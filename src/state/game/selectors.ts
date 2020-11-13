@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { getShortPlayerName } from 'state/players/selectors';
+import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
 
 import { AppState } from 'state/store';
 import { BaseRunners, TeamRole } from './types';
@@ -30,3 +30,12 @@ export const getPlayerPosition = (state: AppState, playerId: string) => {
 };
 
 export const getLineup = (state: AppState, teamRole: TeamRole) => getTeams(state)[teamRole].lineup;
+
+export const getPlayersNotInGame = createSelector(
+  getAllPlayersList,
+  getTeams,
+  (allPlayers, teams) => {
+    const allPlayersInGame = _.flatten(teams.map(team => team.lineup));
+    return allPlayers.filter(({ playerId }) => !allPlayersInGame.includes(playerId));
+  }
+);

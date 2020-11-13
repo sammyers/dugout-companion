@@ -1,6 +1,23 @@
 import _ from 'lodash';
 
-import { BaseType, PlateAppearanceType, BaseRunners } from './types';
+import { BaseType, PlateAppearanceType, BaseRunners, FieldingPosition } from './types';
+
+export const getPositionAbbreviation = (position: FieldingPosition) =>
+  ({
+    [FieldingPosition.PITCHER]: 'P',
+    [FieldingPosition.CATCHER]: 'C',
+    [FieldingPosition.FIRST_BASE]: '1B',
+    [FieldingPosition.SECOND_BASE]: '2B',
+    [FieldingPosition.THIRD_BASE]: '3B',
+    [FieldingPosition.SHORTSTOP]: 'SS',
+    [FieldingPosition.LEFT_FIELD]: 'LF',
+    [FieldingPosition.CENTER_FIELD]: 'CF',
+    [FieldingPosition.RIGHT_FIELD]: 'RF',
+    [FieldingPosition.LEFT_CENTER]: 'LCF',
+    [FieldingPosition.RIGHT_CENTER]: 'RCF',
+  }[position]);
+
+export const allPositions = _.keys(FieldingPosition) as FieldingPosition[];
 
 // Find the base a runner should occupy if advanced by some number of bases.
 // Return null if the runner has scored.

@@ -92,5 +92,16 @@ export interface GameState {
 
 export interface AddPlayerPayload {
   playerId: string;
-  team: 0 | 1;
+  team: TeamRole;
+}
+
+export interface MovePlayerPayload {
+  startIndex: number;
+  endIndex: number;
+  fromTeam: TeamRole;
+  toTeam: TeamRole;
+}
+export interface ChangePlayerPositionPayload {
+  playerId: string;
+  position: FieldingPosition;
 }

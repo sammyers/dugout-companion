@@ -6,7 +6,7 @@ import Teams from './Teams';
 
 const GameView = () => {
   return (
-    <Tabs flex>
+    <Tabs flex margin={{ top: 'small' }}>
       <Tab title="Teams">
         <Teams />
       </Tab>

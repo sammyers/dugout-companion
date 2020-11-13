@@ -1,3 +1,7 @@
+import { createSelector } from '@reduxjs/toolkit';
+
+import { formatShortName } from './utils';
+
 import { AppState } from 'state/store';
 
 export const getPlayerName = (state: AppState, playerId: string) => {
@@ -7,5 +11,8 @@ export const getPlayerName = (state: AppState, playerId: string) => {
 
 export const getShortPlayerName = (state: AppState, playerId: string) => {
   const player = state.players[playerId];
-  return player ? `${player.firstName} ${player.lastName[0]}` : '';
+  return player ? formatShortName(player) : '';
 };
+
+export const getAllPlayers = (state: AppState) => state.players;
+export const getAllPlayersList = createSelector(getAllPlayers, players => Object.values(players));
