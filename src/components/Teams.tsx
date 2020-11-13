@@ -52,7 +52,7 @@ const Lineup = ({ team }: { team: TeamRole }) => {
         onChange={handleSearchChange}
         onSelect={handleSuggestionSelect}
       />
-      <Box direction="row">
+      <Box direction="row" margin={{ top: 'small' }}>
         <Box width="xxsmall">
           {_.range(1, 11).map(lineupSpot => (
             <Box height="xxsmall" justify="center">
