@@ -47,7 +47,7 @@ const getNextAvailablePosition = (currentPositions: Team['positions']) => {
   return allPositions.find(position => !takenPositions.includes(position))!;
 };
 
-const { actions, reducer } = createSlice({
+const { actions: gameActions, reducer } = createSlice({
   name: 'game',
   initialState,
   reducers: {
@@ -183,11 +183,5 @@ const { actions, reducer } = createSlice({
   },
 });
 
-export const {
-  addPlayerToGame,
-  movePlayer,
-  removePlayerFromGame,
-  changePlayerPosition,
-  recordGameEvent,
-} = actions;
+export { gameActions };
 export default reducer;

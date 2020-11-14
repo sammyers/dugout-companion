@@ -4,10 +4,11 @@ import { Close } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { getPlayerPosition } from 'state/game/selectors';
-import { removePlayerFromGame, changePlayerPosition } from 'state/game/slice';
+import { gameActions } from 'state/game/slice';
 import { getShortPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { allPositions, getPositionAbbreviation } from 'state/game/utils';
+
 import { FieldingPosition } from 'state/game/types';
 
 interface Props {
@@ -27,13 +28,12 @@ const LineupPlayer: FC<Props> = ({ playerId, index }) => {
   const position = useAppSelector(state => getPlayerPosition(state, playerId));
 
   const handleRemove = useCallback(() => {
-    dispatch(removePlayerFromGame(playerId));
+    dispatch(gameActions.removePlayerFromGame(playerId));
   }, [playerId, dispatch]);
 
   const handleChangePosition = useCallback(
     ({ value }: { value: FieldingPosition }) => {
-      console.log(value);
-      dispatch(changePlayerPosition({ playerId, position: value }));
+      dispatch(gameActions.changePlayerPosition({ playerId, position: value }));
     },
     [dispatch, playerId]
   );

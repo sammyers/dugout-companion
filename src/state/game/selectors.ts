@@ -6,6 +6,8 @@ import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
 import { AppState } from 'state/store';
 import { BaseRunners, TeamRole } from './types';
 
+const MIN_PLAYERS_TO_PLAY = 8;
+
 export const getTeams = (state: AppState) => state.game.teams;
 
 export const getRunners = (state: AppState) => state.game.runners;
@@ -29,13 +31,25 @@ export const getPlayerPosition = (state: AppState, playerId: string) => {
   return positions[playerId];
 };
 
+export const getLineups = createSelector(
+  getTeams,
+  teams => teams.map(team => team.lineup) as [string[], string[]]
+);
 export const getLineup = (state: AppState, teamRole: TeamRole) => getTeams(state)[teamRole].lineup;
 
 export const getPlayersNotInGame = createSelector(
   getAllPlayersList,
-  getTeams,
-  (allPlayers, teams) => {
-    const allPlayersInGame = _.flatten(teams.map(team => team.lineup));
+  getLineups,
+  (allPlayers, lineups) => {
+    const allPlayersInGame = _.flatten(lineups);
     return allPlayers.filter(({ playerId }) => !allPlayersInGame.includes(playerId));
   }
+);
+
+export const canStartGame = createSelector(
+  getLineups,
+  ([{ length: numAwayPlayers }, { length: numHomePlayers }]) =>
+    Math.abs(numAwayPlayers - numHomePlayers) <= 1 &&
+    numAwayPlayers >= MIN_PLAYERS_TO_PLAY &&
+    numHomePlayers >= MIN_PLAYERS_TO_PLAY
 );

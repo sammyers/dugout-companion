@@ -9,7 +9,6 @@ const reducer = persistCombineReducers(
   {
     key: 'root',
     storage,
-    blacklist: ['game'],
   },
   {
     game,

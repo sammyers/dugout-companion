@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Grommet } from 'grommet';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import App from 'components/App';
@@ -9,18 +9,17 @@ import App from 'components/App';
 import { store, persistor } from 'state/store';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import theme from './theme';
 
 import './index.css';
 
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <Grommet theme={theme} full>
+      <BrowserRouter>
         <React.StrictMode>
           <App />
         </React.StrictMode>
-      </Grommet>
+      </BrowserRouter>
     </PersistGate>
   </Provider>,
   document.getElementById('root')
