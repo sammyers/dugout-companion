@@ -4,13 +4,14 @@ import _ from 'lodash';
 import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
 
 import { AppState } from 'state/store';
-import { BaseRunners, TeamRole } from './types';
+import { BaseRunners, TeamRole, PlateAppearanceType } from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
 export const getTeams = (state: AppState) => state.game.teams;
 
 export const getRunners = (state: AppState) => state.game.runners;
+export const getNumOuts = (state: AppState) => state.game.outs;
 
 export const getRunnerNames = createSelector(
   state => state,
@@ -53,3 +54,16 @@ export const canStartGame = createSelector(
     numAwayPlayers >= MIN_PLAYERS_TO_PLAY &&
     numHomePlayers >= MIN_PLAYERS_TO_PLAY
 );
+
+export const isGameInProgress = (state: AppState) => state.game.started;
+
+export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, (runners, outs) => {
+  const notPossible: Set<PlateAppearanceType> = new Set();
+
+  if (outs === 2 || !_.size(runners)) {
+    notPossible.add(PlateAppearanceType.DOUBLE_PLAY);
+    notPossible.add(PlateAppearanceType.SACRIFICE_FLY);
+  }
+
+  return _.values(PlateAppearanceType).filter(paType => !notPossible.has(paType));
+});

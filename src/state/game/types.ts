@@ -56,7 +56,6 @@ export type BaseRunners = Partial<Record<BaseType, string>>;
 
 export interface PlateAppearanceResult {
   kind: 'plateAppearance';
-  batterId: string;
   type: PlateAppearanceType;
   contactType?: ContactType;
   fieldedBy?: FieldingPosition;

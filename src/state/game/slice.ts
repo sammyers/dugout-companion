@@ -127,12 +127,12 @@ const { actions: gameActions, reducer } = createSlice({
       } else if (payload.kind === 'plateAppearance') {
         switch (payload.type) {
           case PlateAppearanceType.HOMERUN:
-            state.runners = {};
             updateScore(state, _.size(state.runners) + 1);
+            state.runners = {};
             break;
           case PlateAppearanceType.TRIPLE:
-            state.runners = { [BaseType.THIRD]: payload.batterId };
             updateScore(state, _.size(state.runners));
+            state.runners = { [BaseType.THIRD]: state.atBat };
             break;
           case PlateAppearanceType.DOUBLE:
           case PlateAppearanceType.SINGLE:
@@ -140,7 +140,7 @@ const { actions: gameActions, reducer } = createSlice({
             const [newBaseRunners, runsScored] = advanceBaserunnersOnPlateAppearance(
               state.runners,
               payload.type,
-              payload.batterId
+              state.atBat!
             );
             state.runners = newBaseRunners;
             updateScore(state, runsScored);
@@ -153,11 +153,11 @@ const { actions: gameActions, reducer } = createSlice({
           case PlateAppearanceType.FIELDERS_CHOICE:
             state.outs++;
             removeRunner(state, payload.runnersOutOnPlay[0]);
-            state.runners[BaseType.FIRST] = payload.batterId;
+            state.runners[BaseType.FIRST] = state.atBat;
             break;
           case PlateAppearanceType.DOUBLE_PLAY:
             if (payload.runnersOutOnPlay.length > 1) {
-              state.runners[BaseType.FIRST] = payload.batterId;
+              state.runners[BaseType.FIRST] = state.atBat;
             }
             payload.runnersOutOnPlay.forEach(runnerId => {
               removeRunner(state, runnerId);
