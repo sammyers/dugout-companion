@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
 
 import { AppState } from 'state/store';
-import { BaseRunners, TeamRole, PlateAppearanceType } from './types';
+import { BaseRunners, TeamRole, PlateAppearanceType, HalfInning } from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -12,6 +12,20 @@ export const getTeams = (state: AppState) => state.game.teams;
 
 export const getRunners = (state: AppState) => state.game.runners;
 export const getNumOuts = (state: AppState) => state.game.outs;
+export const getScore = (state: AppState) => state.game.score;
+export const getHalfInning = (state: AppState) => state.game.halfInning;
+export const getInning = (state: AppState) => state.game.inning;
+export const getCurrentBatter = (state: AppState) => state.game.atBat;
+
+export const getBattingTeam = createSelector(getHalfInning, half =>
+  half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
+);
+
+export const getBattingLineup = createSelector(
+  getTeams,
+  getBattingTeam,
+  (teams, battingTeam) => teams[battingTeam].lineup
+);
 
 export const getRunnerNames = createSelector(
   state => state,
@@ -67,3 +81,23 @@ export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, 
 
   return _.values(PlateAppearanceType).filter(paType => !notPossible.has(paType));
 });
+
+const getNextBatter = (batterId: string | undefined, lineup: string[]) => {
+  const lineupIndex = _.findIndex(lineup, id => id === batterId);
+  if (lineupIndex === lineup.length - 1) {
+    return lineup[0];
+  }
+  return lineup[lineupIndex + 1];
+};
+export const getOnDeckBatter = createSelector(getCurrentBatter, getBattingLineup, getNextBatter);
+export const getInTheHoleBatter = createSelector(getOnDeckBatter, getBattingLineup, getNextBatter);
+export const getOnDeckBatterName = createSelector(
+  state => state,
+  getOnDeckBatter,
+  getShortPlayerName
+);
+export const getInTheHoleBatterName = createSelector(
+  state => state,
+  getInTheHoleBatter,
+  getShortPlayerName
+);

@@ -63,6 +63,42 @@ export const getEndBaseForBatterRunner = (paType: PlateAppearanceType) => {
   }
 };
 
+const getBaseNumber = (base: BaseType) =>
+  ({
+    [BaseType.FIRST]: 1,
+    [BaseType.SECOND]: 2,
+    [BaseType.THIRD]: 3,
+  }[base]);
+const getPreviousBase = (base: BaseType) => {
+  switch (base) {
+    case BaseType.THIRD:
+      return BaseType.SECOND;
+    case BaseType.SECOND:
+      return BaseType.FIRST;
+    case BaseType.FIRST:
+      return;
+  }
+};
+
+export const mustRunnerAdvance = (base: BaseType, runners: BaseRunners): boolean => {
+  const prevBase = getPreviousBase(base);
+
+  if (!prevBase) return true;
+  if (!runners[prevBase]) return false;
+
+  return mustRunnerAdvance(prevBase, runners);
+};
+
+const forEachRunner = (
+  runners: BaseRunners,
+  callback: (runnerId: string, base: BaseType) => void
+) => {
+  const sortedPairs = (_.toPairs(runners) as [BaseType, string][]).sort(
+    ([baseA], [baseB]) => getBaseNumber(baseA) - getBaseNumber(baseB)
+  );
+  _.forEachRight(sortedPairs, ([base, runnerId]) => callback(runnerId, base));
+};
+
 export const advanceBaserunnersOnPlateAppearance = (
   runners: BaseRunners,
   paType: PlateAppearanceType,
@@ -72,12 +108,16 @@ export const advanceBaserunnersOnPlateAppearance = (
   const newBaseRunners: BaseRunners = {};
 
   const numBasesAdvanced = getNumBasesForPlateAppearance(paType);
-  _.forEach(runners, (runnerId, base) => {
-    const newBase = getNewBase(base as BaseType, numBasesAdvanced);
-    if (newBase) {
-      newBaseRunners[newBase] = runnerId;
+  forEachRunner(runners, (runnerId, base) => {
+    if (paType === PlateAppearanceType.WALK && !mustRunnerAdvance(base, runners)) {
+      newBaseRunners[base] = runnerId;
     } else {
-      runsScored++;
+      const newBase = getNewBase(base as BaseType, numBasesAdvanced);
+      if (newBase) {
+        newBaseRunners[newBase] = runnerId;
+      } else {
+        runsScored++;
+      }
     }
   });
 

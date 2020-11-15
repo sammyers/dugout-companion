@@ -6,6 +6,7 @@ import AnchorLink from './AnchorLink';
 import { canStartGame, isGameInProgress } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import ScoreBug from './ScoreBug';
 
 const TopBar = () => {
   const dispatch = useAppDispatch();
@@ -18,18 +19,20 @@ const TopBar = () => {
   }, [dispatch]);
 
   return (
-    <Header background="brand" pad="medium">
-      <Nav direction="row">
+    <Header background="brand">
+      <Nav direction="row" pad="medium">
         <AnchorLink to="/teams">Teams</AnchorLink>
         <AnchorLink to="/field">Field</AnchorLink>
       </Nav>
-      <Route path="/teams">
-        {!gameInProgress && (
+      {gameInProgress ? (
+        <ScoreBug />
+      ) : (
+        <Route path="/teams">
           <Button disabled={!gameCanStart} onClick={startGame}>
             Start Game
           </Button>
-        )}
-      </Route>
+        </Route>
+      )}
     </Header>
   );
 };

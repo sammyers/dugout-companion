@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { GameState, BaseType, HalfInning } from './types';
+import { GameState, BaseType, HalfInning, TeamRole } from './types';
 
 export const getTeams = (state: GameState) => state.teams;
 export const getRunners = (state: GameState) => state.runners;
@@ -13,7 +13,7 @@ export const getCurrentBaseForRunner = (state: GameState, playerId: string) =>
 export const getHalfInning = (state: GameState) => state.halfInning;
 
 export const getBattingTeam = createSelector(getHalfInning, half =>
-  half === HalfInning.TOP ? 0 : 1
+  half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
 );
 export const getBattingLineup = createSelector(
   getTeams,

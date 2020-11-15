@@ -163,6 +163,9 @@ const { actions: gameActions, reducer } = createSlice({
               removeRunner(state, runnerId);
             });
             break;
+          case PlateAppearanceType.OUT:
+            state.outs++;
+            break;
         }
 
         const nextBatter = getOnDeckBatter(state);
