@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { Header, Nav, Button } from 'grommet';
-import { Route } from 'react-router-dom';
+import { Route, useHistory } from 'react-router-dom';
 
 import AnchorLink from './AnchorLink';
 import { canStartGame, isGameInProgress } from 'state/game/selectors';
@@ -10,25 +10,32 @@ import ScoreBug from './ScoreBug';
 
 const TopBar = () => {
   const dispatch = useAppDispatch();
+  const history = useHistory();
 
   const gameInProgress = useAppSelector(isGameInProgress);
   const gameCanStart = useAppSelector(canStartGame);
 
   const startGame = useCallback(() => {
     dispatch(gameActions.startGame());
-  }, [dispatch]);
+    history.push('/field');
+  }, [dispatch, history]);
 
   return (
     <Header background="brand">
       <Nav direction="row" pad="medium">
         <AnchorLink to="/teams">Teams</AnchorLink>
-        <AnchorLink to="/field">Field</AnchorLink>
+        {gameInProgress && <AnchorLink to="/field">Field</AnchorLink>}
       </Nav>
       {gameInProgress ? (
         <ScoreBug />
       ) : (
         <Route path="/teams">
-          <Button disabled={!gameCanStart} onClick={startGame}>
+          <Button
+            plain={false}
+            disabled={!gameCanStart}
+            onClick={startGame}
+            margin={{ right: 'medium' }}
+          >
             Start Game
           </Button>
         </Route>

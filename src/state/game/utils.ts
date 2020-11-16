@@ -89,9 +89,9 @@ export const mustRunnerAdvance = (base: BaseType, runners: BaseRunners): boolean
   return mustRunnerAdvance(prevBase, runners);
 };
 
-const forEachRunner = (
+export const forEachRunner = (
   runners: BaseRunners,
-  callback: (runnerId: string, base: BaseType) => void
+  callback: (runnerId: string, base: BaseType) => void | boolean
 ) => {
   const sortedPairs = (_.toPairs(runners) as [BaseType, string][]).sort(
     ([baseA], [baseB]) => getBaseNumber(baseA) - getBaseNumber(baseB)
@@ -127,4 +127,13 @@ export const advanceBaserunnersOnPlateAppearance = (
   }
 
   return [newBaseRunners, runsScored];
+};
+
+export const getPlateAppearanceDetailPrompt = (
+  paType: PlateAppearanceType,
+  batterId: string,
+  outs: number,
+  runners: BaseRunners
+) => {
+  const [defaultRunnerPositions] = advanceBaserunnersOnPlateAppearance(runners, paType, batterId);
 };

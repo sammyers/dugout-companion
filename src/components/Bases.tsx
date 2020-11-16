@@ -9,12 +9,14 @@ import {
   getBatterName,
   getOnDeckBatterName,
   getInTheHoleBatterName,
+  isGameInProgress,
 } from 'state/game/selectors';
 import { BaseType } from 'state/game/types';
 import { useAppSelector } from 'utils/hooks';
 
 import { ReactComponent as BaseIcon } from 'icons/base.svg';
 import { ReactComponent as HomeIcon } from 'icons/home.svg';
+import { Redirect } from 'react-router-dom';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (
   <Blank size="large" color={occupied ? 'brand' : undefined} fillOpacity={occupied ? 1 : undefined}>
@@ -28,6 +30,7 @@ const HomePlate = () => (
 );
 
 const Bases = () => {
+  const gameInProgress = useAppSelector(isGameInProgress);
   const {
     [BaseType.FIRST]: firstBaseRunner,
     [BaseType.SECOND]: secondBaseRunner,
@@ -36,6 +39,10 @@ const Bases = () => {
   const batter = useAppSelector(getBatterName);
   const onDeck = useAppSelector(getOnDeckBatterName);
   const inTheHole = useAppSelector(getInTheHoleBatterName);
+
+  if (!gameInProgress) {
+    return <Redirect to="/teams" />;
+  }
 
   return (
     <Box fill>
@@ -68,7 +75,9 @@ const Bases = () => {
             <Text textAlign="center">{thirdBaseRunner}</Text>
           </Box>
           <Box gridArea="home-plate" justify="end" align="center">
-            <Text weight="bold">{batter}</Text>
+            <Text weight="bold" size="xlarge">
+              {batter}
+            </Text>
             <HomePlate />
           </Box>
           <EventReporter />

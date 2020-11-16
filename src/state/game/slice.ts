@@ -2,7 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
 import { getCurrentBaseForRunner, getBattingTeam, getOnDeckBatter } from './partialSelectors';
-import { getNewBase, advanceBaserunnersOnPlateAppearance, allPositions } from './utils';
+import {
+  getNewBase,
+  advanceBaserunnersOnPlateAppearance,
+  allPositions,
+  forEachRunner,
+} from './utils';
 
 import {
   GameState,
@@ -38,6 +43,10 @@ const updateScore = (state: GameState, runs: number = 1) => {
   state.score[getBattingTeam(state)] += runs;
 };
 
+const moveRunner = (state: GameState, startBase: BaseType, endBase: BaseType) => {
+  state.runners[endBase] = state.runners[startBase];
+  delete state.runners[startBase];
+};
 const removeRunner = (state: GameState, runnerId: string) => {
   delete state.runners[getCurrentBaseForRunner(state, runnerId)];
 };
@@ -167,6 +176,21 @@ const { actions: gameActions, reducer } = createSlice({
             state.outs++;
             break;
         }
+
+        forEachRunner(state.runners, (runnerId, base) => {
+          if (runnerId in payload.extraOutsOnBasepaths) {
+            delete state.runners[base];
+            state.outs++;
+          } else if (runnerId in payload.extraBasesTaken) {
+            const newBase = getNewBase(base, payload.extraBasesTaken[runnerId]);
+            if (newBase) {
+              moveRunner(state, base, newBase);
+            } else {
+              delete state.runners[base];
+              updateScore(state);
+            }
+          }
+        });
 
         const nextBatter = getOnDeckBatter(state);
         if (state.outs === 3) {

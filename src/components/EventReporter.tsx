@@ -5,6 +5,7 @@ import { PlateAppearanceType } from 'state/game/types';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { getPlateAppearanceOptions } from 'state/game/selectors';
+import { getPlateAppearanceLabel } from 'utils/labels';
 
 const EventReporter = () => {
   const dispatch = useAppDispatch();
@@ -37,7 +38,7 @@ const EventReporter = () => {
     >
       {options.map(paType => (
         <Button key={paType} plain={false} onClick={reportPlateAppearance(paType)} margin="small">
-          {paType}
+          {getPlateAppearanceLabel(paType)}
         </Button>
       ))}
     </Box>

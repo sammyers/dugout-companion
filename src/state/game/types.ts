@@ -104,3 +104,57 @@ export interface ChangePlayerPositionPayload {
   playerId: string;
   position: FieldingPosition;
 }
+
+interface ContactOption {
+  contactType: ContactType;
+  label: string;
+}
+interface BasepathOutcome {
+  endBase: BaseType | null;
+  successfulAdvance: boolean;
+}
+interface RunnerOptions {
+  runnerId: string;
+  options: BasepathOutcome[];
+}
+interface OutOnPlayOptions {
+  runnerIds: string[];
+  multiple: boolean;
+}
+
+export interface OutPrompt {
+  kind: 'out';
+  contactOptions: ContactOption[];
+  getRunnerOptions: (contactType: ContactType) => RunnerOptions;
+}
+
+export interface HitPrompt {
+  kind: 'hit';
+  contactOptions: ContactOption[];
+  runnerOptions: RunnerOptions[];
+}
+
+export interface SacrificeFlyPrompt {
+  kind: 'sacrificeFly';
+  runnersScoredOptions: number[];
+  getAdditionalRunnerOptions: (runnersScored: number) => RunnerOptions[];
+}
+
+export interface FieldersChoicePrompt {
+  kind: 'fieldersChoice';
+  outOnPlayOptions: OutOnPlayOptions;
+  getAdditionalRunnerOptions: (runnerOut: string) => RunnerOptions[];
+}
+
+export interface DoublePlayPrompt {
+  kind: 'doublePlay';
+  outOnPlayOptions: OutOnPlayOptions;
+  getAdditionalRunnerOptions: (runnersOut: string[]) => RunnerOptions[];
+}
+
+export type PlateAppearanceDetailPrompt =
+  | OutPrompt
+  | HitPrompt
+  | SacrificeFlyPrompt
+  | FieldersChoicePrompt
+  | DoublePlayPrompt;
