@@ -2,26 +2,26 @@ import _ from 'lodash';
 
 import { BaseType, PlateAppearanceType, BaseRunners, FieldingPosition } from './types';
 
-export const getPositionAbbreviation = (position: FieldingPosition) =>
-  ({
-    [FieldingPosition.PITCHER]: 'P',
-    [FieldingPosition.CATCHER]: 'C',
-    [FieldingPosition.FIRST_BASE]: '1B',
-    [FieldingPosition.SECOND_BASE]: '2B',
-    [FieldingPosition.THIRD_BASE]: '3B',
-    [FieldingPosition.SHORTSTOP]: 'SS',
-    [FieldingPosition.LEFT_FIELD]: 'LF',
-    [FieldingPosition.CENTER_FIELD]: 'CF',
-    [FieldingPosition.RIGHT_FIELD]: 'RF',
-    [FieldingPosition.LEFT_CENTER]: 'LCF',
-    [FieldingPosition.RIGHT_CENTER]: 'RCF',
-  }[position]);
-
 export const allPositions = _.keys(FieldingPosition) as FieldingPosition[];
+
+export const getBaseForRunner = (runners: BaseRunners, runnerId: string) =>
+  _.findKey(runners, runner => runner === runnerId) as BaseType;
+
+export const moveRunner = (runners: BaseRunners, startBase: BaseType, endBase: BaseType | null) => {
+  if (endBase) {
+    runners[endBase] = runners[startBase];
+  }
+  delete runners[startBase];
+};
+
+export const removeRunner = (runners: BaseRunners, runnerId: string) => {
+  delete runners[getBaseForRunner(runners, runnerId)];
+};
 
 // Find the base a runner should occupy if advanced by some number of bases.
 // Return null if the runner has scored.
 export const getNewBase = (currentBase: BaseType, numAdvanced: number = 1) => {
+  if (numAdvanced === 0) return currentBase;
   if (currentBase === BaseType.THIRD) return null;
   if (currentBase === BaseType.SECOND) {
     if (numAdvanced > 1) return null;
@@ -63,12 +63,14 @@ export const getEndBaseForBatterRunner = (paType: PlateAppearanceType) => {
   }
 };
 
-const getBaseNumber = (base: BaseType) =>
-  ({
-    [BaseType.FIRST]: 1,
-    [BaseType.SECOND]: 2,
-    [BaseType.THIRD]: 3,
-  }[base]);
+export const getBaseNumber = (base: BaseType | null) =>
+  base === null
+    ? 4
+    : {
+        [BaseType.FIRST]: 1,
+        [BaseType.SECOND]: 2,
+        [BaseType.THIRD]: 3,
+      }[base];
 const getPreviousBase = (base: BaseType) => {
   switch (base) {
     case BaseType.THIRD:
@@ -89,17 +91,20 @@ export const mustRunnerAdvance = (base: BaseType, runners: BaseRunners): boolean
   return mustRunnerAdvance(prevBase, runners);
 };
 
+export const getSortedRunners = (runners: BaseRunners) =>
+  (_.toPairs(runners) as [BaseType, string][]).sort(
+    ([baseA], [baseB]) => getBaseNumber(baseA) - getBaseNumber(baseB)
+  );
+
 export const forEachRunner = (
   runners: BaseRunners,
   callback: (runnerId: string, base: BaseType) => void | boolean
 ) => {
-  const sortedPairs = (_.toPairs(runners) as [BaseType, string][]).sort(
-    ([baseA], [baseB]) => getBaseNumber(baseA) - getBaseNumber(baseB)
-  );
+  const sortedPairs = getSortedRunners(runners);
   _.forEachRight(sortedPairs, ([base, runnerId]) => callback(runnerId, base));
 };
 
-export const advanceBaserunnersOnPlateAppearance = (
+export const getDefaultRunnersAfterPlateAppearance = (
   runners: BaseRunners,
   paType: PlateAppearanceType,
   batterId: string
@@ -129,11 +134,14 @@ export const advanceBaserunnersOnPlateAppearance = (
   return [newBaseRunners, runsScored];
 };
 
-export const getPlateAppearanceDetailPrompt = (
-  paType: PlateAppearanceType,
-  batterId: string,
-  outs: number,
-  runners: BaseRunners
-) => {
-  const [defaultRunnerPositions] = advanceBaserunnersOnPlateAppearance(runners, paType, batterId);
+export const moveRunnersOnGroundBall = (runners: BaseRunners) => {
+  let runs = 0;
+  forEachRunner(runners, (_runnerId, base) => {
+    if (mustRunnerAdvance(base, runners)) {
+      const newBase = getNewBase(base);
+      moveRunner(runners, base, newBase);
+      if (newBase === null) runs++;
+    }
+  });
+  return runs;
 };

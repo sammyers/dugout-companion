@@ -1,14 +1,15 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { GameState, BaseType, HalfInning, TeamRole } from './types';
+import { GameState, HalfInning, TeamRole } from './types';
+import { getBaseForRunner } from './utils';
 
 export const getTeams = (state: GameState) => state.teams;
 export const getRunners = (state: GameState) => state.runners;
 export const getCurrentBatter = (state: GameState) => state.atBat;
 
 export const getCurrentBaseForRunner = (state: GameState, playerId: string) =>
-  _.findKey(getRunners(state), runnerId => runnerId === playerId) as BaseType;
+  getBaseForRunner(getRunners(state), playerId);
 
 export const getHalfInning = (state: GameState) => state.halfInning;
 

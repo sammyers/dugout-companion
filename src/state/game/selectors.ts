@@ -74,6 +74,10 @@ export const isGameInProgress = (state: AppState) => state.game.started;
 export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, (runners, outs) => {
   const notPossible: Set<PlateAppearanceType> = new Set();
 
+  if (!_.size(runners)) {
+    notPossible.add(PlateAppearanceType.FIELDERS_CHOICE);
+  }
+
   if (outs === 2 || !_.size(runners)) {
     notPossible.add(PlateAppearanceType.DOUBLE_PLAY);
     notPossible.add(PlateAppearanceType.SACRIFICE_FLY);

@@ -5,9 +5,10 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import { getPlayerPosition } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
+import { allPositions } from 'state/game/utils';
 import { getShortPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-import { allPositions, getPositionAbbreviation } from 'state/game/utils';
+import { getPositionAbbreviation } from 'utils/labels';
 
 import { FieldingPosition } from 'state/game/types';
 

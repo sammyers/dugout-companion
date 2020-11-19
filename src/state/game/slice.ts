@@ -4,9 +4,11 @@ import _ from 'lodash';
 import { getCurrentBaseForRunner, getBattingTeam, getOnDeckBatter } from './partialSelectors';
 import {
   getNewBase,
-  advanceBaserunnersOnPlateAppearance,
+  getDefaultRunnersAfterPlateAppearance,
   allPositions,
   forEachRunner,
+  moveRunner,
+  removeRunner,
 } from './utils';
 
 import {
@@ -41,14 +43,6 @@ const initialState: GameState = {
 
 const updateScore = (state: GameState, runs: number = 1) => {
   state.score[getBattingTeam(state)] += runs;
-};
-
-const moveRunner = (state: GameState, startBase: BaseType, endBase: BaseType) => {
-  state.runners[endBase] = state.runners[startBase];
-  delete state.runners[startBase];
-};
-const removeRunner = (state: GameState, runnerId: string) => {
-  delete state.runners[getCurrentBaseForRunner(state, runnerId)];
 };
 
 const getNextAvailablePosition = (currentPositions: Team['positions']) => {
@@ -146,7 +140,7 @@ const { actions: gameActions, reducer } = createSlice({
           case PlateAppearanceType.DOUBLE:
           case PlateAppearanceType.SINGLE:
           case PlateAppearanceType.WALK:
-            const [newBaseRunners, runsScored] = advanceBaserunnersOnPlateAppearance(
+            const [newBaseRunners, runsScored] = getDefaultRunnersAfterPlateAppearance(
               state.runners,
               payload.type,
               state.atBat!
@@ -161,7 +155,7 @@ const { actions: gameActions, reducer } = createSlice({
             break;
           case PlateAppearanceType.FIELDERS_CHOICE:
             state.outs++;
-            removeRunner(state, payload.runnersOutOnPlay[0]);
+            removeRunner(state.runners, payload.runnersOutOnPlay[0]);
             state.runners[BaseType.FIRST] = state.atBat;
             break;
           case PlateAppearanceType.DOUBLE_PLAY:
@@ -169,7 +163,7 @@ const { actions: gameActions, reducer } = createSlice({
               state.runners[BaseType.FIRST] = state.atBat;
             }
             payload.runnersOutOnPlay.forEach(runnerId => {
-              removeRunner(state, runnerId);
+              removeRunner(state.runners, runnerId);
             });
             break;
           case PlateAppearanceType.OUT:
@@ -184,7 +178,7 @@ const { actions: gameActions, reducer } = createSlice({
           } else if (runnerId in payload.extraBasesTaken) {
             const newBase = getNewBase(base, payload.extraBasesTaken[runnerId]);
             if (newBase) {
-              moveRunner(state, base, newBase);
+              moveRunner(state.runners, base, newBase);
             } else {
               delete state.runners[base];
               updateScore(state);
