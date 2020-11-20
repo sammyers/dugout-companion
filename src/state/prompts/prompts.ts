@@ -16,6 +16,7 @@ import {
   moveRunner,
   moveRunnersOnGroundBall,
   removeRunner,
+  getPreviousBase,
 } from 'state/game/utils';
 import {
   getHitLabelFromContact,
@@ -56,9 +57,17 @@ const inPlayContactOptions = _.values(ContactType).filter(
   ct => ct !== ContactType.NONE
 ) as HitContactType[];
 const getContactOptionsForHit = (contactTypes: HitContactType[] = inPlayContactOptions) =>
-  contactTypes.map(contactType => ({ contactType, label: getHitLabelFromContact(contactType) }));
+  contactTypes.map((contactType, id) => ({
+    id,
+    contactType,
+    label: getHitLabelFromContact(contactType),
+  }));
 const getContactOptionsForOut = (contactTypes: ContactType[] = _.values(ContactType)) =>
-  contactTypes.map(contactType => ({ contactType, label: getOutLabelFromContact(contactType) }));
+  contactTypes.map((contactType, id) => ({
+    id,
+    contactType,
+    label: getOutLabelFromContact(contactType),
+  }));
 
 const allPositions = _.values(FieldingPosition);
 const outfieldPositions = [
@@ -70,7 +79,7 @@ const outfieldPositions = [
 ];
 const infieldPositions = _.difference(allPositions, outfieldPositions);
 const getFielderOptions = (positions: FieldingPosition[]) =>
-  positions.map(position => ({ position, label: getPositionAbbreviation(position) }));
+  positions.map((position, id) => ({ id, position, label: getPositionAbbreviation(position) }));
 
 const getFielderOptionsForContactType = (contactType: ContactType) => {
   let positions: FieldingPosition[];
@@ -96,18 +105,22 @@ const getFielderOptionsForContactType = (contactType: ContactType) => {
 const getBasepathOutcomesForBases = (bases: (BaseType | null)[]): BasepathOutcome[] => {
   if (!bases.length) return [];
 
-  return [
-    { attemptedAdvance: false },
-    ..._.flatten(
-      _.map(bases, endBase =>
-        [true, false].map(successfulAdvance => ({
-          attemptedAdvance: true,
-          successfulAdvance,
-          endBase,
-        }))
-      )
-    ),
+  const advancedOptions = _.flatten(
+    _.map(bases, endBase =>
+      [true, false].map(successfulAdvance => ({
+        attemptedAdvance: true as true,
+        successfulAdvance,
+        endBase,
+      }))
+    )
+  );
+
+  const options = [
+    { attemptedAdvance: false as false, endBase: getPreviousBase(advancedOptions[0].endBase)! },
+    ...advancedOptions,
   ];
+
+  return options.map(({ ...option }, id) => ({ id, ...option }));
 };
 
 export const getRunnerOptions = (runners: BaseRunners, outs: number): RunnerOptions | undefined => {

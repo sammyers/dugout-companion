@@ -1,31 +1,33 @@
-import React, { useCallback } from 'react';
-import { Box, Button } from 'grommet';
+import React, { useCallback, useState, useMemo } from 'react';
+import { Box, Button, Layer } from 'grommet';
 
 import { PlateAppearanceType } from 'state/game/types';
 import { gameActions } from 'state/game/slice';
+import {
+  getPlateAppearanceOptions,
+  getCurrentBatter,
+  getNumOuts,
+  getRunners,
+  createPlateAppearancePromptSelector,
+} from 'state/game/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import { getPlateAppearanceOptions } from 'state/game/selectors';
 import { getPlateAppearanceLabel } from 'utils/labels';
+import EventDetailPrompt from './prompts/EventDetailPrompt';
 
 const EventReporter = () => {
   const dispatch = useAppDispatch();
 
   const options = useAppSelector(getPlateAppearanceOptions);
 
-  const reportPlateAppearance = useCallback(
-    (paType: PlateAppearanceType) => () => {
-      dispatch(
-        gameActions.recordGameEvent({
-          kind: 'plateAppearance',
-          type: paType,
-          runnersOutOnPlay: [],
-          extraBasesTaken: {},
-          extraOutsOnBasepaths: {},
-        })
-      );
-    },
-    [dispatch]
-  );
+  const [pendingPlateAppearance, setPendingPlateAppearance] = useState<PlateAppearanceType>();
+
+  const handleSubmitPlateAppearance = useCallback(() => {
+    setPendingPlateAppearance(undefined);
+  }, [dispatch, setPendingPlateAppearance]);
+
+  const handleCancelPrompt = useCallback(() => {
+    setPendingPlateAppearance(undefined);
+  }, [setPendingPlateAppearance]);
 
   return (
     <Box
@@ -37,10 +39,20 @@ const EventReporter = () => {
       alignContent="center"
     >
       {options.map(paType => (
-        <Button key={paType} plain={false} onClick={reportPlateAppearance(paType)} margin="small">
-          {getPlateAppearanceLabel(paType)}
-        </Button>
+        <Button
+          key={paType}
+          label={getPlateAppearanceLabel(paType)}
+          onClick={() => setPendingPlateAppearance(paType)}
+          margin="small"
+        />
       ))}
+      {pendingPlateAppearance && (
+        <EventDetailPrompt
+          paType={pendingPlateAppearance}
+          onSubmit={handleSubmitPlateAppearance}
+          onCancel={handleCancelPrompt}
+        />
+      )}
     </Box>
   );
 };

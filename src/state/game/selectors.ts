@@ -5,6 +5,7 @@ import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
 
 import { AppState } from 'state/store';
 import { BaseRunners, TeamRole, PlateAppearanceType, HalfInning } from './types';
+import { getPlateAppearanceDetailPrompt } from 'state/prompts/prompts';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -105,3 +106,8 @@ export const getInTheHoleBatterName = createSelector(
   getInTheHoleBatter,
   getShortPlayerName
 );
+
+export const createPlateAppearancePromptSelector = (paType: PlateAppearanceType) =>
+  createSelector(getCurrentBatter, getNumOuts, getRunners, (batterId, outs, runners) =>
+    getPlateAppearanceDetailPrompt(paType, batterId!, outs, runners)
+  );

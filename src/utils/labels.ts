@@ -1,9 +1,12 @@
+import _ from 'lodash';
+
 import {
   PlateAppearanceType,
   FieldingPosition,
   ContactType,
   HitContactType,
 } from 'state/game/types';
+import { BasepathOutcome } from 'state/prompts/types';
 
 export const getPositionAbbreviation = (position: FieldingPosition) =>
   ({
@@ -51,3 +54,20 @@ export const getHitLabelFromContact = (contactType: HitContactType) =>
     [ContactType.LONG_FLY]: 'Long fly ball',
     [ContactType.POPUP]: 'Pop fly',
   }[contactType]);
+
+export const getRunnerOptionLabel = (option: BasepathOutcome) => {
+  if (!option.attemptedAdvance) {
+    return `Stayed at ${_.lowerCase(option.endBase)}`;
+  }
+  if (option.endBase === null) {
+    if (option.successfulAdvance) {
+      return 'Scored';
+    }
+    return 'Thrown out at home';
+  }
+  const baseName = _.lowerCase(option.endBase);
+  if (option.successfulAdvance) {
+    return `Advanced to ${baseName}`;
+  }
+  return `Thrown out at ${baseName}`;
+};

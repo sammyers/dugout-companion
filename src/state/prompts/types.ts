@@ -1,26 +1,29 @@
 import { ContactType, BaseType, FieldingPosition } from 'state/game/types';
 
-interface ContactOption {
+export interface ContactOption {
+  id: number;
   contactType: ContactType;
   label: string;
 }
-interface ContactOptions {
+export interface ContactOptions {
   options: ContactOption[];
   required?: boolean;
 }
-export type BasepathOutcome =
-  | { attemptedAdvance: false }
+export type BasepathOutcome = { id: number } & (
+  | { attemptedAdvance: false; endBase: BaseType }
   | {
       attemptedAdvance: true;
       endBase: BaseType | null;
       successfulAdvance: boolean;
-    };
+    }
+);
 export interface RunnerOptions {
   runnerId: string;
   options: BasepathOutcome[];
   getTrailingRunnerOptions?: (outcome: BasepathOutcome) => RunnerOptions | undefined;
 }
-interface FielderOption {
+export interface FielderOption {
+  id: number;
   position: FieldingPosition;
   label: string;
 }

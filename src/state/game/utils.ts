@@ -71,8 +71,10 @@ export const getBaseNumber = (base: BaseType | null) =>
         [BaseType.SECOND]: 2,
         [BaseType.THIRD]: 3,
       }[base];
-const getPreviousBase = (base: BaseType) => {
+export const getPreviousBase = (base: BaseType | null) => {
   switch (base) {
+    case null:
+      return BaseType.THIRD;
     case BaseType.THIRD:
       return BaseType.SECOND;
     case BaseType.SECOND:
