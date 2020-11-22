@@ -1,32 +1,29 @@
 import React, { FC, useMemo, useCallback, useEffect } from 'react';
 
-import { getSelectedContactOption } from 'state/prompts/selectors';
+import { FielderOptions } from 'state/prompts/types';
+import { getSelectedFielderOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-
-import { ContactOptions } from 'state/prompts/types';
 import OptionSelector from './OptionSelector';
 
-const ContactPrompt: FC<ContactOptions> = ({ options, required }) => {
+const FielderPrompt: FC<FielderOptions> = ({ options }) => {
   const dispatch = useAppDispatch();
 
   useEffect(
     () => () => {
-      dispatch(promptActions.clearContactChoice());
+      dispatch(promptActions.clearFielderChoice());
     },
     [dispatch]
   );
 
-  const selectedOption = useAppSelector(getSelectedContactOption);
+  const selectedOption = useAppSelector(getSelectedFielderOption);
 
   const formattedOptions = useMemo(() => options.map(({ label, id }) => ({ label, value: id })), [
     options,
   ]);
 
   const handleChange = useCallback(
-    (value: number) => {
-      dispatch(promptActions.setContactChoice(options[value]));
-    },
+    (value: number) => dispatch(promptActions.setFielderChoice(options[value])),
     [dispatch, options]
   );
 
@@ -35,4 +32,4 @@ const ContactPrompt: FC<ContactOptions> = ({ options, required }) => {
   );
 };
 
-export default ContactPrompt;
+export default FielderPrompt;

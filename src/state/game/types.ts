@@ -20,9 +20,9 @@ export enum FieldingPosition {
   SHORTSTOP = 'SHORTSTOP',
   LEFT_FIELD = 'LEFT_FIELD',
   CENTER_FIELD = 'CENTER_FIELD',
-  RIGHT_FIELD = 'RIGHT_FIELD',
   LEFT_CENTER = 'LEFT_CENTER',
   RIGHT_CENTER = 'RIGHT_CENTER',
+  RIGHT_FIELD = 'RIGHT_FIELD',
 }
 export enum PlateAppearanceType {
   OUT = 'OUT',
@@ -65,7 +65,7 @@ export interface PlateAppearanceResult {
     [runnerId: string]: number;
   };
   extraOutsOnBasepaths: {
-    [runnerId: string]: BaseType;
+    [runnerId: string]: BaseType | null;
   };
 }
 

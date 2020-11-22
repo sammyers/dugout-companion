@@ -31,22 +31,22 @@ export interface FielderOptions {
   options: FielderOption[];
   multiple?: boolean;
 }
-interface OutOnPlayOptions {
+export interface OutOnPlayOptions {
   runnerIds: string[];
   multiple?: boolean;
 }
 
-export interface HitPrompt {
+export interface HitOptions {
   kind: 'hit';
   contactOptions: ContactOptions;
   runnerOptions?: RunnerOptions;
-  getNextPrompt: (contactType: ContactType) => FielderOptions | undefined;
+  getNextOptions: (contactType: ContactType) => FielderOptions | undefined;
 }
 
-export interface OutPrompt {
+export interface OutOptions {
   kind: 'out';
   contactOptions: ContactOptions;
-  getNextPrompt: (
+  getNextOptions: (
     contactType: ContactType
   ) =>
     | {
@@ -56,35 +56,39 @@ export interface OutPrompt {
     | undefined;
 }
 
-export interface SacrificeFlyPrompt {
+export interface SacrificeFlyOptions {
   kind: 'sacrificeFly';
   fielderOptions: FielderOptions;
   runnersScoredOptions?: number[];
-  getNextPrompt?: (numScored: number) => RunnerOptions | undefined;
+  getNextOptions?: (numScored: number) => RunnerOptions | undefined;
 }
 
-export interface FieldersChoicePrompt {
+export interface FieldersChoiceOptions {
   kind: 'fieldersChoice';
   fielderOptions: FielderOptions;
   outOnPlayOptions: OutOnPlayOptions;
-  getNextPrompt?: (runnerOut: string) => RunnerOptions | undefined;
+  getNextOptions?: (runnerOut: string) => RunnerOptions | undefined;
 }
 
-export interface DoublePlayPrompt {
+export interface DoublePlayOptions {
   kind: 'doublePlay';
   contactOptions: ContactOptions;
-  getNextPrompt: (
+  getNextOptions: (
     contactType: ContactType
   ) => {
     fielderOptions: FielderOptions;
     outOnPlayOptions?: OutOnPlayOptions;
-    getNextPrompt?: (runnersOut: string[]) => RunnerOptions | undefined;
+    getNextOptions?: (runnersOut: string[]) => RunnerOptions | undefined;
   };
 }
 
-export type PlateAppearanceDetailPrompt =
-  | OutPrompt
-  | HitPrompt
-  | SacrificeFlyPrompt
-  | FieldersChoicePrompt
-  | DoublePlayPrompt;
+export type PlateAppearanceDetailOptions =
+  | OutOptions
+  | HitOptions
+  | SacrificeFlyOptions
+  | FieldersChoiceOptions
+  | DoublePlayOptions;
+
+export interface BasePromptProps {
+  setCanSubmit: (value: boolean) => void;
+}

@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { BasepathOutcome, FielderOption, ContactOption } from './types';
 
 interface PromptState {
+  runnerOptions: Record<string, BasepathOutcome[]>;
   runnerChoices: Record<string, BasepathOutcome>;
   contactChoice?: ContactOption;
   fielderChoice?: FielderOption;
@@ -11,6 +12,7 @@ interface PromptState {
 }
 
 const initialState: PromptState = {
+  runnerOptions: {},
   runnerChoices: {},
   outOnPlayChoices: [],
   sacFlyRunsScoredChoice: 1,
@@ -20,6 +22,15 @@ const { reducer, actions: promptActions } = createSlice({
   name: 'prompt',
   initialState,
   reducers: {
+    registerRunnerOptions(
+      state,
+      { payload }: PayloadAction<{ runnerId: string; options: BasepathOutcome[] }>
+    ) {
+      state.runnerOptions[payload.runnerId] = payload.options;
+    },
+    clearRunnerOptions(state, { payload }: PayloadAction<string>) {
+      delete state.runnerOptions[payload];
+    },
     setRunnerChoice(
       state,
       { payload }: PayloadAction<{ runnerId: string; option: BasepathOutcome }>

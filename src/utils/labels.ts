@@ -18,9 +18,9 @@ export const getPositionAbbreviation = (position: FieldingPosition) =>
     [FieldingPosition.SHORTSTOP]: 'SS',
     [FieldingPosition.LEFT_FIELD]: 'LF',
     [FieldingPosition.CENTER_FIELD]: 'CF',
-    [FieldingPosition.RIGHT_FIELD]: 'RF',
     [FieldingPosition.LEFT_CENTER]: 'LCF',
     [FieldingPosition.RIGHT_CENTER]: 'RCF',
+    [FieldingPosition.RIGHT_FIELD]: 'RF',
   }[position]);
 
 export const getPlateAppearanceLabel = (paType: PlateAppearanceType) =>
@@ -57,17 +57,17 @@ export const getHitLabelFromContact = (contactType: HitContactType) =>
 
 export const getRunnerOptionLabel = (option: BasepathOutcome) => {
   if (!option.attemptedAdvance) {
-    return `Stayed at ${_.lowerCase(option.endBase)}`;
+    return `Held at ${_.lowerCase(option.endBase)}`;
   }
   if (option.endBase === null) {
     if (option.successfulAdvance) {
       return 'Scored';
     }
-    return 'Thrown out at home';
+    return 'Out at home';
   }
   const baseName = _.lowerCase(option.endBase);
   if (option.successfulAdvance) {
-    return `Advanced to ${baseName}`;
+    return `Took ${baseName}`;
   }
-  return `Thrown out at ${baseName}`;
+  return `Out at ${baseName}`;
 };

@@ -1,18 +1,15 @@
-import React, { useCallback, useState, useMemo } from 'react';
-import { Box, Button, Layer } from 'grommet';
+import React, { useCallback, useState } from 'react';
+import { Box, Button } from 'grommet';
+
+import EventDetailPrompt from './prompts/EventDetailPrompt';
+
+import { getPlateAppearanceOptions } from 'state/game/selectors';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { getPlateAppearanceLabel } from 'utils/labels';
 
 import { PlateAppearanceType } from 'state/game/types';
 import { gameActions } from 'state/game/slice';
-import {
-  getPlateAppearanceOptions,
-  getCurrentBatter,
-  getNumOuts,
-  getRunners,
-  createPlateAppearancePromptSelector,
-} from 'state/game/selectors';
-import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import { getPlateAppearanceLabel } from 'utils/labels';
-import EventDetailPrompt from './prompts/EventDetailPrompt';
+import { getPlateAppearanceResult } from 'state/prompts/selectors';
 
 const EventReporter = () => {
   const dispatch = useAppDispatch();
@@ -22,8 +19,15 @@ const EventReporter = () => {
   const [pendingPlateAppearance, setPendingPlateAppearance] = useState<PlateAppearanceType>();
 
   const handleSubmitPlateAppearance = useCallback(() => {
+    if (pendingPlateAppearance) {
+      dispatch((dispatch, getState) => {
+        dispatch(
+          gameActions.recordGameEvent(getPlateAppearanceResult(getState(), pendingPlateAppearance))
+        );
+      });
+    }
     setPendingPlateAppearance(undefined);
-  }, [dispatch, setPendingPlateAppearance]);
+  }, [dispatch, pendingPlateAppearance, setPendingPlateAppearance]);
 
   const handleCancelPrompt = useCallback(() => {
     setPendingPlateAppearance(undefined);
