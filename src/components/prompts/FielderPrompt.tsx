@@ -1,10 +1,12 @@
 import React, { FC, useMemo, useCallback, useEffect } from 'react';
+import { Box, Heading } from 'grommet';
+
+import OptionSelector from './OptionSelector';
 
 import { FielderOptions } from 'state/prompts/types';
 import { getSelectedFielderOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-import OptionSelector from './OptionSelector';
 
 const FielderPrompt: FC<FielderOptions> = ({ options }) => {
   const dispatch = useAppDispatch();
@@ -28,7 +30,16 @@ const FielderPrompt: FC<FielderOptions> = ({ options }) => {
   );
 
   return (
-    <OptionSelector options={formattedOptions} value={selectedOption?.id} onChange={handleChange} />
+    <Box>
+      <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
+        Hit to
+      </Heading>
+      <OptionSelector
+        options={formattedOptions}
+        value={selectedOption?.id}
+        onChange={handleChange}
+      />
+    </Box>
   );
 };
 

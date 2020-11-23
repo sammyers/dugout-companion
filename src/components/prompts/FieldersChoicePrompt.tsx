@@ -22,15 +22,15 @@ const FieldersChoicePrompt: FC<FieldersChoiceOptions & BasePromptProps> = ({
 
   useEffect(() => setCanSubmit(canSubmit), [canSubmit, setCanSubmit]);
 
-  const runnerOptions = useMemo(() => getNextOptions?.(selectedOutOnPlay), [
+  const runnerOptions = useMemo(() => selectedOutOnPlay && getNextOptions?.(selectedOutOnPlay), [
     getNextOptions,
     selectedOutOnPlay,
   ]);
 
   return (
     <Box gap="medium">
+      <FielderPrompt {...fielderOptions} />
       <OutOnPlayPrompt {...outOnPlayOptions} />
-      {fielderOptions && <FielderPrompt {...fielderOptions} />}
       {runnerOptions && <RunnerPrompt {...runnerOptions} />}
     </Box>
   );

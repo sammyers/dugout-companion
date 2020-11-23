@@ -1,4 +1,5 @@
 import React, { FC, useCallback, useEffect } from 'react';
+import { Box, Heading } from 'grommet';
 import _ from 'lodash';
 
 import OptionSelector from './OptionSelector';
@@ -41,8 +42,9 @@ const OutOnPlayPrompt: FC<OutOnPlayOptions> = ({ runnerIds, multiple }) => {
 
   if (dontShow) return null;
 
+  let selector;
   if (multiple) {
-    return (
+    selector = (
       <OptionSelector<string>
         multiple
         options={runnerOptions}
@@ -50,13 +52,22 @@ const OutOnPlayPrompt: FC<OutOnPlayOptions> = ({ runnerIds, multiple }) => {
         onChange={handleChangeMultiple}
       />
     );
+  } else {
+    selector = (
+      <OptionSelector
+        options={runnerOptions}
+        value={selectedOptions[0]}
+        onChange={handleChangeSingle}
+      />
+    );
   }
   return (
-    <OptionSelector
-      options={runnerOptions}
-      value={selectedOptions[0]}
-      onChange={handleChangeSingle}
-    />
+    <Box>
+      <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
+        {multiple ? 'Runners' : 'Runner'} out on play
+      </Heading>
+      {selector}
+    </Box>
   );
 };
 

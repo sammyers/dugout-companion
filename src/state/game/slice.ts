@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
+import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
 import { getCurrentBaseForRunner, getBattingTeam, getOnDeckBatter } from './partialSelectors';
 import {
   getNewBase,
@@ -22,7 +23,6 @@ import {
   MovePlayerPayload,
   ChangePlayerPositionPayload,
 } from './types';
-import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
 
 const initialTeamState: Team = {
   name: '',
@@ -176,7 +176,7 @@ const { actions: gameActions, reducer } = createSlice({
             delete state.runners[base];
             state.outs++;
           } else if (runnerId in payload.extraBasesTaken) {
-            const newBase = getNewBase(base, payload.extraBasesTaken[runnerId]);
+            const newBase = payload.extraBasesTaken[runnerId];
             if (newBase) {
               moveRunner(state.runners, base, newBase);
             } else {

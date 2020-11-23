@@ -1,5 +1,5 @@
 import React, { FC, useMemo, useCallback, useEffect } from 'react';
-import { Box } from 'grommet';
+import { Box, Heading } from 'grommet';
 
 import FielderPrompt from './FielderPrompt';
 import OptionSelector from './OptionSelector';
@@ -38,11 +38,16 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
   return (
     <Box gap="medium">
       {runnersScoredOptions && (
-        <OptionSelector
-          options={runnersScoredOptions}
-          value={selectedRunsScored}
-          onChange={handleChangeRunsScored}
-        />
+        <Box gap="xsmall">
+          <Heading level={4} margin="none" alignSelf="center">
+            Runs batted in
+          </Heading>
+          <OptionSelector
+            options={runnersScoredOptions}
+            value={selectedRunsScored}
+            onChange={handleChangeRunsScored}
+          />
+        </Box>
       )}
       {fielderOptions && <FielderPrompt {...fielderOptions} />}
       {runnerOptions && <RunnerPrompt {...runnerOptions} />}

@@ -12,7 +12,6 @@ export const getSelectedOutOnPlayOptions = (state: AppState) => state.prompts.ou
 export const getSelectedSacFlyRunsScored = (state: AppState) =>
   state.prompts.sacFlyRunsScoredChoice;
 
-export const getAllRunnerOptions = (state: AppState) => state.prompts.runnerOptions;
 export const getAllRunnerChoices = (state: AppState) => state.prompts.runnerChoices;
 
 export const getPlateAppearanceResult = (
@@ -24,8 +23,5 @@ export const getPlateAppearanceResult = (
   contactType: getSelectedContactOption(state)?.contactType,
   fieldedBy: getSelectedFielderOption(state)?.position,
   runnersOutOnPlay: getSelectedOutOnPlayOptions(state),
-  ...getExtraRunnerMovementForPlateAppearance(
-    getAllRunnerOptions(state),
-    getAllRunnerChoices(state)
-  ),
+  ...getExtraRunnerMovementForPlateAppearance(getAllRunnerChoices(state)),
 });

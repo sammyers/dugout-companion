@@ -17,6 +17,8 @@ import {
   moveRunnersOnGroundBall,
   removeRunner,
   getPreviousBase,
+  getNewBase,
+  getNumBasesForPlateAppearance,
 } from 'state/game/utils';
 import {
   getHitLabelFromContact,
@@ -123,25 +125,38 @@ const getBasepathOutcomesForBases = (bases: (BaseType | null)[]): BasepathOutcom
   return options.map(({ ...option }, id) => ({ id, ...option }));
 };
 
-export const getRunnerOptions = (runners: BaseRunners, outs: number): RunnerOptions | undefined => {
+export const getRunnerOptions = (
+  runners: BaseRunners,
+  outs: number,
+  expectedBases: Record<string, BaseType | null> = {},
+  allowScoring = true
+): RunnerOptions | undefined => {
   const leadRunner = getLeadRunner(runners);
   if (!leadRunner) return;
   const [currentBase] = leadRunner;
 
-  return getRunnerOptionsRecursive(runners, outs, currentBase, null);
+  return getRunnerOptionsRecursive(runners, outs, currentBase, null, expectedBases, allowScoring);
 };
 const getRunnerOptionsRecursive = (
   runners: BaseRunners,
   outs: number,
   currentBase: BaseType,
-  runnerAhead: BaseType | null
+  runnerAhead: BaseType | null,
+  expectedBases: Record<string, BaseType | null>,
+  allowScoring: boolean
 ): RunnerOptions | undefined => {
   const runnerId = runners[currentBase]!;
   const nextRunner = getTrailingRunner(runners, currentBase);
-  const options = getBasepathOutcomesForBases(getAvailableBases(currentBase, runnerAhead));
+  const options = getBasepathOutcomesForBases(getAvailableBases(currentBase, runnerAhead)).filter(
+    option => option.endBase || allowScoring
+  );
+  const defaultOption =
+    runnerId in expectedBases
+      ? _.findIndex(options, ({ endBase }) => endBase === expectedBases[runnerId])
+      : 0;
 
-  if (!options.length) return;
-  if (!nextRunner) return { runnerId, options };
+  if (options.length < 2) return;
+  if (!nextRunner) return { runnerId, options, defaultOption };
 
   const [nextBase] = nextRunner;
   const newRunners = { ...runners };
@@ -149,6 +164,7 @@ const getRunnerOptionsRecursive = (
   return {
     runnerId,
     options,
+    defaultOption,
     getTrailingRunnerOptions: outcome => {
       let currentOuts = outs;
       let endBase: BaseType | null = currentBase;
@@ -166,7 +182,14 @@ const getRunnerOptionsRecursive = (
         }
       }
 
-      return getRunnerOptionsRecursive(newRunners, currentOuts, nextBase, endBase);
+      return getRunnerOptionsRecursive(
+        newRunners,
+        currentOuts,
+        nextBase,
+        endBase,
+        expectedBases,
+        allowScoring
+      );
     },
   };
 };
@@ -177,175 +200,173 @@ export const getPlateAppearanceDetailPrompt = (
   outs: number,
   runners: BaseRunners
 ): PlateAppearanceDetailOptions | void => {
-  if (paType === PlateAppearanceType.WALK) return;
+  switch (paType) {
+    case PlateAppearanceType.WALK:
+      return;
 
-  if (paType === PlateAppearanceType.HOMERUN) {
-    return {
-      kind: 'hit',
-      contactOptions: {
-        options: getContactOptionsForHit([
-          ContactType.LINE_DRIVE,
-          ContactType.LAZY_FLY,
-          ContactType.LONG_FLY,
-        ]),
-      },
-      getNextOptions: () => ({
-        options: getFielderOptions(outfieldPositions),
-      }),
-    };
-  }
+    case PlateAppearanceType.HOMERUN:
+      return {
+        kind: 'hit',
+        contactOptions: {
+          options: getContactOptionsForHit([ContactType.LINE_DRIVE, ContactType.LONG_FLY]),
+        },
+        getNextOptions: () => ({
+          options: getFielderOptions(outfieldPositions),
+        }),
+      };
 
-  if (paType === PlateAppearanceType.OUT) {
-    return {
-      kind: 'out',
-      contactOptions: {
-        required: true,
-        options: getContactOptionsForOut(),
-      },
-      getNextOptions: (contactType: ContactType) => {
-        const newRunners = { ...runners };
-        if (contactType === ContactType.NONE) return;
-        const fielderOptions = { options: getFielderOptionsForContactType(contactType) };
-        if (outs === 2) {
-          return { fielderOptions };
-        }
-        if (contactType === ContactType.GROUNDER) {
-          moveRunnersOnGroundBall(newRunners);
-        }
-        return {
-          fielderOptions,
-          runnerOptions: getRunnerOptions(newRunners, outs + 1),
-        };
-      },
-    };
-  }
-
-  if (paType === PlateAppearanceType.SACRIFICE_FLY) {
-    const fielderOptions = { options: getFielderOptions(outfieldPositions) };
-    if (_.size(runners) === 1) {
-      return { kind: 'sacrificeFly', fielderOptions };
-    }
-
-    return {
-      kind: 'sacrificeFly',
-      fielderOptions,
-      runnersScoredOptions: _.range(1, _.size(runners) + 1),
-      getNextOptions: numScored => {
-        const newRunners = { ...runners };
-        _.times(numScored, () => {
-          moveRunner(newRunners, getLeadRunner(newRunners)![0], null);
-        });
-
-        return getRunnerOptions(newRunners, outs + 1);
-      },
-    };
-  }
-
-  if (paType === PlateAppearanceType.FIELDERS_CHOICE) {
-    return {
-      kind: 'fieldersChoice',
-      outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
-      fielderOptions: { options: getFielderOptionsForContactType(ContactType.GROUNDER) },
-      getNextOptions:
-        outs < 2
-          ? runnerOut => {
-              const newRunners = { ...runners };
-              removeRunner(newRunners, runnerOut);
-              moveRunnersOnGroundBall(newRunners);
-              newRunners[BaseType.FIRST] = batterId;
-              return getRunnerOptions(newRunners, outs + 1);
-            }
-          : undefined,
-    };
-  }
-
-  if (paType === PlateAppearanceType.DOUBLE_PLAY) {
-    return {
-      kind: 'doublePlay',
-      contactOptions: {
-        options: getContactOptionsForOut(inPlayContactOptions),
-        required: true,
-      },
-      getNextOptions: contactType => {
-        const fielderOptions = { options: getFielderOptionsForContactType(contactType) };
-        if (_.size(runners) === 1) {
-          return { fielderOptions };
-        }
-
-        if (contactType === ContactType.GROUNDER) {
+    case PlateAppearanceType.OUT:
+      return {
+        kind: 'out',
+        contactOptions: {
+          required: true,
+          options: getContactOptionsForOut(),
+        },
+        getNextOptions: (contactType: ContactType) => {
+          const newRunners = { ...runners };
+          if (contactType === ContactType.NONE) return;
+          const fielderOptions = { options: getFielderOptionsForContactType(contactType) };
+          if (outs === 2) {
+            return { fielderOptions };
+          }
+          if (contactType === ContactType.GROUNDER) {
+            moveRunnersOnGroundBall(newRunners);
+          }
           return {
             fielderOptions,
-            outOnPlayOptions: {
-              runnerIds: [batterId, ...(_.values(runners) as string[])],
-              multiple: true,
-            },
+            runnerOptions: getRunnerOptions(
+              newRunners,
+              outs + 1,
+              {},
+              contactType === ContactType.GROUNDER
+            ),
+          };
+        },
+      };
+
+    case PlateAppearanceType.SACRIFICE_FLY:
+      const fielderOptions = { options: getFielderOptions(outfieldPositions) };
+      if (_.size(runners) === 1) {
+        return { kind: 'sacrificeFly', fielderOptions };
+      }
+
+      return {
+        kind: 'sacrificeFly',
+        fielderOptions,
+        runnersScoredOptions: _.range(1, _.size(runners) + 1),
+        getNextOptions: numScored => {
+          const newRunners = { ...runners };
+          _.times(numScored, () => {
+            moveRunner(newRunners, getLeadRunner(newRunners)![0], null);
+          });
+
+          return getRunnerOptions(newRunners, outs + 1, {}, false);
+        },
+      };
+
+    case PlateAppearanceType.FIELDERS_CHOICE:
+      return {
+        kind: 'fieldersChoice',
+        outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
+        fielderOptions: { options: getFielderOptionsForContactType(ContactType.GROUNDER) },
+        getNextOptions:
+          outs < 2
+            ? runnerOut => {
+                const newRunners = { ...runners };
+                removeRunner(newRunners, runnerOut);
+                moveRunnersOnGroundBall(newRunners);
+                newRunners[BaseType.FIRST] = batterId;
+                return getRunnerOptions(newRunners, outs + 1);
+              }
+            : undefined,
+      };
+
+    case PlateAppearanceType.DOUBLE_PLAY:
+      return {
+        kind: 'doublePlay',
+        contactOptions: {
+          options: getContactOptionsForOut(inPlayContactOptions),
+          required: true,
+        },
+        getNextOptions: contactType => {
+          const fielderOptions = { options: getFielderOptionsForContactType(contactType) };
+          if (_.size(runners) === 1) {
+            return { fielderOptions };
+          }
+
+          if (contactType === ContactType.GROUNDER) {
+            return {
+              fielderOptions,
+              outOnPlayOptions: {
+                runnerIds: [batterId, ...(_.values(runners) as string[])],
+                multiple: true,
+              },
+              getNextOptions:
+                outs === 0
+                  ? runnersOut => {
+                      const newRunners = { ...runners };
+                      runnersOut.forEach(runnerId => removeRunner(newRunners, runnerId));
+                      moveRunnersOnGroundBall(newRunners);
+                      if (!runnersOut.includes(batterId)) {
+                        // the rare fielder's choice double play
+                        newRunners[BaseType.FIRST] = batterId;
+                      }
+                      return getRunnerOptions(newRunners, outs + 2);
+                    }
+                  : undefined,
+            };
+          }
+
+          return {
+            outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
+            fielderOptions,
             getNextOptions:
               outs === 0
                 ? runnersOut => {
                     const newRunners = { ...runners };
-                    runnersOut.forEach(runnerId => removeRunner(newRunners, runnerId));
-                    moveRunnersOnGroundBall(newRunners);
-                    if (!runnersOut.includes(batterId)) {
-                      // the rare fielder's choice double play
-                      newRunners[BaseType.FIRST] = batterId;
-                    }
+                    removeRunner(newRunners, runnersOut[0]);
                     return getRunnerOptions(newRunners, outs + 2);
                   }
                 : undefined,
           };
-        }
+        },
+      };
 
-        return {
-          outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
-          fielderOptions,
-          getNextOptions:
-            outs === 0
-              ? runnersOut => {
-                  const newRunners = { ...runners };
-                  removeRunner(newRunners, runnersOut[0]);
-                  return getRunnerOptions(newRunners, outs + 2);
-                }
-              : undefined,
-        };
-      },
-    };
+    default:
+      const [defaultRunnerPositions] = getDefaultRunnersAfterPlateAppearance(
+        runners,
+        paType,
+        batterId
+      );
+
+      const runnersToBases = _.invert(runners) as Record<string, BaseType>;
+      const expectedBases = _.mapValues(runnersToBases, (base: BaseType) =>
+        getNewBase(base, getNumBasesForPlateAppearance(paType))
+      );
+
+      return {
+        kind: 'hit',
+        contactOptions: { options: getContactOptionsForHit() },
+        runnerOptions: getRunnerOptions(defaultRunnerPositions, outs, expectedBases),
+        getNextOptions: contactType => ({
+          options: getFielderOptionsForContactType(contactType),
+        }),
+      };
   }
-
-  const [defaultRunnerPositions] = getDefaultRunnersAfterPlateAppearance(runners, paType, batterId);
-  return {
-    kind: 'hit',
-    contactOptions: { options: getContactOptionsForHit() },
-    runnerOptions: getRunnerOptions(defaultRunnerPositions, outs),
-    getNextOptions: contactType => ({ options: getFielderOptionsForContactType(contactType) }),
-  };
 };
 
 export const getExtraRunnerMovementForPlateAppearance = (
-  allRunnerOptions: Record<string, BasepathOutcome[]>,
   allRunnerChoices: Record<string, BasepathOutcome>
 ) => {
-  const extraBasesTaken: Record<string, number> = {};
+  const extraBasesTaken: Record<string, BaseType | null> = {};
   const extraOutsOnBasepaths: Record<string, BaseType | null> = {};
 
   _.forEach(allRunnerChoices, (outcome, runnerId) => {
-    const defaultChoice = _.findLast(
-      allRunnerOptions[runnerId],
-      ({ attemptedAdvance }) => !attemptedAdvance
-    )!;
-    const extraBases = getBaseNumber(outcome.endBase) - getBaseNumber(defaultChoice.endBase);
-    if (extraBases !== 0) {
-      if (outcome.attemptedAdvance) {
-        if (outcome.successfulAdvance) {
-          extraBasesTaken[runnerId] = extraBases;
-        } else {
-          extraOutsOnBasepaths[runnerId] = outcome.endBase;
-          if (extraBases > 1) {
-            extraBasesTaken[runnerId] = extraBases - 1;
-          }
-        }
+    if (outcome.attemptedAdvance) {
+      if (outcome.successfulAdvance) {
+        extraBasesTaken[runnerId] = outcome.endBase;
       } else {
-        // this should only come up in the "negative bases taken" case
-        extraBasesTaken[runnerId] = extraBases;
+        extraOutsOnBasepaths[runnerId] = outcome.endBase;
       }
     }
   });

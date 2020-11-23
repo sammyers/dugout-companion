@@ -62,7 +62,7 @@ export interface PlateAppearanceResult {
   fieldedBy?: FieldingPosition;
   runnersOutOnPlay: string[];
   extraBasesTaken: {
-    [runnerId: string]: number;
+    [runnerId: string]: BaseType | null;
   };
   extraOutsOnBasepaths: {
     [runnerId: string]: BaseType | null;

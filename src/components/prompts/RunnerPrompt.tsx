@@ -15,18 +15,18 @@ import { RunnerOptions } from 'state/prompts/types';
 const RunnerPrompt: FC<RunnerOptions & { nested?: boolean }> = ({
   runnerId,
   options,
+  defaultOption,
   getTrailingRunnerOptions,
   nested,
 }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(promptActions.registerRunnerOptions({ runnerId, options }));
-    dispatch(promptActions.setRunnerChoice({ runnerId, option: options[0] }));
+    dispatch(promptActions.setRunnerChoice({ runnerId, option: options[defaultOption] }));
     return () => {
       dispatch(promptActions.clearRunnerChoice(runnerId));
     };
-  }, [dispatch, runnerId, options]);
+  }, [dispatch, runnerId, options, defaultOption]);
 
   const selectedOption = useAppSelector(state => getSelectedRunnerOption(state, runnerId));
   const runnerName = useAppSelector(state => getShortPlayerName(state, runnerId));
@@ -50,7 +50,7 @@ const RunnerPrompt: FC<RunnerOptions & { nested?: boolean }> = ({
   return (
     <Box gap="xsmall">
       {!nested && (
-        <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
+        <Heading level={4} margin="none" alignSelf="center">
           Runner Movement
         </Heading>
       )}

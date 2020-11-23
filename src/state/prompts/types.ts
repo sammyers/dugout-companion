@@ -20,6 +20,7 @@ export type BasepathOutcome = { id: number } & (
 export interface RunnerOptions {
   runnerId: string;
   options: BasepathOutcome[];
+  defaultOption: number;
   getTrailingRunnerOptions?: (outcome: BasepathOutcome) => RunnerOptions | undefined;
 }
 export interface FielderOption {

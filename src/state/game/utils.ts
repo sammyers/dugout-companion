@@ -10,8 +10,12 @@ export const getBaseForRunner = (runners: BaseRunners, runnerId: string) =>
 export const moveRunner = (runners: BaseRunners, startBase: BaseType, endBase: BaseType | null) => {
   if (endBase) {
     runners[endBase] = runners[startBase];
+    delete runners[startBase];
+    return false;
+  } else {
+    delete runners[startBase];
+    return true;
   }
-  delete runners[startBase];
 };
 
 export const removeRunner = (runners: BaseRunners, runnerId: string) => {
@@ -21,6 +25,7 @@ export const removeRunner = (runners: BaseRunners, runnerId: string) => {
 // Find the base a runner should occupy if advanced by some number of bases.
 // Return null if the runner has scored.
 export const getNewBase = (currentBase: BaseType, numAdvanced: number = 1) => {
+  if (numAdvanced === -1) return getPreviousBase(currentBase)!;
   if (numAdvanced === 0) return currentBase;
   if (currentBase === BaseType.THIRD) return null;
   if (currentBase === BaseType.SECOND) {
@@ -32,7 +37,7 @@ export const getNewBase = (currentBase: BaseType, numAdvanced: number = 1) => {
   return BaseType.SECOND;
 };
 
-const getNumBasesForPlateAppearance = (paType: PlateAppearanceType) => {
+export const getNumBasesForPlateAppearance = (paType: PlateAppearanceType) => {
   switch (paType) {
     case PlateAppearanceType.HOMERUN:
       return 4;
@@ -112,28 +117,23 @@ export const getDefaultRunnersAfterPlateAppearance = (
   batterId: string
 ): [BaseRunners, number] => {
   let runsScored = 0;
-  const newBaseRunners: BaseRunners = {};
-
+  const newRunners = { ...runners };
   const numBasesAdvanced = getNumBasesForPlateAppearance(paType);
-  forEachRunner(runners, (runnerId, base) => {
-    if (paType === PlateAppearanceType.WALK && !mustRunnerAdvance(base, runners)) {
-      newBaseRunners[base] = runnerId;
-    } else {
-      const newBase = getNewBase(base as BaseType, numBasesAdvanced);
-      if (newBase) {
-        newBaseRunners[newBase] = runnerId;
-      } else {
-        runsScored++;
+
+  _.times(numBasesAdvanced, i => {
+    forEachRunner(newRunners, (_runnerId, base) => {
+      if (mustRunnerAdvance(base, newRunners)) {
+        if (moveRunner(newRunners, base, getNewBase(base))) {
+          runsScored++;
+        }
       }
+    });
+    if (i === 0 && getEndBaseForBatterRunner(paType)) {
+      newRunners[BaseType.FIRST] = batterId;
     }
   });
 
-  const endBaseForBatterRunner = getEndBaseForBatterRunner(paType);
-  if (endBaseForBatterRunner) {
-    newBaseRunners[endBaseForBatterRunner] = batterId;
-  }
-
-  return [newBaseRunners, runsScored];
+  return [newRunners, runsScored];
 };
 
 export const moveRunnersOnGroundBall = (runners: BaseRunners) => {
@@ -147,3 +147,6 @@ export const moveRunnersOnGroundBall = (runners: BaseRunners) => {
   });
   return runs;
 };
+
+export const mustAllRunnersAdvance = (runners: BaseRunners) =>
+  _.every(runners, (_runnerId, base) => mustRunnerAdvance(base as BaseType, runners));
