@@ -12,10 +12,13 @@ const initialStats: PlayerStats = {
   homeRuns: 0,
   walks: 0,
   stolenBases: 0,
+  caughtStealing: 0,
   runsBattedIn: 0,
   runsScored: 0,
   strikeouts: 0,
   sacrificeFlies: 0,
+  groundIntoDoublePlays: 0,
+  leftOnBase: 0,
 };
 
 const doesPlayerExist = (newPlayer: NewPlayer, players: Record<string, Player>) =>

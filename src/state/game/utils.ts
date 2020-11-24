@@ -89,13 +89,18 @@ export const getPreviousBase = (base: BaseType | null) => {
   }
 };
 
-export const mustRunnerAdvance = (base: BaseType, runners: BaseRunners): boolean => {
+export const mustRunnerAdvance = (
+  base: BaseType,
+  runners: BaseRunners,
+  batterEndBase = BaseType.FIRST
+): boolean => {
   const prevBase = getPreviousBase(base);
 
+  if (getBaseNumber(base) - getBaseNumber(batterEndBase) <= 0) return true;
   if (!prevBase) return true;
   if (!runners[prevBase]) return false;
 
-  return mustRunnerAdvance(prevBase, runners);
+  return mustRunnerAdvance(prevBase, runners, batterEndBase);
 };
 
 export const getSortedRunners = (runners: BaseRunners) =>
@@ -124,7 +129,7 @@ export const getDefaultRunnersAfterPlateAppearance = (
 
   _.times(numBasesAdvanced, i => {
     forEachRunner(newRunners, (runnerId, base) => {
-      if (mustRunnerAdvance(base, newRunners)) {
+      if (mustRunnerAdvance(base, newRunners, getEndBaseForBatterRunner(paType)!)) {
         if (moveRunner(newRunners, base, getNewBase(base))) {
           runnersScored.push(runnerId);
         }

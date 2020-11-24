@@ -1,4 +1,4 @@
-export interface PlayerStats {
+export interface CountingStats {
   atBats: number;
   hits: number;
   doubles: number;
@@ -6,16 +6,24 @@ export interface PlayerStats {
   homeRuns: number;
   walks: number;
   stolenBases: number;
+  caughtStealing: number;
   runsBattedIn: number;
   runsScored: number;
   strikeouts: number;
   sacrificeFlies: number;
-  battingAverage?: number;
-  onBasePercentage?: number;
-  sluggingPercentage?: number;
-  onBasePlusSlugging?: number;
-  isolatedPower?: number;
+  groundIntoDoublePlays: number;
+  leftOnBase: number;
 }
+
+export interface RateStats {
+  battingAverage: number;
+  onBasePercentage: number;
+  sluggingPercentage: number;
+  onBasePlusSlugging: number;
+  isolatedPower: number;
+}
+
+export type PlayerStats = CountingStats & Partial<RateStats>;
 
 export interface NewPlayer {
   firstName: string;

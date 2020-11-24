@@ -111,3 +111,5 @@ export const createPlateAppearancePromptSelector = (paType: PlateAppearanceType)
   createSelector(getCurrentBatter, getNumOuts, getRunners, (batterId, outs, runners) =>
     getPlateAppearanceDetailPrompt(paType, batterId!, outs, runners)
   );
+
+export const getGameHistory = (state: AppState) => state.game.gameHistory;

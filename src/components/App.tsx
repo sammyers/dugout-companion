@@ -5,6 +5,7 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import TopBar from './TopBar';
 import Bases from './Bases';
 import Teams from './Teams';
+import BoxScore from './BoxScore';
 
 import theme from 'theme';
 import { players } from 'state/players/testData';
@@ -32,6 +33,9 @@ const App = () => {
             </Route>
             <Route path="/field">
               <Bases />
+            </Route>
+            <Route path="/box-score">
+              <BoxScore />
             </Route>
             <Route path="/">
               <Redirect to="/teams" />

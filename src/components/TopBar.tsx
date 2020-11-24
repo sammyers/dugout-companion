@@ -25,6 +25,7 @@ const TopBar = () => {
       <Nav direction="row" pad="medium">
         <AnchorLink to="/teams">Teams</AnchorLink>
         {gameInProgress && <AnchorLink to="/field">Field</AnchorLink>}
+        {gameInProgress && <AnchorLink to="/box-score">Box Score</AnchorLink>}
       </Nav>
       {gameInProgress ? (
         <ScoreBug />
