@@ -23,5 +23,6 @@ export const getPlateAppearanceResult = (
   contactType: getSelectedContactOption(state)?.contactType,
   fieldedBy: getSelectedFielderOption(state)?.position,
   runnersOutOnPlay: getSelectedOutOnPlayOptions(state),
+  runsScoredOnSacFly: getSelectedSacFlyRunsScored(state),
   ...getExtraRunnerMovementForPlateAppearance(getAllRunnerChoices(state)),
 });

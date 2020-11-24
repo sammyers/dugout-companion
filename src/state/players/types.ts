@@ -9,7 +9,12 @@ export interface PlayerStats {
   runsBattedIn: number;
   runsScored: number;
   strikeouts: number;
-  sacrifices: number;
+  sacrificeFlies: number;
+  battingAverage?: number;
+  onBasePercentage?: number;
+  sluggingPercentage?: number;
+  onBasePlusSlugging?: number;
+  isolatedPower?: number;
 }
 
 export interface NewPlayer {

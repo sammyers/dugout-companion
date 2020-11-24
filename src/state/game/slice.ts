@@ -10,6 +10,8 @@ import {
   forEachRunner,
   moveRunner,
   removeRunner,
+  moveRunnersOnGroundBall,
+  getLeadRunner,
 } from './utils';
 
 import {
@@ -22,6 +24,8 @@ import {
   BaseType,
   MovePlayerPayload,
   ChangePlayerPositionPayload,
+  RecordedPlay,
+  ContactType,
 } from './types';
 
 const initialTeamState: Team = {
@@ -112,6 +116,21 @@ const { actions: gameActions, reducer } = createSlice({
       state.started = true;
     },
     recordGameEvent(state, { payload }: PayloadAction<GameEvent>) {
+      const { atBat, inning, halfInning, outs, runners, score } = state;
+      const recordedPlay: RecordedPlay = {
+        event: payload,
+        gameState: { atBat, inning, halfInning, outs, runners, score },
+        runnersBattedIn: [],
+        runnersScored: [],
+      };
+
+      const recordRunnersScored = (runners: string[], battedIn = true) => {
+        if (battedIn) {
+          recordedPlay.runnersBattedIn.push(...runners);
+        }
+        recordedPlay.runnersScored.push(...runners);
+      };
+
       if (payload.kind === 'stolenBaseAttempt') {
         const startBase = getCurrentBaseForRunner(state, payload.runnerId);
         if (payload.success) {
@@ -122,6 +141,7 @@ const { actions: gameActions, reducer } = createSlice({
           } else {
             // runner scored
             updateScore(state);
+            recordRunnersScored([payload.runnerId], false);
           }
         } else {
           delete state.runners[startBase];
@@ -131,60 +151,87 @@ const { actions: gameActions, reducer } = createSlice({
         switch (payload.type) {
           case PlateAppearanceType.HOMERUN:
             updateScore(state, _.size(state.runners) + 1);
+            recordRunnersScored([...(_.values(state.runners) as string[]), atBat!]);
             state.runners = {};
             break;
           case PlateAppearanceType.TRIPLE:
             updateScore(state, _.size(state.runners));
-            state.runners = { [BaseType.THIRD]: state.atBat };
+            recordRunnersScored(_.values(state.runners) as string[]);
+            state.runners = { [BaseType.THIRD]: atBat };
             break;
           case PlateAppearanceType.DOUBLE:
           case PlateAppearanceType.SINGLE:
           case PlateAppearanceType.WALK:
-            const [newBaseRunners, runsScored] = getDefaultRunnersAfterPlateAppearance(
+            const [newBaseRunners, runnersScored] = getDefaultRunnersAfterPlateAppearance(
               state.runners,
               payload.type,
-              state.atBat!
+              atBat!
             );
             state.runners = newBaseRunners;
-            updateScore(state, runsScored);
+            updateScore(state, runnersScored.length);
+            recordRunnersScored(runnersScored);
             break;
           case PlateAppearanceType.SACRIFICE_FLY:
-            delete state.runners[BaseType.THIRD];
+            _.times(payload.runsScoredOnSacFly!, () => {
+              const [base, runnerId] = getLeadRunner(runners)!;
+              moveRunner(runners, base, null);
+              updateScore(state);
+              recordRunnersScored([runnerId]);
+            });
             state.outs++;
-            updateScore(state);
             break;
-          case PlateAppearanceType.FIELDERS_CHOICE:
-            state.outs++;
+          case PlateAppearanceType.FIELDERS_CHOICE: {
             removeRunner(state.runners, payload.runnersOutOnPlay[0]);
-            state.runners[BaseType.FIRST] = state.atBat;
-            break;
-          case PlateAppearanceType.DOUBLE_PLAY:
-            if (payload.runnersOutOnPlay.length > 1) {
-              state.runners[BaseType.FIRST] = state.atBat;
+            const runnersScored = moveRunnersOnGroundBall(state.runners);
+            state.runners[BaseType.FIRST] = atBat;
+            if (runnersScored.length && outs < 2) {
+              updateScore(state);
+              recordRunnersScored(runnersScored);
             }
+            state.outs++;
+            break;
+          }
+          case PlateAppearanceType.DOUBLE_PLAY:
+            state.outs += 2;
             payload.runnersOutOnPlay.forEach(runnerId => {
               removeRunner(state.runners, runnerId);
             });
+            if (payload.contactType === ContactType.GROUNDER) {
+              const runnersScored = moveRunnersOnGroundBall(state.runners);
+              if (runnersScored.length && outs === 0) {
+                updateScore(state, runnersScored.length);
+                recordRunnersScored(runnersScored, false);
+              }
+            }
+            if (!payload.runnersOutOnPlay.includes(atBat!)) {
+              state.runners[BaseType.FIRST] = atBat;
+            }
             break;
           case PlateAppearanceType.OUT:
+            if (payload.contactType === ContactType.GROUNDER) {
+              const runnersScored = moveRunnersOnGroundBall(state.runners);
+              if (runnersScored.length && outs < 2) {
+                updateScore(state, runnersScored.length);
+                recordRunnersScored(runnersScored);
+              }
+            }
             state.outs++;
             break;
         }
 
         forEachRunner(state.runners, (runnerId, base) => {
-          if (runnerId in payload.extraOutsOnBasepaths) {
+          if (runnerId in payload.outsOnBasepaths) {
             delete state.runners[base];
             state.outs++;
-          } else if (runnerId in payload.extraBasesTaken) {
-            const newBase = payload.extraBasesTaken[runnerId];
-            if (newBase) {
-              moveRunner(state.runners, base, newBase);
-            } else {
-              delete state.runners[base];
+          } else if (runnerId in payload.basesTaken) {
+            if (moveRunner(state.runners, base, payload.basesTaken[runnerId])) {
               updateScore(state);
+              recordRunnersScored([runnerId], payload.type !== PlateAppearanceType.DOUBLE_PLAY);
             }
           }
         });
+
+        state.gameHistory.push(recordedPlay);
 
         const nextBatter = getOnDeckBatter(state);
         if (state.outs === 3) {
@@ -195,7 +242,7 @@ const { actions: gameActions, reducer } = createSlice({
           if (state.halfInning === HalfInning.BOTTOM) {
             state.inning++;
           }
-          state.halfInning = 1 - state.halfInning;
+          state.halfInning = 1 - halfInning;
         } else {
           state.atBat = nextBatter;
         }

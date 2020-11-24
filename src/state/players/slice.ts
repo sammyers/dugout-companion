@@ -15,7 +15,7 @@ const initialStats: PlayerStats = {
   runsBattedIn: 0,
   runsScored: 0,
   strikeouts: 0,
-  sacrifices: 0,
+  sacrificeFlies: 0,
 };
 
 const doesPlayerExist = (newPlayer: NewPlayer, players: Record<string, Player>) =>

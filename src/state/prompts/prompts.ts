@@ -19,6 +19,7 @@ import {
   getPreviousBase,
   getNewBase,
   getNumBasesForPlateAppearance,
+  getLeadRunner,
 } from 'state/game/utils';
 import {
   getHitLabelFromContact,
@@ -28,7 +29,6 @@ import {
 
 import { PlateAppearanceDetailOptions, RunnerOptions, BasepathOutcome } from './types';
 
-const getLeadRunner = (runners: BaseRunners) => _.last(getSortedRunners(runners));
 const getTrailingRunner = (runners: BaseRunners, leadBase: BaseType | null) => {
   if (leadBase === null) {
     return getLeadRunner(runners);
@@ -282,6 +282,7 @@ export const getPlateAppearanceDetailPrompt = (
       };
 
     case PlateAppearanceType.DOUBLE_PLAY:
+      const runnerIds = _.map(_.reverse(getSortedRunners(runners)), 1);
       return {
         kind: 'doublePlay',
         contactOptions: {
@@ -298,7 +299,7 @@ export const getPlateAppearanceDetailPrompt = (
             return {
               fielderOptions,
               outOnPlayOptions: {
-                runnerIds: [batterId, ...(_.values(runners) as string[])],
+                runnerIds: [...runnerIds, batterId],
                 multiple: true,
               },
               getNextOptions:
@@ -318,7 +319,7 @@ export const getPlateAppearanceDetailPrompt = (
           }
 
           return {
-            outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
+            outOnPlayOptions: { runnerIds },
             fielderOptions,
             getNextOptions:
               outs === 0
@@ -358,18 +359,18 @@ export const getPlateAppearanceDetailPrompt = (
 export const getExtraRunnerMovementForPlateAppearance = (
   allRunnerChoices: Record<string, BasepathOutcome>
 ) => {
-  const extraBasesTaken: Record<string, BaseType | null> = {};
-  const extraOutsOnBasepaths: Record<string, BaseType | null> = {};
+  const basesTaken: Record<string, BaseType | null> = {};
+  const outsOnBasepaths: Record<string, BaseType | null> = {};
 
   _.forEach(allRunnerChoices, (outcome, runnerId) => {
     if (outcome.attemptedAdvance) {
       if (outcome.successfulAdvance) {
-        extraBasesTaken[runnerId] = outcome.endBase;
+        basesTaken[runnerId] = outcome.endBase;
       } else {
-        extraOutsOnBasepaths[runnerId] = outcome.endBase;
+        outsOnBasepaths[runnerId] = outcome.endBase;
       }
     }
   });
 
-  return { extraBasesTaken, extraOutsOnBasepaths };
+  return { basesTaken, outsOnBasepaths };
 };

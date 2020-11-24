@@ -103,6 +103,8 @@ export const getSortedRunners = (runners: BaseRunners) =>
     ([baseA], [baseB]) => getBaseNumber(baseA) - getBaseNumber(baseB)
   );
 
+export const getLeadRunner = (runners: BaseRunners) => _.last(getSortedRunners(runners));
+
 export const forEachRunner = (
   runners: BaseRunners,
   callback: (runnerId: string, base: BaseType) => void | boolean
@@ -115,16 +117,16 @@ export const getDefaultRunnersAfterPlateAppearance = (
   runners: BaseRunners,
   paType: PlateAppearanceType,
   batterId: string
-): [BaseRunners, number] => {
-  let runsScored = 0;
+): [BaseRunners, string[]] => {
+  let runnersScored: string[] = [];
   const newRunners = { ...runners };
   const numBasesAdvanced = getNumBasesForPlateAppearance(paType);
 
   _.times(numBasesAdvanced, i => {
-    forEachRunner(newRunners, (_runnerId, base) => {
+    forEachRunner(newRunners, (runnerId, base) => {
       if (mustRunnerAdvance(base, newRunners)) {
         if (moveRunner(newRunners, base, getNewBase(base))) {
-          runsScored++;
+          runnersScored.push(runnerId);
         }
       }
     });
@@ -133,19 +135,19 @@ export const getDefaultRunnersAfterPlateAppearance = (
     }
   });
 
-  return [newRunners, runsScored];
+  return [newRunners, runnersScored];
 };
 
 export const moveRunnersOnGroundBall = (runners: BaseRunners) => {
-  let runs = 0;
-  forEachRunner(runners, (_runnerId, base) => {
+  let runnersScored: string[] = [];
+  forEachRunner(runners, (runnerId, base) => {
     if (mustRunnerAdvance(base, runners)) {
-      const newBase = getNewBase(base);
-      moveRunner(runners, base, newBase);
-      if (newBase === null) runs++;
+      if (moveRunner(runners, base, getNewBase(base))) {
+        runnersScored.push(runnerId);
+      }
     }
   });
-  return runs;
+  return runnersScored;
 };
 
 export const mustAllRunnersAdvance = (runners: BaseRunners) =>

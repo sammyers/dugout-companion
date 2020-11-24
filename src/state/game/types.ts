@@ -61,12 +61,13 @@ export interface PlateAppearanceResult {
   contactType?: ContactType;
   fieldedBy?: FieldingPosition;
   runnersOutOnPlay: string[];
-  extraBasesTaken: {
+  basesTaken: {
     [runnerId: string]: BaseType | null;
   };
-  extraOutsOnBasepaths: {
+  outsOnBasepaths: {
     [runnerId: string]: BaseType | null;
   };
+  runsScoredOnSacFly?: number;
 }
 
 export interface StolenBaseAttempt {
@@ -86,8 +87,15 @@ export interface GameState {
   upNextHalfInning?: string;
   runners: BaseRunners;
   outs: number;
-  gameHistory: GameEvent[];
+  gameHistory: RecordedPlay[];
   score: [number, number];
+}
+
+export interface RecordedPlay {
+  gameState: Pick<GameState, 'atBat' | 'inning' | 'halfInning' | 'runners' | 'outs' | 'score'>;
+  event: GameEvent;
+  runnersScored: string[];
+  runnersBattedIn: string[];
 }
 
 export interface AddPlayerPayload {
