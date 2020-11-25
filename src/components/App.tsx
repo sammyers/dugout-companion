@@ -6,6 +6,7 @@ import TopBar from './TopBar';
 import Bases from './Bases';
 import Teams from './Teams';
 import BoxScore from './BoxScore';
+import Plays from './Plays';
 
 import theme from 'theme';
 import { players } from 'state/players/testData';
@@ -36,6 +37,9 @@ const App = () => {
             </Route>
             <Route path="/box-score">
               <BoxScore />
+            </Route>
+            <Route path="/plays">
+              <Plays />
             </Route>
             <Route path="/">
               <Redirect to="/teams" />

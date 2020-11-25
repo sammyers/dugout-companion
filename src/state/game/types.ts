@@ -43,6 +43,14 @@ export enum ContactType {
   LAZY_FLY = 'LAZY_FLY',
   LONG_FLY = 'LONG_FLY',
 }
+export type HitType = Exclude<
+  PlateAppearanceType,
+  | PlateAppearanceType.DOUBLE_PLAY
+  | PlateAppearanceType.FIELDERS_CHOICE
+  | PlateAppearanceType.OUT
+  | PlateAppearanceType.SACRIFICE_FLY
+  | PlateAppearanceType.WALK
+>;
 export type HitContactType = Exclude<ContactType, ContactType.NONE>;
 
 export interface Team {
@@ -92,10 +100,14 @@ export interface GameState {
 }
 
 export interface RecordedPlay {
-  gameState: Pick<GameState, 'atBat' | 'inning' | 'halfInning' | 'runners' | 'outs' | 'score'>;
+  gameState: Required<
+    Pick<GameState, 'atBat' | 'inning' | 'halfInning' | 'runners' | 'outs' | 'score'>
+  >;
   event: GameEvent;
   runnersScored: string[];
   runnersBattedIn: string[];
+  runnersAfter: BaseRunners;
+  scoreAfter: [number, number];
 }
 
 export interface AddPlayerPayload {

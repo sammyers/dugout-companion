@@ -119,9 +119,11 @@ const { actions: gameActions, reducer } = createSlice({
       const { atBat, inning, halfInning, outs, runners, score } = state;
       const recordedPlay: RecordedPlay = {
         event: payload,
-        gameState: { atBat, inning, halfInning, outs, runners, score },
+        gameState: { atBat: atBat!, inning, halfInning, outs, runners, score },
         runnersBattedIn: [],
         runnersScored: [],
+        runnersAfter: runners,
+        scoreAfter: score,
       };
 
       const recordRunnersScored = (runners: string[], battedIn = true) => {
@@ -231,6 +233,8 @@ const { actions: gameActions, reducer } = createSlice({
           }
         });
 
+        recordedPlay.runnersAfter = state.runners;
+        recordedPlay.scoreAfter = state.score;
         state.gameHistory.push(recordedPlay);
 
         const nextBatter = getOnDeckBatter(state);

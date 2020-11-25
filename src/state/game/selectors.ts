@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
 
 import { AppState } from 'state/store';
-import { BaseRunners, TeamRole, PlateAppearanceType, HalfInning } from './types';
+import { BaseRunners, TeamRole, PlateAppearanceType, HalfInning, FieldingPosition } from './types';
 import { getPlateAppearanceDetailPrompt } from 'state/prompts/prompts';
 
 const MIN_PLAYERS_TO_PLAY = 8;
@@ -41,6 +41,9 @@ export const getBatterName = createSelector(
   getBatter,
   (state, batterId) => (batterId ? getShortPlayerName(state, batterId) : '')
 );
+
+export const getPlayerAtPosition = (state: AppState, team: TeamRole, position: FieldingPosition) =>
+  _.findKey(state.game.teams[team].positions, p => p === position)!;
 
 export const getPlayerPosition = (state: AppState, playerId: string) => {
   const { positions } = _.find(getTeams(state), ({ lineup }) => lineup.includes(playerId))!;
