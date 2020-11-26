@@ -2,10 +2,11 @@ import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
 import { getShortPlayerName, getAllPlayersList } from 'state/players/selectors';
+import { getPlateAppearanceDetailPrompt } from 'state/prompts/prompts';
+import { getAvailablePositionsForTeam, shouldTeamUseFourOutfielders } from './utils';
 
 import { AppState } from 'state/store';
 import { BaseRunners, TeamRole, PlateAppearanceType, HalfInning, FieldingPosition } from './types';
-import { getPlateAppearanceDetailPrompt } from 'state/prompts/prompts';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -26,6 +27,15 @@ export const getBattingLineup = createSelector(
   getTeams,
   getBattingTeam,
   (teams, battingTeam) => teams[battingTeam].lineup
+);
+
+export const getAvailablePositions = (state: AppState, team: TeamRole) =>
+  getAvailablePositionsForTeam(getTeams(state)[team]);
+
+export const doesFieldingTeamHaveFourOutfielders = createSelector(
+  getTeams,
+  getHalfInning,
+  (teams, halfInning) => shouldTeamUseFourOutfielders(teams[1 - halfInning])
 );
 
 export const getRunnerNames = createSelector(
@@ -111,8 +121,13 @@ export const getInTheHoleBatterName = createSelector(
 );
 
 export const createPlateAppearancePromptSelector = (paType: PlateAppearanceType) =>
-  createSelector(getCurrentBatter, getNumOuts, getRunners, (batterId, outs, runners) =>
-    getPlateAppearanceDetailPrompt(paType, batterId!, outs, runners)
+  createSelector(
+    getCurrentBatter,
+    getNumOuts,
+    getRunners,
+    doesFieldingTeamHaveFourOutfielders,
+    (batterId, outs, runners, fourOutfielders) =>
+      getPlateAppearanceDetailPrompt(paType, batterId!, outs, runners, fourOutfielders)
   );
 
 export const getGameHistory = (state: AppState) => state.game.gameHistory;

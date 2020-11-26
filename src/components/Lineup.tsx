@@ -64,7 +64,7 @@ const Lineup = ({ team }: { team: TeamRole }) => {
           {({ innerRef, droppableProps, placeholder }) => (
             <Box ref={innerRef} {...droppableProps} flex>
               {players.map((playerId, index) => (
-                <LineupPlayer key={playerId} playerId={playerId} index={index} />
+                <LineupPlayer key={playerId} playerId={playerId} index={index} team={team} />
               ))}
               {placeholder}
             </Box>

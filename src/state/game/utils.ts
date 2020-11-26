@@ -1,8 +1,18 @@
 import _ from 'lodash';
 
-import { BaseType, PlateAppearanceType, BaseRunners, FieldingPosition } from './types';
+import { BaseType, PlateAppearanceType, BaseRunners, FieldingPosition, Team } from './types';
 
 export const allPositions = _.keys(FieldingPosition) as FieldingPosition[];
+
+export const shouldTeamUseFourOutfielders = ({ lineup }: Team) => lineup.length > 9;
+export const getAvailablePositionsForTeam = (team: Team) => {
+  if (shouldTeamUseFourOutfielders(team)) {
+    return allPositions.filter(position => position !== FieldingPosition.CENTER_FIELD);
+  }
+  return allPositions.filter(
+    position => ![FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(position)
+  );
+};
 
 export const getBaseForRunner = (runners: BaseRunners, runnerId: string) =>
   _.findKey(runners, runner => runner === runnerId) as BaseType;

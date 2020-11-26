@@ -72,8 +72,8 @@ const InningPlays: FC<InningPlaysProps> = ({ inning, halfInning, plays }) => (
       </Text>
     </CardHeader>
     <CardBody pad={{ horizontal: 'medium', vertical: 'small' }} gap="small" border="between">
-      {plays.map(({ description, outs, score, type }) => (
-        <Box pad="small" direction="row" justify="between" gap="xsmall">
+      {plays.map(({ description, outs, score, type }, i) => (
+        <Box key={i} pad="small" direction="row" justify="between" gap="xsmall">
           <Box>
             <Text>
               <Text>{description}</Text>
@@ -115,7 +115,7 @@ const Plays = () => {
           Scoring
         </Heading>
         {scoringPlays.map(group => (
-          <InningPlays {...group} />
+          <InningPlays key={`${group.inning}_${group.halfInning}`} {...group} />
         ))}
       </Box>
       <Box gap="small" basis="0" flex>
@@ -123,7 +123,7 @@ const Plays = () => {
           All Plays
         </Heading>
         {allPlays.map(group => (
-          <InningPlays {...group} />
+          <InningPlays key={`${group.inning}_${group.halfInning}`} {...group} />
         ))}
       </Box>
     </Box>

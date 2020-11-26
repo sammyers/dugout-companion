@@ -14,13 +14,17 @@ import { OutOnPlayOptions } from 'state/prompts/types';
 const OutOnPlayPrompt: FC<OutOnPlayOptions> = ({ runnerIds, multiple }) => {
   const dispatch = useAppDispatch();
 
-  const dontShow = !multiple && runnerIds.length === 1;
+  const dontShow = multiple ? runnerIds.length === 2 : runnerIds.length === 1;
 
   useEffect(() => {
     if (dontShow) {
-      dispatch(promptActions.setOutOnPlayChoices([runnerIds[0]]));
+      if (multiple) {
+        dispatch(promptActions.setOutOnPlayChoices(runnerIds));
+      } else {
+        dispatch(promptActions.setOutOnPlayChoices([runnerIds[0]]));
+      }
     }
-  }, [dontShow, runnerIds, dispatch]);
+  }, [multiple, dontShow, runnerIds, dispatch]);
 
   const selectedOptions = useAppSelector(getSelectedOutOnPlayOptions);
 

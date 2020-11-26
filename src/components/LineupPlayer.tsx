@@ -1,32 +1,37 @@
-import React, { useCallback, FC } from 'react';
-import { Box, Text, Button, Select } from 'grommet';
+import React, { useCallback, FC, useMemo } from 'react';
+import { Box, Text, Button, Select, ThemeContext } from 'grommet';
 import { Close } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { getPlayerPosition } from 'state/game/selectors';
+import { getAvailablePositions, getPlayerPosition } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { allPositions } from 'state/game/utils';
 import { getShortPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { getPositionAbbreviation } from 'utils/labels';
 
-import { FieldingPosition } from 'state/game/types';
+import { FieldingPosition, TeamRole } from 'state/game/types';
 
 interface Props {
+  team: TeamRole;
   playerId: string;
   index: number;
 }
 
-const positionOptions = allPositions.map(position => ({
-  position,
-  label: getPositionAbbreviation(position),
-}));
-
-const LineupPlayer: FC<Props> = ({ playerId, index }) => {
+const LineupPlayer: FC<Props> = ({ playerId, index, team }) => {
   const dispatch = useAppDispatch();
 
   const name = useAppSelector(state => getShortPlayerName(state, playerId));
   const position = useAppSelector(state => getPlayerPosition(state, playerId));
+
+  const availablePositions = useAppSelector(state => getAvailablePositions(state, team));
+  const positionOptions = useMemo(
+    () =>
+      availablePositions.map(position => ({
+        position,
+        label: getPositionAbbreviation(position),
+      })),
+    [availablePositions]
+  );
 
   const handleRemove = useCallback(() => {
     dispatch(gameActions.removePlayerFromGame(playerId));
@@ -52,15 +57,17 @@ const LineupPlayer: FC<Props> = ({ playerId, index }) => {
           justify="between"
         >
           <Text margin={{ right: 'auto' }}>{name}</Text>
-          <Box width="xsmall" margin={{ right: 'small' }}>
-            <Select
-              value={position}
-              options={positionOptions}
-              labelKey="label"
-              valueKey={{ key: 'position', reduce: true }}
-              onChange={handleChangePosition}
-            />
-          </Box>
+          <ThemeContext.Extend value={{ global: { size: { xsmall: '108px' } } }}>
+            <Box width="xsmall" margin={{ right: 'small' }}>
+              <Select
+                value={position}
+                options={positionOptions}
+                labelKey="label"
+                valueKey={{ key: 'position', reduce: true }}
+                onChange={handleChangePosition}
+              />
+            </Box>
+          </ThemeContext.Extend>
           <Button
             plain={false}
             icon={<Close size="small" color="status-critical" />}

@@ -140,8 +140,10 @@ export const getPlayDescription = ({
             const startBase = getBaseForRunner(runners, runnerId);
             outBase = contactType === ContactType.GROUNDER ? getNewBase(startBase) : startBase;
           }
-          sentences.push(makeOutPhrase(runnerId, outBase));
-          playerIds.push(runnerId);
+          if (contactType === ContactType.GROUNDER || runnerId !== atBat) {
+            sentences.push(makeOutPhrase(runnerId, outBase));
+            playerIds.push(runnerId);
+          }
         });
         newNumOuts = outs + 2;
         break;

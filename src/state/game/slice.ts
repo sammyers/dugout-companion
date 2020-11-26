@@ -6,12 +6,13 @@ import { getCurrentBaseForRunner, getBattingTeam, getOnDeckBatter } from './part
 import {
   getNewBase,
   getDefaultRunnersAfterPlateAppearance,
-  allPositions,
   forEachRunner,
   moveRunner,
   removeRunner,
   moveRunnersOnGroundBall,
   getLeadRunner,
+  getAvailablePositionsForTeam,
+  shouldTeamUseFourOutfielders,
 } from './utils';
 
 import {
@@ -26,6 +27,7 @@ import {
   ChangePlayerPositionPayload,
   RecordedPlay,
   ContactType,
+  FieldingPosition,
 } from './types';
 
 const initialTeamState: Team = {
@@ -49,9 +51,35 @@ const updateScore = (state: GameState, runs: number = 1) => {
   state.score[getBattingTeam(state)] += runs;
 };
 
-const getNextAvailablePosition = (currentPositions: Team['positions']) => {
-  const takenPositions = _.values(currentPositions);
+const getNextAvailablePosition = (team: Team) => {
+  const takenPositions = _.values(team.positions);
+  const allPositions = getAvailablePositionsForTeam(team);
   return allPositions.find(position => !takenPositions.includes(position))!;
+};
+
+const updatePositions = (team: Team) => {
+  const fourOutfielders = shouldTeamUseFourOutfielders(team);
+  _.forEach(team.positions, (position, playerId) => {
+    if (fourOutfielders && position === FieldingPosition.CENTER_FIELD) {
+      console.log(position, playerId);
+      if (!_.some(team.positions, position => position === FieldingPosition.LEFT_CENTER)) {
+        team.positions[playerId] = FieldingPosition.LEFT_CENTER;
+      } else if (!_.some(team.positions, position => position === FieldingPosition.RIGHT_CENTER)) {
+        team.positions[playerId] = FieldingPosition.RIGHT_CENTER;
+      } else {
+        team.positions[playerId] = getNextAvailablePosition(team);
+      }
+    } else if (
+      !fourOutfielders &&
+      [FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(position)
+    ) {
+      if (!_.some(team.positions, position => position === FieldingPosition.CENTER_FIELD)) {
+        team.positions[playerId] = FieldingPosition.CENTER_FIELD;
+      } else {
+        team.positions[playerId] = getNextAvailablePosition(team);
+      }
+    }
+  });
 };
 
 const { actions: gameActions, reducer } = createSlice({
@@ -59,10 +87,11 @@ const { actions: gameActions, reducer } = createSlice({
   initialState,
   reducers: {
     addPlayerToGame(state, { payload }: PayloadAction<AddPlayerPayload>) {
-      const { lineup, positions } = state.teams[payload.team];
-      if (!lineup.includes(payload.playerId)) {
-        lineup.push(payload.playerId);
-        positions[payload.playerId] = getNextAvailablePosition(positions);
+      const team = state.teams[payload.team];
+      if (!team.lineup.includes(payload.playerId)) {
+        team.lineup.push(payload.playerId);
+        team.positions[payload.playerId] = getNextAvailablePosition(team);
+        updatePositions(team);
       }
     },
     movePlayer(state, { payload }: PayloadAction<MovePlayerPayload>) {
@@ -85,18 +114,24 @@ const { actions: gameActions, reducer } = createSlice({
           destTeam.positions,
           position => position === sourceTeam.positions[playerId]
         );
-        if (currentPlayerWithPosition) {
-          destTeam.positions[playerId] = getNextAvailablePosition(destTeam.positions);
+        if (
+          currentPlayerWithPosition ||
+          !getAvailablePositionsForTeam(destTeam).includes(sourceTeam.positions[playerId])
+        ) {
+          destTeam.positions[playerId] = getNextAvailablePosition(destTeam);
         } else {
           destTeam.positions[playerId] = sourceTeam.positions[playerId];
         }
         delete sourceTeam.positions[playerId];
+        updatePositions(sourceTeam);
+        updatePositions(destTeam);
       }
     },
     removePlayerFromGame(state, { payload }: PayloadAction<string>) {
       state.teams.forEach(team => {
         team.lineup = team.lineup.filter(playerId => playerId !== payload);
         delete team.positions[payload];
+        updatePositions(team);
       });
     },
     changePlayerPosition(state, { payload }: PayloadAction<ChangePlayerPositionPayload>) {
@@ -119,7 +154,14 @@ const { actions: gameActions, reducer } = createSlice({
       const { atBat, inning, halfInning, outs, runners, score } = state;
       const recordedPlay: RecordedPlay = {
         event: payload,
-        gameState: { atBat: atBat!, inning, halfInning, outs, runners, score },
+        gameState: {
+          atBat: atBat!,
+          inning,
+          halfInning,
+          outs,
+          runners: { ...runners },
+          score: [...score],
+        },
         runnersBattedIn: [],
         runnersScored: [],
         runnersAfter: runners,
@@ -204,9 +246,10 @@ const { actions: gameActions, reducer } = createSlice({
                 updateScore(state, runnersScored.length);
                 recordRunnersScored(runnersScored, false);
               }
-            }
-            if (!payload.runnersOutOnPlay.includes(atBat!)) {
-              state.runners[BaseType.FIRST] = atBat;
+
+              if (!payload.runnersOutOnPlay.includes(atBat!)) {
+                state.runners[BaseType.FIRST] = atBat;
+              }
             }
             break;
           case PlateAppearanceType.OUT:
