@@ -86,8 +86,14 @@ export interface StolenBaseAttempt {
 
 export type GameEvent = PlateAppearanceResult | StolenBaseAttempt;
 
+export enum GameStatus {
+  NOT_STARTED = 'NOT_STARTED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  FINISHED = 'FINISHED',
+}
+
 export interface GameState {
-  started: boolean;
+  status: GameStatus;
   teams: [Team, Team];
   inning: number;
   halfInning: HalfInning;
@@ -97,6 +103,7 @@ export interface GameState {
   outs: number;
   gameHistory: RecordedPlay[];
   score: [number, number];
+  gameLength: number;
 }
 
 export interface RecordedPlay {

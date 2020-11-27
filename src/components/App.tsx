@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grommet, Main, Box } from 'grommet';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom';
 
 import TopBar from './TopBar';
 import Bases from './Bases';
@@ -9,12 +9,19 @@ import BoxScore from './BoxScore';
 import Plays from './Plays';
 
 import theme from 'theme';
-import { players } from 'state/players/testData';
+import { isGameOver } from 'state/game/selectors';
 import { addPlayer } from 'state/players/slice';
-import { useMount, useAppDispatch } from 'utils/hooks';
+import { players } from 'state/players/testData';
+import { useMount, useAppDispatch, useAppSelector } from 'utils/hooks';
+import GameOver from './GameOver';
 
 const App = () => {
   const dispatch = useAppDispatch();
+
+  const { pathname } = useLocation();
+  const history = useHistory();
+
+  const gameOver = useAppSelector(isGameOver);
 
   useMount(() => {
     players.forEach(player => {
@@ -23,12 +30,21 @@ const App = () => {
     });
   });
 
+  useEffect(() => {
+    if (gameOver && pathname !== '/game-over') {
+      history.replace('/game-over');
+    }
+  }, [pathname, gameOver, history]);
+
   return (
     <Grommet full theme={theme}>
       <Box height="100%">
-        <TopBar />
+        {!gameOver && <TopBar />}
         <Main flex overflow={{ vertical: 'auto' }}>
           <Switch>
+            <Route path="/game-over">
+              <GameOver />
+            </Route>
             <Route path="/teams">
               <Teams />
             </Route>

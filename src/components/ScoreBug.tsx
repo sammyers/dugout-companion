@@ -30,7 +30,7 @@ const ScoreBug = () => {
         {halfInning === HalfInning.TOP ? <CaretUpFill /> : <CaretDownFill />}
         <Text>{inning}</Text>
       </Box>
-      <Table margin={{ right: 'medium' }}>
+      <Table>
         <TableBody>
           <TableRow style={battingTeam === TeamRole.AWAY ? boldStyle : undefined}>
             <TableCell scope="row">Away</TableCell>

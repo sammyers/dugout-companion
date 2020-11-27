@@ -28,7 +28,6 @@ export const aggregateStats = (plays: RecordedPlay[]) => {
     }
     callback(allStats[playerId]);
   };
-  console.log(plays);
   plays.forEach(({ gameState, event, runnersScored, runnersBattedIn }) => {
     runnersScored.forEach(runnerId => {
       updatePlayer(runnerId, stats => void stats.runsScored++);

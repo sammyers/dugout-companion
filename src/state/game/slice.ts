@@ -28,6 +28,7 @@ import {
   RecordedPlay,
   ContactType,
   FieldingPosition,
+  GameStatus,
 } from './types';
 
 const initialTeamState: Team = {
@@ -37,7 +38,7 @@ const initialTeamState: Team = {
 };
 
 const initialState: GameState = {
-  started: false,
+  status: GameStatus.NOT_STARTED,
   teams: [initialTeamState, initialTeamState],
   inning: 1,
   halfInning: HalfInning.TOP,
@@ -45,6 +46,7 @@ const initialState: GameState = {
   outs: 0,
   gameHistory: [],
   score: [0, 0],
+  gameLength: 9,
 };
 
 const updateScore = (state: GameState, runs: number = 1) => {
@@ -61,7 +63,6 @@ const updatePositions = (team: Team) => {
   const fourOutfielders = shouldTeamUseFourOutfielders(team);
   _.forEach(team.positions, (position, playerId) => {
     if (fourOutfielders && position === FieldingPosition.CENTER_FIELD) {
-      console.log(position, playerId);
       if (!_.some(team.positions, position => position === FieldingPosition.LEFT_CENTER)) {
         team.positions[playerId] = FieldingPosition.LEFT_CENTER;
       } else if (!_.some(team.positions, position => position === FieldingPosition.RIGHT_CENTER)) {
@@ -80,6 +81,22 @@ const updatePositions = (team: Team) => {
       }
     }
   });
+};
+
+const cleanUpAfterPlateAppearance = (state: GameState) => {
+  const nextBatter = getOnDeckBatter(state);
+  if (state.outs === 3) {
+    state.atBat = state.upNextHalfInning;
+    state.upNextHalfInning = nextBatter;
+    state.runners = {};
+    state.outs = 0;
+    if (state.halfInning === HalfInning.BOTTOM) {
+      state.inning++;
+    }
+    state.halfInning = 1 - state.halfInning;
+  } else {
+    state.atBat = nextBatter;
+  }
 };
 
 const { actions: gameActions, reducer } = createSlice({
@@ -148,7 +165,7 @@ const { actions: gameActions, reducer } = createSlice({
     startGame(state) {
       state.atBat = state.teams[0].lineup[0];
       state.upNextHalfInning = state.teams[1].lineup[0];
-      state.started = true;
+      state.status = GameStatus.IN_PROGRESS;
     },
     recordGameEvent(state, { payload }: PayloadAction<GameEvent>) {
       const { atBat, inning, halfInning, outs, runners, score } = state;
@@ -280,20 +297,46 @@ const { actions: gameActions, reducer } = createSlice({
         recordedPlay.scoreAfter = state.score;
         state.gameHistory.push(recordedPlay);
 
-        const nextBatter = getOnDeckBatter(state);
-        if (state.outs === 3) {
-          state.atBat = state.upNextHalfInning;
-          state.upNextHalfInning = nextBatter;
-          state.runners = {};
-          state.outs = 0;
-          if (state.halfInning === HalfInning.BOTTOM) {
-            state.inning++;
-          }
-          state.halfInning = 1 - halfInning;
+        const [awayScore, homeScore] = state.score;
+        const homeLeadingAfterTop =
+          state.outs === 3 && state.halfInning === HalfInning.TOP && awayScore < homeScore;
+        const awayLeadingAfterBottom =
+          state.outs === 3 && state.halfInning === HalfInning.BOTTOM && awayScore > homeScore;
+
+        if (
+          state.inning >= state.gameLength &&
+          (homeLeadingAfterTop ||
+            awayLeadingAfterBottom ||
+            (state.halfInning === HalfInning.BOTTOM && awayScore < homeScore))
+        ) {
+          state.status = GameStatus.FINISHED;
         } else {
-          state.atBat = nextBatter;
+          cleanUpAfterPlateAppearance(state);
         }
       }
+    },
+    changeGameLength(state, { payload }: PayloadAction<number>) {
+      state.gameLength = payload;
+    },
+    incrementGameLength(state) {
+      state.gameLength += 1;
+    },
+    decrementGameLength(state) {
+      state.gameLength -= 1;
+    },
+    extendGame(state) {
+      state.gameLength = Math.max(state.inning, state.gameLength) + 1;
+      state.status = GameStatus.IN_PROGRESS;
+      cleanUpAfterPlateAppearance(state);
+    },
+    resetGame(state) {
+      return {
+        ...initialState,
+        teams: state.teams,
+      };
+    },
+    fullResetGame() {
+      return { ...initialState };
     },
   },
 });

@@ -1,12 +1,14 @@
-import React, { FC } from 'react';
-import { Card, CardHeader, Text, CardBody, Box, Heading } from 'grommet';
+import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { Card, CardHeader, Text, CardBody, Box, Heading, ThemeContext } from 'grommet';
+import _ from 'lodash';
 import { Redirect } from 'react-router-dom';
 
-import { isGameInProgress } from 'state/game/selectors';
+import { getInning, isGameInProgress } from 'state/game/selectors';
 import { HalfInning, PlateAppearanceType } from 'state/game/types';
 import { getAllPlays, getScoringPlays } from 'state/plays/selectors';
 import { useAppSelector } from 'utils/hooks';
 import { getOrdinalInning, getPlateAppearanceLabel } from 'utils/labels';
+import { current } from '@reduxjs/toolkit';
 
 interface Play {
   description: string;
@@ -73,7 +75,7 @@ const InningPlays: FC<InningPlaysProps> = ({ inning, halfInning, plays }) => (
     </CardHeader>
     <CardBody pad={{ horizontal: 'medium', vertical: 'small' }} gap="small" border="between">
       {plays.map(({ description, outs, score, type }, i) => (
-        <Box key={i} pad="small" direction="row" justify="between" gap="xsmall">
+        <Box key={i} pad={{ vertical: 'small' }} direction="row" justify="between" gap="xsmall">
           <Box>
             <Text>
               <Text>{description}</Text>
@@ -96,35 +98,67 @@ const Plays = () => {
   const gameStarted = useAppSelector(isGameInProgress);
   const scoringPlays = useAppSelector(getScoringPlays);
   const allPlays = useAppSelector(getAllPlays);
+  const currentInning = useAppSelector(getInning);
+
+  const [selectedInning, setSelectedInning] = useState(currentInning);
+
+  const allPlaysForInning = useMemo(
+    () => allPlays.filter(({ inning }) => inning === selectedInning),
+    [allPlays, selectedInning]
+  );
+
+  const selectInning = useCallback(
+    (inning: number) => () => {
+      setSelectedInning(inning);
+    },
+    [setSelectedInning]
+  );
 
   if (!gameStarted) {
     return <Redirect to="/teams" />;
   }
 
   return (
-    <Box
-      direction="row"
-      justify="around"
-      pad="medium"
-      gap="medium"
-      flex={{ shrink: 0 }}
-      basis="auto"
-    >
-      <Box gap="small" basis="0" flex>
+    <Box pad="medium" flex={{ shrink: 0 }} basis="auto" gap="small">
+      <Box direction="row" justify="between">
         <Heading level={4} margin="none">
           Scoring
         </Heading>
-        {scoringPlays.map(group => (
-          <InningPlays key={`${group.inning}_${group.halfInning}`} {...group} />
-        ))}
-      </Box>
-      <Box gap="small" basis="0" flex>
         <Heading level={4} alignSelf="end" margin="none">
           All Plays
         </Heading>
-        {allPlays.map(group => (
-          <InningPlays key={`${group.inning}_${group.halfInning}`} {...group} />
-        ))}
+      </Box>
+      <Box direction="row" gap="small">
+        <Box gap="small" basis="0" flex>
+          {scoringPlays.map(group => (
+            <InningPlays key={`${group.inning}_${group.halfInning}`} {...group} />
+          ))}
+        </Box>
+        <Box gap="small" basis="0" flex margin={{ left: 'small' }}>
+          {!allPlaysForInning.length && <Text alignSelf="center">No plays yet this inning.</Text>}
+          {allPlaysForInning.map(group => (
+            <InningPlays key={`${group.inning}_${group.halfInning}`} {...group} />
+          ))}
+        </Box>
+        <ThemeContext.Extend value={{ global: { size: { xxsmall: '32px' } } }}>
+          <Box gap="xsmall" flex={false}>
+            {_.range(1, currentInning + 1).map(inning => (
+              <Box
+                round={{ size: '4px' }}
+                border={{ size: 'small' }}
+                width="xxsmall"
+                height="xxsmall"
+                justify="center"
+                align="center"
+                hoverIndicator={!(inning === selectedInning)}
+                background={inning === selectedInning ? 'brand' : undefined}
+                onClick={selectInning(inning)}
+              >
+                <Text>{inning}</Text>
+              </Box>
+            ))}
+          </Box>
+        </ThemeContext.Extend>
       </Box>
     </Box>
   );

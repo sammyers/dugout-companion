@@ -1,12 +1,15 @@
-import React, { useCallback } from 'react';
-import { Header, Nav, Button } from 'grommet';
+import React, { useCallback, useRef, useState } from 'react';
+import { Header, Nav, Button, Box, Drop } from 'grommet';
+import { SettingsOption } from 'grommet-icons';
 import { Route, useHistory } from 'react-router-dom';
 
 import AnchorLink from './AnchorLink';
+import ScoreBug from './ScoreBug';
+import SettingsMenu from './SettingsMenu';
+
 import { canStartGame, isGameInProgress } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import ScoreBug from './ScoreBug';
 
 const TopBar = () => {
   const dispatch = useAppDispatch();
@@ -20,6 +23,11 @@ const TopBar = () => {
     history.push('/field');
   }, [dispatch, history]);
 
+  const settingsButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
+
+  const toggleSettings = useCallback(() => setShowSettings(show => !show), [setShowSettings]);
+
   return (
     <Header background="brand">
       <Nav direction="row" pad="medium">
@@ -28,20 +36,36 @@ const TopBar = () => {
         {gameInProgress && <AnchorLink to="/box-score">Box Score</AnchorLink>}
         {gameInProgress && <AnchorLink to="/plays">Plays</AnchorLink>}
       </Nav>
-      {gameInProgress ? (
-        <ScoreBug />
-      ) : (
-        <Route path="/teams">
-          <Button
-            plain={false}
-            disabled={!gameCanStart}
-            onClick={startGame}
-            margin={{ right: 'medium' }}
-          >
-            Start Game
-          </Button>
-        </Route>
-      )}
+      <Box direction="row" margin={{ right: 'small' }}>
+        {gameInProgress ? (
+          <ScoreBug />
+        ) : (
+          <Route path="/teams">
+            <Button
+              plain={false}
+              disabled={!gameCanStart}
+              onClick={startGame}
+              margin={{ right: 'medium' }}
+            >
+              Start Game
+            </Button>
+          </Route>
+        )}
+        <Button
+          margin={{ left: 'small' }}
+          icon={<SettingsOption />}
+          plain={false}
+          alignSelf="center"
+          color="light-1"
+          ref={settingsButtonRef}
+          onClick={toggleSettings}
+        />
+        {showSettings && settingsButtonRef.current && (
+          <Drop target={settingsButtonRef.current} align={{ top: 'bottom', right: 'right' }}>
+            <SettingsMenu />
+          </Drop>
+        )}
+      </Box>
     </Header>
   );
 };

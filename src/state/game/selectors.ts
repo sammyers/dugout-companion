@@ -6,7 +6,14 @@ import { getPlateAppearanceDetailPrompt } from 'state/prompts/prompts';
 import { getAvailablePositionsForTeam, shouldTeamUseFourOutfielders } from './utils';
 
 import { AppState } from 'state/store';
-import { BaseRunners, TeamRole, PlateAppearanceType, HalfInning, FieldingPosition } from './types';
+import {
+  BaseRunners,
+  TeamRole,
+  PlateAppearanceType,
+  HalfInning,
+  FieldingPosition,
+  GameStatus,
+} from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -83,7 +90,12 @@ export const canStartGame = createSelector(
     numHomePlayers >= MIN_PLAYERS_TO_PLAY
 );
 
-export const isGameInProgress = (state: AppState) => state.game.started;
+export const getGameStatus = (state: AppState) => state.game.status;
+export const isGameInProgress = createSelector(
+  getGameStatus,
+  status => status === GameStatus.IN_PROGRESS
+);
+export const isGameOver = createSelector(getGameStatus, status => status === GameStatus.FINISHED);
 
 export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, (runners, outs) => {
   const notPossible: Set<PlateAppearanceType> = new Set();
@@ -131,3 +143,23 @@ export const createPlateAppearancePromptSelector = (paType: PlateAppearanceType)
   );
 
 export const getGameHistory = (state: AppState) => state.game.gameHistory;
+
+export const getCurrentGameLength = (state: AppState) => state.game.gameLength;
+export const getMinGameLength = createSelector(
+  getInning,
+  getHalfInning,
+  getScore,
+  (inning, halfInning, [awayScore, homeScore]) => {
+    if (halfInning === HalfInning.BOTTOM && homeScore > awayScore) {
+      return Math.max(7, inning + 1);
+    }
+    return Math.max(7, inning);
+  }
+);
+export const getMaxGameLength = () => 12;
+
+export const isGameInExtraInnings = createSelector(
+  getInning,
+  getCurrentGameLength,
+  (inning, gameLength) => inning > gameLength
+);
