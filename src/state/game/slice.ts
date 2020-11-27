@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
+import undoable, { includeAction } from 'redux-undo';
 
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
 import { getCurrentBaseForRunner, getBattingTeam, getOnDeckBatter } from './partialSelectors';
@@ -342,4 +343,8 @@ const { actions: gameActions, reducer } = createSlice({
 });
 
 export { gameActions };
-export default reducer;
+export default undoable(reducer, {
+  filter: includeAction(gameActions.recordGameEvent.type),
+  limit: 10,
+  syncFilter: true,
+});

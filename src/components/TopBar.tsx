@@ -45,7 +45,7 @@ const TopBar = () => {
               plain={false}
               disabled={!gameCanStart}
               onClick={startGame}
-              margin={{ right: 'medium' }}
+              margin={{ right: 'small' }}
             >
               Start Game
             </Button>

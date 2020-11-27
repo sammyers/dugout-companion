@@ -17,14 +17,14 @@ import {
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
-export const getTeams = (state: AppState) => state.game.teams;
+export const getTeams = (state: AppState) => state.game.present.teams;
 
-export const getRunners = (state: AppState) => state.game.runners;
-export const getNumOuts = (state: AppState) => state.game.outs;
-export const getScore = (state: AppState) => state.game.score;
-export const getHalfInning = (state: AppState) => state.game.halfInning;
-export const getInning = (state: AppState) => state.game.inning;
-export const getCurrentBatter = (state: AppState) => state.game.atBat;
+export const getRunners = (state: AppState) => state.game.present.runners;
+export const getNumOuts = (state: AppState) => state.game.present.outs;
+export const getScore = (state: AppState) => state.game.present.score;
+export const getHalfInning = (state: AppState) => state.game.present.halfInning;
+export const getInning = (state: AppState) => state.game.present.inning;
+export const getCurrentBatter = (state: AppState) => state.game.present.atBat;
 
 export const getBattingTeam = createSelector(getHalfInning, half =>
   half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
@@ -52,7 +52,7 @@ export const getRunnerNames = createSelector(
     _.mapValues<BaseRunners>(runners, (id: string) => getShortPlayerName(state, id))
 );
 
-const getBatter = (state: AppState) => state.game.atBat;
+const getBatter = (state: AppState) => state.game.present.atBat;
 export const getBatterName = createSelector(
   state => state,
   getBatter,
@@ -60,7 +60,7 @@ export const getBatterName = createSelector(
 );
 
 export const getPlayerAtPosition = (state: AppState, team: TeamRole, position: FieldingPosition) =>
-  _.findKey(state.game.teams[team].positions, p => p === position)!;
+  _.findKey(state.game.present.teams[team].positions, p => p === position)!;
 
 export const getPlayerPosition = (state: AppState, playerId: string) => {
   const { positions } = _.find(getTeams(state), ({ lineup }) => lineup.includes(playerId))!;
@@ -90,7 +90,7 @@ export const canStartGame = createSelector(
     numHomePlayers >= MIN_PLAYERS_TO_PLAY
 );
 
-export const getGameStatus = (state: AppState) => state.game.status;
+export const getGameStatus = (state: AppState) => state.game.present.status;
 export const isGameInProgress = createSelector(
   getGameStatus,
   status => status === GameStatus.IN_PROGRESS
@@ -142,9 +142,9 @@ export const createPlateAppearancePromptSelector = (paType: PlateAppearanceType)
       getPlateAppearanceDetailPrompt(paType, batterId!, outs, runners, fourOutfielders)
   );
 
-export const getGameHistory = (state: AppState) => state.game.gameHistory;
+export const getGameHistory = (state: AppState) => state.game.present.gameHistory;
 
-export const getCurrentGameLength = (state: AppState) => state.game.gameLength;
+export const getCurrentGameLength = (state: AppState) => state.game.present.gameLength;
 export const getMinGameLength = createSelector(
   getInning,
   getHalfInning,
@@ -163,3 +163,6 @@ export const isGameInExtraInnings = createSelector(
   getCurrentGameLength,
   (inning, gameLength) => inning > gameLength
 );
+
+export const isUndoPossible = (state: AppState) => state.game.past.length > 0;
+export const isRedoPossible = (state: AppState) => state.game.future.length > 0;

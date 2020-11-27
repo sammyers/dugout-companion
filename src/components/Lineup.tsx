@@ -34,8 +34,10 @@ const Lineup = ({ team }: { team: TeamRole }) => {
 
   const handleSuggestionSelect: NonNullable<TextInputProps['onSelect']> = useCallback(
     ({ suggestion }) => {
-      dispatch(gameActions.addPlayerToGame({ team, playerId: suggestion.value }));
-      setSearchValue('');
+      if (suggestion) {
+        dispatch(gameActions.addPlayerToGame({ team, playerId: suggestion.value }));
+        setSearchValue('');
+      }
     },
     [team, dispatch, setSearchValue]
   );

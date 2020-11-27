@@ -1,6 +1,8 @@
-import React from 'react';
-import { Grid, Box, Text } from 'grommet';
-import { Blank } from 'grommet-icons';
+import React, { useCallback } from 'react';
+import { Grid, Box, Text, Button } from 'grommet';
+import { Blank, Redo, Undo } from 'grommet-icons';
+import { Redirect } from 'react-router-dom';
+import { ActionCreators } from 'redux-undo';
 
 import EventReporter from './EventReporter';
 
@@ -10,13 +12,14 @@ import {
   getOnDeckBatterName,
   getInTheHoleBatterName,
   isGameInProgress,
+  isUndoPossible,
+  isRedoPossible,
 } from 'state/game/selectors';
 import { BaseType } from 'state/game/types';
-import { useAppSelector } from 'utils/hooks';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
 import { ReactComponent as BaseIcon } from 'icons/base.svg';
 import { ReactComponent as HomeIcon } from 'icons/home.svg';
-import { Redirect } from 'react-router-dom';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (
   <Blank size="large" color={occupied ? 'brand' : undefined} fillOpacity={occupied ? 1 : undefined}>
@@ -30,6 +33,8 @@ const HomePlate = () => (
 );
 
 const Bases = () => {
+  const dispatch = useAppDispatch();
+
   const gameInProgress = useAppSelector(isGameInProgress);
   const {
     [BaseType.FIRST]: firstBaseRunner,
@@ -39,6 +44,16 @@ const Bases = () => {
   const batter = useAppSelector(getBatterName);
   const onDeck = useAppSelector(getOnDeckBatterName);
   const inTheHole = useAppSelector(getInTheHoleBatterName);
+  const undoPossible = useAppSelector(isUndoPossible);
+  const redoPossible = useAppSelector(isRedoPossible);
+
+  const undo = useCallback(() => {
+    dispatch(ActionCreators.undo());
+  }, [dispatch]);
+
+  const redo = useCallback(() => {
+    dispatch(ActionCreators.redo());
+  }, [dispatch]);
 
   if (!gameInProgress) {
     return <Redirect to="/teams" />;
@@ -52,7 +67,7 @@ const Bases = () => {
           rows={['xsmall', 'auto', 'xsmall']}
           columns={['small', 'auto', 'small']}
           areas={[
-            ['.', 'second-base', '.'],
+            ['undo-redo', 'second-base', '.'],
             ['third-base', 'reporter', 'first-base'],
             ['.', 'home-plate', '.'],
           ]}
@@ -62,6 +77,10 @@ const Bases = () => {
             fill-opacity: 1;
           }
         `}</style>
+          <Box gridArea="undo-redo" direction="row" margin="medium" gap="small">
+            <Button icon={<Undo />} disabled={!undoPossible} onClick={undo} />
+            <Button icon={<Redo />} disabled={!redoPossible} onClick={redo} />
+          </Box>
           <Box gridArea="first-base" direction="row" justify="end" align="center">
             <Text textAlign="center">{firstBaseRunner}</Text>
             <Base occupied={!!firstBaseRunner} />

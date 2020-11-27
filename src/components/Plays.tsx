@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { Card, CardHeader, Text, CardBody, Box, Heading, ThemeContext } from 'grommet';
 import _ from 'lodash';
 import { Redirect } from 'react-router-dom';
@@ -8,7 +8,6 @@ import { HalfInning, PlateAppearanceType } from 'state/game/types';
 import { getAllPlays, getScoringPlays } from 'state/plays/selectors';
 import { useAppSelector } from 'utils/hooks';
 import { getOrdinalInning, getPlateAppearanceLabel } from 'utils/labels';
-import { current } from '@reduxjs/toolkit';
 
 interface Play {
   description: string;
