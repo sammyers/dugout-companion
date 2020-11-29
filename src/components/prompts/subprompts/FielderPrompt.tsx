@@ -1,14 +1,17 @@
 import React, { FC, useMemo, useCallback, useEffect } from 'react';
 import { Box, Heading } from 'grommet';
 
-import OptionSelector from './OptionSelector';
+import OptionSelector from '../OptionSelector';
 
 import { FielderOptions } from 'state/prompts/types';
 import { getSelectedFielderOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
-const FielderPrompt: FC<FielderOptions> = ({ options }) => {
+const FielderPrompt: FC<FielderOptions & { showTitle?: boolean }> = ({
+  options,
+  showTitle = true,
+}) => {
   const dispatch = useAppDispatch();
 
   useEffect(
@@ -30,10 +33,12 @@ const FielderPrompt: FC<FielderOptions> = ({ options }) => {
   );
 
   return (
-    <Box>
-      <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
-        Hit to
-      </Heading>
+    <Box flex>
+      {showTitle && (
+        <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
+          Hit to
+        </Heading>
+      )}
       <OptionSelector
         options={formattedOptions}
         value={selectedOption?.id}

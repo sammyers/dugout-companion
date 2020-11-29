@@ -1,10 +1,11 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
 
-import ContactPrompt from './ContactPrompt';
-import FielderPrompt from './FielderPrompt';
-import RunnerPrompt from './RunnerPrompt';
-import OutOnPlayPrompt from './OutOnPlayPrompt';
+import PromptAccordion, { PromptAccordionPanel } from './PromptAccordion';
+import PlateAppearancePreview from './PlateAppearancePreview';
+import ContactPanel from './panels/ContactPanel';
+import RunnerPrompt from './subprompts/RunnerPrompt';
+import OutOnPlayPrompt, { shouldShowOOPPrompt } from './subprompts/OutOnPlayPrompt';
 
 import { getSelectedOutOnPlayOptions, getSelectedContactOption } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';
@@ -42,10 +43,29 @@ const DoublePlayPrompt: FC<DoublePlayOptions & BasePromptProps> = ({
 
   return (
     <Box gap="medium">
-      <ContactPrompt {...contactOptions} />
-      {nextOptions?.fielderOptions && <FielderPrompt {...nextOptions.fielderOptions} />}
-      {nextOptions?.outOnPlayOptions && <OutOnPlayPrompt {...nextOptions.outOnPlayOptions} />}
-      {runnerOptions && <RunnerPrompt {...runnerOptions} />}
+      <PromptAccordion>
+        <ContactPanel
+          contactOptions={contactOptions}
+          fielderOptions={nextOptions?.fielderOptions}
+        />
+        {nextOptions?.outOnPlayOptions &&
+          (shouldShowOOPPrompt(nextOptions.outOnPlayOptions) ? (
+            <PromptAccordionPanel
+              label={`Runner${nextOptions.outOnPlayOptions.multiple ? 's' : ''} out on play`}
+              preview=""
+            >
+              <OutOnPlayPrompt {...nextOptions.outOnPlayOptions} showTitle={false} />
+            </PromptAccordionPanel>
+          ) : (
+            <OutOnPlayPrompt {...nextOptions.outOnPlayOptions} />
+          ))}
+        {runnerOptions && (
+          <PromptAccordionPanel label="Runners" preview="">
+            <RunnerPrompt {...runnerOptions} />
+          </PromptAccordionPanel>
+        )}
+      </PromptAccordion>
+      {canSubmit && <PlateAppearancePreview />}
     </Box>
   );
 };

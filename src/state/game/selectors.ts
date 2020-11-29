@@ -164,5 +164,9 @@ export const isGameInExtraInnings = createSelector(
   (inning, gameLength) => inning > gameLength
 );
 
-export const isUndoPossible = (state: AppState) => state.game.past.length > 0;
-export const isRedoPossible = (state: AppState) => state.game.future.length > 0;
+export const getPresent = (state: AppState) => state.game.present;
+export const getPast = (state: AppState) => state.game.past;
+export const getFuture = (state: AppState) => state.game.future;
+
+export const isUndoPossible = createSelector(getPast, past => past.length > 0);
+export const isRedoPossible = createSelector(getFuture, future => future.length > 0);

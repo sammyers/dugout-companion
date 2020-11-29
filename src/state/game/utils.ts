@@ -1,6 +1,18 @@
 import _ from 'lodash';
 
-import { BaseType, PlateAppearanceType, BaseRunners, FieldingPosition, Team } from './types';
+import { getBattingTeam, getCurrentBaseForRunner } from './partialSelectors';
+
+import {
+  BaseType,
+  PlateAppearanceType,
+  BaseRunners,
+  FieldingPosition,
+  Team,
+  GameEvent,
+  GameState,
+  RecordedPlay,
+  ContactType,
+} from './types';
 
 export const allPositions = _.keys(FieldingPosition) as FieldingPosition[];
 
@@ -167,3 +179,139 @@ export const moveRunnersOnGroundBall = (runners: BaseRunners) => {
 
 export const mustAllRunnersAdvance = (runners: BaseRunners) =>
   _.every(runners, (_runnerId, base) => mustRunnerAdvance(base as BaseType, runners));
+
+const updateScore = (state: GameState, runs: number = 1) => {
+  state.score[getBattingTeam(state)] += runs;
+};
+
+export const applyGameEvent = (state: GameState, event: GameEvent) => {
+  const { atBat, inning, halfInning, outs, runners, score } = state;
+  const recordedPlay: RecordedPlay = {
+    event: event,
+    gameState: {
+      atBat: atBat!,
+      inning,
+      halfInning,
+      outs,
+      runners: { ...runners },
+      score: [...score],
+    },
+    runnersBattedIn: [],
+    runnersScored: [],
+    runnersAfter: runners,
+    scoreAfter: score,
+  };
+
+  const recordRunnersScored = (runners: string[], battedIn = true) => {
+    if (battedIn) {
+      recordedPlay.runnersBattedIn.push(...runners);
+    }
+    recordedPlay.runnersScored.push(...runners);
+  };
+
+  if (event.kind === 'stolenBaseAttempt') {
+    const startBase = getCurrentBaseForRunner(state, event.runnerId);
+    if (event.success) {
+      const endBase = getNewBase(startBase);
+      delete state.runners[startBase];
+      if (endBase) {
+        state.runners[endBase] = event.runnerId;
+      } else {
+        // runner scored
+        updateScore(state);
+        recordRunnersScored([event.runnerId], false);
+      }
+    } else {
+      delete state.runners[startBase];
+      state.outs++;
+    }
+  } else if (event.kind === 'plateAppearance') {
+    switch (event.type) {
+      case PlateAppearanceType.HOMERUN:
+        updateScore(state, _.size(state.runners) + 1);
+        recordRunnersScored([...(_.values(state.runners) as string[]), atBat!]);
+        state.runners = {};
+        break;
+      case PlateAppearanceType.TRIPLE:
+        updateScore(state, _.size(state.runners));
+        recordRunnersScored(_.values(state.runners) as string[]);
+        state.runners = { [BaseType.THIRD]: atBat };
+        break;
+      case PlateAppearanceType.DOUBLE:
+      case PlateAppearanceType.SINGLE:
+      case PlateAppearanceType.WALK:
+        const [newBaseRunners, runnersScored] = getDefaultRunnersAfterPlateAppearance(
+          state.runners,
+          event.type,
+          atBat!
+        );
+        state.runners = newBaseRunners;
+        updateScore(state, runnersScored.length);
+        recordRunnersScored(runnersScored);
+        break;
+      case PlateAppearanceType.SACRIFICE_FLY:
+        _.times(event.runsScoredOnSacFly!, () => {
+          const [base, runnerId] = getLeadRunner(runners)!;
+          moveRunner(runners, base, null);
+          updateScore(state);
+          recordRunnersScored([runnerId]);
+        });
+        state.outs++;
+        break;
+      case PlateAppearanceType.FIELDERS_CHOICE: {
+        removeRunner(state.runners, event.runnersOutOnPlay[0]);
+        const runnersScored = moveRunnersOnGroundBall(state.runners);
+        state.runners[BaseType.FIRST] = atBat;
+        if (runnersScored.length && outs < 2) {
+          updateScore(state);
+          recordRunnersScored(runnersScored);
+        }
+        state.outs++;
+        break;
+      }
+      case PlateAppearanceType.DOUBLE_PLAY:
+        state.outs += 2;
+        event.runnersOutOnPlay.forEach(runnerId => {
+          removeRunner(state.runners, runnerId);
+        });
+        if (event.contactType === ContactType.GROUNDER) {
+          const runnersScored = moveRunnersOnGroundBall(state.runners);
+          if (runnersScored.length && outs === 0) {
+            updateScore(state, runnersScored.length);
+            recordRunnersScored(runnersScored, false);
+          }
+
+          if (!event.runnersOutOnPlay.includes(atBat!)) {
+            state.runners[BaseType.FIRST] = atBat;
+          }
+        }
+        break;
+      case PlateAppearanceType.OUT:
+        if (event.contactType === ContactType.GROUNDER) {
+          const runnersScored = moveRunnersOnGroundBall(state.runners);
+          if (runnersScored.length && outs < 2) {
+            updateScore(state, runnersScored.length);
+            recordRunnersScored(runnersScored);
+          }
+        }
+        state.outs++;
+        break;
+    }
+
+    forEachRunner(state.runners, (runnerId, base) => {
+      if (runnerId in event.outsOnBasepaths) {
+        delete state.runners[base];
+        state.outs++;
+      } else if (runnerId in event.basesTaken) {
+        if (moveRunner(state.runners, base, event.basesTaken[runnerId])) {
+          updateScore(state);
+          recordRunnersScored([runnerId], event.type !== PlateAppearanceType.DOUBLE_PLAY);
+        }
+      }
+    });
+
+    recordedPlay.runnersAfter = state.runners;
+    recordedPlay.scoreAfter = state.score;
+    state.gameHistory.push(recordedPlay);
+  }
+};

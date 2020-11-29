@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useEffect, ReactNode, useState } from 'react';
+import React, { FC, useMemo, useEffect, ReactNode, useState, createContext } from 'react';
 import { Layer, Box, Button, Heading } from 'grommet';
 
 import HitPrompt from './HitPrompt';
@@ -19,6 +19,8 @@ interface Props {
   onSubmit: () => void;
   onCancel: () => void;
 }
+
+export const promptContext = createContext(PlateAppearanceType.OUT);
 
 const EventDetailPrompt: FC<Props> = ({ paType, onSubmit, onCancel }) => {
   const dispatch = useAppDispatch();
@@ -61,10 +63,10 @@ const EventDetailPrompt: FC<Props> = ({ paType, onSubmit, onCancel }) => {
   return (
     <Layer>
       <Box pad="medium">
-        <Heading level={3} margin={{ top: 'none' }} textAlign="center">
+        <Heading level={3} margin="none" alignSelf="center">
           {getPlateAppearanceLabel(paType)} by {batter}
         </Heading>
-        {promptView}
+        <promptContext.Provider value={paType}>{promptView}</promptContext.Provider>
         <Box direction="row" margin={{ top: 'medium' }} justify="between" gap="small">
           <Button color="status-critical" label="Cancel" onClick={onCancel} />
           {canSubmit && (

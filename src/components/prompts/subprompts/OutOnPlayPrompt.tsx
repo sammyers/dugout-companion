@@ -2,7 +2,7 @@ import React, { FC, useCallback, useEffect } from 'react';
 import { Box, Heading } from 'grommet';
 import _ from 'lodash';
 
-import OptionSelector from './OptionSelector';
+import OptionSelector from '../OptionSelector';
 
 import { getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
@@ -11,10 +11,18 @@ import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
 import { OutOnPlayOptions } from 'state/prompts/types';
 
-const OutOnPlayPrompt: FC<OutOnPlayOptions> = ({ runnerIds, multiple }) => {
+export const shouldShowOOPPrompt = ({ multiple, runnerIds }: OutOnPlayOptions) =>
+  multiple ? runnerIds.length > 2 : runnerIds.length > 1;
+
+const OutOnPlayPrompt: FC<OutOnPlayOptions & { showTitle?: boolean }> = ({
+  showTitle = true,
+  ...options
+}) => {
+  const { multiple, runnerIds } = options;
+
   const dispatch = useAppDispatch();
 
-  const dontShow = multiple ? runnerIds.length === 2 : runnerIds.length === 1;
+  const dontShow = !shouldShowOOPPrompt(options);
 
   useEffect(() => {
     if (dontShow) {
@@ -67,9 +75,11 @@ const OutOnPlayPrompt: FC<OutOnPlayOptions> = ({ runnerIds, multiple }) => {
   }
   return (
     <Box>
-      <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
-        {multiple ? 'Runners' : 'Runner'} out on play
-      </Heading>
+      {showTitle && (
+        <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
+          {multiple ? 'Runners' : 'Runner'} out on play
+        </Heading>
+      )}
       {selector}
     </Box>
   );

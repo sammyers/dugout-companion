@@ -1,8 +1,8 @@
 import React, { FC, useMemo, useCallback, useEffect } from 'react';
-import { Box, Text, Heading } from 'grommet';
+import { Box, Text } from 'grommet';
 import { useDispatch } from 'react-redux';
 
-import OptionSelector from './OptionSelector';
+import OptionSelector from '../OptionSelector';
 
 import { getShortPlayerName } from 'state/players/selectors';
 import { getSelectedRunnerOption } from 'state/prompts/selectors';
@@ -12,12 +12,11 @@ import { getRunnerOptionLabel } from 'utils/labels';
 
 import { RunnerOptions } from 'state/prompts/types';
 
-const RunnerPrompt: FC<RunnerOptions & { nested?: boolean }> = ({
+const RunnerPrompt: FC<RunnerOptions> = ({
   runnerId,
   options,
   defaultOption,
   getTrailingRunnerOptions,
-  nested,
 }) => {
   const dispatch = useDispatch();
 
@@ -32,7 +31,12 @@ const RunnerPrompt: FC<RunnerOptions & { nested?: boolean }> = ({
   const runnerName = useAppSelector(state => getShortPlayerName(state, runnerId));
 
   const formattedOptions = useMemo(
-    () => options.map(option => ({ label: getRunnerOptionLabel(option), value: option.id })),
+    () =>
+      options.map(option => ({
+        label: getRunnerOptionLabel(option),
+        value: option.id,
+        negative: option.attemptedAdvance && !option.successfulAdvance,
+      })),
     [options]
   );
 
@@ -48,19 +52,19 @@ const RunnerPrompt: FC<RunnerOptions & { nested?: boolean }> = ({
   );
 
   return (
-    <Box gap="xsmall">
-      {!nested && (
-        <Heading level={4} margin="none" alignSelf="center">
-          Runner Movement
-        </Heading>
-      )}
-      <Text margin={nested ? { top: 'small' } : undefined}>{runnerName}</Text>
-      <OptionSelector
-        options={formattedOptions}
-        value={selectedOption?.id}
-        onChange={handleChange}
-      />
-      {trailingRunnerOptions && <RunnerPrompt {...trailingRunnerOptions} nested={true} />}
+    <Box gap="small">
+      <Box direction="row" gap="small">
+        <Text alignSelf="center" style={{ whiteSpace: 'nowrap' }}>
+          {runnerName}
+        </Text>
+        <OptionSelector
+          flex
+          options={formattedOptions}
+          value={selectedOption?.id}
+          onChange={handleChange}
+        />
+      </Box>
+      {trailingRunnerOptions && <RunnerPrompt {...trailingRunnerOptions} />}
     </Box>
   );
 };

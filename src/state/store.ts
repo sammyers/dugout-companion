@@ -17,7 +17,7 @@ const reducer = persistCombineReducers(
 
 export const store = configureStore({
   reducer,
-  middleware: getDefaultMiddleware({ serializableCheck: false }),
+  middleware: getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }),
 });
 export const persistor = persistStore(store);
 

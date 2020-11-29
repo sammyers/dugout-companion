@@ -7,6 +7,7 @@ import {
   getMaxGameLength,
   getMinGameLength,
   isGameInExtraInnings,
+  isGameInProgress,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
@@ -34,6 +35,7 @@ const SettingsMenu = () => {
   const minInnings = useAppSelector(getMinGameLength);
   const maxInnings = useAppSelector(getMaxGameLength);
   const currentGameLength = useAppSelector(getCurrentGameLength);
+  const inProgress = useAppSelector(isGameInProgress);
   const inExtraInnings = useAppSelector(isGameInExtraInnings);
 
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
@@ -87,17 +89,19 @@ const SettingsMenu = () => {
           {inExtraInnings ? 'In extra' : currentGameLength} innings
         </Text>
       </Box>
-      <DropButton
-        label="Reset game"
-        icon={<PowerReset color="status-critical" />}
-        color="status-critical"
-        alignSelf="center"
-        open={resetConfirmOpen}
-        onOpen={() => setResetConfirmOpen(true)}
-        dropContent={<ResetConfirm />}
-        dropProps={{ align: { top: 'bottom' } }}
-        onClose={() => setResetConfirmOpen(false)}
-      />
+      {inProgress && (
+        <DropButton
+          label="Reset game"
+          icon={<PowerReset color="status-critical" />}
+          color="status-critical"
+          alignSelf="center"
+          open={resetConfirmOpen}
+          onOpen={() => setResetConfirmOpen(true)}
+          dropContent={<ResetConfirm />}
+          dropProps={{ align: { top: 'bottom' } }}
+          onClose={() => setResetConfirmOpen(false)}
+        />
+      )}
     </Box>
   );
 };

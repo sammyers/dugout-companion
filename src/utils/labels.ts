@@ -1,12 +1,20 @@
-import _ from 'lodash';
-
 import {
   PlateAppearanceType,
   FieldingPosition,
   ContactType,
   HitContactType,
+  BaseType,
 } from 'state/game/types';
 import { BasepathOutcome } from 'state/prompts/types';
+
+export const formatShortBaseName = (base: BaseType | null) => {
+  if (base === null) return 'home';
+  return {
+    [BaseType.FIRST]: '1st',
+    [BaseType.SECOND]: '2nd',
+    [BaseType.THIRD]: '3rd',
+  }[base];
+};
 
 export const getPositionAbbreviation = (position: FieldingPosition) =>
   ({
@@ -57,7 +65,7 @@ export const getHitLabelFromContact = (contactType: HitContactType) =>
 
 export const getRunnerOptionLabel = (option: BasepathOutcome) => {
   if (!option.attemptedAdvance) {
-    return `Held at ${_.lowerCase(option.endBase)}`;
+    return `Held at ${formatShortBaseName(option.endBase)}`;
   }
   if (option.endBase === null) {
     if (option.successfulAdvance) {
@@ -65,7 +73,7 @@ export const getRunnerOptionLabel = (option: BasepathOutcome) => {
     }
     return 'Out at home';
   }
-  const baseName = _.lowerCase(option.endBase);
+  const baseName = formatShortBaseName(option.endBase);
   if (option.successfulAdvance) {
     return `Took ${baseName}`;
   }

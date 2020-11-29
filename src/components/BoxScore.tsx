@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, DataTable, Text } from 'grommet';
+import { Box, Card, DataTable, Text } from 'grommet';
 import { Redirect } from 'react-router-dom';
 
 import { isGameInProgress, getPlayerPosition } from 'state/game/selectors';
@@ -40,28 +40,30 @@ interface TeamBoxScoreProps {
 
 const TeamBoxScore: FC<TeamBoxScoreProps> = ({ rows, team }) => {
   return (
-    <DataTable<BoxScoreRow>
-      margin="small"
-      columns={[
-        {
-          property: 'playerId',
-          header: <Text>{team === TeamRole.AWAY ? 'Away' : 'Home'} Batters</Text>,
-          primary: true,
-          render: ({ playerId, lineupSpot }) => (
-            <NameCell playerId={playerId} lineupSpot={lineupSpot} />
-          ),
-        },
-        { property: 'atBats', header: 'AB' },
-        { property: 'runsScored', header: 'R' },
-        { property: 'hits', header: 'H' },
-        { property: 'runsBattedIn', header: 'RBI' },
-        { property: 'walks', header: 'BB' },
-        { property: 'leftOnBase', header: 'LOB' },
-        { property: 'battingAverage', header: 'AVG' },
-        { property: 'onBasePlusSlugging', header: 'OPS' },
-      ]}
-      data={rows}
-    />
+    <Card pad="small" background="light-1" margin="small">
+      <DataTable<BoxScoreRow>
+        margin="small"
+        columns={[
+          {
+            property: 'playerId',
+            header: <Text>{team === TeamRole.AWAY ? 'Away' : 'Home'} Batters</Text>,
+            primary: true,
+            render: ({ playerId, lineupSpot }) => (
+              <NameCell playerId={playerId} lineupSpot={lineupSpot} />
+            ),
+          },
+          { property: 'atBats', header: 'AB' },
+          { property: 'runsScored', header: 'R' },
+          { property: 'hits', header: 'H' },
+          { property: 'runsBattedIn', header: 'RBI' },
+          { property: 'walks', header: 'BB' },
+          { property: 'leftOnBase', header: 'LOB' },
+          { property: 'battingAverage', header: 'AVG' },
+          { property: 'onBasePlusSlugging', header: 'OPS' },
+        ]}
+        data={rows}
+      />
+    </Card>
   );
 };
 

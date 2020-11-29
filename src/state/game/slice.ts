@@ -3,17 +3,11 @@ import _ from 'lodash';
 import undoable, { includeAction } from 'redux-undo';
 
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
-import { getCurrentBaseForRunner, getBattingTeam, getOnDeckBatter } from './partialSelectors';
+import { getOnDeckBatter } from './partialSelectors';
 import {
-  getNewBase,
-  getDefaultRunnersAfterPlateAppearance,
-  forEachRunner,
-  moveRunner,
-  removeRunner,
-  moveRunnersOnGroundBall,
-  getLeadRunner,
   getAvailablePositionsForTeam,
   shouldTeamUseFourOutfielders,
+  applyGameEvent,
 } from './utils';
 
 import {
@@ -22,12 +16,8 @@ import {
   AddPlayerPayload,
   HalfInning,
   GameEvent,
-  PlateAppearanceType,
-  BaseType,
   MovePlayerPayload,
   ChangePlayerPositionPayload,
-  RecordedPlay,
-  ContactType,
   FieldingPosition,
   GameStatus,
 } from './types';
@@ -48,10 +38,6 @@ const initialState: GameState = {
   gameHistory: [],
   score: [0, 0],
   gameLength: 9,
-};
-
-const updateScore = (state: GameState, runs: number = 1) => {
-  state.score[getBattingTeam(state)] += runs;
 };
 
 const getNextAvailablePosition = (team: Team) => {
@@ -169,151 +155,23 @@ const { actions: gameActions, reducer } = createSlice({
       state.status = GameStatus.IN_PROGRESS;
     },
     recordGameEvent(state, { payload }: PayloadAction<GameEvent>) {
-      const { atBat, inning, halfInning, outs, runners, score } = state;
-      const recordedPlay: RecordedPlay = {
-        event: payload,
-        gameState: {
-          atBat: atBat!,
-          inning,
-          halfInning,
-          outs,
-          runners: { ...runners },
-          score: [...score],
-        },
-        runnersBattedIn: [],
-        runnersScored: [],
-        runnersAfter: runners,
-        scoreAfter: score,
-      };
+      applyGameEvent(state, payload);
 
-      const recordRunnersScored = (runners: string[], battedIn = true) => {
-        if (battedIn) {
-          recordedPlay.runnersBattedIn.push(...runners);
-        }
-        recordedPlay.runnersScored.push(...runners);
-      };
+      const [awayScore, homeScore] = state.score;
+      const homeLeadingAfterTop =
+        state.outs === 3 && state.halfInning === HalfInning.TOP && awayScore < homeScore;
+      const awayLeadingAfterBottom =
+        state.outs === 3 && state.halfInning === HalfInning.BOTTOM && awayScore > homeScore;
 
-      if (payload.kind === 'stolenBaseAttempt') {
-        const startBase = getCurrentBaseForRunner(state, payload.runnerId);
-        if (payload.success) {
-          const endBase = getNewBase(startBase);
-          delete state.runners[startBase];
-          if (endBase) {
-            state.runners[endBase] = payload.runnerId;
-          } else {
-            // runner scored
-            updateScore(state);
-            recordRunnersScored([payload.runnerId], false);
-          }
-        } else {
-          delete state.runners[startBase];
-          state.outs++;
-        }
-      } else if (payload.kind === 'plateAppearance') {
-        switch (payload.type) {
-          case PlateAppearanceType.HOMERUN:
-            updateScore(state, _.size(state.runners) + 1);
-            recordRunnersScored([...(_.values(state.runners) as string[]), atBat!]);
-            state.runners = {};
-            break;
-          case PlateAppearanceType.TRIPLE:
-            updateScore(state, _.size(state.runners));
-            recordRunnersScored(_.values(state.runners) as string[]);
-            state.runners = { [BaseType.THIRD]: atBat };
-            break;
-          case PlateAppearanceType.DOUBLE:
-          case PlateAppearanceType.SINGLE:
-          case PlateAppearanceType.WALK:
-            const [newBaseRunners, runnersScored] = getDefaultRunnersAfterPlateAppearance(
-              state.runners,
-              payload.type,
-              atBat!
-            );
-            state.runners = newBaseRunners;
-            updateScore(state, runnersScored.length);
-            recordRunnersScored(runnersScored);
-            break;
-          case PlateAppearanceType.SACRIFICE_FLY:
-            _.times(payload.runsScoredOnSacFly!, () => {
-              const [base, runnerId] = getLeadRunner(runners)!;
-              moveRunner(runners, base, null);
-              updateScore(state);
-              recordRunnersScored([runnerId]);
-            });
-            state.outs++;
-            break;
-          case PlateAppearanceType.FIELDERS_CHOICE: {
-            removeRunner(state.runners, payload.runnersOutOnPlay[0]);
-            const runnersScored = moveRunnersOnGroundBall(state.runners);
-            state.runners[BaseType.FIRST] = atBat;
-            if (runnersScored.length && outs < 2) {
-              updateScore(state);
-              recordRunnersScored(runnersScored);
-            }
-            state.outs++;
-            break;
-          }
-          case PlateAppearanceType.DOUBLE_PLAY:
-            state.outs += 2;
-            payload.runnersOutOnPlay.forEach(runnerId => {
-              removeRunner(state.runners, runnerId);
-            });
-            if (payload.contactType === ContactType.GROUNDER) {
-              const runnersScored = moveRunnersOnGroundBall(state.runners);
-              if (runnersScored.length && outs === 0) {
-                updateScore(state, runnersScored.length);
-                recordRunnersScored(runnersScored, false);
-              }
-
-              if (!payload.runnersOutOnPlay.includes(atBat!)) {
-                state.runners[BaseType.FIRST] = atBat;
-              }
-            }
-            break;
-          case PlateAppearanceType.OUT:
-            if (payload.contactType === ContactType.GROUNDER) {
-              const runnersScored = moveRunnersOnGroundBall(state.runners);
-              if (runnersScored.length && outs < 2) {
-                updateScore(state, runnersScored.length);
-                recordRunnersScored(runnersScored);
-              }
-            }
-            state.outs++;
-            break;
-        }
-
-        forEachRunner(state.runners, (runnerId, base) => {
-          if (runnerId in payload.outsOnBasepaths) {
-            delete state.runners[base];
-            state.outs++;
-          } else if (runnerId in payload.basesTaken) {
-            if (moveRunner(state.runners, base, payload.basesTaken[runnerId])) {
-              updateScore(state);
-              recordRunnersScored([runnerId], payload.type !== PlateAppearanceType.DOUBLE_PLAY);
-            }
-          }
-        });
-
-        recordedPlay.runnersAfter = state.runners;
-        recordedPlay.scoreAfter = state.score;
-        state.gameHistory.push(recordedPlay);
-
-        const [awayScore, homeScore] = state.score;
-        const homeLeadingAfterTop =
-          state.outs === 3 && state.halfInning === HalfInning.TOP && awayScore < homeScore;
-        const awayLeadingAfterBottom =
-          state.outs === 3 && state.halfInning === HalfInning.BOTTOM && awayScore > homeScore;
-
-        if (
-          state.inning >= state.gameLength &&
-          (homeLeadingAfterTop ||
-            awayLeadingAfterBottom ||
-            (state.halfInning === HalfInning.BOTTOM && awayScore < homeScore))
-        ) {
-          state.status = GameStatus.FINISHED;
-        } else {
-          cleanUpAfterPlateAppearance(state);
-        }
+      if (
+        state.inning >= state.gameLength &&
+        (homeLeadingAfterTop ||
+          awayLeadingAfterBottom ||
+          (state.halfInning === HalfInning.BOTTOM && awayScore < homeScore))
+      ) {
+        state.status = GameStatus.FINISHED;
+      } else {
+        cleanUpAfterPlateAppearance(state);
       }
     },
     changeGameLength(state, { payload }: PayloadAction<number>) {

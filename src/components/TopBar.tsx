@@ -7,9 +7,10 @@ import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
 import SettingsMenu from './SettingsMenu';
 
-import { canStartGame, isGameInProgress } from 'state/game/selectors';
+import { canStartGame, getRunnerNames, isGameInProgress } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import BasesPreview from './BasesPreview';
 
 const TopBar = () => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ const TopBar = () => {
 
   const gameInProgress = useAppSelector(isGameInProgress);
   const gameCanStart = useAppSelector(canStartGame);
+  const runners = useAppSelector(getRunnerNames);
 
   const startGame = useCallback(() => {
     dispatch(gameActions.startGame());
@@ -37,6 +39,11 @@ const TopBar = () => {
         {gameInProgress && <AnchorLink to="/plays">Plays</AnchorLink>}
       </Nav>
       <Box direction="row" margin={{ right: 'small' }}>
+        {gameInProgress && (
+          <Box alignSelf="center" margin={{ right: 'medium' }}>
+            <BasesPreview bases={runners} color="light-1" />
+          </Box>
+        )}
         {gameInProgress ? (
           <ScoreBug />
         ) : (

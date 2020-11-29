@@ -1,15 +1,16 @@
 import React, { FC, useMemo, useCallback, useEffect } from 'react';
 import { Box, Heading } from 'grommet';
 
-import FielderPrompt from './FielderPrompt';
+import FielderPrompt from './subprompts/FielderPrompt';
 import OptionSelector from './OptionSelector';
-import RunnerPrompt from './RunnerPrompt';
+import RunnerPrompt from './subprompts/RunnerPrompt';
 
 import { getSelectedSacFlyRunsScored } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
 import { SacrificeFlyOptions, BasePromptProps } from 'state/prompts/types';
+import PlateAppearancePreview from './PlateAppearancePreview';
 
 const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
   fielderOptions,
@@ -36,21 +37,24 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
   );
 
   return (
-    <Box gap="medium">
-      {runnersScoredOptions && (
-        <Box gap="xsmall">
-          <Heading level={4} margin="none" alignSelf="center">
-            Runs batted in
-          </Heading>
-          <OptionSelector
-            options={runnersScoredOptions}
-            value={selectedRunsScored}
-            onChange={handleChangeRunsScored}
-          />
-        </Box>
-      )}
-      {fielderOptions && <FielderPrompt {...fielderOptions} />}
+    <Box gap="medium" margin={{ top: 'medium' }}>
+      <Box direction="row" gap="small">
+        {runnersScoredOptions && (
+          <Box gap="xsmall" flex>
+            <Heading level={4} margin="none" alignSelf="center">
+              Runs batted in
+            </Heading>
+            <OptionSelector
+              options={runnersScoredOptions}
+              value={selectedRunsScored}
+              onChange={handleChangeRunsScored}
+            />
+          </Box>
+        )}
+        {fielderOptions && <FielderPrompt {...fielderOptions} />}
+      </Box>
       {runnerOptions && <RunnerPrompt {...runnerOptions} />}
+      <PlateAppearancePreview />
     </Box>
   );
 };

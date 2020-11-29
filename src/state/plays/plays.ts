@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 import { getNewBase, getBaseForRunner, forEachRunner } from 'state/game/utils';
-import { getHitLabelFromContact } from 'utils/labels';
+import { formatShortBaseName, getHitLabelFromContact } from 'utils/labels';
 
 import {
   PlateAppearanceType,
@@ -12,6 +12,7 @@ import {
   BaseType,
   HitType,
 } from 'state/game/types';
+import { RawPlayDescription } from './types';
 
 const getPositionTitle = (position: FieldingPosition) =>
   ({
@@ -55,15 +56,6 @@ const formatBaseName = (base: BaseType | null) => {
   }[base];
 };
 
-const formatShortBaseName = (base: BaseType | null) => {
-  if (base === null) return 'home';
-  return {
-    [BaseType.FIRST]: '1st',
-    [BaseType.SECOND]: '2nd',
-    [BaseType.THIRD]: '3rd',
-  }[base];
-};
-
 const makeOutPhrase = (runnerId: string, base: BaseType | null) =>
   `{${runnerId}} out at ${formatShortBaseName(base)}.`;
 
@@ -73,7 +65,7 @@ export const getPlayDescription = ({
   runnersScored,
   runnersAfter,
   scoreAfter,
-}: RecordedPlay) => {
+}: RecordedPlay): RawPlayDescription => {
   const sentences: string[] = [];
   const playerIds: string[] = [];
   let position: FieldingPosition | undefined;

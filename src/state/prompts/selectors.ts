@@ -1,6 +1,12 @@
+import { createNextState } from '@reduxjs/toolkit';
+import _ from 'lodash';
+
+import { getExtraRunnerMovementForPlateAppearance } from './prompts';
+
 import { AppState } from 'state/store';
 import { PlateAppearanceType, PlateAppearanceResult } from 'state/game/types';
-import { getExtraRunnerMovementForPlateAppearance } from './prompts';
+import { applyGameEvent } from 'state/game/utils';
+import { getPresent } from 'state/game/selectors';
 
 export const getSelectedRunnerOption = (state: AppState, runnerId: string) =>
   state.prompts.runnerChoices[runnerId];
@@ -26,3 +32,12 @@ export const getPlateAppearanceResult = (
   runsScoredOnSacFly: getSelectedSacFlyRunsScored(state),
   ...getExtraRunnerMovementForPlateAppearance(getAllRunnerChoices(state)),
 });
+
+export const getPlateAppearancePreview = (state: AppState, type: PlateAppearanceType) => {
+  const event = getPlateAppearanceResult(state, type);
+  const { gameHistory, runners, outs } = createNextState(getPresent(state), state =>
+    applyGameEvent(state, event)
+  );
+  const { runnersScored } = _.last(gameHistory)!;
+  return { runners, runnersScored, outs };
+};

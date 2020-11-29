@@ -1,13 +1,15 @@
 import React, { FC, useMemo, useEffect } from 'react';
-import { Box } from 'grommet';
 
-import ContactPrompt from './ContactPrompt';
-import FielderPrompt from './FielderPrompt';
-import RunnerPrompt from './RunnerPrompt';
+import PromptAccordion, { PromptAccordionPanel } from './PromptAccordion';
+import PlateAppearancePreview from './PlateAppearancePreview';
+import ContactPanel from './panels/ContactPanel';
+import RunnerPrompt from './subprompts/RunnerPrompt';
 
-import { HitOptions, BasePromptProps } from 'state/prompts/types';
 import { getSelectedContactOption } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';
+
+import { HitOptions, BasePromptProps } from 'state/prompts/types';
+import { Box } from 'grommet';
 
 const HitPrompt: FC<HitOptions & BasePromptProps> = ({
   contactOptions,
@@ -26,9 +28,15 @@ const HitPrompt: FC<HitOptions & BasePromptProps> = ({
 
   return (
     <Box gap="medium">
-      <ContactPrompt {...contactOptions} />
-      {fielderOptions && <FielderPrompt {...fielderOptions} />}
-      {runnerOptions && <RunnerPrompt {...runnerOptions} />}
+      <PromptAccordion>
+        <ContactPanel contactOptions={contactOptions} fielderOptions={fielderOptions} />
+        {runnerOptions && (
+          <PromptAccordionPanel label="Runners" preview="">
+            <RunnerPrompt {...runnerOptions} />
+          </PromptAccordionPanel>
+        )}
+      </PromptAccordion>
+      <PlateAppearancePreview />
     </Box>
   );
 };

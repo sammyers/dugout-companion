@@ -6,7 +6,7 @@ import TopBar from './TopBar';
 import Bases from './Bases';
 import Teams from './Teams';
 import BoxScore from './BoxScore';
-import Plays from './Plays';
+import Plays from './plays/Plays';
 
 import theme from 'theme';
 import { isGameOver } from 'state/game/selectors';

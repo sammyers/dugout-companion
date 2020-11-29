@@ -3,14 +3,18 @@ import { createSelector } from '@reduxjs/toolkit';
 import { formatShortName } from './utils';
 
 import { AppState } from 'state/store';
+import { Player } from './types';
+
+const getPlayer = (state: AppState, playerId: string): Player | undefined =>
+  state.players[playerId];
 
 export const getPlayerName = (state: AppState, playerId: string) => {
-  const player = state.players[playerId];
+  const player = getPlayer(state, playerId);
   return player ? `${player.firstName} ${player.lastName}` : '';
 };
 
 export const getShortPlayerName = (state: AppState, playerId: string) => {
-  const player = state.players[playerId];
+  const player = getPlayer(state, playerId);
   return player ? formatShortName(player) : '';
 };
 

@@ -15,8 +15,9 @@ import {
   isUndoPossible,
   isRedoPossible,
 } from 'state/game/selectors';
-import { BaseType } from 'state/game/types';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+
+import { BaseType } from 'state/game/types';
 
 import { ReactComponent as BaseIcon } from 'icons/base.svg';
 import { ReactComponent as HomeIcon } from 'icons/home.svg';
