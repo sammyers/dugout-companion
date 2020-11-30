@@ -61,7 +61,7 @@ const EventDetailPrompt: FC<Props> = ({ paType, onSubmit, onCancel }) => {
   }
 
   return (
-    <Layer>
+    <Layer responsive={false}>
       <Box pad="medium">
         <Heading level={3} margin="none" alignSelf="center">
           {getPlateAppearanceLabel(paType)} by {batter}

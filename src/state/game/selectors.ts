@@ -13,6 +13,7 @@ import {
   HalfInning,
   FieldingPosition,
   GameStatus,
+  Team,
 } from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
@@ -59,8 +60,14 @@ export const getBatterName = createSelector(
   (state, batterId) => (batterId ? getShortPlayerName(state, batterId) : '')
 );
 
+export const getPlayerAtPositionFromTeams = (
+  teams: [Team, Team],
+  team: TeamRole,
+  position: FieldingPosition
+) => _.findKey(teams[team].positions, p => p === position)!;
+
 export const getPlayerAtPosition = (state: AppState, team: TeamRole, position: FieldingPosition) =>
-  _.findKey(state.game.present.teams[team].positions, p => p === position)!;
+  getPlayerAtPositionFromTeams(getTeams(state), team, position);
 
 export const getPlayerPosition = (state: AppState, playerId: string) => {
   const { positions } = _.find(getTeams(state), ({ lineup }) => lineup.includes(playerId))!;

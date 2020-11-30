@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { Grid, Box, Text, Button } from 'grommet';
 import { Blank, Redo, Undo } from 'grommet-icons';
 import { Redirect } from 'react-router-dom';
@@ -21,6 +21,7 @@ import { BaseType } from 'state/game/types';
 
 import { ReactComponent as BaseIcon } from 'icons/base.svg';
 import { ReactComponent as HomeIcon } from 'icons/home.svg';
+import PlayNotification from './PlayNotification';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (
   <Blank size="large" color={occupied ? 'brand' : undefined} fillOpacity={occupied ? 1 : undefined}>
@@ -56,13 +57,15 @@ const Bases = () => {
     dispatch(ActionCreators.redo());
   }, [dispatch]);
 
+  const boxRef = useRef<HTMLDivElement | null>(null);
+
   if (!gameInProgress) {
     return <Redirect to="/teams" />;
   }
 
   return (
     <Box fill>
-      <Box flex>
+      <Box flex ref={boxRef}>
         <Grid
           fill
           rows={['xsmall', 'auto', 'xsmall']}
@@ -102,6 +105,7 @@ const Bases = () => {
           </Box>
           <EventReporter />
         </Grid>
+        {boxRef.current && <PlayNotification target={boxRef.current} />}
       </Box>
       <Box border={{ side: 'top' }} direction="row" justify="around" pad="medium">
         <Box direction="row" gap="small">

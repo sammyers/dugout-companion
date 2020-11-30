@@ -1,4 +1,5 @@
 import React, { FC, useMemo, useEffect } from 'react';
+import { Box } from 'grommet';
 
 import PromptAccordion, { PromptAccordionPanel } from './PromptAccordion';
 import PlateAppearancePreview from './PlateAppearancePreview';
@@ -9,7 +10,6 @@ import { getSelectedContactOption } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';
 
 import { HitOptions, BasePromptProps } from 'state/prompts/types';
-import { Box } from 'grommet';
 
 const HitPrompt: FC<HitOptions & BasePromptProps> = ({
   contactOptions,

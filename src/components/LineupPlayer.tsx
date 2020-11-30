@@ -5,7 +5,7 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import { getAvailablePositions, getPlayerPosition } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { getShortPlayerName } from 'state/players/selectors';
+import { getPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { getPositionAbbreviation } from 'utils/labels';
 
@@ -20,7 +20,7 @@ interface Props {
 const LineupPlayer: FC<Props> = ({ playerId, index, team }) => {
   const dispatch = useAppDispatch();
 
-  const name = useAppSelector(state => getShortPlayerName(state, playerId));
+  const name = useAppSelector(state => getPlayerName(state, playerId));
   const position = useAppSelector(state => getPlayerPosition(state, playerId));
 
   const availablePositions = useAppSelector(state => getAvailablePositions(state, team));

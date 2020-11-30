@@ -6,6 +6,7 @@ const theme: ThemeType = {
       brand: '#1c5253',
       'accent-3': '#C3DFE0',
       'status-critical-light': '#ffcccc',
+      'status-ok-light': '#ccffed',
     },
     focus: {
       outline: {

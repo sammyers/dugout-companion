@@ -8,8 +8,11 @@ import LineupPlayer from './LineupPlayer';
 import { getLineup, getPlayersNotInGame } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { TeamRole } from 'state/game/types';
-import { formatShortName } from 'state/players/utils';
+import { getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
+import { addPlayer } from 'state/players/slice';
+
+const NEW_PLAYER_ID = 'new-player';
 
 const Lineup = ({ team }: { team: TeamRole }) => {
   const dispatch = useAppDispatch();
@@ -22,9 +25,30 @@ const Lineup = ({ team }: { team: TeamRole }) => {
   const suggestions = useMemo(() => {
     if (!searchValue.length) return [];
 
-    return availablePlayers
+    const existingSuggestions = availablePlayers
       .filter(({ firstName }) => firstName.toLowerCase().startsWith(searchValue.toLowerCase()))
-      .map(player => ({ value: player.playerId, label: formatShortName(player) }));
+      .map(player => ({
+        value: player.playerId,
+        label: (
+          <Box pad="small">
+            <Text>
+              {player.firstName} {player.lastName}
+            </Text>
+          </Box>
+        ),
+      }));
+
+    if (searchValue.length > 2) {
+      return existingSuggestions.concat({
+        label: (
+          <Box border={{ color: 'status-ok', size: '2px' }} pad="small">
+            <Text>Add new player "{searchValue}"</Text>
+          </Box>
+        ),
+        value: NEW_PLAYER_ID,
+      });
+    }
+    return existingSuggestions;
   }, [availablePlayers, searchValue]);
 
   const handleSearchChange = useCallback(
@@ -35,11 +59,16 @@ const Lineup = ({ team }: { team: TeamRole }) => {
   const handleSuggestionSelect: NonNullable<TextInputProps['onSelect']> = useCallback(
     ({ suggestion }) => {
       if (suggestion) {
-        dispatch(gameActions.addPlayerToGame({ team, playerId: suggestion.value }));
+        let playerId = suggestion.value;
+        if (playerId === NEW_PLAYER_ID) {
+          const { payload } = dispatch(addPlayer(getNameParts(searchValue)));
+          playerId = payload.playerId;
+        }
+        dispatch(gameActions.addPlayerToGame({ team, playerId }));
         setSearchValue('');
       }
     },
-    [team, dispatch, setSearchValue]
+    [team, dispatch, searchValue, setSearchValue]
   );
 
   return (
@@ -56,7 +85,7 @@ const Lineup = ({ team }: { team: TeamRole }) => {
       />
       <Box direction="row" margin={{ top: 'small' }}>
         <Box width="xxsmall">
-          {_.range(1, 11).map(lineupSpot => (
+          {_.range(1, Math.max(9, players.length) + 1).map(lineupSpot => (
             <Box key={lineupSpot} height="xxsmall" justify="center">
               <Text>{lineupSpot}</Text>
             </Box>

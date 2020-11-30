@@ -1,27 +1,39 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { getFuture, getGameHistory, getPlayerAtPosition } from 'state/game/selectors';
-import { getShortPlayerName } from 'state/players/selectors';
+import {
+  getFuture,
+  getGameHistory,
+  getPlayerAtPositionFromTeams,
+  getTeams,
+} from 'state/game/selectors';
+import { getPlayerGetter } from 'state/players/selectors';
+import { formatShortName } from 'state/players/utils';
 import { getPlayDescription } from './plays';
 
-import { HalfInning, RecordedPlay } from 'state/game/types';
-import { AppState } from 'state/store';
+import { HalfInning, RecordedPlay, Team } from 'state/game/types';
+import { Player } from 'state/players/types';
 import { HalfInningPlaysGroup, PlayDescription } from './types';
 
-const makeInterpolatedPlayDescription = (state: AppState, play: RecordedPlay): PlayDescription => {
+const makeInterpolatedPlayDescription = (
+  play: RecordedPlay,
+  playerGetter: (playerId: string) => Player,
+  teams: [Team, Team]
+): PlayDescription => {
   const { description, playerIds, position, newNumOuts, newScore } = getPlayDescription(play);
   let interpolatedDescription = description;
   if (position) {
     interpolatedDescription = description.replace(
       new RegExp(`{${position}}`),
-      getShortPlayerName(state, getPlayerAtPosition(state, 1 - play.gameState.halfInning, position))
+      formatShortName(
+        playerGetter(getPlayerAtPositionFromTeams(teams, 1 - play.gameState.halfInning, position))
+      )
     );
   }
   playerIds.forEach(playerId => {
     interpolatedDescription = interpolatedDescription.replace(
       new RegExp(`{${playerId}}`, 'g'),
-      getShortPlayerName(state, playerId)
+      formatShortName(playerGetter(playerId))
     );
   });
 
@@ -35,8 +47,9 @@ const makeInterpolatedPlayDescription = (state: AppState, play: RecordedPlay): P
 
 export const getAllPlays = createSelector(
   getGameHistory,
-  state => state,
-  (history, state): HalfInningPlaysGroup[] => {
+  getPlayerGetter,
+  getTeams,
+  (history, playerGetter, teams): HalfInningPlaysGroup[] => {
     const groupedPlaysByInning = history.reduce((groupedPlays, play) => {
       const { inning, halfInning } = play.gameState;
       if (!groupedPlays.length) {
@@ -55,7 +68,7 @@ export const getAllPlays = createSelector(
     return groupedPlaysByInning.map(({ inning, halfInning, plays }) => ({
       inning,
       halfInning,
-      plays: plays.map(play => makeInterpolatedPlayDescription(state, play)),
+      plays: plays.map(play => makeInterpolatedPlayDescription(play, playerGetter, teams)),
     }));
   }
 );
@@ -72,18 +85,16 @@ export const getScoringPlays = createSelector(getAllPlays, groups =>
 
 export const getLastPlay = createSelector(
   getGameHistory,
-  state => state,
-  (history, state) => {
+  getPlayerGetter,
+  getTeams,
+  (history, playerGetter, teams) => {
     const lastPlay = _.last(history);
-    return lastPlay && makeInterpolatedPlayDescription(state, lastPlay);
+    return lastPlay && makeInterpolatedPlayDescription(lastPlay, playerGetter, teams);
   }
 );
 
-export const getNextPlay = createSelector(
-  getFuture,
-  state => state,
-  (future, state) => {
-    const nextPlay = _.last(_.first(future)?.gameHistory);
-    return nextPlay && makeInterpolatedPlayDescription(state, nextPlay);
-  }
-);
+export const getNextPlay = createSelector(getFuture, getPlayerGetter, (future, playerGetter) => {
+  const nextState = _.first(future);
+  const nextPlay = _.last(nextState?.gameHistory);
+  return nextPlay && makeInterpolatedPlayDescription(nextPlay, playerGetter, nextState!.teams);
+});

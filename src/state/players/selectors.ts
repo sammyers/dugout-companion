@@ -23,3 +23,7 @@ export const getAllPlayersList = createSelector(getAllPlayers, players => Object
 
 export const getPlayerOptionsForSelector = (state: AppState, playerIds: string[]) =>
   playerIds.map(id => ({ label: getShortPlayerName(state, id), value: id }));
+
+export const getPlayerGetter = createSelector(getAllPlayers, players => (playerId: string) =>
+  players[playerId]
+);
