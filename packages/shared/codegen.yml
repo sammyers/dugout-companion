@@ -1,0 +1,13 @@
+overwrite: true
+schema: 'src/graphql/schema.ts'
+documents: 'graphql/**/*.graphql'
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-resolvers'
+      - 'typescript-react-apollo'
+    config:
+      withHooks: true
+      useIndexSignature: true

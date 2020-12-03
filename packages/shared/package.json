@@ -1,0 +1,28 @@
+{
+  "name": "@dugout-companion/shared",
+  "version": "1.0.0",
+  "description": "Common type definitions and utilites for Dugout Companion",
+  "main": "build/index.js",
+  "typings": "build/index.d.ts",
+  "repository": "https://github.com/sammyers/dugout-companion",
+  "author": "Sam Myers <sammyers.dev@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "codegen": "graphql-codegen --config codegen.yml",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.2",
+    "apollo-server-express": "^2.19.0",
+    "graphql": "^15.4.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "1.19.4",
+    "@graphql-codegen/introspection": "1.18.1",
+    "@graphql-codegen/typescript": "1.19.0",
+    "@graphql-codegen/typescript-operations": "1.17.12",
+    "@graphql-codegen/typescript-react-apollo": "2.2.1",
+    "@graphql-codegen/typescript-resolvers": "1.18.0",
+    "typescript": "4.0.3"
+  }
+}
