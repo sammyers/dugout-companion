@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Grommet, Main, Box } from 'grommet';
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom';
 
+import { useCreatePlayerMutation } from '@dugout-companion/shared';
+
 import TopBar from './TopBar';
 import Bases from './Bases';
 import Teams from './Teams';
@@ -23,10 +25,13 @@ const App = () => {
 
   const gameOver = useAppSelector(isGameOver);
 
+  const [createPlayer] = useCreatePlayerMutation();
+
   useMount(() => {
     players.forEach(player => {
       const [firstName, lastName] = player.split(' ');
       dispatch(addPlayer({ firstName, lastName }));
+      createPlayer({ variables: { firstName, lastName } });
     });
   });
 

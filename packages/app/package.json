@@ -27,6 +27,7 @@
     ]
   },
   "dependencies": {
+    "@apollo/client": "^3.3.3",
     "@dugout-companion/shared": "^1.0.0",
     "@reduxjs/toolkit": "^1.4.0",
     "@testing-library/jest-dom": "^5.11.4",

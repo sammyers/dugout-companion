@@ -1,4 +1,4 @@
-query allPlayers {
+query GetAllPlayers {
   players {
     id
     firstName

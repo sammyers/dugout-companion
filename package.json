@@ -7,6 +7,7 @@
   "scripts": {
     "app": "yarn workspace @dugout-companion/app",
     "server": "yarn workspace @dugout-companion/server",
-    "shared": "yarn workspace @dugout-companion/shared"
+    "shared": "yarn workspace @dugout-companion/shared",
+    "db": "yarn workspace @dugout-companion/db"
   }
 }

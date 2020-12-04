@@ -1,0 +1,9 @@
+mutation CreatePlayer($firstName: String!, $lastName: String) {
+  createPlayer(input: { player: { firstName: $firstName, lastName: $lastName } }) {
+    player {
+      id
+      firstName
+      lastName
+    }
+  }
+}

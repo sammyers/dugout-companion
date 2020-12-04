@@ -1,0 +1,21 @@
+{
+  "name": "@dugout-companion/db",
+  "version": "1.0.0",
+  "description": "Database migrations and scripts for Dugout Companion.",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "setup": "node -r @dugout-companion/shared/env ./scripts/setup.js",
+    "gm": "node -r @dugout-companion/shared/env node_modules/.bin/graphile-migrate",
+    "migrate": "yarn gm migrate",
+    "watch": "yarn gm watch",
+    "commit": "yarn gm commit",
+    "uncommit": "yarn gm uncommit",
+    "reset": "yarn gm reset"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "graphile-migrate": "^1.0.2",
+    "pg": "^8.5.1"
+  }
+}
