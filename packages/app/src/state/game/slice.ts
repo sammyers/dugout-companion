@@ -78,7 +78,7 @@ const makeNewLineup = (state: AppGameState, role: TeamRole, lineupSpots?: Lineup
   const lineupBeforeId = _.last(team.lineups)!.id;
   const newLineup = {
     id: nextLineupId,
-    originalClientId: nextLineupId,
+    originalClientId: null,
     lineupSpots: lineupSpots ?? [...currentLineup],
   };
   team.lineups.push(newLineup);
@@ -328,6 +328,13 @@ const { actions: gameActions, reducer } = createSlice({
   reducers: {
     addPlayerToGame(state, { payload: { teamRole, playerId } }: PayloadAction<AddPlayerPayload>) {
       const team = getTeamWithRole(state.teams, teamRole);
+      if (!team.lineups.length) {
+        team.lineups.push({
+          id: state.nextLineupId,
+          originalClientId: null,
+          lineupSpots: [],
+        });
+      }
       const lineup = getCurrentLineup(team);
       if (!_.some(lineup, { playerId })) {
         const newSpot = { playerId, position: getNextAvailablePosition(team)! };
