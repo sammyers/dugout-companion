@@ -1,10 +1,10 @@
 import {
-  PlateAppearanceType,
-  FieldingPosition,
-  ContactType,
-  HitContactType,
   BaseType,
-} from 'state/game/types';
+  ContactQuality,
+  FieldingPosition,
+  PlateAppearanceType,
+} from '@dugout-companion/shared';
+import { HitContactType } from 'state/game/types';
 import { BasepathOutcome } from 'state/prompts/types';
 
 export const formatShortBaseName = (base: BaseType | null) => {
@@ -44,23 +44,23 @@ export const getPlateAppearanceLabel = (paType: PlateAppearanceType) =>
     [PlateAppearanceType.DOUBLE_PLAY]: 'Double Play',
   }[paType]);
 
-export const getOutLabelFromContact = (contactType: ContactType) =>
+export const getOutLabelFromContact = (contactType: ContactQuality) =>
   ({
-    [ContactType.GROUNDER]: 'Groundout',
-    [ContactType.LAZY_FLY]: 'Lazy flyout',
-    [ContactType.LINE_DRIVE]: 'Lineout',
-    [ContactType.LONG_FLY]: 'Long flyout',
-    [ContactType.POPUP]: 'Popout',
-    [ContactType.NONE]: 'Strikeout',
+    [ContactQuality.GROUNDER]: 'Groundout',
+    [ContactQuality.LAZY_FLY]: 'Lazy flyout',
+    [ContactQuality.LINE_DRIVE]: 'Lineout',
+    [ContactQuality.LONG_FLY]: 'Long flyout',
+    [ContactQuality.POPUP]: 'Popout',
+    [ContactQuality.NONE]: 'Strikeout',
   }[contactType]);
 
 export const getHitLabelFromContact = (contactType: HitContactType) =>
   ({
-    [ContactType.GROUNDER]: 'Ground ball',
-    [ContactType.LAZY_FLY]: 'Lazy fly ball',
-    [ContactType.LINE_DRIVE]: 'Line drive',
-    [ContactType.LONG_FLY]: 'Long fly ball',
-    [ContactType.POPUP]: 'Pop fly',
+    [ContactQuality.GROUNDER]: 'Ground ball',
+    [ContactQuality.LAZY_FLY]: 'Lazy fly ball',
+    [ContactQuality.LINE_DRIVE]: 'Line drive',
+    [ContactQuality.LONG_FLY]: 'Long fly ball',
+    [ContactQuality.POPUP]: 'Pop fly',
   }[contactType]);
 
 export const getRunnerOptionLabel = (option: BasepathOutcome) => {

@@ -1,6 +1,7 @@
+import { ContactQuality, PlateAppearanceType } from '@dugout-companion/shared';
 import _ from 'lodash';
 
-import { RecordedPlay, PlateAppearanceType, ContactType } from 'state/game/types';
+import { GameEventRecord } from 'state/game/types';
 import { PlayerStats } from 'state/players/types';
 
 export const initialStats: PlayerStats = {
@@ -20,7 +21,7 @@ export const initialStats: PlayerStats = {
   leftOnBase: 0,
 };
 
-export const aggregateStats = (plays: RecordedPlay[]) => {
+export const aggregateStats = (plays: GameEventRecord[]) => {
   const allStats: Record<string, PlayerStats> = {};
   const updatePlayer = (playerId: string, callback: (stats: PlayerStats) => void) => {
     if (!(playerId in allStats)) {
@@ -28,29 +29,31 @@ export const aggregateStats = (plays: RecordedPlay[]) => {
     }
     callback(allStats[playerId]);
   };
-  plays.forEach(({ gameState, event, runnersScored, runnersBattedIn }) => {
-    runnersScored.forEach(runnerId => {
+  plays.forEach(({ gameStateBefore, gameEvent, scoredRunners }) => {
+    scoredRunners.forEach(({ runnerId }) => {
       updatePlayer(runnerId, stats => void stats.runsScored++);
     });
-    if (event.kind === 'stolenBaseAttempt') {
-      updatePlayer(event.runnerId, stats => {
-        if (event.success) {
+    if (gameEvent.stolenBaseAttempt) {
+      const { runnerId, success } = gameEvent.stolenBaseAttempt;
+      updatePlayer(runnerId, stats => {
+        if (success) {
           stats.stolenBases++;
         } else {
           stats.caughtStealing++;
         }
       });
-    } else {
-      updatePlayer(gameState.atBat!, stats => {
-        stats.runsBattedIn += runnersBattedIn.length;
+    } else if (gameEvent.plateAppearance) {
+      updatePlayer(gameStateBefore.playerAtBat, stats => {
+        stats.runsBattedIn += _.filter(scoredRunners, { battedIn: true }).length;
+        const { type, contact } = gameEvent.plateAppearance!;
 
-        if (event.type === PlateAppearanceType.WALK) {
+        if (type === PlateAppearanceType.WALK) {
           stats.walks++;
-        } else if (event.type === PlateAppearanceType.SACRIFICE_FLY) {
+        } else if (type === PlateAppearanceType.SACRIFICE_FLY) {
           stats.sacrificeFlies++;
         } else {
           stats.atBats++;
-          switch (event.type) {
+          switch (type) {
             case PlateAppearanceType.SINGLE:
               stats.hits++;
               break;
@@ -67,19 +70,19 @@ export const aggregateStats = (plays: RecordedPlay[]) => {
               stats.homeRuns++;
               break;
             case PlateAppearanceType.OUT:
-              if (event.contactType === ContactType.NONE) {
+              if (contact === ContactQuality.NONE) {
                 stats.strikeouts++;
               }
-              stats.leftOnBase += _.size(gameState.runners);
+              stats.leftOnBase += gameStateBefore.baseRunners.length;
               break;
             case PlateAppearanceType.DOUBLE_PLAY:
-              if (event.contactType === ContactType.GROUNDER) {
+              if (contact === ContactQuality.GROUNDER) {
                 stats.groundIntoDoublePlays++;
               }
-              stats.leftOnBase += _.size(gameState.runners) - 1;
+              stats.leftOnBase += gameStateBefore.baseRunners.length - 1;
               break;
             case PlateAppearanceType.FIELDERS_CHOICE:
-              stats.leftOnBase += _.size(gameState.runners);
+              stats.leftOnBase += gameStateBefore.baseRunners.length;
               break;
           }
         }

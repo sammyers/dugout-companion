@@ -1,4 +1,5 @@
-import { BaseType } from 'state/game/types';
+import { BaseType } from '@dugout-companion/shared';
+
 import { getAvailableBases, getRunnerOptions } from './prompts';
 
 describe('getAvailableBases', () => {

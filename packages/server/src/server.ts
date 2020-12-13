@@ -1,11 +1,14 @@
 import express from 'express';
 import postgraphile from 'postgraphile';
+import LdsPlugin from '@graphile/subscriptions-lds';
 import SimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector';
+import NestedMutationsPlugin from 'postgraphile-plugin-nested-mutations';
 
 const app = express();
 
 const middleware = postgraphile(process.env.AUTH_DATABASE_URL, 'public', {
-  appendPlugins: [SimplifyInflectorPlugin],
+  live: true,
+  appendPlugins: [SimplifyInflectorPlugin, NestedMutationsPlugin, LdsPlugin],
   watchPg: true,
   graphiql: true,
   enhanceGraphiql: true,
@@ -30,6 +33,7 @@ const middleware = postgraphile(process.env.AUTH_DATABASE_URL, 'public', {
   },
   graphileBuildOptions: {
     pgOmitListSuffix: true,
+    nestedMutationsSimpleFieldNames: true,
   },
   exportGqlSchemaPath: `${__dirname}/../../shared/schema.graphql`,
   enableCors: true,

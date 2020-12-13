@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { Box, Button } from 'grommet';
 
+import { PlateAppearanceType } from '@dugout-companion/shared';
+
 import EventDetailPrompt from './prompts/EventDetailPrompt';
 
 import { getPlateAppearanceOptions } from 'state/game/selectors';
@@ -8,8 +10,6 @@ import { gameActions } from 'state/game/slice';
 import { getPlateAppearanceResult } from 'state/prompts/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { getPlateAppearanceLabel } from 'utils/labels';
-
-import { PlateAppearanceType } from 'state/game/types';
 
 const buttonGroups = [
   {
@@ -46,7 +46,9 @@ const EventReporter = () => {
     if (pendingPlateAppearance) {
       dispatch((dispatch, getState) => {
         dispatch(
-          gameActions.recordGameEvent(getPlateAppearanceResult(getState(), pendingPlateAppearance))
+          gameActions.recordPlateAppearance(
+            getPlateAppearanceResult(getState(), pendingPlateAppearance)
+          )
         );
       });
     }

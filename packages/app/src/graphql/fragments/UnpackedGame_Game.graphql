@@ -1,0 +1,57 @@
+fragment UnpackedGame_Game on Game {
+  datePlayed
+  id
+  gameLength
+  location
+  name
+  score
+  gameEventRecords {
+    gameEvent {
+      lineupChange {
+        lineupBeforeId
+        lineupAfterId
+      }
+      stolenBaseAttempt {
+        runnerId
+        success
+      }
+      plateAppearance {
+        type
+        contact
+        fieldedBy
+        outOnPlayRunners {
+          runnerId
+        }
+        basepathMovements {
+          runnerId
+          endBase
+          wasSafe
+        }
+        runsScoredOnSacFly
+      }
+    }
+    scoredRunners {
+      runnerId
+      battedIn
+    }
+    gameStateBefore {
+      ...GameEventRecord_GameState
+    }
+    gameStateAfter {
+      ...GameEventRecord_GameState
+    }
+  }
+  teams {
+    name
+    role
+    lineups {
+      id
+      originalClientId
+      lineupSpots(orderBy: BATTING_ORDER_ASC) {
+        playerId
+        position
+      }
+    }
+    winner
+  }
+}

@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import { Card, CardHeader, Text, CardBody } from 'grommet';
 
+import { HalfInning } from '@dugout-companion/shared';
+
 import Play from './Play';
 
 import { getOrdinalInning } from 'utils/labels';
 
-import { HalfInning } from 'state/game/types';
 import { HalfInningPlaysGroup } from 'state/plays/types';
 
 const HalfInningPlays: FC<HalfInningPlaysGroup> = ({ inning, halfInning, plays }) => (

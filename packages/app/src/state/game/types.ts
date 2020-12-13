@@ -1,90 +1,41 @@
-export enum HalfInning {
-  TOP,
-  BOTTOM,
-}
-export enum TeamRole {
-  AWAY,
-  HOME,
-}
-export enum BaseType {
-  FIRST = 'FIRST',
-  SECOND = 'SECOND',
-  THIRD = 'THIRD',
-}
-export enum FieldingPosition {
-  PITCHER = 'PITCHER',
-  CATCHER = 'CATCHER',
-  FIRST_BASE = 'FIRST_BASE',
-  SECOND_BASE = 'SECOND_BASE',
-  THIRD_BASE = 'THIRD_BASE',
-  SHORTSTOP = 'SHORTSTOP',
-  LEFT_FIELD = 'LEFT_FIELD',
-  CENTER_FIELD = 'CENTER_FIELD',
-  LEFT_CENTER = 'LEFT_CENTER',
-  RIGHT_CENTER = 'RIGHT_CENTER',
-  RIGHT_FIELD = 'RIGHT_FIELD',
-}
-export enum PlateAppearanceType {
-  OUT = 'OUT',
-  WALK = 'WALK',
-  SINGLE = 'SINGLE',
-  DOUBLE = 'DOUBLE',
-  TRIPLE = 'TRIPLE',
-  HOMERUN = 'HOMERUN',
-  SACRIFICE_FLY = 'SACRIFICE_FLY',
-  FIELDERS_CHOICE = 'FIELDERS_CHOICE',
-  DOUBLE_PLAY = 'DOUBLE_PLAY',
-}
-export enum ContactType {
-  NONE = 'NONE',
-  GROUNDER = 'GROUNDER',
-  LINE_DRIVE = 'LINE_DRIVE',
-  POPUP = 'POPUP',
-  LAZY_FLY = 'LAZY_FLY',
-  LONG_FLY = 'LONG_FLY',
-}
-export type HitType = Exclude<
+import {
+  ContactQuality,
+  FieldingPosition,
   PlateAppearanceType,
-  | PlateAppearanceType.DOUBLE_PLAY
-  | PlateAppearanceType.FIELDERS_CHOICE
-  | PlateAppearanceType.OUT
-  | PlateAppearanceType.SACRIFICE_FLY
-  | PlateAppearanceType.WALK
+  TeamRole,
+  UnpackedGame_GameFragment,
+} from '@dugout-companion/shared';
+
+import { SimplifyType } from 'utils/common';
+
+export type Game = SimplifyType<
+  UnpackedGame_GameFragment,
+  'gameEvent' | 'gameStateBefore' | 'gameStateAfter'
 >;
-export type HitContactType = Exclude<ContactType, ContactType.NONE>;
+export type GameEventRecord = Game['gameEventRecords'][number];
+export type Team = Game['teams'][number];
+export type Lineup = Team['lineups'][number];
+export type LineupSpot = Lineup['lineupSpots'][number];
 
-export interface Team {
-  name: string;
-  lineup: string[];
-  positions: {
-    [playerId: string]: FieldingPosition;
-  };
-}
+export type GameEventContainer = GameEventRecord['gameEvent'];
+export type PlateAppearance = NonNullable<GameEventContainer['plateAppearance']>;
+export type LineupChange = NonNullable<GameEventContainer['lineupChange']>;
+export type StolenBaseAttempt = NonNullable<GameEventContainer['stolenBaseAttempt']>;
 
-export type BaseRunners = Partial<Record<BaseType, string>>;
+export type HitType =
+  | PlateAppearanceType.SINGLE
+  | PlateAppearanceType.DOUBLE
+  | PlateAppearanceType.TRIPLE
+  | PlateAppearanceType.HOMERUN;
+export type HitContactType = Exclude<ContactQuality, ContactQuality.NONE>;
 
-export interface PlateAppearanceResult {
-  kind: 'plateAppearance';
-  type: PlateAppearanceType;
-  contactType?: ContactType;
-  fieldedBy?: FieldingPosition;
-  runnersOutOnPlay: string[];
-  basesTaken: {
-    [runnerId: string]: BaseType | null;
-  };
-  outsOnBasepaths: {
-    [runnerId: string]: BaseType | null;
-  };
-  runsScoredOnSacFly?: number;
-}
-
-export interface StolenBaseAttempt {
-  kind: 'stolenBaseAttempt';
-  runnerId: string;
-  success: boolean;
-}
-
-export type GameEvent = PlateAppearanceResult | StolenBaseAttempt;
+export type GameState = GameEventRecord['gameStateBefore'];
+export type BaseRunners = GameState['baseRunners'];
+export type BaseRunnerMap = Partial<
+  Record<BaseRunners[number]['base'], BaseRunners[number]['runnerId']>
+>;
+export type ScoredRunner = GameEventRecord['scoredRunners'][number];
+export type BasepathMovement = PlateAppearance['basepathMovements'][number];
 
 export enum GameStatus {
   NOT_STARTED = 'NOT_STARTED',
@@ -92,34 +43,18 @@ export enum GameStatus {
   FINISHED = 'FINISHED',
 }
 
-export interface GameState {
-  status: GameStatus;
-  teams: [Team, Team];
-  inning: number;
-  halfInning: HalfInning;
-  atBat?: string;
-  upNextHalfInning?: string;
-  runners: BaseRunners;
-  outs: number;
-  gameHistory: RecordedPlay[];
-  score: [number, number];
-  gameLength: number;
-}
-
-export interface RecordedPlay {
-  gameState: Required<
-    Pick<GameState, 'atBat' | 'inning' | 'halfInning' | 'runners' | 'outs' | 'score'>
-  >;
-  event: GameEvent;
-  runnersScored: string[];
-  runnersBattedIn: string[];
-  runnersAfter: BaseRunners;
-  scoreAfter: [number, number];
-}
+export type AppGameState = SimplifyType<
+  GameState &
+    Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords'> & {
+      status: GameStatus;
+      upNextHalfInning?: string;
+      nextLineupId: number;
+    }
+>;
 
 export interface AddPlayerPayload {
   playerId: string;
-  team: TeamRole;
+  teamRole: TeamRole;
 }
 
 export interface MovePlayerPayload {

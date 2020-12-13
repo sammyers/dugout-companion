@@ -2,24 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 import { v1 as uuidv1 } from 'uuid';
 
-import { Player, NewPlayer, NewPlayerWithId, PlayerStats } from './types';
-
-const initialStats: PlayerStats = {
-  atBats: 0,
-  hits: 0,
-  doubles: 0,
-  triples: 0,
-  homeRuns: 0,
-  walks: 0,
-  stolenBases: 0,
-  caughtStealing: 0,
-  runsBattedIn: 0,
-  runsScored: 0,
-  strikeouts: 0,
-  sacrificeFlies: 0,
-  groundIntoDoublePlays: 0,
-  leftOnBase: 0,
-};
+import { Player, NewPlayer } from './types';
 
 const doesPlayerExist = (newPlayer: NewPlayer, players: Record<string, Player>) =>
   _.some(
@@ -27,20 +10,31 @@ const doesPlayerExist = (newPlayer: NewPlayer, players: Record<string, Player>) 
     player => player.firstName === newPlayer.firstName && player.lastName === newPlayer.lastName
   );
 
-const { actions, reducer } = createSlice({
+type PlayerMap = Record<string, Player>;
+
+const { actions: playerActions, reducer } = createSlice({
   name: 'players',
-  initialState: {} as Record<string, Player>,
+  initialState: {} as PlayerMap,
   reducers: {
+    loadPlayers: (_state, { payload }: PayloadAction<Player[]>) =>
+      _.reduce(
+        payload,
+        (all, player) => ({
+          ...all,
+          [player.id]: player,
+        }),
+        {} as PlayerMap
+      ),
     addPlayer: {
-      reducer(state, { payload }: PayloadAction<NewPlayerWithId>) {
+      reducer(state, { payload }: PayloadAction<Player>) {
         if (!doesPlayerExist(payload, state)) {
-          state[payload.playerId] = { ...payload, games: 0, stats: initialStats };
+          state[payload.id] = payload;
         }
       },
-      prepare: (player: NewPlayer) => ({ payload: { ...player, playerId: uuidv1() } }),
+      prepare: (player: NewPlayer) => ({ payload: { ...player, id: uuidv1() } }),
     },
   },
 });
 
-export const { addPlayer } = actions;
+export { playerActions };
 export default reducer;

@@ -1,5 +1,6 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
+import _ from 'lodash';
 
 import PromptAccordion, { PromptAccordionPanel } from './PromptAccordion';
 import PlateAppearancePreview from './PlateAppearancePreview';
@@ -37,7 +38,7 @@ const DoublePlayPrompt: FC<DoublePlayOptions & BasePromptProps> = ({
     () =>
       nextOptions &&
       !!selectedOutsOnPlay.length &&
-      nextOptions.getNextOptions?.(selectedOutsOnPlay),
+      nextOptions.getNextOptions?.(_.map(selectedOutsOnPlay, 'runnerId')),
     [nextOptions, selectedOutsOnPlay]
   );
 

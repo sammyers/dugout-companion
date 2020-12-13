@@ -1,0 +1,9 @@
+fragment NewLineups_Game on Game {
+  teams {
+    id
+    lineups {
+      id
+      originalClientId
+    }
+  }
+}

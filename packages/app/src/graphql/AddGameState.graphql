@@ -1,8 +1,0 @@
-mutation AddGameState($base: BaseType!) {
-  createGameState(input: { gameState: { base: $base } }) {
-    gameState {
-      id
-      base
-    }
-  }
-}

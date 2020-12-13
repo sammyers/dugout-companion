@@ -2,10 +2,11 @@ import React, { useCallback } from 'react';
 import { Box } from 'grommet';
 import { DragDropContext, DragDropContextProps } from 'react-beautiful-dnd';
 
+import { TeamRole } from '@dugout-companion/shared';
+
 import Lineup from './Lineup';
 
 import { gameActions } from 'state/game/slice';
-import { TeamRole } from 'state/game/types';
 import { useAppDispatch } from 'utils/hooks';
 
 const Teams = () => {
@@ -36,8 +37,8 @@ const Teams = () => {
         flex={{ shrink: 0 }}
         basis="auto"
       >
-        <Lineup team={TeamRole.AWAY} />
-        <Lineup team={TeamRole.HOME} />
+        <Lineup teamRole={TeamRole.AWAY} />
+        <Lineup teamRole={TeamRole.HOME} />
       </Box>
     </DragDropContext>
   );

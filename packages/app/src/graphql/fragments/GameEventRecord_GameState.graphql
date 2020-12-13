@@ -1,0 +1,11 @@
+fragment GameEventRecord_GameState on GameState {
+  inning
+  halfInning
+  outs
+  playerAtBat
+  score
+  baseRunners {
+    runnerId
+    base
+  }
+}

@@ -1,3 +1,6 @@
+import { GetAllPlayersSubscription } from '@dugout-companion/shared';
+import { SimplifyType } from 'utils/common';
+
 export interface CountingStats {
   atBats: number;
   hits: number;
@@ -25,16 +28,6 @@ export interface RateStats {
 
 export type PlayerStats = CountingStats & Partial<RateStats>;
 
-export interface NewPlayer {
-  firstName: string;
-  lastName: string;
-}
+export type Player = NonNullable<SimplifyType<GetAllPlayersSubscription['players']>>[number];
 
-export interface NewPlayerWithId extends NewPlayer {
-  playerId: string;
-}
-
-export interface Player extends NewPlayerWithId {
-  games: number;
-  stats: PlayerStats;
-}
+export type NewPlayer = Pick<Player, 'firstName' | 'lastName'>;

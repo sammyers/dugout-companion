@@ -3,21 +3,22 @@ import { Box, Text, TextInput, TextInputProps, Heading } from 'grommet';
 import _ from 'lodash';
 import { Droppable } from 'react-beautiful-dnd';
 
+import { TeamRole } from '@dugout-companion/shared';
+
 import LineupPlayer from './LineupPlayer';
 
 import { getLineup, getPlayersNotInGame } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { TeamRole } from 'state/game/types';
 import { getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-import { addPlayer } from 'state/players/slice';
+import { playerActions } from 'state/players/slice';
 
 const NEW_PLAYER_ID = 'new-player';
 
-const Lineup = ({ team }: { team: TeamRole }) => {
+const Lineup = ({ teamRole }: { teamRole: TeamRole }) => {
   const dispatch = useAppDispatch();
 
-  const players = useAppSelector(state => getLineup(state, team));
+  const players = useAppSelector(state => getLineup(state, teamRole));
   const availablePlayers = useAppSelector(getPlayersNotInGame);
 
   const [searchValue, setSearchValue] = useState('');
@@ -28,7 +29,7 @@ const Lineup = ({ team }: { team: TeamRole }) => {
     const existingSuggestions = availablePlayers
       .filter(({ firstName }) => firstName.toLowerCase().startsWith(searchValue.toLowerCase()))
       .map(player => ({
-        value: player.playerId,
+        value: player.id,
         label: (
           <Box pad="small">
             <Text>
@@ -61,20 +62,20 @@ const Lineup = ({ team }: { team: TeamRole }) => {
       if (suggestion) {
         let playerId = suggestion.value;
         if (playerId === NEW_PLAYER_ID) {
-          const { payload } = dispatch(addPlayer(getNameParts(searchValue)));
-          playerId = payload.playerId;
+          const { payload } = dispatch(playerActions.addPlayer(getNameParts(searchValue)));
+          playerId = payload.id;
         }
-        dispatch(gameActions.addPlayerToGame({ team, playerId }));
+        dispatch(gameActions.addPlayerToGame({ teamRole, playerId }));
         setSearchValue('');
       }
     },
-    [team, dispatch, searchValue, setSearchValue]
+    [teamRole, dispatch, searchValue, setSearchValue]
   );
 
   return (
     <Box flex>
       <Heading level={4} textAlign="center" margin={{ top: 'none' }}>
-        {team === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
+        {teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
       </Heading>
       <TextInput
         placeholder="Add Player"
@@ -91,11 +92,17 @@ const Lineup = ({ team }: { team: TeamRole }) => {
             </Box>
           ))}
         </Box>
-        <Droppable droppableId={team === TeamRole.AWAY ? 'AWAY' : 'HOME'}>
+        <Droppable droppableId={teamRole === TeamRole.AWAY ? 'AWAY' : 'HOME'}>
           {({ innerRef, droppableProps, placeholder }) => (
             <Box ref={innerRef} {...droppableProps} flex>
-              {players.map((playerId, index) => (
-                <LineupPlayer key={playerId} playerId={playerId} index={index} team={team} />
+              {players.map(({ playerId, position }, index) => (
+                <LineupPlayer
+                  key={playerId}
+                  playerId={playerId}
+                  position={position}
+                  index={index}
+                  team={teamRole}
+                />
               ))}
               {placeholder}
             </Box>

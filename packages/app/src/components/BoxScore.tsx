@@ -2,13 +2,14 @@ import React, { FC } from 'react';
 import { Box, Card, DataTable, Text } from 'grommet';
 import { Redirect } from 'react-router-dom';
 
+import { TeamRole } from '@dugout-companion/shared';
+
 import { isGameInProgress, getPlayerPosition } from 'state/game/selectors';
 import { getShortPlayerName } from 'state/players/selectors';
 import { getBoxScore } from 'state/stats/selectors';
 import { useAppSelector } from 'utils/hooks';
 import { getPositionAbbreviation } from 'utils/labels';
 
-import { TeamRole } from 'state/game/types';
 import { BoxScoreRow } from 'state/stats/types';
 
 interface NameCellProps {

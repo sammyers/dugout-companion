@@ -1,4 +1,7 @@
-import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import { ApolloClient, InMemoryCache, HttpLink, split } from '@apollo/client';
+import { WebSocketLink } from '@apollo/client/link/ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -15,9 +18,37 @@ const reducer = persistCombineReducers(
   }
 );
 
+const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
+
+const wsLink = new WebSocketLink({
+  uri: 'ws://localhost:4000/graphql',
+  options: {
+    reconnect: true,
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+  },
+  wsLink,
+  httpLink
+);
+
+export const apolloClient = new ApolloClient({
+  link: splitLink,
+  cache: new InMemoryCache(),
+});
+
 export const store = configureStore({
   reducer,
-  middleware: getDefaultMiddleware({ serializableCheck: false, immutableCheck: false }),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      thunk: { extraArgument: apolloClient },
+      serializableCheck: false,
+      immutableCheck: false,
+    }),
 });
 export const persistor = persistStore(store);
 

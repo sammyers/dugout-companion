@@ -12,7 +12,7 @@ const PlateAppearancePreview: FC = () => {
 
   const {
     runners,
-    runnersScored: { length: runs },
+    scoredRunners: { length: runs },
     outs,
   } = useAppSelector(state => getPlateAppearancePreview(state, paType));
 

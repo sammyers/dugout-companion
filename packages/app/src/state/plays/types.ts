@@ -1,17 +1,17 @@
-import { FieldingPosition, HalfInning, PlateAppearanceType } from 'state/game/types';
+import { FieldingPosition, HalfInning, PlateAppearanceType } from '@dugout-companion/shared';
 
 export interface RawPlayDescription {
   description: string;
   playerIds: string[];
   position?: FieldingPosition;
   newNumOuts?: number;
-  newScore?: [number, number];
+  newScore?: number[];
 }
 
 export interface PlayDescription {
   description: string;
   outs?: number;
-  score?: [number, number];
+  score?: number[];
   type?: PlateAppearanceType;
 }
 

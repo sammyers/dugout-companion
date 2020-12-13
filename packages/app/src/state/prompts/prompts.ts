@@ -1,13 +1,12 @@
-import _ from 'lodash';
-
 import {
-  ContactType,
-  HitContactType,
+  BaseType,
+  ContactQuality,
   FieldingPosition,
   PlateAppearanceType,
-  BaseRunners,
-  BaseType,
-} from 'state/game/types';
+} from '@dugout-companion/shared';
+import _ from 'lodash';
+
+import { HitContactType, BaseRunnerMap, BasepathMovement } from 'state/game/types';
 import {
   getDefaultRunnersAfterPlateAppearance,
   getSortedRunners,
@@ -29,7 +28,7 @@ import {
 
 import { PlateAppearanceDetailOptions, RunnerOptions, BasepathOutcome } from './types';
 
-const getTrailingRunner = (runners: BaseRunners, leadBase: BaseType | null) => {
+const getTrailingRunner = (runners: BaseRunnerMap, leadBase: BaseType | null) => {
   if (leadBase === null) {
     return getLeadRunner(runners);
   }
@@ -55,8 +54,8 @@ export const getAvailableBases = (currentBase: BaseType, nextRunner: BaseType | 
   );
 };
 
-const inPlayContactOptions = _.values(ContactType).filter(
-  ct => ct !== ContactType.NONE
+const inPlayContactOptions = _.values(ContactQuality).filter(
+  ct => ct !== ContactQuality.NONE
 ) as HitContactType[];
 const getContactOptionsForHit = (contactTypes: HitContactType[] = inPlayContactOptions) =>
   contactTypes.map((contactType, id) => ({
@@ -64,7 +63,7 @@ const getContactOptionsForHit = (contactTypes: HitContactType[] = inPlayContactO
     contactType,
     label: getHitLabelFromContact(contactType),
   }));
-const getContactOptionsForOut = (contactTypes: ContactType[] = _.values(ContactType)) =>
+const getContactOptionsForOut = (contactTypes: ContactQuality[] = _.values(ContactQuality)) =>
   contactTypes.map((contactType, id) => ({
     id,
     contactType,
@@ -94,28 +93,28 @@ const makeFielderOptions = (positions: FieldingPosition[]) =>
   positions.map((position, id) => ({ id, position, label: getPositionAbbreviation(position) }));
 
 const getFielderOptionsForContactType = (
-  contactType: ContactType,
+  contactType: ContactQuality,
   hit: boolean,
   fourOutfielders: boolean
 ) => {
   let positions: FieldingPosition[];
   switch (contactType) {
-    case ContactType.GROUNDER:
+    case ContactQuality.GROUNDER:
       positions = hit ? getAllPositions(fourOutfielders) : infieldPositions;
       break;
-    case ContactType.POPUP:
+    case ContactQuality.POPUP:
       positions = infieldPositions;
       break;
-    case ContactType.LAZY_FLY:
-    case ContactType.LONG_FLY:
+    case ContactQuality.LAZY_FLY:
+    case ContactQuality.LONG_FLY:
       positions = getOutfieldPositions(fourOutfielders);
       break;
-    case ContactType.LINE_DRIVE:
+    case ContactQuality.LINE_DRIVE:
       positions = getAllPositions(fourOutfielders).filter(
         position => position !== FieldingPosition.CATCHER
       );
       break;
-    case ContactType.NONE:
+    case ContactQuality.NONE:
       positions = [];
       break;
   }
@@ -144,7 +143,7 @@ const getBasepathOutcomesForBases = (bases: (BaseType | null)[]): BasepathOutcom
 };
 
 export const getRunnerOptions = (
-  runners: BaseRunners,
+  runners: BaseRunnerMap,
   outs: number,
   expectedBases: Record<string, BaseType | null> = {},
   allowScoring = true
@@ -156,7 +155,7 @@ export const getRunnerOptions = (
   return getRunnerOptionsRecursive(runners, outs, currentBase, null, expectedBases, allowScoring);
 };
 const getRunnerOptionsRecursive = (
-  runners: BaseRunners,
+  runners: BaseRunnerMap,
   outs: number,
   currentBase: BaseType,
   runnerAhead: BaseType | null,
@@ -216,7 +215,7 @@ export const getPlateAppearanceDetailPrompt = (
   paType: PlateAppearanceType,
   batterId: string,
   outs: number,
-  runners: BaseRunners,
+  runners: BaseRunnerMap,
   fourOutfielders: boolean
 ): PlateAppearanceDetailOptions | void => {
   switch (paType) {
@@ -227,7 +226,7 @@ export const getPlateAppearanceDetailPrompt = (
       return {
         kind: 'hit',
         contactOptions: {
-          options: getContactOptionsForHit([ContactType.LINE_DRIVE, ContactType.LONG_FLY]),
+          options: getContactOptionsForHit([ContactQuality.LINE_DRIVE, ContactQuality.LONG_FLY]),
         },
         getNextOptions: () => ({
           options: makeFielderOptions(getOutfieldPositions(fourOutfielders)),
@@ -241,16 +240,16 @@ export const getPlateAppearanceDetailPrompt = (
           required: true,
           options: getContactOptionsForOut(),
         },
-        getNextOptions: (contactType: ContactType) => {
+        getNextOptions: (contactType: ContactQuality) => {
           const newRunners = { ...runners };
-          if (contactType === ContactType.NONE) return;
+          if (contactType === ContactQuality.NONE) return;
           const fielderOptions = {
             options: getFielderOptionsForContactType(contactType, false, fourOutfielders),
           };
           if (outs === 2) {
             return { fielderOptions };
           }
-          if (contactType === ContactType.GROUNDER) {
+          if (contactType === ContactQuality.GROUNDER) {
             moveRunnersOnGroundBall(newRunners);
           }
           return {
@@ -259,7 +258,7 @@ export const getPlateAppearanceDetailPrompt = (
               newRunners,
               outs + 1,
               {},
-              contactType === ContactType.GROUNDER
+              contactType === ContactQuality.GROUNDER
             ),
           };
         },
@@ -290,7 +289,7 @@ export const getPlateAppearanceDetailPrompt = (
         kind: 'fieldersChoice',
         outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
         fielderOptions: {
-          options: getFielderOptionsForContactType(ContactType.GROUNDER, false, fourOutfielders),
+          options: getFielderOptionsForContactType(ContactQuality.GROUNDER, false, fourOutfielders),
         },
         getNextOptions:
           outs < 2
@@ -326,7 +325,7 @@ export const getPlateAppearanceDetailPrompt = (
             };
           }
 
-          if (contactType === ContactType.GROUNDER) {
+          if (contactType === ContactQuality.GROUNDER) {
             return {
               fielderOptions,
               outOnPlayOptions: {
@@ -390,18 +389,13 @@ export const getPlateAppearanceDetailPrompt = (
 export const getExtraRunnerMovementForPlateAppearance = (
   allRunnerChoices: Record<string, BasepathOutcome>
 ) => {
-  const basesTaken: Record<string, BaseType | null> = {};
-  const outsOnBasepaths: Record<string, BaseType | null> = {};
+  const movements: BasepathMovement[] = [];
 
   _.forEach(allRunnerChoices, (outcome, runnerId) => {
     if (outcome.attemptedAdvance) {
-      if (outcome.successfulAdvance) {
-        basesTaken[runnerId] = outcome.endBase;
-      } else {
-        outsOnBasepaths[runnerId] = outcome.endBase;
-      }
+      movements.push({ runnerId, endBase: outcome.endBase, wasSafe: outcome.successfulAdvance });
     }
   });
 
-  return { basesTaken, outsOnBasepaths };
+  return movements;
 };

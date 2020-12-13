@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { BasepathOutcome, FielderOption, ContactOption } from './types';
 
-interface PromptState {
+export interface PromptState {
   runnerChoices: Record<string, BasepathOutcome>;
   contactChoice?: ContactOption;
   fielderChoice?: FielderOption;

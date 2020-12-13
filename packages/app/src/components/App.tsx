@@ -2,8 +2,9 @@ import React, { useEffect } from 'react';
 import { Grommet, Main, Box } from 'grommet';
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom';
 
-import { useCreatePlayerMutation } from '@dugout-companion/shared';
+import { useGetAllPlayersSubscription } from '@dugout-companion/shared';
 
+import GameOver from './GameOver';
 import TopBar from './TopBar';
 import Bases from './Bases';
 import Teams from './Teams';
@@ -12,10 +13,10 @@ import Plays from './plays/Plays';
 
 import theme from 'theme';
 import { isGameOver } from 'state/game/selectors';
-import { addPlayer } from 'state/players/slice';
-import { players } from 'state/players/testData';
-import { useMount, useAppDispatch, useAppSelector } from 'utils/hooks';
-import GameOver from './GameOver';
+import { playerActions } from 'state/players/slice';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
+
+import { Player } from 'state/players/types';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -25,15 +26,13 @@ const App = () => {
 
   const gameOver = useAppSelector(isGameOver);
 
-  const [createPlayer] = useCreatePlayerMutation();
+  const { data } = useGetAllPlayersSubscription();
 
-  useMount(() => {
-    players.forEach(player => {
-      const [firstName, lastName] = player.split(' ');
-      dispatch(addPlayer({ firstName, lastName }));
-      createPlayer({ variables: { firstName, lastName } });
-    });
-  });
+  useEffect(() => {
+    if (data) {
+      dispatch(playerActions.loadPlayers(data.players as Player[]));
+    }
+  }, [data, dispatch]);
 
   useEffect(() => {
     if (gameOver && pathname !== '/game-over') {

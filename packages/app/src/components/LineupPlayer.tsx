@@ -3,17 +3,18 @@ import { Box, Text, Button, Select, ThemeContext } from 'grommet';
 import { Close } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
+import { FieldingPosition, TeamRole } from '@dugout-companion/shared';
+
 import { getAvailablePositions, getPlayerPosition } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { getPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { getPositionAbbreviation } from 'utils/labels';
 
-import { FieldingPosition, TeamRole } from 'state/game/types';
+import { LineupSpot } from 'state/game/types';
 
-interface Props {
+interface Props extends LineupSpot {
   team: TeamRole;
-  playerId: string;
   index: number;
 }
 

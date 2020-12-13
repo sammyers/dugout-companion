@@ -1,6 +1,8 @@
 import React, { FC, useMemo, useEffect, ReactNode, useState, createContext } from 'react';
 import { Layer, Box, Button, Heading } from 'grommet';
 
+import { PlateAppearanceType } from '@dugout-companion/shared';
+
 import HitPrompt from './HitPrompt';
 import OutPrompt from './OutPrompt';
 import SacrificeFlyPrompt from './SacrificeFlyPrompt';
@@ -11,8 +13,6 @@ import { createPlateAppearancePromptSelector, getBatterName } from 'state/game/s
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { getPlateAppearanceLabel } from 'utils/labels';
-
-import { PlateAppearanceType } from 'state/game/types';
 
 interface Props {
   paType: PlateAppearanceType;

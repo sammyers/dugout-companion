@@ -4,6 +4,8 @@ import { Blank, Redo, Undo } from 'grommet-icons';
 import { Redirect } from 'react-router-dom';
 import { ActionCreators } from 'redux-undo';
 
+import { BaseType } from '@dugout-companion/shared';
+
 import EventReporter from './EventReporter';
 
 import {
@@ -16,8 +18,6 @@ import {
   isRedoPossible,
 } from 'state/game/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-
-import { BaseType } from 'state/game/types';
 
 import { ReactComponent as BaseIcon } from 'icons/base.svg';
 import { ReactComponent as HomeIcon } from 'icons/home.svg';

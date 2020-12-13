@@ -1,12 +1,14 @@
 import { createNextState } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
+import { getPresent } from 'state/game/selectors';
+import { runnersToMap } from 'state/game/utils';
 import { getExtraRunnerMovementForPlateAppearance } from './prompts';
 
+import { PlateAppearanceType } from '@dugout-companion/shared';
+import { PlateAppearance } from 'state/game/types';
 import { AppState } from 'state/store';
-import { PlateAppearanceType, PlateAppearanceResult } from 'state/game/types';
-import { applyGameEvent } from 'state/game/utils';
-import { getPresent } from 'state/game/selectors';
+import { applyPlateAppearance } from 'state/game/slice';
 
 export const getSelectedRunnerOption = (state: AppState, runnerId: string) =>
   state.prompts.runnerChoices[runnerId];
@@ -23,21 +25,20 @@ export const getAllRunnerChoices = (state: AppState) => state.prompts.runnerChoi
 export const getPlateAppearanceResult = (
   state: AppState,
   type: PlateAppearanceType
-): PlateAppearanceResult => ({
-  kind: 'plateAppearance',
+): PlateAppearance => ({
   type,
-  contactType: getSelectedContactOption(state)?.contactType,
-  fieldedBy: getSelectedFielderOption(state)?.position,
-  runnersOutOnPlay: getSelectedOutOnPlayOptions(state),
+  contact: getSelectedContactOption(state)?.contactType ?? null,
+  fieldedBy: getSelectedFielderOption(state)?.position ?? null,
+  outOnPlayRunners: getSelectedOutOnPlayOptions(state).map(runnerId => ({ runnerId })),
   runsScoredOnSacFly: getSelectedSacFlyRunsScored(state),
-  ...getExtraRunnerMovementForPlateAppearance(getAllRunnerChoices(state)),
+  basepathMovements: getExtraRunnerMovementForPlateAppearance(getAllRunnerChoices(state)),
 });
 
 export const getPlateAppearancePreview = (state: AppState, type: PlateAppearanceType) => {
   const event = getPlateAppearanceResult(state, type);
-  const { gameHistory, runners, outs } = createNextState(getPresent(state), state =>
-    applyGameEvent(state, event)
+  const { gameEventRecords, baseRunners, outs } = createNextState(getPresent(state), state =>
+    applyPlateAppearance(state, event)
   );
-  const { runnersScored } = _.last(gameHistory)!;
-  return { runners, runnersScored, outs };
+  const { scoredRunners } = _.last(gameEventRecords)!;
+  return { runners: runnersToMap(baseRunners), scoredRunners, outs };
 };

@@ -1,0 +1,7 @@
+mutation FillInGameEvents($input: UpdateGameInput!) {
+  updateGame(input: $input) {
+    game {
+      ...UnpackedGame_Game
+    }
+  }
+}

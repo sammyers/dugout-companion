@@ -1,8 +1,8 @@
-import { ContactType, BaseType, FieldingPosition } from 'state/game/types';
+import { BaseType, ContactQuality, FieldingPosition } from '@dugout-companion/shared';
 
 export interface ContactOption {
   id: number;
-  contactType: ContactType;
+  contactType: ContactQuality;
   label: string;
 }
 export interface ContactOptions {
@@ -41,14 +41,14 @@ export interface HitOptions {
   kind: 'hit';
   contactOptions: ContactOptions;
   runnerOptions?: RunnerOptions;
-  getNextOptions: (contactType: ContactType) => FielderOptions | undefined;
+  getNextOptions: (contactType: ContactQuality) => FielderOptions | undefined;
 }
 
 export interface OutOptions {
   kind: 'out';
   contactOptions: ContactOptions;
   getNextOptions: (
-    contactType: ContactType
+    contactType: ContactQuality
   ) =>
     | {
         runnerOptions?: RunnerOptions;
@@ -75,7 +75,7 @@ export interface DoublePlayOptions {
   kind: 'doublePlay';
   contactOptions: ContactOptions;
   getNextOptions: (
-    contactType: ContactType
+    contactType: ContactQuality
   ) => {
     fielderOptions: FielderOptions;
     outOnPlayOptions?: OutOnPlayOptions;

@@ -1,24 +1,21 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import {
-  getFuture,
-  getGameHistory,
-  getPlayerAtPositionFromTeams,
-  getTeams,
-} from 'state/game/selectors';
+import { getFuture, getGameHistory, getTeams } from 'state/game/selectors';
+import { getPlayerAtPositionFromTeams } from 'state/game/utils';
 import { getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
 import { getPlayDescription } from './plays';
 
-import { HalfInning, RecordedPlay, Team } from 'state/game/types';
+import { GameEventRecord, Team } from 'state/game/types';
 import { Player } from 'state/players/types';
 import { HalfInningPlaysGroup, PlayDescription } from './types';
+import { HalfInning, TeamRole } from '@dugout-companion/shared';
 
 const makeInterpolatedPlayDescription = (
-  play: RecordedPlay,
+  play: GameEventRecord,
   playerGetter: (playerId: string) => Player,
-  teams: [Team, Team]
+  teams: Team[]
 ): PlayDescription => {
   const { description, playerIds, position, newNumOuts, newScore } = getPlayDescription(play);
   let interpolatedDescription = description;
@@ -26,7 +23,13 @@ const makeInterpolatedPlayDescription = (
     interpolatedDescription = description.replace(
       new RegExp(`{${position}}`),
       formatShortName(
-        playerGetter(getPlayerAtPositionFromTeams(teams, 1 - play.gameState.halfInning, position))
+        playerGetter(
+          getPlayerAtPositionFromTeams(
+            teams,
+            play.gameStateBefore.halfInning === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME,
+            position
+          )!.playerId
+        )
       )
     );
   }
@@ -41,7 +44,7 @@ const makeInterpolatedPlayDescription = (
     description: interpolatedDescription,
     outs: newNumOuts,
     score: newScore,
-    type: play.event.kind === 'plateAppearance' ? play.event.type : undefined,
+    type: play.gameEvent.plateAppearance ? play.gameEvent.plateAppearance.type : undefined,
   };
 };
 
@@ -51,7 +54,7 @@ export const getAllPlays = createSelector(
   getTeams,
   (history, playerGetter, teams): HalfInningPlaysGroup[] => {
     const groupedPlaysByInning = history.reduce((groupedPlays, play) => {
-      const { inning, halfInning } = play.gameState;
+      const { inning, halfInning } = play.gameStateBefore!;
       if (!groupedPlays.length) {
         groupedPlays.push({ inning, halfInning, plays: [play] });
       } else {
@@ -63,7 +66,7 @@ export const getAllPlays = createSelector(
         }
       }
       return groupedPlays;
-    }, [] as { inning: number; halfInning: HalfInning; plays: RecordedPlay[] }[]);
+    }, [] as { inning: number; halfInning: HalfInning; plays: GameEventRecord[] }[]);
 
     return groupedPlaysByInning.map(({ inning, halfInning, plays }) => ({
       inning,
@@ -95,6 +98,6 @@ export const getLastPlay = createSelector(
 
 export const getNextPlay = createSelector(getFuture, getPlayerGetter, (future, playerGetter) => {
   const nextState = _.first(future);
-  const nextPlay = _.last(nextState?.gameHistory);
+  const nextPlay = _.last(nextState?.gameEventRecords);
   return nextPlay && makeInterpolatedPlayDescription(nextPlay, playerGetter, nextState!.teams);
 });

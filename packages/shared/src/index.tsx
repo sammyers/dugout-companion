@@ -13,12 +13,14 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122). */
-  UUID: any;
+  UUID: string;
   /**
    * A point in time as described by the [ISO
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
    */
-  Datetime: any;
+  Datetime: string;
+  /** The day, does not include a time. */
+  Date: string;
 };
 
 /** The root query type which gives access points into the data universe. */
@@ -33,22 +35,142 @@ export type Query = Node & {
   nodeId: Scalars['ID'];
   /** Fetches an object given its globally unique `ID`. */
   node: Maybe<Node>;
+  /** Reads a set of `BaseRunner`. */
+  baseRunners: Maybe<Array<BaseRunner>>;
+  /** Reads a set of `BasepathMovement`. */
+  basepathMovements: Maybe<Array<BasepathMovement>>;
+  /** Reads a set of `Game`. */
+  games: Maybe<Array<Game>>;
+  /** Reads a set of `GameEvent`. */
+  gameEvents: Maybe<Array<GameEvent>>;
+  /** Reads a set of `GameEventRecord`. */
+  gameEventRecords: Maybe<Array<GameEventRecord>>;
   /** Reads a set of `GameState`. */
   gameStates: Maybe<Array<GameState>>;
+  /** Reads a set of `Lineup`. */
+  lineups: Maybe<Array<Lineup>>;
+  /** Reads a set of `LineupChange`. */
+  lineupChanges: Maybe<Array<LineupChange>>;
+  /** Reads a set of `LineupForGameState`. */
+  lineupForGameStates: Maybe<Array<LineupForGameState>>;
+  /** Reads a set of `LineupSpot`. */
+  lineupSpots: Maybe<Array<LineupSpot>>;
+  /** Reads a set of `OutOnPlayRunner`. */
+  outOnPlayRunners: Maybe<Array<OutOnPlayRunner>>;
+  /** Reads a set of `PlateAppearance`. */
+  plateAppearances: Maybe<Array<PlateAppearance>>;
   /** Reads a set of `Player`. */
   players: Maybe<Array<Player>>;
+  /** Reads a set of `ScoredRunner`. */
+  scoredRunners: Maybe<Array<ScoredRunner>>;
+  /** Reads a set of `StolenBaseAttempt`. */
+  stolenBaseAttempts: Maybe<Array<StolenBaseAttempt>>;
+  /** Reads a set of `Team`. */
+  teams: Maybe<Array<Team>>;
+  baseRunner: Maybe<BaseRunner>;
+  basepathMovement: Maybe<BasepathMovement>;
+  game: Maybe<Game>;
+  gameByName: Maybe<Game>;
+  gameEvent: Maybe<GameEvent>;
+  gameEventRecord: Maybe<GameEventRecord>;
   gameState: Maybe<GameState>;
+  lineup: Maybe<Lineup>;
+  lineupChange: Maybe<LineupChange>;
+  lineupForGameState: Maybe<LineupForGameState>;
+  lineupSpot: Maybe<LineupSpot>;
+  lineupSpotByLineupIdAndBattingOrder: Maybe<LineupSpot>;
+  lineupSpotByLineupIdAndPosition: Maybe<LineupSpot>;
+  outOnPlayRunner: Maybe<OutOnPlayRunner>;
+  plateAppearance: Maybe<PlateAppearance>;
   player: Maybe<Player>;
+  playerByFirstNameAndLastName: Maybe<Player>;
+  scoredRunner: Maybe<ScoredRunner>;
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  team: Maybe<Team>;
+  teamByGameIdAndRole: Maybe<Team>;
+  /** Reads a single `BaseRunner` using its globally unique `ID`. */
+  baseRunnerByNodeId: Maybe<BaseRunner>;
+  /** Reads a single `BasepathMovement` using its globally unique `ID`. */
+  basepathMovementByNodeId: Maybe<BasepathMovement>;
+  /** Reads a single `Game` using its globally unique `ID`. */
+  gameByNodeId: Maybe<Game>;
+  /** Reads a single `GameEvent` using its globally unique `ID`. */
+  gameEventByNodeId: Maybe<GameEvent>;
+  /** Reads a single `GameEventRecord` using its globally unique `ID`. */
+  gameEventRecordByNodeId: Maybe<GameEventRecord>;
   /** Reads a single `GameState` using its globally unique `ID`. */
   gameStateByNodeId: Maybe<GameState>;
+  /** Reads a single `Lineup` using its globally unique `ID`. */
+  lineupByNodeId: Maybe<Lineup>;
+  /** Reads a single `LineupChange` using its globally unique `ID`. */
+  lineupChangeByNodeId: Maybe<LineupChange>;
+  /** Reads a single `LineupForGameState` using its globally unique `ID`. */
+  lineupForGameStateByNodeId: Maybe<LineupForGameState>;
+  /** Reads a single `LineupSpot` using its globally unique `ID`. */
+  lineupSpotByNodeId: Maybe<LineupSpot>;
+  /** Reads a single `OutOnPlayRunner` using its globally unique `ID`. */
+  outOnPlayRunnerByNodeId: Maybe<OutOnPlayRunner>;
+  /** Reads a single `PlateAppearance` using its globally unique `ID`. */
+  plateAppearanceByNodeId: Maybe<PlateAppearance>;
   /** Reads a single `Player` using its globally unique `ID`. */
   playerByNodeId: Maybe<Player>;
+  /** Reads a single `ScoredRunner` using its globally unique `ID`. */
+  scoredRunnerByNodeId: Maybe<ScoredRunner>;
+  /** Reads a single `StolenBaseAttempt` using its globally unique `ID`. */
+  stolenBaseAttemptByNodeId: Maybe<StolenBaseAttempt>;
+  /** Reads a single `Team` using its globally unique `ID`. */
+  teamByNodeId: Maybe<Team>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
 export type QueryNodeArgs = {
   nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBaseRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BaseRunnersOrderBy>>;
+  condition?: Maybe<BaseRunnerCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBasepathMovementsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BasepathMovementsOrderBy>>;
+  condition?: Maybe<BasepathMovementCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGamesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GamesOrderBy>>;
+  condition?: Maybe<GameCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventsOrderBy>>;
+  condition?: Maybe<GameEventCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventRecordsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
+  condition?: Maybe<GameEventRecordCondition>;
 };
 
 
@@ -62,6 +184,60 @@ export type QueryGameStatesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLineupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupsOrderBy>>;
+  condition?: Maybe<LineupCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupChangesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupChangesOrderBy>>;
+  condition?: Maybe<LineupChangeCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupForGameStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupForGameStatesOrderBy>>;
+  condition?: Maybe<LineupForGameStateCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupSpotsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupSpotsOrderBy>>;
+  condition?: Maybe<LineupSpotCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOutOnPlayRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OutOnPlayRunnersOrderBy>>;
+  condition?: Maybe<OutOnPlayRunnerCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlateAppearancesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<PlateAppearancesOrderBy>>;
+  condition?: Maybe<PlateAppearanceCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryPlayersArgs = {
   first?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -71,7 +247,125 @@ export type QueryPlayersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryScoredRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ScoredRunnersOrderBy>>;
+  condition?: Maybe<ScoredRunnerCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryStolenBaseAttemptsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<StolenBaseAttemptsOrderBy>>;
+  condition?: Maybe<StolenBaseAttemptCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTeamsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<TeamsOrderBy>>;
+  condition?: Maybe<TeamCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBaseRunnerArgs = {
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBasepathMovementArgs = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameByNameArgs = {
+  name: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventRecordArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGameStateArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupChangeArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupForGameStateArgs = {
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupSpotArgs = {
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupSpotByLineupIdAndBattingOrderArgs = {
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupSpotByLineupIdAndPositionArgs = {
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOutOnPlayRunnerArgs = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlateAppearanceArgs = {
   id: Scalars['Int'];
 };
 
@@ -83,7 +377,106 @@ export type QueryPlayerArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPlayerByFirstNameAndLastNameArgs = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryScoredRunnerArgs = {
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryStolenBaseAttemptArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTeamArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTeamByGameIdAndRoleArgs = {
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBaseRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryBasepathMovementByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventRecordByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGameStateByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupChangeByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupForGameStateByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLineupSpotByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryOutOnPlayRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlateAppearanceByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -93,19 +486,43 @@ export type QueryPlayerByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
+
+/** The root query type which gives access points into the data universe. */
+export type QueryScoredRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryStolenBaseAttemptByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTeamByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
 /** An object with a globally unique `ID`. */
 export type Node = {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
 };
 
-export type GameState = Node & {
-  __typename?: 'GameState';
+export type BaseRunner = Node & {
+  __typename?: 'BaseRunner';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
-  id: Scalars['Int'];
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
   base: BaseType;
+  /** Reads a single `GameState` that is related to this `BaseRunner`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Player` that is related to this `BaseRunner`. */
+  runner: Maybe<Player>;
 };
+
 
 export enum BaseType {
   FIRST = 'FIRST',
@@ -113,13 +530,761 @@ export enum BaseType {
   THIRD = 'THIRD'
 }
 
+export type GameState = Node & {
+  __typename?: 'GameState';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  playerAtBat: Scalars['UUID'];
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  /** Reads a single `Player` that is related to this `GameState`. */
+  playerByPlayerAtBat: Maybe<Player>;
+  /** Reads and enables pagination through a set of `BaseRunner`. */
+  baseRunners: Array<BaseRunner>;
+  /** Reads and enables pagination through a set of `LineupForGameState`. */
+  lineupForGameStates: Array<LineupForGameState>;
+  /** Reads and enables pagination through a set of `GameEventRecord`. */
+  gameEventRecordsByGameStateBeforeId: Array<GameEventRecord>;
+  /** Reads and enables pagination through a set of `GameEventRecord`. */
+  gameEventRecordsByGameStateAfterId: Array<GameEventRecord>;
+  /** Reads and enables pagination through a set of `Lineup`. */
+  lineups: Maybe<Array<Maybe<Lineup>>>;
+};
+
+
+export type GameStateBaseRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BaseRunnersOrderBy>>;
+  condition?: Maybe<BaseRunnerCondition>;
+};
+
+
+export type GameStateLineupForGameStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupForGameStatesOrderBy>>;
+  condition?: Maybe<LineupForGameStateCondition>;
+};
+
+
+export type GameStateGameEventRecordsByGameStateBeforeIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
+  condition?: Maybe<GameEventRecordCondition>;
+};
+
+
+export type GameStateGameEventRecordsByGameStateAfterIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
+  condition?: Maybe<GameEventRecordCondition>;
+};
+
+
+export type GameStateLineupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+export enum HalfInning {
+  TOP = 'TOP',
+  BOTTOM = 'BOTTOM'
+}
+
+export type Player = Node & {
+  __typename?: 'Player';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['UUID'];
+  firstName: Scalars['String'];
+  lastName: Maybe<Scalars['String']>;
+  createdAt: Maybe<Scalars['Datetime']>;
+  /** Reads and enables pagination through a set of `LineupSpot`. */
+  lineupSpots: Array<LineupSpot>;
+  /** Reads and enables pagination through a set of `BasepathMovement`. */
+  basepathMovementsByRunnerId: Array<BasepathMovement>;
+  /** Reads and enables pagination through a set of `OutOnPlayRunner`. */
+  outOnPlayRunnersByRunnerId: Array<OutOnPlayRunner>;
+  /** Reads and enables pagination through a set of `StolenBaseAttempt`. */
+  stolenBaseAttemptsByRunnerId: Array<StolenBaseAttempt>;
+  /** Reads and enables pagination through a set of `GameState`. */
+  gameStatesByPlayerAtBat: Array<GameState>;
+  /** Reads and enables pagination through a set of `BaseRunner`. */
+  baseRunnersByRunnerId: Array<BaseRunner>;
+  /** Reads and enables pagination through a set of `ScoredRunner`. */
+  scoredRunnersByRunnerId: Array<ScoredRunner>;
+};
+
+
+export type PlayerLineupSpotsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupSpotsOrderBy>>;
+  condition?: Maybe<LineupSpotCondition>;
+};
+
+
+export type PlayerBasepathMovementsByRunnerIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BasepathMovementsOrderBy>>;
+  condition?: Maybe<BasepathMovementCondition>;
+};
+
+
+export type PlayerOutOnPlayRunnersByRunnerIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OutOnPlayRunnersOrderBy>>;
+  condition?: Maybe<OutOnPlayRunnerCondition>;
+};
+
+
+export type PlayerStolenBaseAttemptsByRunnerIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<StolenBaseAttemptsOrderBy>>;
+  condition?: Maybe<StolenBaseAttemptCondition>;
+};
+
+
+export type PlayerGameStatesByPlayerAtBatArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameStatesOrderBy>>;
+  condition?: Maybe<GameStateCondition>;
+};
+
+
+export type PlayerBaseRunnersByRunnerIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BaseRunnersOrderBy>>;
+  condition?: Maybe<BaseRunnerCondition>;
+};
+
+
+export type PlayerScoredRunnersByRunnerIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ScoredRunnersOrderBy>>;
+  condition?: Maybe<ScoredRunnerCondition>;
+};
+
+
+export type LineupSpot = Node & {
+  __typename?: 'LineupSpot';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+  battingOrder: Scalars['Int'];
+  position: FieldingPosition;
+  /** Reads a single `Lineup` that is related to this `LineupSpot`. */
+  lineup: Maybe<Lineup>;
+  /** Reads a single `Player` that is related to this `LineupSpot`. */
+  player: Maybe<Player>;
+};
+
+export enum FieldingPosition {
+  PITCHER = 'PITCHER',
+  CATCHER = 'CATCHER',
+  FIRST_BASE = 'FIRST_BASE',
+  SECOND_BASE = 'SECOND_BASE',
+  THIRD_BASE = 'THIRD_BASE',
+  SHORTSTOP = 'SHORTSTOP',
+  LEFT_FIELD = 'LEFT_FIELD',
+  CENTER_FIELD = 'CENTER_FIELD',
+  LEFT_CENTER = 'LEFT_CENTER',
+  RIGHT_CENTER = 'RIGHT_CENTER',
+  RIGHT_FIELD = 'RIGHT_FIELD'
+}
+
+export type Lineup = Node & {
+  __typename?: 'Lineup';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  teamId: Scalars['Int'];
+  originalClientId: Maybe<Scalars['Int']>;
+  /** Reads a single `Team` that is related to this `Lineup`. */
+  team: Maybe<Team>;
+  /** Reads and enables pagination through a set of `LineupSpot`. */
+  lineupSpots: Array<LineupSpot>;
+  /** Reads and enables pagination through a set of `LineupChange`. */
+  lineupChangesByLineupBeforeId: Array<LineupChange>;
+  /** Reads and enables pagination through a set of `LineupChange`. */
+  lineupChangesByLineupAfterId: Array<LineupChange>;
+  /** Reads and enables pagination through a set of `LineupForGameState`. */
+  lineupForGameStates: Array<LineupForGameState>;
+};
+
+
+export type LineupLineupSpotsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupSpotsOrderBy>>;
+  condition?: Maybe<LineupSpotCondition>;
+};
+
+
+export type LineupLineupChangesByLineupBeforeIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupChangesOrderBy>>;
+  condition?: Maybe<LineupChangeCondition>;
+};
+
+
+export type LineupLineupChangesByLineupAfterIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupChangesOrderBy>>;
+  condition?: Maybe<LineupChangeCondition>;
+};
+
+
+export type LineupLineupForGameStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupForGameStatesOrderBy>>;
+  condition?: Maybe<LineupForGameStateCondition>;
+};
+
+export type Team = Node & {
+  __typename?: 'Team';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  gameId: Scalars['Int'];
+  role: TeamRole;
+  name: Maybe<Scalars['String']>;
+  winner: Maybe<Scalars['Boolean']>;
+  /** Reads a single `Game` that is related to this `Team`. */
+  game: Maybe<Game>;
+  /** Reads and enables pagination through a set of `Lineup`. */
+  lineups: Array<Lineup>;
+};
+
+
+export type TeamLineupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupsOrderBy>>;
+  condition?: Maybe<LineupCondition>;
+};
+
+export enum TeamRole {
+  AWAY = 'AWAY',
+  HOME = 'HOME'
+}
+
+export type Game = Node & {
+  __typename?: 'Game';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Maybe<Scalars['String']>;
+  location: Maybe<Scalars['String']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength: Scalars['Int'];
+  datePlayed: Maybe<Scalars['Date']>;
+  /** Reads and enables pagination through a set of `Team`. */
+  teams: Array<Team>;
+  /** Reads and enables pagination through a set of `GameEventRecord`. */
+  gameEventRecords: Array<GameEventRecord>;
+};
+
+
+export type GameTeamsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<TeamsOrderBy>>;
+  condition?: Maybe<TeamCondition>;
+};
+
+
+export type GameGameEventRecordsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
+  condition?: Maybe<GameEventRecordCondition>;
+};
+
+
+/** Methods to use when ordering `Team`. */
+export enum TeamsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  GAME_ID_ASC = 'GAME_ID_ASC',
+  GAME_ID_DESC = 'GAME_ID_DESC',
+  ROLE_ASC = 'ROLE_ASC',
+  ROLE_DESC = 'ROLE_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  WINNER_ASC = 'WINNER_ASC',
+  WINNER_DESC = 'WINNER_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `Team` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type TeamCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameId` field. */
+  gameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `role` field. */
+  role?: Maybe<TeamRole>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `winner` field. */
+  winner?: Maybe<Scalars['Boolean']>;
+};
+
+export type GameEventRecord = Node & {
+  __typename?: 'GameEventRecord';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  gameId: Scalars['Int'];
+  gameStateBeforeId: Scalars['Int'];
+  gameStateAfterId: Scalars['Int'];
+  gameEventId: Scalars['Int'];
+  /** Reads a single `Game` that is related to this `GameEventRecord`. */
+  game: Maybe<Game>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateBefore: Maybe<GameState>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateAfter: Maybe<GameState>;
+  /** Reads a single `GameEvent` that is related to this `GameEventRecord`. */
+  gameEvent: Maybe<GameEvent>;
+  /** Reads and enables pagination through a set of `ScoredRunner`. */
+  scoredRunners: Array<ScoredRunner>;
+};
+
+
+export type GameEventRecordScoredRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ScoredRunnersOrderBy>>;
+  condition?: Maybe<ScoredRunnerCondition>;
+};
+
+export type GameEvent = Node & {
+  __typename?: 'GameEvent';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  plateAppearanceId: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId: Maybe<Scalars['Int']>;
+  lineupChangeId: Maybe<Scalars['Int']>;
+  /** Reads a single `PlateAppearance` that is related to this `GameEvent`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `StolenBaseAttempt` that is related to this `GameEvent`. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /** Reads a single `LineupChange` that is related to this `GameEvent`. */
+  lineupChange: Maybe<LineupChange>;
+  /** Reads and enables pagination through a set of `GameEventRecord`. */
+  gameEventRecords: Array<GameEventRecord>;
+};
+
+
+export type GameEventGameEventRecordsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
+  condition?: Maybe<GameEventRecordCondition>;
+};
+
+export type PlateAppearance = Node & {
+  __typename?: 'PlateAppearance';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  type: PlateAppearanceType;
+  contact: Maybe<ContactQuality>;
+  fieldedBy: Maybe<FieldingPosition>;
+  runsScoredOnSacFly: Maybe<Scalars['Int']>;
+  /** Reads and enables pagination through a set of `BasepathMovement`. */
+  basepathMovements: Array<BasepathMovement>;
+  /** Reads and enables pagination through a set of `OutOnPlayRunner`. */
+  outOnPlayRunners: Array<OutOnPlayRunner>;
+};
+
+
+export type PlateAppearanceBasepathMovementsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BasepathMovementsOrderBy>>;
+  condition?: Maybe<BasepathMovementCondition>;
+};
+
+
+export type PlateAppearanceOutOnPlayRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OutOnPlayRunnersOrderBy>>;
+  condition?: Maybe<OutOnPlayRunnerCondition>;
+};
+
+export enum PlateAppearanceType {
+  OUT = 'OUT',
+  WALK = 'WALK',
+  SINGLE = 'SINGLE',
+  DOUBLE = 'DOUBLE',
+  TRIPLE = 'TRIPLE',
+  HOMERUN = 'HOMERUN',
+  SACRIFICE_FLY = 'SACRIFICE_FLY',
+  FIELDERS_CHOICE = 'FIELDERS_CHOICE',
+  DOUBLE_PLAY = 'DOUBLE_PLAY'
+}
+
+export enum ContactQuality {
+  NONE = 'NONE',
+  GROUNDER = 'GROUNDER',
+  LINE_DRIVE = 'LINE_DRIVE',
+  POPUP = 'POPUP',
+  LAZY_FLY = 'LAZY_FLY',
+  LONG_FLY = 'LONG_FLY'
+}
+
+export type BasepathMovement = Node & {
+  __typename?: 'BasepathMovement';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+  endBase: Maybe<BaseType>;
+  wasSafe: Scalars['Boolean'];
+  /** Reads a single `PlateAppearance` that is related to this `BasepathMovement`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `BasepathMovement`. */
+  runner: Maybe<Player>;
+};
+
+/** Methods to use when ordering `BasepathMovement`. */
+export enum BasepathMovementsOrderBy {
+  NATURAL = 'NATURAL',
+  PLATE_APPEARANCE_ID_ASC = 'PLATE_APPEARANCE_ID_ASC',
+  PLATE_APPEARANCE_ID_DESC = 'PLATE_APPEARANCE_ID_DESC',
+  RUNNER_ID_ASC = 'RUNNER_ID_ASC',
+  RUNNER_ID_DESC = 'RUNNER_ID_DESC',
+  END_BASE_ASC = 'END_BASE_ASC',
+  END_BASE_DESC = 'END_BASE_DESC',
+  WAS_SAFE_ASC = 'WAS_SAFE_ASC',
+  WAS_SAFE_DESC = 'WAS_SAFE_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `BasepathMovement` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type BasepathMovementCondition = {
+  /** Checks for equality with the object’s `plateAppearanceId` field. */
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runnerId` field. */
+  runnerId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `endBase` field. */
+  endBase?: Maybe<BaseType>;
+  /** Checks for equality with the object’s `wasSafe` field. */
+  wasSafe?: Maybe<Scalars['Boolean']>;
+};
+
+export type OutOnPlayRunner = Node & {
+  __typename?: 'OutOnPlayRunner';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+  /** Reads a single `PlateAppearance` that is related to this `OutOnPlayRunner`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `OutOnPlayRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** Methods to use when ordering `OutOnPlayRunner`. */
+export enum OutOnPlayRunnersOrderBy {
+  NATURAL = 'NATURAL',
+  PLATE_APPEARANCE_ID_ASC = 'PLATE_APPEARANCE_ID_ASC',
+  PLATE_APPEARANCE_ID_DESC = 'PLATE_APPEARANCE_ID_DESC',
+  RUNNER_ID_ASC = 'RUNNER_ID_ASC',
+  RUNNER_ID_DESC = 'RUNNER_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `OutOnPlayRunner` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type OutOnPlayRunnerCondition = {
+  /** Checks for equality with the object’s `plateAppearanceId` field. */
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runnerId` field. */
+  runnerId?: Maybe<Scalars['UUID']>;
+};
+
+export type StolenBaseAttempt = Node & {
+  __typename?: 'StolenBaseAttempt';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+  success: Scalars['Boolean'];
+  /** Reads a single `Player` that is related to this `StolenBaseAttempt`. */
+  runner: Maybe<Player>;
+};
+
+export type LineupChange = Node & {
+  __typename?: 'LineupChange';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  lineupBeforeId: Scalars['Int'];
+  lineupAfterId: Scalars['Int'];
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupBefore: Maybe<Lineup>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupAfter: Maybe<Lineup>;
+};
+
+/** Methods to use when ordering `GameEventRecord`. */
+export enum GameEventRecordsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  GAME_ID_ASC = 'GAME_ID_ASC',
+  GAME_ID_DESC = 'GAME_ID_DESC',
+  GAME_STATE_BEFORE_ID_ASC = 'GAME_STATE_BEFORE_ID_ASC',
+  GAME_STATE_BEFORE_ID_DESC = 'GAME_STATE_BEFORE_ID_DESC',
+  GAME_STATE_AFTER_ID_ASC = 'GAME_STATE_AFTER_ID_ASC',
+  GAME_STATE_AFTER_ID_DESC = 'GAME_STATE_AFTER_ID_DESC',
+  GAME_EVENT_ID_ASC = 'GAME_EVENT_ID_ASC',
+  GAME_EVENT_ID_DESC = 'GAME_EVENT_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `GameEventRecord` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type GameEventRecordCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameId` field. */
+  gameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameStateBeforeId` field. */
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameStateAfterId` field. */
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameEventId` field. */
+  gameEventId?: Maybe<Scalars['Int']>;
+};
+
+export type ScoredRunner = Node & {
+  __typename?: 'ScoredRunner';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+  battedIn: Scalars['Boolean'];
+  /** Reads a single `GameEventRecord` that is related to this `ScoredRunner`. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /** Reads a single `Player` that is related to this `ScoredRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** Methods to use when ordering `ScoredRunner`. */
+export enum ScoredRunnersOrderBy {
+  NATURAL = 'NATURAL',
+  GAME_EVENT_RECORD_ID_ASC = 'GAME_EVENT_RECORD_ID_ASC',
+  GAME_EVENT_RECORD_ID_DESC = 'GAME_EVENT_RECORD_ID_DESC',
+  RUNNER_ID_ASC = 'RUNNER_ID_ASC',
+  RUNNER_ID_DESC = 'RUNNER_ID_DESC',
+  BATTED_IN_ASC = 'BATTED_IN_ASC',
+  BATTED_IN_DESC = 'BATTED_IN_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `ScoredRunner` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ScoredRunnerCondition = {
+  /** Checks for equality with the object’s `gameEventRecordId` field. */
+  gameEventRecordId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runnerId` field. */
+  runnerId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `battedIn` field. */
+  battedIn?: Maybe<Scalars['Boolean']>;
+};
+
+/** Methods to use when ordering `Lineup`. */
+export enum LineupsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  TEAM_ID_ASC = 'TEAM_ID_ASC',
+  TEAM_ID_DESC = 'TEAM_ID_DESC',
+  ORIGINAL_CLIENT_ID_ASC = 'ORIGINAL_CLIENT_ID_ASC',
+  ORIGINAL_CLIENT_ID_DESC = 'ORIGINAL_CLIENT_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `Lineup` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type LineupCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `teamId` field. */
+  teamId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `originalClientId` field. */
+  originalClientId?: Maybe<Scalars['Int']>;
+};
+
+/** Methods to use when ordering `LineupSpot`. */
+export enum LineupSpotsOrderBy {
+  NATURAL = 'NATURAL',
+  LINEUP_ID_ASC = 'LINEUP_ID_ASC',
+  LINEUP_ID_DESC = 'LINEUP_ID_DESC',
+  PLAYER_ID_ASC = 'PLAYER_ID_ASC',
+  PLAYER_ID_DESC = 'PLAYER_ID_DESC',
+  BATTING_ORDER_ASC = 'BATTING_ORDER_ASC',
+  BATTING_ORDER_DESC = 'BATTING_ORDER_DESC',
+  POSITION_ASC = 'POSITION_ASC',
+  POSITION_DESC = 'POSITION_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `LineupSpot` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type LineupSpotCondition = {
+  /** Checks for equality with the object’s `lineupId` field. */
+  lineupId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerId` field. */
+  playerId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `battingOrder` field. */
+  battingOrder?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `position` field. */
+  position?: Maybe<FieldingPosition>;
+};
+
+/** Methods to use when ordering `LineupChange`. */
+export enum LineupChangesOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  LINEUP_BEFORE_ID_ASC = 'LINEUP_BEFORE_ID_ASC',
+  LINEUP_BEFORE_ID_DESC = 'LINEUP_BEFORE_ID_DESC',
+  LINEUP_AFTER_ID_ASC = 'LINEUP_AFTER_ID_ASC',
+  LINEUP_AFTER_ID_DESC = 'LINEUP_AFTER_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `LineupChange` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type LineupChangeCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `lineupBeforeId` field. */
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `lineupAfterId` field. */
+  lineupAfterId?: Maybe<Scalars['Int']>;
+};
+
+export type LineupForGameState = Node & {
+  __typename?: 'LineupForGameState';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+  /** Reads a single `GameState` that is related to this `LineupForGameState`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Lineup` that is related to this `LineupForGameState`. */
+  lineup: Maybe<Lineup>;
+};
+
+/** Methods to use when ordering `LineupForGameState`. */
+export enum LineupForGameStatesOrderBy {
+  NATURAL = 'NATURAL',
+  GAME_STATE_ID_ASC = 'GAME_STATE_ID_ASC',
+  GAME_STATE_ID_DESC = 'GAME_STATE_ID_DESC',
+  LINEUP_ID_ASC = 'LINEUP_ID_ASC',
+  LINEUP_ID_DESC = 'LINEUP_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `LineupForGameState` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type LineupForGameStateCondition = {
+  /** Checks for equality with the object’s `gameStateId` field. */
+  gameStateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `lineupId` field. */
+  lineupId?: Maybe<Scalars['Int']>;
+};
+
+/** Methods to use when ordering `StolenBaseAttempt`. */
+export enum StolenBaseAttemptsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  RUNNER_ID_ASC = 'RUNNER_ID_ASC',
+  RUNNER_ID_DESC = 'RUNNER_ID_DESC',
+  SUCCESS_ASC = 'SUCCESS_ASC',
+  SUCCESS_DESC = 'SUCCESS_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `StolenBaseAttempt` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type StolenBaseAttemptCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runnerId` field. */
+  runnerId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `success` field. */
+  success?: Maybe<Scalars['Boolean']>;
+};
+
 /** Methods to use when ordering `GameState`. */
 export enum GameStatesOrderBy {
   NATURAL = 'NATURAL',
   ID_ASC = 'ID_ASC',
   ID_DESC = 'ID_DESC',
-  BASE_ASC = 'BASE_ASC',
-  BASE_DESC = 'BASE_DESC',
+  PLAYER_AT_BAT_ASC = 'PLAYER_AT_BAT_ASC',
+  PLAYER_AT_BAT_DESC = 'PLAYER_AT_BAT_DESC',
+  INNING_ASC = 'INNING_ASC',
+  INNING_DESC = 'INNING_DESC',
+  HALF_INNING_ASC = 'HALF_INNING_ASC',
+  HALF_INNING_DESC = 'HALF_INNING_DESC',
+  OUTS_ASC = 'OUTS_ASC',
+  OUTS_DESC = 'OUTS_DESC',
+  SCORE_ASC = 'SCORE_ASC',
+  SCORE_DESC = 'SCORE_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -131,21 +1296,142 @@ export enum GameStatesOrderBy {
 export type GameStateCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerAtBat` field. */
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `inning` field. */
+  inning?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `halfInning` field. */
+  halfInning?: Maybe<HalfInning>;
+  /** Checks for equality with the object’s `outs` field. */
+  outs?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `score` field. */
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+};
+
+/** Methods to use when ordering `BaseRunner`. */
+export enum BaseRunnersOrderBy {
+  NATURAL = 'NATURAL',
+  GAME_STATE_ID_ASC = 'GAME_STATE_ID_ASC',
+  GAME_STATE_ID_DESC = 'GAME_STATE_ID_DESC',
+  RUNNER_ID_ASC = 'RUNNER_ID_ASC',
+  RUNNER_ID_DESC = 'RUNNER_ID_DESC',
+  BASE_ASC = 'BASE_ASC',
+  BASE_DESC = 'BASE_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `BaseRunner` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type BaseRunnerCondition = {
+  /** Checks for equality with the object’s `gameStateId` field. */
+  gameStateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runnerId` field. */
+  runnerId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `base` field. */
   base?: Maybe<BaseType>;
 };
 
-export type Player = Node & {
-  __typename?: 'Player';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['UUID'];
-  firstName: Scalars['String'];
-  lastName: Maybe<Scalars['String']>;
-  createdAt: Maybe<Scalars['Datetime']>;
+/** Methods to use when ordering `Game`. */
+export enum GamesOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  LOCATION_ASC = 'LOCATION_ASC',
+  LOCATION_DESC = 'LOCATION_DESC',
+  SCORE_ASC = 'SCORE_ASC',
+  SCORE_DESC = 'SCORE_DESC',
+  GAME_LENGTH_ASC = 'GAME_LENGTH_ASC',
+  GAME_LENGTH_DESC = 'GAME_LENGTH_DESC',
+  DATE_PLAYED_ASC = 'DATE_PLAYED_ASC',
+  DATE_PLAYED_DESC = 'DATE_PLAYED_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/** A condition to be used against `Game` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type GameCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `location` field. */
+  location?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `score` field. */
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `gameLength` field. */
+  gameLength?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `datePlayed` field. */
+  datePlayed?: Maybe<Scalars['Date']>;
 };
 
+/** Methods to use when ordering `GameEvent`. */
+export enum GameEventsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  PLATE_APPEARANCE_ID_ASC = 'PLATE_APPEARANCE_ID_ASC',
+  PLATE_APPEARANCE_ID_DESC = 'PLATE_APPEARANCE_ID_DESC',
+  STOLEN_BASE_ATTEMPT_ID_ASC = 'STOLEN_BASE_ATTEMPT_ID_ASC',
+  STOLEN_BASE_ATTEMPT_ID_DESC = 'STOLEN_BASE_ATTEMPT_ID_DESC',
+  LINEUP_CHANGE_ID_ASC = 'LINEUP_CHANGE_ID_ASC',
+  LINEUP_CHANGE_ID_DESC = 'LINEUP_CHANGE_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
 
+/**
+ * A condition to be used against `GameEvent` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type GameEventCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `plateAppearanceId` field. */
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stolenBaseAttemptId` field. */
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `lineupChangeId` field. */
+  lineupChangeId?: Maybe<Scalars['Int']>;
+};
+
+/** Methods to use when ordering `PlateAppearance`. */
+export enum PlateAppearancesOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  TYPE_ASC = 'TYPE_ASC',
+  TYPE_DESC = 'TYPE_DESC',
+  CONTACT_ASC = 'CONTACT_ASC',
+  CONTACT_DESC = 'CONTACT_DESC',
+  FIELDED_BY_ASC = 'FIELDED_BY_ASC',
+  FIELDED_BY_DESC = 'FIELDED_BY_DESC',
+  RUNS_SCORED_ON_SAC_FLY_ASC = 'RUNS_SCORED_ON_SAC_FLY_ASC',
+  RUNS_SCORED_ON_SAC_FLY_DESC = 'RUNS_SCORED_ON_SAC_FLY_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+/**
+ * A condition to be used against `PlateAppearance` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type PlateAppearanceCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: Maybe<PlateAppearanceType>;
+  /** Checks for equality with the object’s `contact` field. */
+  contact?: Maybe<ContactQuality>;
+  /** Checks for equality with the object’s `fieldedBy` field. */
+  fieldedBy?: Maybe<FieldingPosition>;
+  /** Checks for equality with the object’s `runsScoredOnSacFly` field. */
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+};
 
 /** Methods to use when ordering `Player`. */
 export enum PlayersOrderBy {
@@ -177,26 +1463,216 @@ export type PlayerCondition = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a single `BaseRunner`. */
+  createBaseRunner: Maybe<CreateBaseRunnerPayload>;
+  /** Creates a single `BasepathMovement`. */
+  createBasepathMovement: Maybe<CreateBasepathMovementPayload>;
+  /** Creates a single `Game`. */
+  createGame: Maybe<CreateGamePayload>;
+  /** Creates a single `GameEvent`. */
+  createGameEvent: Maybe<CreateGameEventPayload>;
+  /** Creates a single `GameEventRecord`. */
+  createGameEventRecord: Maybe<CreateGameEventRecordPayload>;
   /** Creates a single `GameState`. */
   createGameState: Maybe<CreateGameStatePayload>;
+  /** Creates a single `Lineup`. */
+  createLineup: Maybe<CreateLineupPayload>;
+  /** Creates a single `LineupChange`. */
+  createLineupChange: Maybe<CreateLineupChangePayload>;
+  /** Creates a single `LineupForGameState`. */
+  createLineupForGameState: Maybe<CreateLineupForGameStatePayload>;
+  /** Creates a single `LineupSpot`. */
+  createLineupSpot: Maybe<CreateLineupSpotPayload>;
+  /** Creates a single `OutOnPlayRunner`. */
+  createOutOnPlayRunner: Maybe<CreateOutOnPlayRunnerPayload>;
+  /** Creates a single `PlateAppearance`. */
+  createPlateAppearance: Maybe<CreatePlateAppearancePayload>;
   /** Creates a single `Player`. */
   createPlayer: Maybe<CreatePlayerPayload>;
+  /** Creates a single `ScoredRunner`. */
+  createScoredRunner: Maybe<CreateScoredRunnerPayload>;
+  /** Creates a single `StolenBaseAttempt`. */
+  createStolenBaseAttempt: Maybe<CreateStolenBaseAttemptPayload>;
+  /** Creates a single `Team`. */
+  createTeam: Maybe<CreateTeamPayload>;
+  /** Updates a single `BaseRunner` using its globally unique id and a patch. */
+  updateBaseRunnerByNodeId: Maybe<UpdateBaseRunnerPayload>;
+  /** Updates a single `BaseRunner` using a unique key and a patch. */
+  updateBaseRunner: Maybe<UpdateBaseRunnerPayload>;
+  /** Updates a single `BasepathMovement` using its globally unique id and a patch. */
+  updateBasepathMovementByNodeId: Maybe<UpdateBasepathMovementPayload>;
+  /** Updates a single `BasepathMovement` using a unique key and a patch. */
+  updateBasepathMovement: Maybe<UpdateBasepathMovementPayload>;
+  /** Updates a single `Game` using its globally unique id and a patch. */
+  updateGameByNodeId: Maybe<UpdateGamePayload>;
+  /** Updates a single `Game` using a unique key and a patch. */
+  updateGame: Maybe<UpdateGamePayload>;
+  /** Updates a single `Game` using a unique key and a patch. */
+  updateGameByName: Maybe<UpdateGamePayload>;
+  /** Updates a single `GameEvent` using its globally unique id and a patch. */
+  updateGameEventByNodeId: Maybe<UpdateGameEventPayload>;
+  /** Updates a single `GameEvent` using a unique key and a patch. */
+  updateGameEvent: Maybe<UpdateGameEventPayload>;
+  /** Updates a single `GameEventRecord` using its globally unique id and a patch. */
+  updateGameEventRecordByNodeId: Maybe<UpdateGameEventRecordPayload>;
+  /** Updates a single `GameEventRecord` using a unique key and a patch. */
+  updateGameEventRecord: Maybe<UpdateGameEventRecordPayload>;
   /** Updates a single `GameState` using its globally unique id and a patch. */
   updateGameStateByNodeId: Maybe<UpdateGameStatePayload>;
   /** Updates a single `GameState` using a unique key and a patch. */
   updateGameState: Maybe<UpdateGameStatePayload>;
+  /** Updates a single `Lineup` using its globally unique id and a patch. */
+  updateLineupByNodeId: Maybe<UpdateLineupPayload>;
+  /** Updates a single `Lineup` using a unique key and a patch. */
+  updateLineup: Maybe<UpdateLineupPayload>;
+  /** Updates a single `LineupChange` using its globally unique id and a patch. */
+  updateLineupChangeByNodeId: Maybe<UpdateLineupChangePayload>;
+  /** Updates a single `LineupChange` using a unique key and a patch. */
+  updateLineupChange: Maybe<UpdateLineupChangePayload>;
+  /** Updates a single `LineupForGameState` using its globally unique id and a patch. */
+  updateLineupForGameStateByNodeId: Maybe<UpdateLineupForGameStatePayload>;
+  /** Updates a single `LineupForGameState` using a unique key and a patch. */
+  updateLineupForGameState: Maybe<UpdateLineupForGameStatePayload>;
+  /** Updates a single `LineupSpot` using its globally unique id and a patch. */
+  updateLineupSpotByNodeId: Maybe<UpdateLineupSpotPayload>;
+  /** Updates a single `LineupSpot` using a unique key and a patch. */
+  updateLineupSpot: Maybe<UpdateLineupSpotPayload>;
+  /** Updates a single `LineupSpot` using a unique key and a patch. */
+  updateLineupSpotByLineupIdAndBattingOrder: Maybe<UpdateLineupSpotPayload>;
+  /** Updates a single `LineupSpot` using a unique key and a patch. */
+  updateLineupSpotByLineupIdAndPosition: Maybe<UpdateLineupSpotPayload>;
+  /** Updates a single `OutOnPlayRunner` using its globally unique id and a patch. */
+  updateOutOnPlayRunnerByNodeId: Maybe<UpdateOutOnPlayRunnerPayload>;
+  /** Updates a single `OutOnPlayRunner` using a unique key and a patch. */
+  updateOutOnPlayRunner: Maybe<UpdateOutOnPlayRunnerPayload>;
+  /** Updates a single `PlateAppearance` using its globally unique id and a patch. */
+  updatePlateAppearanceByNodeId: Maybe<UpdatePlateAppearancePayload>;
+  /** Updates a single `PlateAppearance` using a unique key and a patch. */
+  updatePlateAppearance: Maybe<UpdatePlateAppearancePayload>;
   /** Updates a single `Player` using its globally unique id and a patch. */
   updatePlayerByNodeId: Maybe<UpdatePlayerPayload>;
   /** Updates a single `Player` using a unique key and a patch. */
   updatePlayer: Maybe<UpdatePlayerPayload>;
+  /** Updates a single `Player` using a unique key and a patch. */
+  updatePlayerByFirstNameAndLastName: Maybe<UpdatePlayerPayload>;
+  /** Updates a single `ScoredRunner` using its globally unique id and a patch. */
+  updateScoredRunnerByNodeId: Maybe<UpdateScoredRunnerPayload>;
+  /** Updates a single `ScoredRunner` using a unique key and a patch. */
+  updateScoredRunner: Maybe<UpdateScoredRunnerPayload>;
+  /** Updates a single `StolenBaseAttempt` using its globally unique id and a patch. */
+  updateStolenBaseAttemptByNodeId: Maybe<UpdateStolenBaseAttemptPayload>;
+  /** Updates a single `StolenBaseAttempt` using a unique key and a patch. */
+  updateStolenBaseAttempt: Maybe<UpdateStolenBaseAttemptPayload>;
+  /** Updates a single `Team` using its globally unique id and a patch. */
+  updateTeamByNodeId: Maybe<UpdateTeamPayload>;
+  /** Updates a single `Team` using a unique key and a patch. */
+  updateTeam: Maybe<UpdateTeamPayload>;
+  /** Updates a single `Team` using a unique key and a patch. */
+  updateTeamByGameIdAndRole: Maybe<UpdateTeamPayload>;
+  /** Deletes a single `BaseRunner` using its globally unique id. */
+  deleteBaseRunnerByNodeId: Maybe<DeleteBaseRunnerPayload>;
+  /** Deletes a single `BaseRunner` using a unique key. */
+  deleteBaseRunner: Maybe<DeleteBaseRunnerPayload>;
+  /** Deletes a single `BasepathMovement` using its globally unique id. */
+  deleteBasepathMovementByNodeId: Maybe<DeleteBasepathMovementPayload>;
+  /** Deletes a single `BasepathMovement` using a unique key. */
+  deleteBasepathMovement: Maybe<DeleteBasepathMovementPayload>;
+  /** Deletes a single `Game` using its globally unique id. */
+  deleteGameByNodeId: Maybe<DeleteGamePayload>;
+  /** Deletes a single `Game` using a unique key. */
+  deleteGame: Maybe<DeleteGamePayload>;
+  /** Deletes a single `Game` using a unique key. */
+  deleteGameByName: Maybe<DeleteGamePayload>;
+  /** Deletes a single `GameEvent` using its globally unique id. */
+  deleteGameEventByNodeId: Maybe<DeleteGameEventPayload>;
+  /** Deletes a single `GameEvent` using a unique key. */
+  deleteGameEvent: Maybe<DeleteGameEventPayload>;
+  /** Deletes a single `GameEventRecord` using its globally unique id. */
+  deleteGameEventRecordByNodeId: Maybe<DeleteGameEventRecordPayload>;
+  /** Deletes a single `GameEventRecord` using a unique key. */
+  deleteGameEventRecord: Maybe<DeleteGameEventRecordPayload>;
   /** Deletes a single `GameState` using its globally unique id. */
   deleteGameStateByNodeId: Maybe<DeleteGameStatePayload>;
   /** Deletes a single `GameState` using a unique key. */
   deleteGameState: Maybe<DeleteGameStatePayload>;
+  /** Deletes a single `Lineup` using its globally unique id. */
+  deleteLineupByNodeId: Maybe<DeleteLineupPayload>;
+  /** Deletes a single `Lineup` using a unique key. */
+  deleteLineup: Maybe<DeleteLineupPayload>;
+  /** Deletes a single `LineupChange` using its globally unique id. */
+  deleteLineupChangeByNodeId: Maybe<DeleteLineupChangePayload>;
+  /** Deletes a single `LineupChange` using a unique key. */
+  deleteLineupChange: Maybe<DeleteLineupChangePayload>;
+  /** Deletes a single `LineupForGameState` using its globally unique id. */
+  deleteLineupForGameStateByNodeId: Maybe<DeleteLineupForGameStatePayload>;
+  /** Deletes a single `LineupForGameState` using a unique key. */
+  deleteLineupForGameState: Maybe<DeleteLineupForGameStatePayload>;
+  /** Deletes a single `LineupSpot` using its globally unique id. */
+  deleteLineupSpotByNodeId: Maybe<DeleteLineupSpotPayload>;
+  /** Deletes a single `LineupSpot` using a unique key. */
+  deleteLineupSpot: Maybe<DeleteLineupSpotPayload>;
+  /** Deletes a single `LineupSpot` using a unique key. */
+  deleteLineupSpotByLineupIdAndBattingOrder: Maybe<DeleteLineupSpotPayload>;
+  /** Deletes a single `LineupSpot` using a unique key. */
+  deleteLineupSpotByLineupIdAndPosition: Maybe<DeleteLineupSpotPayload>;
+  /** Deletes a single `OutOnPlayRunner` using its globally unique id. */
+  deleteOutOnPlayRunnerByNodeId: Maybe<DeleteOutOnPlayRunnerPayload>;
+  /** Deletes a single `OutOnPlayRunner` using a unique key. */
+  deleteOutOnPlayRunner: Maybe<DeleteOutOnPlayRunnerPayload>;
+  /** Deletes a single `PlateAppearance` using its globally unique id. */
+  deletePlateAppearanceByNodeId: Maybe<DeletePlateAppearancePayload>;
+  /** Deletes a single `PlateAppearance` using a unique key. */
+  deletePlateAppearance: Maybe<DeletePlateAppearancePayload>;
   /** Deletes a single `Player` using its globally unique id. */
   deletePlayerByNodeId: Maybe<DeletePlayerPayload>;
   /** Deletes a single `Player` using a unique key. */
   deletePlayer: Maybe<DeletePlayerPayload>;
+  /** Deletes a single `Player` using a unique key. */
+  deletePlayerByFirstNameAndLastName: Maybe<DeletePlayerPayload>;
+  /** Deletes a single `ScoredRunner` using its globally unique id. */
+  deleteScoredRunnerByNodeId: Maybe<DeleteScoredRunnerPayload>;
+  /** Deletes a single `ScoredRunner` using a unique key. */
+  deleteScoredRunner: Maybe<DeleteScoredRunnerPayload>;
+  /** Deletes a single `StolenBaseAttempt` using its globally unique id. */
+  deleteStolenBaseAttemptByNodeId: Maybe<DeleteStolenBaseAttemptPayload>;
+  /** Deletes a single `StolenBaseAttempt` using a unique key. */
+  deleteStolenBaseAttempt: Maybe<DeleteStolenBaseAttemptPayload>;
+  /** Deletes a single `Team` using its globally unique id. */
+  deleteTeamByNodeId: Maybe<DeleteTeamPayload>;
+  /** Deletes a single `Team` using a unique key. */
+  deleteTeam: Maybe<DeleteTeamPayload>;
+  /** Deletes a single `Team` using a unique key. */
+  deleteTeamByGameIdAndRole: Maybe<DeleteTeamPayload>;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateBaseRunnerArgs = {
+  input: CreateBaseRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateBasepathMovementArgs = {
+  input: CreateBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateGameArgs = {
+  input: CreateGameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateGameEventArgs = {
+  input: CreateGameEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateGameEventRecordArgs = {
+  input: CreateGameEventRecordInput;
 };
 
 
@@ -207,8 +1683,128 @@ export type MutationCreateGameStateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLineupArgs = {
+  input: CreateLineupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLineupChangeArgs = {
+  input: CreateLineupChangeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLineupForGameStateArgs = {
+  input: CreateLineupForGameStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLineupSpotArgs = {
+  input: CreateLineupSpotInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateOutOnPlayRunnerArgs = {
+  input: CreateOutOnPlayRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlateAppearanceArgs = {
+  input: CreatePlateAppearanceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePlayerArgs = {
   input: CreatePlayerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateScoredRunnerArgs = {
+  input: CreateScoredRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateStolenBaseAttemptArgs = {
+  input: CreateStolenBaseAttemptInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTeamArgs = {
+  input: CreateTeamInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateBaseRunnerByNodeIdArgs = {
+  input: UpdateBaseRunnerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateBaseRunnerArgs = {
+  input: UpdateBaseRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateBasepathMovementByNodeIdArgs = {
+  input: UpdateBasepathMovementByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateBasepathMovementArgs = {
+  input: UpdateBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameByNodeIdArgs = {
+  input: UpdateGameByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameArgs = {
+  input: UpdateGameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameByNameArgs = {
+  input: UpdateGameByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameEventByNodeIdArgs = {
+  input: UpdateGameEventByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameEventArgs = {
+  input: UpdateGameEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameEventRecordByNodeIdArgs = {
+  input: UpdateGameEventRecordByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameEventRecordArgs = {
+  input: UpdateGameEventRecordInput;
 };
 
 
@@ -225,6 +1821,90 @@ export type MutationUpdateGameStateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupByNodeIdArgs = {
+  input: UpdateLineupByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupArgs = {
+  input: UpdateLineupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupChangeByNodeIdArgs = {
+  input: UpdateLineupChangeByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupChangeArgs = {
+  input: UpdateLineupChangeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupForGameStateByNodeIdArgs = {
+  input: UpdateLineupForGameStateByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupForGameStateArgs = {
+  input: UpdateLineupForGameStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupSpotByNodeIdArgs = {
+  input: UpdateLineupSpotByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupSpotArgs = {
+  input: UpdateLineupSpotInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupSpotByLineupIdAndBattingOrderArgs = {
+  input: UpdateLineupSpotByLineupIdAndBattingOrderInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLineupSpotByLineupIdAndPositionArgs = {
+  input: UpdateLineupSpotByLineupIdAndPositionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOutOnPlayRunnerByNodeIdArgs = {
+  input: UpdateOutOnPlayRunnerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateOutOnPlayRunnerArgs = {
+  input: UpdateOutOnPlayRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlateAppearanceByNodeIdArgs = {
+  input: UpdatePlateAppearanceByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlateAppearanceArgs = {
+  input: UpdatePlateAppearanceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlayerByNodeIdArgs = {
   input: UpdatePlayerByNodeIdInput;
 };
@@ -233,6 +1913,120 @@ export type MutationUpdatePlayerByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlayerArgs = {
   input: UpdatePlayerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlayerByFirstNameAndLastNameArgs = {
+  input: UpdatePlayerByFirstNameAndLastNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateScoredRunnerByNodeIdArgs = {
+  input: UpdateScoredRunnerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateScoredRunnerArgs = {
+  input: UpdateScoredRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateStolenBaseAttemptByNodeIdArgs = {
+  input: UpdateStolenBaseAttemptByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateStolenBaseAttemptArgs = {
+  input: UpdateStolenBaseAttemptInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTeamByNodeIdArgs = {
+  input: UpdateTeamByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTeamArgs = {
+  input: UpdateTeamInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTeamByGameIdAndRoleArgs = {
+  input: UpdateTeamByGameIdAndRoleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteBaseRunnerByNodeIdArgs = {
+  input: DeleteBaseRunnerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteBaseRunnerArgs = {
+  input: DeleteBaseRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteBasepathMovementByNodeIdArgs = {
+  input: DeleteBasepathMovementByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteBasepathMovementArgs = {
+  input: DeleteBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameByNodeIdArgs = {
+  input: DeleteGameByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameArgs = {
+  input: DeleteGameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameByNameArgs = {
+  input: DeleteGameByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameEventByNodeIdArgs = {
+  input: DeleteGameEventByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameEventArgs = {
+  input: DeleteGameEventInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameEventRecordByNodeIdArgs = {
+  input: DeleteGameEventRecordByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameEventRecordArgs = {
+  input: DeleteGameEventRecordInput;
 };
 
 
@@ -249,6 +2043,90 @@ export type MutationDeleteGameStateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupByNodeIdArgs = {
+  input: DeleteLineupByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupArgs = {
+  input: DeleteLineupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupChangeByNodeIdArgs = {
+  input: DeleteLineupChangeByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupChangeArgs = {
+  input: DeleteLineupChangeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupForGameStateByNodeIdArgs = {
+  input: DeleteLineupForGameStateByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupForGameStateArgs = {
+  input: DeleteLineupForGameStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupSpotByNodeIdArgs = {
+  input: DeleteLineupSpotByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupSpotArgs = {
+  input: DeleteLineupSpotInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupSpotByLineupIdAndBattingOrderArgs = {
+  input: DeleteLineupSpotByLineupIdAndBattingOrderInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLineupSpotByLineupIdAndPositionArgs = {
+  input: DeleteLineupSpotByLineupIdAndPositionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOutOnPlayRunnerByNodeIdArgs = {
+  input: DeleteOutOnPlayRunnerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteOutOnPlayRunnerArgs = {
+  input: DeleteOutOnPlayRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlateAppearanceByNodeIdArgs = {
+  input: DeletePlateAppearanceByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlateAppearanceArgs = {
+  input: DeletePlateAppearanceInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePlayerByNodeIdArgs = {
   input: DeletePlayerByNodeIdInput;
 };
@@ -257,6 +2135,3854 @@ export type MutationDeletePlayerByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePlayerArgs = {
   input: DeletePlayerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlayerByFirstNameAndLastNameArgs = {
+  input: DeletePlayerByFirstNameAndLastNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteScoredRunnerByNodeIdArgs = {
+  input: DeleteScoredRunnerByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteScoredRunnerArgs = {
+  input: DeleteScoredRunnerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteStolenBaseAttemptByNodeIdArgs = {
+  input: DeleteStolenBaseAttemptByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteStolenBaseAttemptArgs = {
+  input: DeleteStolenBaseAttemptInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTeamByNodeIdArgs = {
+  input: DeleteTeamByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTeamArgs = {
+  input: DeleteTeamInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTeamByGameIdAndRoleArgs = {
+  input: DeleteTeamByGameIdAndRoleInput;
+};
+
+/** The output of our create `BaseRunner` mutation. */
+export type CreateBaseRunnerPayload = {
+  __typename?: 'CreateBaseRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `BaseRunner` that was created by this mutation. */
+  baseRunner: Maybe<BaseRunner>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameState` that is related to this `BaseRunner`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Player` that is related to this `BaseRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the create `BaseRunner` mutation. */
+export type CreateBaseRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `BaseRunner` to be created by this mutation. */
+  baseRunner: BaseRunnerInput;
+};
+
+/** An input for mutations affecting `BaseRunner` */
+export type BaseRunnerInput = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  base: BaseType;
+  gameState?: Maybe<BaseRunnerGameStateIdFkeyInput>;
+  player?: Maybe<BaseRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `gameState` in the `BaseRunnerInput` mutation. */
+export type BaseRunnerGameStateIdFkeyInput = {
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectById?: Maybe<GameStateGameStatePkeyConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameStateNodeIdConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteById?: Maybe<GameStateGameStatePkeyDelete>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameStateNodeIdDelete>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateById?: Maybe<GameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyUsingGameStatePkeyUpdate>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate>;
+  /** A `GameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<BaseRunnerGameStateIdFkeyGameStateCreateInput>;
+};
+
+/** The fields on `gameState` to look up the row to connect. */
+export type GameStateGameStatePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type GameStateNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `gameState` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `gameState` to look up the row to delete. */
+export type GameStateGameStatePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type GameStateNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `gameState` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `gameState` to look up the row to update. */
+export type GameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyUsingGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: UpdateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameState` being updated. */
+export type UpdateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning?: Maybe<Scalars['Int']>;
+  halfInning?: Maybe<HalfInning>;
+  outs?: Maybe<Scalars['Int']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** Input for the nested mutation of `player` in the `GameStateInput` mutation. */
+export type GameStatePlayerAtBatFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameStateOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<GameStatePlayerAtBatFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to connect. */
+export type PlayerPlayerPkeyConnect = {
+  id: Scalars['UUID'];
+};
+
+/** The fields on `player` to look up the row to connect. */
+export type PlayerPlayerFirstNameLastNameKeyConnect = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type PlayerNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `player` to look up the row to delete. */
+export type PlayerPlayerPkeyDelete = {
+  id: Scalars['UUID'];
+};
+
+/** The fields on `player` to look up the row to delete. */
+export type PlayerPlayerFirstNameLastNameKeyDelete = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type PlayerNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `player` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupSpot` in the `PlayerInput` mutation. */
+export type LineupSpotPlayerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineupSpot` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByLineupIdAndPlayerId?: Maybe<Array<LineupSpotLineupSpotPkeyConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByLineupIdAndBattingOrder?: Maybe<Array<LineupSpotLineupSpotLineupIdBattingOrderKeyConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByLineupIdAndPosition?: Maybe<Array<LineupSpotLineupSpotLineupIdPositionKeyConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupSpotNodeIdConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByLineupIdAndPlayerId?: Maybe<Array<LineupSpotLineupSpotPkeyDelete>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByLineupIdAndBattingOrder?: Maybe<Array<LineupSpotLineupSpotLineupIdBattingOrderKeyDelete>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByLineupIdAndPosition?: Maybe<Array<LineupSpotLineupSpotLineupIdPositionKeyDelete>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupSpotNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByLineupIdAndPlayerId?: Maybe<Array<LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotPkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByLineupIdAndBattingOrder?: Maybe<Array<LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotLineupIdBattingOrderKeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByLineupIdAndPosition?: Maybe<Array<LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotLineupIdPositionKeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate>>;
+  /** A `LineupSpotInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupSpotPlayerIdFkeyLineupSpotCreateInput>>;
+};
+
+/** The fields on `lineupSpot` to look up the row to connect. */
+export type LineupSpotLineupSpotPkeyConnect = {
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+/** The fields on `lineupSpot` to look up the row to connect. */
+export type LineupSpotLineupSpotLineupIdBattingOrderKeyConnect = {
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+/** The fields on `lineupSpot` to look up the row to connect. */
+export type LineupSpotLineupSpotLineupIdPositionKeyConnect = {
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LineupSpotNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `lineupSpot` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineupSpot` to look up the row to delete. */
+export type LineupSpotLineupSpotPkeyDelete = {
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+/** The fields on `lineupSpot` to look up the row to delete. */
+export type LineupSpotLineupSpotLineupIdBattingOrderKeyDelete = {
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+/** The fields on `lineupSpot` to look up the row to delete. */
+export type LineupSpotLineupSpotLineupIdPositionKeyDelete = {
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LineupSpotNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `lineupSpot` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineupSpot` to look up the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotPkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: UpdateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch;
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `lineupSpot` being updated. */
+export type UpdateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
+  lineupId?: Maybe<Scalars['Int']>;
+  battingOrder?: Maybe<Scalars['Int']>;
+  position?: Maybe<FieldingPosition>;
+  lineup?: Maybe<LineupSpotLineupIdFkeyInput>;
+  player?: Maybe<LineupSpotPlayerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `lineup` in the `LineupSpotInput` mutation. */
+export type LineupSpotLineupIdFkeyInput = {
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectById?: Maybe<LineupLineupPkeyConnect>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LineupNodeIdConnect>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteById?: Maybe<LineupLineupPkeyDelete>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LineupNodeIdDelete>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateById?: Maybe<LineupOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupPkeyUpdate>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyNodeIdUpdate>;
+  /** A `LineupInput` object that will be created and connected to this object. */
+  create?: Maybe<LineupSpotLineupIdFkeyLineupCreateInput>;
+};
+
+/** The fields on `lineup` to look up the row to connect. */
+export type LineupLineupPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LineupNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `lineup` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineup` to look up the row to delete. */
+export type LineupLineupPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LineupNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `lineup` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineup` to look up the row to update. */
+export type LineupOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupPkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: UpdateLineupOnLineupSpotForLineupSpotLineupIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineup` being updated. */
+export type UpdateLineupOnLineupSpotForLineupSpotLineupIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `team` in the `LineupInput` mutation. */
+export type LineupTeamIdFkeyInput = {
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  connectById?: Maybe<TeamTeamPkeyConnect>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  connectByGameIdAndRole?: Maybe<TeamTeamGameIdRoleKeyConnect>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TeamNodeIdConnect>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  deleteById?: Maybe<TeamTeamPkeyDelete>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  deleteByGameIdAndRole?: Maybe<TeamTeamGameIdRoleKeyDelete>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TeamNodeIdDelete>;
+  /** The primary key(s) and patch data for `team` for the far side of the relationship. */
+  updateById?: Maybe<TeamOnLineupForLineupTeamIdFkeyUsingTeamPkeyUpdate>;
+  /** The primary key(s) and patch data for `team` for the far side of the relationship. */
+  updateByGameIdAndRole?: Maybe<TeamOnLineupForLineupTeamIdFkeyUsingTeamGameIdRoleKeyUpdate>;
+  /** The primary key(s) and patch data for `team` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LineupOnLineupForLineupTeamIdFkeyNodeIdUpdate>;
+  /** A `TeamInput` object that will be created and connected to this object. */
+  create?: Maybe<LineupTeamIdFkeyTeamCreateInput>;
+};
+
+/** The fields on `team` to look up the row to connect. */
+export type TeamTeamPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `team` to look up the row to connect. */
+export type TeamTeamGameIdRoleKeyConnect = {
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TeamNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `team` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `team` to look up the row to delete. */
+export type TeamTeamPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `team` to look up the row to delete. */
+export type TeamTeamGameIdRoleKeyDelete = {
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TeamNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `team` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `team` to look up the row to update. */
+export type TeamOnLineupForLineupTeamIdFkeyUsingTeamPkeyUpdate = {
+  /** An object where the defined keys will be set on the `team` being updated. */
+  patch: UpdateTeamOnLineupForLineupTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `team` being updated. */
+export type UpdateTeamOnLineupForLineupTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  role?: Maybe<TeamRole>;
+  name?: Maybe<Scalars['String']>;
+  winner?: Maybe<Scalars['Boolean']>;
+  game?: Maybe<TeamGameIdFkeyInput>;
+  lineups?: Maybe<LineupTeamIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `game` in the `TeamInput` mutation. */
+export type TeamGameIdFkeyInput = {
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectById?: Maybe<GameGamePkeyConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByName?: Maybe<GameGameNameKeyConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameNodeIdConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteById?: Maybe<GameGamePkeyDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByName?: Maybe<GameGameNameKeyDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameNodeIdDelete>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateById?: Maybe<GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByName?: Maybe<GameOnTeamForTeamGameIdFkeyUsingGameNameKeyUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TeamOnTeamForTeamGameIdFkeyNodeIdUpdate>;
+  /** A `GameInput` object that will be created and connected to this object. */
+  create?: Maybe<TeamGameIdFkeyGameCreateInput>;
+};
+
+/** The fields on `game` to look up the row to connect. */
+export type GameGamePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `game` to look up the row to connect. */
+export type GameGameNameKeyConnect = {
+  name: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type GameNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `game` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `game` to look up the row to delete. */
+export type GameGamePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `game` to look up the row to delete. */
+export type GameGameNameKeyDelete = {
+  name: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type GameNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `game` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnTeamForTeamGameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `game` being updated. */
+export type UpdateGameOnTeamForTeamGameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  datePlayed?: Maybe<Scalars['Date']>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `team` in the `GameInput` mutation. */
+export type TeamGameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `team` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  connectById?: Maybe<Array<TeamTeamPkeyConnect>>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  connectByGameIdAndRole?: Maybe<Array<TeamTeamGameIdRoleKeyConnect>>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TeamNodeIdConnect>>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TeamTeamPkeyDelete>>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  deleteByGameIdAndRole?: Maybe<Array<TeamTeamGameIdRoleKeyDelete>>;
+  /** The primary key(s) for `team` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TeamNodeIdDelete>>;
+  /** The primary key(s) and patch data for `team` for the far side of the relationship. */
+  updateById?: Maybe<Array<TeamOnTeamForTeamGameIdFkeyUsingTeamPkeyUpdate>>;
+  /** The primary key(s) and patch data for `team` for the far side of the relationship. */
+  updateByGameIdAndRole?: Maybe<Array<TeamOnTeamForTeamGameIdFkeyUsingTeamGameIdRoleKeyUpdate>>;
+  /** The primary key(s) and patch data for `team` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameOnTeamForTeamGameIdFkeyNodeIdUpdate>>;
+  /** A `TeamInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TeamGameIdFkeyTeamCreateInput>>;
+};
+
+/** The fields on `team` to look up the row to update. */
+export type TeamOnTeamForTeamGameIdFkeyUsingTeamPkeyUpdate = {
+  /** An object where the defined keys will be set on the `team` being updated. */
+  patch: UpdateTeamOnTeamForTeamGameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `team` being updated. */
+export type UpdateTeamOnTeamForTeamGameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  role?: Maybe<TeamRole>;
+  name?: Maybe<Scalars['String']>;
+  winner?: Maybe<Scalars['Boolean']>;
+  game?: Maybe<TeamGameIdFkeyInput>;
+  lineups?: Maybe<LineupTeamIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineup` in the `TeamInput` mutation. */
+export type LineupTeamIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineup` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectById?: Maybe<Array<LineupLineupPkeyConnect>>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupNodeIdConnect>>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LineupLineupPkeyDelete>>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateById?: Maybe<Array<LineupOnLineupForLineupTeamIdFkeyUsingLineupPkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TeamOnLineupForLineupTeamIdFkeyNodeIdUpdate>>;
+  /** A `LineupInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupTeamIdFkeyLineupCreateInput>>;
+};
+
+/** The fields on `lineup` to look up the row to update. */
+export type LineupOnLineupForLineupTeamIdFkeyUsingLineupPkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: UpdateLineupOnLineupForLineupTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineup` being updated. */
+export type UpdateLineupOnLineupForLineupTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupSpot` in the `LineupInput` mutation. */
+export type LineupSpotLineupIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineupSpot` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByLineupIdAndPlayerId?: Maybe<Array<LineupSpotLineupSpotPkeyConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByLineupIdAndBattingOrder?: Maybe<Array<LineupSpotLineupSpotLineupIdBattingOrderKeyConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByLineupIdAndPosition?: Maybe<Array<LineupSpotLineupSpotLineupIdPositionKeyConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupSpotNodeIdConnect>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByLineupIdAndPlayerId?: Maybe<Array<LineupSpotLineupSpotPkeyDelete>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByLineupIdAndBattingOrder?: Maybe<Array<LineupSpotLineupSpotLineupIdBattingOrderKeyDelete>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByLineupIdAndPosition?: Maybe<Array<LineupSpotLineupSpotLineupIdPositionKeyDelete>>;
+  /** The primary key(s) for `lineupSpot` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupSpotNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByLineupIdAndPlayerId?: Maybe<Array<LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotPkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByLineupIdAndBattingOrder?: Maybe<Array<LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotLineupIdBattingOrderKeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByLineupIdAndPosition?: Maybe<Array<LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotLineupIdPositionKeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupSpot` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LineupOnLineupSpotForLineupSpotLineupIdFkeyNodeIdUpdate>>;
+  /** A `LineupSpotInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupSpotLineupIdFkeyLineupSpotCreateInput>>;
+};
+
+/** The fields on `lineupSpot` to look up the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotPkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: UpdateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch;
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `lineupSpot` being updated. */
+export type UpdateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch = {
+  playerId?: Maybe<Scalars['UUID']>;
+  battingOrder?: Maybe<Scalars['Int']>;
+  position?: Maybe<FieldingPosition>;
+  lineup?: Maybe<LineupSpotLineupIdFkeyInput>;
+  player?: Maybe<LineupSpotPlayerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `player` in the `LineupSpotInput` mutation. */
+export type LineupSpotPlayerIdFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<LineupSpotPlayerIdFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `basepathMovement` in the `PlayerInput` mutation. */
+export type BasepathMovementRunnerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `basepathMovement` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  connectByPlateAppearanceIdAndRunnerId?: Maybe<Array<BasepathMovementBasepathMovementPkeyConnect>>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<BasepathMovementNodeIdConnect>>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  deleteByPlateAppearanceIdAndRunnerId?: Maybe<Array<BasepathMovementBasepathMovementPkeyDelete>>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<BasepathMovementNodeIdDelete>>;
+  /** The primary key(s) and patch data for `basepathMovement` for the far side of the relationship. */
+  updateByPlateAppearanceIdAndRunnerId?: Maybe<Array<BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingBasepathMovementPkeyUpdate>>;
+  /** The primary key(s) and patch data for `basepathMovement` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate>>;
+  /** A `BasepathMovementInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<BasepathMovementRunnerIdFkeyBasepathMovementCreateInput>>;
+};
+
+/** The fields on `basepathMovement` to look up the row to connect. */
+export type BasepathMovementBasepathMovementPkeyConnect = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type BasepathMovementNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `basepathMovement` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `basepathMovement` to look up the row to delete. */
+export type BasepathMovementBasepathMovementPkeyDelete = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type BasepathMovementNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `basepathMovement` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `basepathMovement` to look up the row to update. */
+export type BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingBasepathMovementPkeyUpdate = {
+  /** An object where the defined keys will be set on the `basepathMovement` being updated. */
+  patch: UpdateBasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `basepathMovement` being updated. */
+export type UpdateBasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  endBase?: Maybe<BaseType>;
+  wasSafe?: Maybe<Scalars['Boolean']>;
+  plateAppearance?: Maybe<BasepathMovementPlateAppearanceIdFkeyInput>;
+  player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `plateAppearance` in the `BasepathMovementInput` mutation. */
+export type BasepathMovementPlateAppearanceIdFkeyInput = {
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  connectById?: Maybe<PlateAppearancePlateAppearancePkeyConnect>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlateAppearanceNodeIdConnect>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  deleteById?: Maybe<PlateAppearancePlateAppearancePkeyDelete>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlateAppearanceNodeIdDelete>;
+  /** The primary key(s) and patch data for `plateAppearance` for the far side of the relationship. */
+  updateById?: Maybe<PlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyUsingPlateAppearancePkeyUpdate>;
+  /** The primary key(s) and patch data for `plateAppearance` for the far side of the relationship. */
+  updateByNodeId?: Maybe<BasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyNodeIdUpdate>;
+  /** A `PlateAppearanceInput` object that will be created and connected to this object. */
+  create?: Maybe<BasepathMovementPlateAppearanceIdFkeyPlateAppearanceCreateInput>;
+};
+
+/** The fields on `plateAppearance` to look up the row to connect. */
+export type PlateAppearancePlateAppearancePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type PlateAppearanceNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `plateAppearance` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `plateAppearance` to look up the row to delete. */
+export type PlateAppearancePlateAppearancePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type PlateAppearanceNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `plateAppearance` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `plateAppearance` to look up the row to update. */
+export type PlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyUsingPlateAppearancePkeyUpdate = {
+  /** An object where the defined keys will be set on the `plateAppearance` being updated. */
+  patch: UpdatePlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `plateAppearance` being updated. */
+export type UpdatePlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<PlateAppearanceType>;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `basepathMovement` in the `PlateAppearanceInput` mutation. */
+export type BasepathMovementPlateAppearanceIdFkeyInverseInput = {
+  /** Flag indicating whether all other `basepathMovement` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  connectByPlateAppearanceIdAndRunnerId?: Maybe<Array<BasepathMovementBasepathMovementPkeyConnect>>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<BasepathMovementNodeIdConnect>>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  deleteByPlateAppearanceIdAndRunnerId?: Maybe<Array<BasepathMovementBasepathMovementPkeyDelete>>;
+  /** The primary key(s) for `basepathMovement` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<BasepathMovementNodeIdDelete>>;
+  /** The primary key(s) and patch data for `basepathMovement` for the far side of the relationship. */
+  updateByPlateAppearanceIdAndRunnerId?: Maybe<Array<BasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyUsingBasepathMovementPkeyUpdate>>;
+  /** The primary key(s) and patch data for `basepathMovement` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyNodeIdUpdate>>;
+  /** A `BasepathMovementInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<BasepathMovementPlateAppearanceIdFkeyBasepathMovementCreateInput>>;
+};
+
+/** The fields on `basepathMovement` to look up the row to update. */
+export type BasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyUsingBasepathMovementPkeyUpdate = {
+  /** An object where the defined keys will be set on the `basepathMovement` being updated. */
+  patch: UpdateBasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `basepathMovement` being updated. */
+export type UpdateBasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  endBase?: Maybe<BaseType>;
+  wasSafe?: Maybe<Scalars['Boolean']>;
+  plateAppearance?: Maybe<BasepathMovementPlateAppearanceIdFkeyInput>;
+  player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `player` in the `BasepathMovementInput` mutation. */
+export type BasepathMovementRunnerIdFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<BasepathMovementRunnerIdFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `outOnPlayRunner` in the `PlayerInput` mutation. */
+export type OutOnPlayRunnerRunnerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `outOnPlayRunner` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  connectByPlateAppearanceIdAndRunnerId?: Maybe<Array<OutOnPlayRunnerOutOnPlayRunnerPkeyConnect>>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<OutOnPlayRunnerNodeIdConnect>>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  deleteByPlateAppearanceIdAndRunnerId?: Maybe<Array<OutOnPlayRunnerOutOnPlayRunnerPkeyDelete>>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<OutOnPlayRunnerNodeIdDelete>>;
+  /** The primary key(s) and patch data for `outOnPlayRunner` for the far side of the relationship. */
+  updateByPlateAppearanceIdAndRunnerId?: Maybe<Array<OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingOutOnPlayRunnerPkeyUpdate>>;
+  /** The primary key(s) and patch data for `outOnPlayRunner` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate>>;
+  /** A `OutOnPlayRunnerInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<OutOnPlayRunnerRunnerIdFkeyOutOnPlayRunnerCreateInput>>;
+};
+
+/** The fields on `outOnPlayRunner` to look up the row to connect. */
+export type OutOnPlayRunnerOutOnPlayRunnerPkeyConnect = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type OutOnPlayRunnerNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `outOnPlayRunner` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outOnPlayRunner` to look up the row to delete. */
+export type OutOnPlayRunnerOutOnPlayRunnerPkeyDelete = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type OutOnPlayRunnerNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `outOnPlayRunner` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `outOnPlayRunner` to look up the row to update. */
+export type OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingOutOnPlayRunnerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outOnPlayRunner` being updated. */
+  patch: UpdateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `outOnPlayRunner` being updated. */
+export type UpdateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInput>;
+  player?: Maybe<OutOnPlayRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `plateAppearance` in the `OutOnPlayRunnerInput` mutation. */
+export type OutOnPlayRunnerPlateAppearanceIdFkeyInput = {
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  connectById?: Maybe<PlateAppearancePlateAppearancePkeyConnect>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlateAppearanceNodeIdConnect>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  deleteById?: Maybe<PlateAppearancePlateAppearancePkeyDelete>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlateAppearanceNodeIdDelete>;
+  /** The primary key(s) and patch data for `plateAppearance` for the far side of the relationship. */
+  updateById?: Maybe<PlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyUsingPlateAppearancePkeyUpdate>;
+  /** The primary key(s) and patch data for `plateAppearance` for the far side of the relationship. */
+  updateByNodeId?: Maybe<OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyNodeIdUpdate>;
+  /** A `PlateAppearanceInput` object that will be created and connected to this object. */
+  create?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyPlateAppearanceCreateInput>;
+};
+
+/** The fields on `plateAppearance` to look up the row to update. */
+export type PlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyUsingPlateAppearancePkeyUpdate = {
+  /** An object where the defined keys will be set on the `plateAppearance` being updated. */
+  patch: UpdatePlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `plateAppearance` being updated. */
+export type UpdatePlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<PlateAppearanceType>;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `outOnPlayRunner` in the `PlateAppearanceInput` mutation. */
+export type OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput = {
+  /** Flag indicating whether all other `outOnPlayRunner` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  connectByPlateAppearanceIdAndRunnerId?: Maybe<Array<OutOnPlayRunnerOutOnPlayRunnerPkeyConnect>>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<OutOnPlayRunnerNodeIdConnect>>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  deleteByPlateAppearanceIdAndRunnerId?: Maybe<Array<OutOnPlayRunnerOutOnPlayRunnerPkeyDelete>>;
+  /** The primary key(s) for `outOnPlayRunner` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<OutOnPlayRunnerNodeIdDelete>>;
+  /** The primary key(s) and patch data for `outOnPlayRunner` for the far side of the relationship. */
+  updateByPlateAppearanceIdAndRunnerId?: Maybe<Array<OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyUsingOutOnPlayRunnerPkeyUpdate>>;
+  /** The primary key(s) and patch data for `outOnPlayRunner` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyNodeIdUpdate>>;
+  /** A `OutOnPlayRunnerInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<OutOnPlayRunnerPlateAppearanceIdFkeyOutOnPlayRunnerCreateInput>>;
+};
+
+/** The fields on `outOnPlayRunner` to look up the row to update. */
+export type OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyUsingOutOnPlayRunnerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outOnPlayRunner` being updated. */
+  patch: UpdateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `outOnPlayRunner` being updated. */
+export type UpdateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  plateAppearance?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInput>;
+  player?: Maybe<OutOnPlayRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `player` in the `OutOnPlayRunnerInput` mutation. */
+export type OutOnPlayRunnerRunnerIdFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `stolenBaseAttempt` in the `PlayerInput` mutation. */
+export type StolenBaseAttemptRunnerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `stolenBaseAttempt` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  connectById?: Maybe<Array<StolenBaseAttemptStolenBaseAttemptPkeyConnect>>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<StolenBaseAttemptNodeIdConnect>>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  deleteById?: Maybe<Array<StolenBaseAttemptStolenBaseAttemptPkeyDelete>>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<StolenBaseAttemptNodeIdDelete>>;
+  /** The primary key(s) and patch data for `stolenBaseAttempt` for the far side of the relationship. */
+  updateById?: Maybe<Array<StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingStolenBaseAttemptPkeyUpdate>>;
+  /** The primary key(s) and patch data for `stolenBaseAttempt` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate>>;
+  /** A `StolenBaseAttemptInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<StolenBaseAttemptRunnerIdFkeyStolenBaseAttemptCreateInput>>;
+};
+
+/** The fields on `stolenBaseAttempt` to look up the row to connect. */
+export type StolenBaseAttemptStolenBaseAttemptPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type StolenBaseAttemptNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `stolenBaseAttempt` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `stolenBaseAttempt` to look up the row to delete. */
+export type StolenBaseAttemptStolenBaseAttemptPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type StolenBaseAttemptNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `stolenBaseAttempt` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `stolenBaseAttempt` to look up the row to update. */
+export type StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingStolenBaseAttemptPkeyUpdate = {
+  /** An object where the defined keys will be set on the `stolenBaseAttempt` being updated. */
+  patch: UpdateStolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `stolenBaseAttempt` being updated. */
+export type UpdateStolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  success?: Maybe<Scalars['Boolean']>;
+  player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
+  gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `player` in the `StolenBaseAttemptInput` mutation. */
+export type StolenBaseAttemptRunnerIdFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<StolenBaseAttemptRunnerIdFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameState` in the `PlayerInput` mutation. */
+export type GameStatePlayerAtBatFkeyInverseInput = {
+  /** Flag indicating whether all other `gameState` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameStateGameStatePkeyConnect>>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameStateNodeIdConnect>>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameStateGameStatePkeyDelete>>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameStateNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameStateOnGameStateForGameStatePlayerAtBatFkeyUsingGameStatePkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate>>;
+  /** A `GameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameStatePlayerAtBatFkeyGameStateCreateInput>>;
+};
+
+/** The fields on `gameState` to look up the row to update. */
+export type GameStateOnGameStateForGameStatePlayerAtBatFkeyUsingGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: UpdateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameState` being updated. */
+export type UpdateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  inning?: Maybe<Scalars['Int']>;
+  halfInning?: Maybe<HalfInning>;
+  outs?: Maybe<Scalars['Int']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** Input for the nested mutation of `baseRunner` in the `GameStateInput` mutation. */
+export type BaseRunnerGameStateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `baseRunner` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  connectByGameStateIdAndRunnerId?: Maybe<Array<BaseRunnerBaseRunnerPkeyConnect>>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<BaseRunnerNodeIdConnect>>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  deleteByGameStateIdAndRunnerId?: Maybe<Array<BaseRunnerBaseRunnerPkeyDelete>>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<BaseRunnerNodeIdDelete>>;
+  /** The primary key(s) and patch data for `baseRunner` for the far side of the relationship. */
+  updateByGameStateIdAndRunnerId?: Maybe<Array<BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyUsingBaseRunnerPkeyUpdate>>;
+  /** The primary key(s) and patch data for `baseRunner` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate>>;
+  /** A `BaseRunnerInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<BaseRunnerGameStateIdFkeyBaseRunnerCreateInput>>;
+};
+
+/** The fields on `baseRunner` to look up the row to connect. */
+export type BaseRunnerBaseRunnerPkeyConnect = {
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type BaseRunnerNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `baseRunner` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `baseRunner` to look up the row to delete. */
+export type BaseRunnerBaseRunnerPkeyDelete = {
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type BaseRunnerNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `baseRunner` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `baseRunner` to look up the row to update. */
+export type BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyUsingBaseRunnerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `baseRunner` being updated. */
+  patch: UpdateBaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch;
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `baseRunner` being updated. */
+export type UpdateBaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  base?: Maybe<BaseType>;
+  gameState?: Maybe<BaseRunnerGameStateIdFkeyInput>;
+  player?: Maybe<BaseRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `player` in the `BaseRunnerInput` mutation. */
+export type BaseRunnerRunnerIdFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<BaseRunnerRunnerIdFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `baseRunner` in the `PlayerInput` mutation. */
+export type BaseRunnerRunnerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `baseRunner` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  connectByGameStateIdAndRunnerId?: Maybe<Array<BaseRunnerBaseRunnerPkeyConnect>>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<BaseRunnerNodeIdConnect>>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  deleteByGameStateIdAndRunnerId?: Maybe<Array<BaseRunnerBaseRunnerPkeyDelete>>;
+  /** The primary key(s) for `baseRunner` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<BaseRunnerNodeIdDelete>>;
+  /** The primary key(s) and patch data for `baseRunner` for the far side of the relationship. */
+  updateByGameStateIdAndRunnerId?: Maybe<Array<BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingBaseRunnerPkeyUpdate>>;
+  /** The primary key(s) and patch data for `baseRunner` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate>>;
+  /** A `BaseRunnerInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<BaseRunnerRunnerIdFkeyBaseRunnerCreateInput>>;
+};
+
+/** The fields on `baseRunner` to look up the row to update. */
+export type BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingBaseRunnerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `baseRunner` being updated. */
+  patch: UpdateBaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch;
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `baseRunner` being updated. */
+export type UpdateBaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  base?: Maybe<BaseType>;
+  gameState?: Maybe<BaseRunnerGameStateIdFkeyInput>;
+  player?: Maybe<BaseRunnerRunnerIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `baseRunner` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `baseRunner` being updated. */
+  patch: BaseRunnerPatch;
+};
+
+/** Represents an update to a `BaseRunner`. Fields that are set will be updated. */
+export type BaseRunnerPatch = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  base?: Maybe<BaseType>;
+  gameState?: Maybe<BaseRunnerGameStateIdFkeyInput>;
+  player?: Maybe<BaseRunnerRunnerIdFkeyInput>;
+};
+
+/** The `baseRunner` to be created by this mutation. */
+export type BaseRunnerRunnerIdFkeyBaseRunnerCreateInput = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  base: BaseType;
+  gameState?: Maybe<BaseRunnerGameStateIdFkeyInput>;
+  player?: Maybe<BaseRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `scoredRunner` in the `PlayerInput` mutation. */
+export type ScoredRunnerRunnerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `scoredRunner` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  connectByGameEventRecordIdAndRunnerId?: Maybe<Array<ScoredRunnerScoredRunnerPkeyConnect>>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ScoredRunnerNodeIdConnect>>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  deleteByGameEventRecordIdAndRunnerId?: Maybe<Array<ScoredRunnerScoredRunnerPkeyDelete>>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ScoredRunnerNodeIdDelete>>;
+  /** The primary key(s) and patch data for `scoredRunner` for the far side of the relationship. */
+  updateByGameEventRecordIdAndRunnerId?: Maybe<Array<ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingScoredRunnerPkeyUpdate>>;
+  /** The primary key(s) and patch data for `scoredRunner` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate>>;
+  /** A `ScoredRunnerInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ScoredRunnerRunnerIdFkeyScoredRunnerCreateInput>>;
+};
+
+/** The fields on `scoredRunner` to look up the row to connect. */
+export type ScoredRunnerScoredRunnerPkeyConnect = {
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ScoredRunnerNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `scoredRunner` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `scoredRunner` to look up the row to delete. */
+export type ScoredRunnerScoredRunnerPkeyDelete = {
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ScoredRunnerNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `scoredRunner` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `scoredRunner` to look up the row to update. */
+export type ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingScoredRunnerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `scoredRunner` being updated. */
+  patch: UpdateScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch;
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `scoredRunner` being updated. */
+export type UpdateScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
+  gameEventRecordId?: Maybe<Scalars['Int']>;
+  battedIn?: Maybe<Scalars['Boolean']>;
+  gameEventRecord?: Maybe<ScoredRunnerGameEventRecordIdFkeyInput>;
+  player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `gameEventRecord` in the `ScoredRunnerInput` mutation. */
+export type ScoredRunnerGameEventRecordIdFkeyInput = {
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectById?: Maybe<GameEventRecordGameEventRecordPkeyConnect>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameEventRecordNodeIdConnect>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteById?: Maybe<GameEventRecordGameEventRecordPkeyDelete>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameEventRecordNodeIdDelete>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateById?: Maybe<GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordPkeyUpdate>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate>;
+  /** A `GameEventRecordInput` object that will be created and connected to this object. */
+  create?: Maybe<ScoredRunnerGameEventRecordIdFkeyGameEventRecordCreateInput>;
+};
+
+/** The fields on `gameEventRecord` to look up the row to connect. */
+export type GameEventRecordGameEventRecordPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type GameEventRecordNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `gameEventRecord` to look up the row to delete. */
+export type GameEventRecordGameEventRecordPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type GameEventRecordNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+export type UpdateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `game` in the `GameEventRecordInput` mutation. */
+export type GameEventRecordGameIdFkeyInput = {
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectById?: Maybe<GameGamePkeyConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByName?: Maybe<GameGameNameKeyConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameNodeIdConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteById?: Maybe<GameGamePkeyDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByName?: Maybe<GameGameNameKeyDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameNodeIdDelete>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateById?: Maybe<GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGamePkeyUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByName?: Maybe<GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameNameKeyUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate>;
+  /** A `GameInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventRecordGameIdFkeyGameCreateInput>;
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `game` being updated. */
+export type UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  datePlayed?: Maybe<Scalars['Date']>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEventRecord` in the `GameInput` mutation. */
+export type GameEventRecordGameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `gameEventRecord` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate>>;
+  /** A `GameEventRecordInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventRecordGameIdFkeyGameEventRecordCreateInput>>;
+};
+
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameState` in the `GameEventRecordInput` mutation. */
+export type GameEventRecordGameStateBeforeFkInput = {
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectById?: Maybe<GameStateGameStatePkeyConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameStateNodeIdConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteById?: Maybe<GameStateGameStatePkeyDelete>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameStateNodeIdDelete>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateById?: Maybe<GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameStatePkeyUpdate>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate>;
+  /** A `GameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventRecordGameStateBeforeFkGameStateCreateInput>;
+};
+
+/** The fields on `gameState` to look up the row to update. */
+export type GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: UpdateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameState` being updated. */
+export type UpdateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning?: Maybe<Scalars['Int']>;
+  halfInning?: Maybe<HalfInning>;
+  outs?: Maybe<Scalars['Int']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupForGameState` in the `GameStateInput` mutation. */
+export type LineupForGameStateGameStateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineupForGameState` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  connectByGameStateIdAndLineupId?: Maybe<Array<LineupForGameStateLineupForGameStatePkeyConnect>>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupForGameStateNodeIdConnect>>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  deleteByGameStateIdAndLineupId?: Maybe<Array<LineupForGameStateLineupForGameStatePkeyDelete>>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupForGameStateNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineupForGameState` for the far side of the relationship. */
+  updateByGameStateIdAndLineupId?: Maybe<Array<LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyUsingLineupForGameStatePkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupForGameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyNodeIdUpdate>>;
+  /** A `LineupForGameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupForGameStateGameStateIdFkeyLineupForGameStateCreateInput>>;
+};
+
+/** The fields on `lineupForGameState` to look up the row to connect. */
+export type LineupForGameStateLineupForGameStatePkeyConnect = {
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LineupForGameStateNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `lineupForGameState` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineupForGameState` to look up the row to delete. */
+export type LineupForGameStateLineupForGameStatePkeyDelete = {
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LineupForGameStateNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `lineupForGameState` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineupForGameState` to look up the row to update. */
+export type LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyUsingLineupForGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupForGameState` being updated. */
+  patch: UpdateLineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch;
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineupForGameState` being updated. */
+export type UpdateLineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch = {
+  lineupId?: Maybe<Scalars['Int']>;
+  gameState?: Maybe<LineupForGameStateGameStateIdFkeyInput>;
+  lineup?: Maybe<LineupForGameStateLineupIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `gameState` in the `LineupForGameStateInput` mutation. */
+export type LineupForGameStateGameStateIdFkeyInput = {
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectById?: Maybe<GameStateGameStatePkeyConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameStateNodeIdConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteById?: Maybe<GameStateGameStatePkeyDelete>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameStateNodeIdDelete>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateById?: Maybe<GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyUsingGameStatePkeyUpdate>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyNodeIdUpdate>;
+  /** A `GameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<LineupForGameStateGameStateIdFkeyGameStateCreateInput>;
+};
+
+/** The fields on `gameState` to look up the row to update. */
+export type GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyUsingGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: UpdateGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameState` being updated. */
+export type UpdateGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning?: Maybe<Scalars['Int']>;
+  halfInning?: Maybe<HalfInning>;
+  outs?: Maybe<Scalars['Int']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEventRecord` in the `GameStateInput` mutation. */
+export type GameEventRecordGameStateBeforeFkInverseInput = {
+  /** Flag indicating whether all other `gameEventRecord` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate>>;
+  /** A `GameEventRecordInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventRecordGameStateBeforeFkGameEventRecordCreateInput>>;
+};
+
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameState` in the `GameEventRecordInput` mutation. */
+export type GameEventRecordGameStateAfterFkInput = {
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectById?: Maybe<GameStateGameStatePkeyConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameStateNodeIdConnect>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteById?: Maybe<GameStateGameStatePkeyDelete>;
+  /** The primary key(s) for `gameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameStateNodeIdDelete>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateById?: Maybe<GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameStatePkeyUpdate>;
+  /** The primary key(s) and patch data for `gameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate>;
+  /** A `GameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventRecordGameStateAfterFkGameStateCreateInput>;
+};
+
+/** The fields on `gameState` to look up the row to update. */
+export type GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: UpdateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameState` being updated. */
+export type UpdateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning?: Maybe<Scalars['Int']>;
+  halfInning?: Maybe<HalfInning>;
+  outs?: Maybe<Scalars['Int']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEventRecord` in the `GameStateInput` mutation. */
+export type GameEventRecordGameStateAfterFkInverseInput = {
+  /** Flag indicating whether all other `gameEventRecord` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate>>;
+  /** A `GameEventRecordInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventRecordGameStateAfterFkGameEventRecordCreateInput>>;
+};
+
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEvent` in the `GameEventRecordInput` mutation. */
+export type GameEventRecordGameEventIdFkeyInput = {
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectById?: Maybe<GameEventGameEventPkeyConnect>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameEventNodeIdConnect>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteById?: Maybe<GameEventGameEventPkeyDelete>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameEventNodeIdDelete>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateById?: Maybe<GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventPkeyUpdate>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate>;
+  /** A `GameEventInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventRecordGameEventIdFkeyGameEventCreateInput>;
+};
+
+/** The fields on `gameEvent` to look up the row to connect. */
+export type GameEventGameEventPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type GameEventNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `gameEvent` to look up the row to delete. */
+export type GameEventGameEventPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type GameEventNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `gameEvent` to look up the row to update. */
+export type GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: UpdateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEvent` being updated. */
+export type UpdateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `plateAppearance` in the `GameEventInput` mutation. */
+export type GameEventPlateAppearanceIdFkeyInput = {
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  connectById?: Maybe<PlateAppearancePlateAppearancePkeyConnect>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlateAppearanceNodeIdConnect>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  deleteById?: Maybe<PlateAppearancePlateAppearancePkeyDelete>;
+  /** The primary key(s) for `plateAppearance` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlateAppearanceNodeIdDelete>;
+  /** The primary key(s) and patch data for `plateAppearance` for the far side of the relationship. */
+  updateById?: Maybe<PlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyUsingPlateAppearancePkeyUpdate>;
+  /** The primary key(s) and patch data for `plateAppearance` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventOnGameEventForGameEventPlateAppearanceIdFkeyNodeIdUpdate>;
+  /** A `PlateAppearanceInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventPlateAppearanceIdFkeyPlateAppearanceCreateInput>;
+};
+
+/** The fields on `plateAppearance` to look up the row to update. */
+export type PlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyUsingPlateAppearancePkeyUpdate = {
+  /** An object where the defined keys will be set on the `plateAppearance` being updated. */
+  patch: UpdatePlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `plateAppearance` being updated. */
+export type UpdatePlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<PlateAppearanceType>;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEvent` in the `PlateAppearanceInput` mutation. */
+export type GameEventPlateAppearanceIdFkeyInverseInput = {
+  /** Flag indicating whether all other `gameEvent` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventGameEventPkeyConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventNodeIdConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventGameEventPkeyDelete>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventOnGameEventForGameEventPlateAppearanceIdFkeyUsingGameEventPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyNodeIdUpdate>>;
+  /** A `GameEventInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventPlateAppearanceIdFkeyGameEventCreateInput>>;
+};
+
+/** The fields on `gameEvent` to look up the row to update. */
+export type GameEventOnGameEventForGameEventPlateAppearanceIdFkeyUsingGameEventPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: UpdateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEvent` being updated. */
+export type UpdateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `stolenBaseAttempt` in the `GameEventInput` mutation. */
+export type GameEventStolenBaseAttemptIdFkeyInput = {
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  connectById?: Maybe<StolenBaseAttemptStolenBaseAttemptPkeyConnect>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  connectByNodeId?: Maybe<StolenBaseAttemptNodeIdConnect>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  deleteById?: Maybe<StolenBaseAttemptStolenBaseAttemptPkeyDelete>;
+  /** The primary key(s) for `stolenBaseAttempt` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<StolenBaseAttemptNodeIdDelete>;
+  /** The primary key(s) and patch data for `stolenBaseAttempt` for the far side of the relationship. */
+  updateById?: Maybe<StolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyUsingStolenBaseAttemptPkeyUpdate>;
+  /** The primary key(s) and patch data for `stolenBaseAttempt` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyNodeIdUpdate>;
+  /** A `StolenBaseAttemptInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventStolenBaseAttemptIdFkeyStolenBaseAttemptCreateInput>;
+};
+
+/** The fields on `stolenBaseAttempt` to look up the row to update. */
+export type StolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyUsingStolenBaseAttemptPkeyUpdate = {
+  /** An object where the defined keys will be set on the `stolenBaseAttempt` being updated. */
+  patch: UpdateStolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `stolenBaseAttempt` being updated. */
+export type UpdateStolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  success?: Maybe<Scalars['Boolean']>;
+  player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
+  gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEvent` in the `StolenBaseAttemptInput` mutation. */
+export type GameEventStolenBaseAttemptIdFkeyInverseInput = {
+  /** Flag indicating whether all other `gameEvent` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventGameEventPkeyConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventNodeIdConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventGameEventPkeyDelete>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyUsingGameEventPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<StolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyNodeIdUpdate>>;
+  /** A `GameEventInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventStolenBaseAttemptIdFkeyGameEventCreateInput>>;
+};
+
+/** The fields on `gameEvent` to look up the row to update. */
+export type GameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyUsingGameEventPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: UpdateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEvent` being updated. */
+export type UpdateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupChange` in the `GameEventInput` mutation. */
+export type GameEventLineupChangeIdFkeyInput = {
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  connectById?: Maybe<LineupChangeLineupChangePkeyConnect>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LineupChangeNodeIdConnect>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  deleteById?: Maybe<LineupChangeLineupChangePkeyDelete>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LineupChangeNodeIdDelete>;
+  /** The primary key(s) and patch data for `lineupChange` for the far side of the relationship. */
+  updateById?: Maybe<LineupChangeOnGameEventForGameEventLineupChangeIdFkeyUsingLineupChangePkeyUpdate>;
+  /** The primary key(s) and patch data for `lineupChange` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate>;
+  /** A `LineupChangeInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventLineupChangeIdFkeyLineupChangeCreateInput>;
+};
+
+/** The fields on `lineupChange` to look up the row to connect. */
+export type LineupChangeLineupChangePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LineupChangeNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `lineupChange` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineupChange` to look up the row to delete. */
+export type LineupChangeLineupChangePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LineupChangeNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `lineupChange` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `lineupChange` to look up the row to update. */
+export type LineupChangeOnGameEventForGameEventLineupChangeIdFkeyUsingLineupChangePkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupChange` being updated. */
+  patch: UpdateLineupChangeOnGameEventForGameEventLineupChangeIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineupChange` being updated. */
+export type UpdateLineupChangeOnGameEventForGameEventLineupChangeIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  lineupAfterId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineup` in the `LineupChangeInput` mutation. */
+export type LineupChangeLineupAfterIdFkeyInput = {
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectById?: Maybe<LineupLineupPkeyConnect>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LineupNodeIdConnect>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteById?: Maybe<LineupLineupPkeyDelete>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LineupNodeIdDelete>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateById?: Maybe<LineupOnLineupChangeForLineupChangeLineupAfterIdFkeyUsingLineupPkeyUpdate>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyNodeIdUpdate>;
+  /** A `LineupInput` object that will be created and connected to this object. */
+  create?: Maybe<LineupChangeLineupAfterIdFkeyLineupCreateInput>;
+};
+
+/** The fields on `lineup` to look up the row to update. */
+export type LineupOnLineupChangeForLineupChangeLineupAfterIdFkeyUsingLineupPkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: UpdateLineupOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineup` being updated. */
+export type UpdateLineupOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupChange` in the `LineupInput` mutation. */
+export type LineupChangeLineupBeforeIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineupChange` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  connectById?: Maybe<Array<LineupChangeLineupChangePkeyConnect>>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupChangeNodeIdConnect>>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LineupChangeLineupChangePkeyDelete>>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupChangeNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineupChange` for the far side of the relationship. */
+  updateById?: Maybe<Array<LineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyUsingLineupChangePkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupChange` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LineupOnLineupChangeForLineupChangeLineupBeforeIdFkeyNodeIdUpdate>>;
+  /** A `LineupChangeInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupChangeLineupBeforeIdFkeyLineupChangeCreateInput>>;
+};
+
+/** The fields on `lineupChange` to look up the row to update. */
+export type LineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyUsingLineupChangePkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupChange` being updated. */
+  patch: UpdateLineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineupChange` being updated. */
+export type UpdateLineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  lineupAfterId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEvent` in the `LineupChangeInput` mutation. */
+export type GameEventLineupChangeIdFkeyInverseInput = {
+  /** Flag indicating whether all other `gameEvent` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventGameEventPkeyConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventNodeIdConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventGameEventPkeyDelete>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventOnGameEventForGameEventLineupChangeIdFkeyUsingGameEventPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LineupChangeOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate>>;
+  /** A `GameEventInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventLineupChangeIdFkeyGameEventCreateInput>>;
+};
+
+/** The fields on `gameEvent` to look up the row to update. */
+export type GameEventOnGameEventForGameEventLineupChangeIdFkeyUsingGameEventPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: UpdateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEvent` being updated. */
+export type UpdateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `gameEventRecord` in the `GameEventInput` mutation. */
+export type GameEventRecordGameEventIdFkeyInverseInput = {
+  /** Flag indicating whether all other `gameEventRecord` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate>>;
+  /** A `GameEventRecordInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventRecordGameEventIdFkeyGameEventRecordCreateInput>>;
+};
+
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `scoredRunner` in the `GameEventRecordInput` mutation. */
+export type ScoredRunnerGameEventRecordIdFkeyInverseInput = {
+  /** Flag indicating whether all other `scoredRunner` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  connectByGameEventRecordIdAndRunnerId?: Maybe<Array<ScoredRunnerScoredRunnerPkeyConnect>>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ScoredRunnerNodeIdConnect>>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  deleteByGameEventRecordIdAndRunnerId?: Maybe<Array<ScoredRunnerScoredRunnerPkeyDelete>>;
+  /** The primary key(s) for `scoredRunner` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ScoredRunnerNodeIdDelete>>;
+  /** The primary key(s) and patch data for `scoredRunner` for the far side of the relationship. */
+  updateByGameEventRecordIdAndRunnerId?: Maybe<Array<ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingScoredRunnerPkeyUpdate>>;
+  /** The primary key(s) and patch data for `scoredRunner` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate>>;
+  /** A `ScoredRunnerInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ScoredRunnerGameEventRecordIdFkeyScoredRunnerCreateInput>>;
+};
+
+/** The fields on `scoredRunner` to look up the row to update. */
+export type ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingScoredRunnerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `scoredRunner` being updated. */
+  patch: UpdateScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch;
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `scoredRunner` being updated. */
+export type UpdateScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  battedIn?: Maybe<Scalars['Boolean']>;
+  gameEventRecord?: Maybe<ScoredRunnerGameEventRecordIdFkeyInput>;
+  player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `player` in the `ScoredRunnerInput` mutation. */
+export type ScoredRunnerRunnerIdFkeyInput = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<ScoredRunnerRunnerIdFkeyPlayerCreateInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** Represents an update to a `Player`. Fields that are set will be updated. */
+export type PlayerPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The `player` to be created by this mutation. */
+export type ScoredRunnerRunnerIdFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `scoredRunner` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `scoredRunner` being updated. */
+  patch: ScoredRunnerPatch;
+};
+
+/** Represents an update to a `ScoredRunner`. Fields that are set will be updated. */
+export type ScoredRunnerPatch = {
+  gameEventRecordId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  battedIn?: Maybe<Scalars['Boolean']>;
+  gameEventRecord?: Maybe<ScoredRunnerGameEventRecordIdFkeyInput>;
+  player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
+};
+
+/** The `scoredRunner` to be created by this mutation. */
+export type ScoredRunnerGameEventRecordIdFkeyScoredRunnerCreateInput = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  battedIn: Scalars['Boolean'];
+  gameEventRecord?: Maybe<ScoredRunnerGameEventRecordIdFkeyInput>;
+  player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+};
+
+/** Represents an update to a `GameEventRecord`. Fields that are set will be updated. */
+export type GameEventRecordPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** The `gameEventRecord` to be created by this mutation. */
+export type GameEventRecordGameEventIdFkeyGameEventRecordCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupChangeOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: GameEventPatch;
+};
+
+/** Represents an update to a `GameEvent`. Fields that are set will be updated. */
+export type GameEventPatch = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** The `gameEvent` to be created by this mutation. */
+export type GameEventLineupChangeIdFkeyGameEventCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupOnLineupChangeForLineupChangeLineupBeforeIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupChange` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupChange` being updated. */
+  patch: LineupChangePatch;
+};
+
+/** Represents an update to a `LineupChange`. Fields that are set will be updated. */
+export type LineupChangePatch = {
+  id?: Maybe<Scalars['Int']>;
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  lineupAfterId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** The `lineupChange` to be created by this mutation. */
+export type LineupChangeLineupBeforeIdFkeyLineupChangeCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  lineupAfterId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupChange` in the `LineupInput` mutation. */
+export type LineupChangeLineupAfterIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineupChange` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  connectById?: Maybe<Array<LineupChangeLineupChangePkeyConnect>>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupChangeNodeIdConnect>>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LineupChangeLineupChangePkeyDelete>>;
+  /** The primary key(s) for `lineupChange` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupChangeNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineupChange` for the far side of the relationship. */
+  updateById?: Maybe<Array<LineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyUsingLineupChangePkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupChange` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LineupOnLineupChangeForLineupChangeLineupAfterIdFkeyNodeIdUpdate>>;
+  /** A `LineupChangeInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupChangeLineupAfterIdFkeyLineupChangeCreateInput>>;
+};
+
+/** The fields on `lineupChange` to look up the row to update. */
+export type LineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyUsingLineupChangePkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupChange` being updated. */
+  patch: UpdateLineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineupChange` being updated. */
+export type UpdateLineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupOnLineupChangeForLineupChangeLineupAfterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupChange` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupChange` being updated. */
+  patch: LineupChangePatch;
+};
+
+/** The `lineupChange` to be created by this mutation. */
+export type LineupChangeLineupAfterIdFkeyLineupChangeCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `lineupForGameState` in the `LineupInput` mutation. */
+export type LineupForGameStateLineupIdFkeyInverseInput = {
+  /** Flag indicating whether all other `lineupForGameState` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  connectByGameStateIdAndLineupId?: Maybe<Array<LineupForGameStateLineupForGameStatePkeyConnect>>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LineupForGameStateNodeIdConnect>>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  deleteByGameStateIdAndLineupId?: Maybe<Array<LineupForGameStateLineupForGameStatePkeyDelete>>;
+  /** The primary key(s) for `lineupForGameState` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LineupForGameStateNodeIdDelete>>;
+  /** The primary key(s) and patch data for `lineupForGameState` for the far side of the relationship. */
+  updateByGameStateIdAndLineupId?: Maybe<Array<LineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyUsingLineupForGameStatePkeyUpdate>>;
+  /** The primary key(s) and patch data for `lineupForGameState` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyNodeIdUpdate>>;
+  /** A `LineupForGameStateInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LineupForGameStateLineupIdFkeyLineupForGameStateCreateInput>>;
+};
+
+/** The fields on `lineupForGameState` to look up the row to update. */
+export type LineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyUsingLineupForGameStatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupForGameState` being updated. */
+  patch: UpdateLineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch;
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineupForGameState` being updated. */
+export type UpdateLineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  gameState?: Maybe<LineupForGameStateGameStateIdFkeyInput>;
+  lineup?: Maybe<LineupForGameStateLineupIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `lineup` in the `LineupForGameStateInput` mutation. */
+export type LineupForGameStateLineupIdFkeyInput = {
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectById?: Maybe<LineupLineupPkeyConnect>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LineupNodeIdConnect>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteById?: Maybe<LineupLineupPkeyDelete>;
+  /** The primary key(s) for `lineup` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LineupNodeIdDelete>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateById?: Maybe<LineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyUsingLineupPkeyUpdate>;
+  /** The primary key(s) and patch data for `lineup` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyNodeIdUpdate>;
+  /** A `LineupInput` object that will be created and connected to this object. */
+  create?: Maybe<LineupForGameStateLineupIdFkeyLineupCreateInput>;
+};
+
+/** The fields on `lineup` to look up the row to update. */
+export type LineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyUsingLineupPkeyUpdate = {
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: UpdateLineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `lineup` being updated. */
+export type UpdateLineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineup` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: LineupPatch;
+};
+
+/** Represents an update to a `Lineup`. Fields that are set will be updated. */
+export type LineupPatch = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The `lineup` to be created by this mutation. */
+export type LineupForGameStateLineupIdFkeyLineupCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupForGameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupForGameState` being updated. */
+  patch: LineupForGameStatePatch;
+};
+
+/** Represents an update to a `LineupForGameState`. Fields that are set will be updated. */
+export type LineupForGameStatePatch = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  lineupId?: Maybe<Scalars['Int']>;
+  gameState?: Maybe<LineupForGameStateGameStateIdFkeyInput>;
+  lineup?: Maybe<LineupForGameStateLineupIdFkeyInput>;
+};
+
+/** The `lineupForGameState` to be created by this mutation. */
+export type LineupForGameStateLineupIdFkeyLineupForGameStateCreateInput = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  gameState?: Maybe<LineupForGameStateGameStateIdFkeyInput>;
+  lineup?: Maybe<LineupForGameStateLineupIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineup` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: LineupPatch;
+};
+
+/** The `lineup` to be created by this mutation. */
+export type LineupChangeLineupAfterIdFkeyLineupCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupChange` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupChange` being updated. */
+  patch: LineupChangePatch;
+};
+
+/** The `lineupChange` to be created by this mutation. */
+export type GameEventLineupChangeIdFkeyLineupChangeCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  lineupAfterId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type StolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: GameEventPatch;
+};
+
+/** The `gameEvent` to be created by this mutation. */
+export type GameEventStolenBaseAttemptIdFkeyGameEventCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `stolenBaseAttempt` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `stolenBaseAttempt` being updated. */
+  patch: StolenBaseAttemptPatch;
+};
+
+/** Represents an update to a `StolenBaseAttempt`. Fields that are set will be updated. */
+export type StolenBaseAttemptPatch = {
+  id?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  success?: Maybe<Scalars['Boolean']>;
+  player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
+  gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** The `stolenBaseAttempt` to be created by this mutation. */
+export type GameEventStolenBaseAttemptIdFkeyStolenBaseAttemptCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  success: Scalars['Boolean'];
+  player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
+  gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: GameEventPatch;
+};
+
+/** The `gameEvent` to be created by this mutation. */
+export type GameEventPlateAppearanceIdFkeyGameEventCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventOnGameEventForGameEventPlateAppearanceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `plateAppearance` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `plateAppearance` being updated. */
+  patch: PlateAppearancePatch;
+};
+
+/** Represents an update to a `PlateAppearance`. Fields that are set will be updated. */
+export type PlateAppearancePatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<PlateAppearanceType>;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** The `plateAppearance` to be created by this mutation. */
+export type GameEventPlateAppearanceIdFkeyPlateAppearanceCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  type: PlateAppearanceType;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: GameEventPatch;
+};
+
+/** The `gameEvent` to be created by this mutation. */
+export type GameEventRecordGameEventIdFkeyGameEventCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+};
+
+/** The `gameEventRecord` to be created by this mutation. */
+export type GameEventRecordGameStateAfterFkGameEventRecordCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: GameStatePatch;
+};
+
+/** Represents an update to a `GameState`. Fields that are set will be updated. */
+export type GameStatePatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning?: Maybe<Scalars['Int']>;
+  halfInning?: Maybe<HalfInning>;
+  outs?: Maybe<Scalars['Int']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The `gameState` to be created by this mutation. */
+export type GameEventRecordGameStateAfterFkGameStateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+};
+
+/** The `gameEventRecord` to be created by this mutation. */
+export type GameEventRecordGameStateBeforeFkGameEventRecordCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: GameStatePatch;
+};
+
+/** The `gameState` to be created by this mutation. */
+export type LineupForGameStateGameStateIdFkeyGameStateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupForGameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupForGameState` being updated. */
+  patch: LineupForGameStatePatch;
+};
+
+/** The `lineupForGameState` to be created by this mutation. */
+export type LineupForGameStateGameStateIdFkeyLineupForGameStateCreateInput = {
+  lineupId?: Maybe<Scalars['Int']>;
+  gameState?: Maybe<LineupForGameStateGameStateIdFkeyInput>;
+  lineup?: Maybe<LineupForGameStateLineupIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: GameStatePatch;
+};
+
+/** The `gameState` to be created by this mutation. */
+export type GameEventRecordGameStateBeforeFkGameStateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+};
+
+/** The `gameEventRecord` to be created by this mutation. */
+export type GameEventRecordGameIdFkeyGameEventRecordCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `game` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: GamePatch;
+};
+
+/** Represents an update to a `Game`. Fields that are set will be updated. */
+export type GamePatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  datePlayed?: Maybe<Scalars['Date']>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** The `game` to be created by this mutation. */
+export type GameEventRecordGameIdFkeyGameCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  datePlayed?: Maybe<Scalars['Date']>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+};
+
+/** The `gameEventRecord` to be created by this mutation. */
+export type ScoredRunnerGameEventRecordIdFkeyGameEventRecordCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `scoredRunner` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `scoredRunner` being updated. */
+  patch: ScoredRunnerPatch;
+};
+
+/** The `scoredRunner` to be created by this mutation. */
+export type ScoredRunnerRunnerIdFkeyScoredRunnerCreateInput = {
+  gameEventRecordId?: Maybe<Scalars['Int']>;
+  battedIn: Scalars['Boolean'];
+  gameEventRecord?: Maybe<ScoredRunnerGameEventRecordIdFkeyInput>;
+  player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The `player` to be created by this mutation. */
+export type BaseRunnerRunnerIdFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `baseRunner` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `baseRunner` being updated. */
+  patch: BaseRunnerPatch;
+};
+
+/** The `baseRunner` to be created by this mutation. */
+export type BaseRunnerGameStateIdFkeyBaseRunnerCreateInput = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  base: BaseType;
+  gameState?: Maybe<BaseRunnerGameStateIdFkeyInput>;
+  player?: Maybe<BaseRunnerRunnerIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: GameStatePatch;
+};
+
+/** The `gameState` to be created by this mutation. */
+export type GameStatePlayerAtBatFkeyGameStateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The `player` to be created by this mutation. */
+export type StolenBaseAttemptRunnerIdFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `stolenBaseAttempt` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `stolenBaseAttempt` being updated. */
+  patch: StolenBaseAttemptPatch;
+};
+
+/** The `stolenBaseAttempt` to be created by this mutation. */
+export type StolenBaseAttemptRunnerIdFkeyStolenBaseAttemptCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  success: Scalars['Boolean'];
+  player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
+  gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The `player` to be created by this mutation. */
+export type OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outOnPlayRunner` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outOnPlayRunner` being updated. */
+  patch: OutOnPlayRunnerPatch;
+};
+
+/** Represents an update to a `OutOnPlayRunner`. Fields that are set will be updated. */
+export type OutOnPlayRunnerPatch = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  plateAppearance?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInput>;
+  player?: Maybe<OutOnPlayRunnerRunnerIdFkeyInput>;
+};
+
+/** The `outOnPlayRunner` to be created by this mutation. */
+export type OutOnPlayRunnerPlateAppearanceIdFkeyOutOnPlayRunnerCreateInput = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  plateAppearance?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInput>;
+  player?: Maybe<OutOnPlayRunnerRunnerIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `plateAppearance` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `plateAppearance` being updated. */
+  patch: PlateAppearancePatch;
+};
+
+/** The `plateAppearance` to be created by this mutation. */
+export type OutOnPlayRunnerPlateAppearanceIdFkeyPlateAppearanceCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  type: PlateAppearanceType;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outOnPlayRunner` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outOnPlayRunner` being updated. */
+  patch: OutOnPlayRunnerPatch;
+};
+
+/** The `outOnPlayRunner` to be created by this mutation. */
+export type OutOnPlayRunnerRunnerIdFkeyOutOnPlayRunnerCreateInput = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInput>;
+  player?: Maybe<OutOnPlayRunnerRunnerIdFkeyInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The `player` to be created by this mutation. */
+export type BasepathMovementRunnerIdFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `basepathMovement` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `basepathMovement` being updated. */
+  patch: BasepathMovementPatch;
+};
+
+/** Represents an update to a `BasepathMovement`. Fields that are set will be updated. */
+export type BasepathMovementPatch = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  endBase?: Maybe<BaseType>;
+  wasSafe?: Maybe<Scalars['Boolean']>;
+  plateAppearance?: Maybe<BasepathMovementPlateAppearanceIdFkeyInput>;
+  player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
+};
+
+/** The `basepathMovement` to be created by this mutation. */
+export type BasepathMovementPlateAppearanceIdFkeyBasepathMovementCreateInput = {
+  runnerId?: Maybe<Scalars['UUID']>;
+  endBase?: Maybe<BaseType>;
+  wasSafe: Scalars['Boolean'];
+  plateAppearance?: Maybe<BasepathMovementPlateAppearanceIdFkeyInput>;
+  player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type BasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `plateAppearance` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `plateAppearance` being updated. */
+  patch: PlateAppearancePatch;
+};
+
+/** The `plateAppearance` to be created by this mutation. */
+export type BasepathMovementPlateAppearanceIdFkeyPlateAppearanceCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  type: PlateAppearanceType;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `basepathMovement` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `basepathMovement` being updated. */
+  patch: BasepathMovementPatch;
+};
+
+/** The `basepathMovement` to be created by this mutation. */
+export type BasepathMovementRunnerIdFkeyBasepathMovementCreateInput = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  endBase?: Maybe<BaseType>;
+  wasSafe: Scalars['Boolean'];
+  plateAppearance?: Maybe<BasepathMovementPlateAppearanceIdFkeyInput>;
+  player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The `player` to be created by this mutation. */
+export type LineupSpotPlayerIdFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The fields on `lineupSpot` to look up the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotLineupIdBattingOrderKeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: UpdateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch;
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+/** The fields on `lineupSpot` to look up the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotLineupIdPositionKeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: UpdateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch;
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupOnLineupSpotForLineupSpotLineupIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupSpot` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: LineupSpotPatch;
+};
+
+/** Represents an update to a `LineupSpot`. Fields that are set will be updated. */
+export type LineupSpotPatch = {
+  lineupId?: Maybe<Scalars['Int']>;
+  playerId?: Maybe<Scalars['UUID']>;
+  battingOrder?: Maybe<Scalars['Int']>;
+  position?: Maybe<FieldingPosition>;
+  lineup?: Maybe<LineupSpotLineupIdFkeyInput>;
+  player?: Maybe<LineupSpotPlayerIdFkeyInput>;
+};
+
+/** The `lineupSpot` to be created by this mutation. */
+export type LineupSpotLineupIdFkeyLineupSpotCreateInput = {
+  playerId?: Maybe<Scalars['UUID']>;
+  battingOrder: Scalars['Int'];
+  position: FieldingPosition;
+  lineup?: Maybe<LineupSpotLineupIdFkeyInput>;
+  player?: Maybe<LineupSpotPlayerIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TeamOnLineupForLineupTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineup` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: LineupPatch;
+};
+
+/** The `lineup` to be created by this mutation. */
+export type LineupTeamIdFkeyLineupCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The fields on `team` to look up the row to update. */
+export type TeamOnTeamForTeamGameIdFkeyUsingTeamGameIdRoleKeyUpdate = {
+  /** An object where the defined keys will be set on the `team` being updated. */
+  patch: UpdateTeamOnTeamForTeamGameIdFkeyPatch;
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameOnTeamForTeamGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `team` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `team` being updated. */
+  patch: TeamPatch;
+};
+
+/** Represents an update to a `Team`. Fields that are set will be updated. */
+export type TeamPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  role?: Maybe<TeamRole>;
+  name?: Maybe<Scalars['String']>;
+  winner?: Maybe<Scalars['Boolean']>;
+  game?: Maybe<TeamGameIdFkeyInput>;
+  lineups?: Maybe<LineupTeamIdFkeyInverseInput>;
+};
+
+/** The `team` to be created by this mutation. */
+export type TeamGameIdFkeyTeamCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  role: TeamRole;
+  name?: Maybe<Scalars['String']>;
+  winner?: Maybe<Scalars['Boolean']>;
+  game?: Maybe<TeamGameIdFkeyInput>;
+  lineups?: Maybe<LineupTeamIdFkeyInverseInput>;
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnTeamForTeamGameIdFkeyUsingGameNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnTeamForTeamGameIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TeamOnTeamForTeamGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `game` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: GamePatch;
+};
+
+/** The `game` to be created by this mutation. */
+export type TeamGameIdFkeyGameCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  datePlayed?: Maybe<Scalars['Date']>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** The fields on `team` to look up the row to update. */
+export type TeamOnLineupForLineupTeamIdFkeyUsingTeamGameIdRoleKeyUpdate = {
+  /** An object where the defined keys will be set on the `team` being updated. */
+  patch: UpdateTeamOnLineupForLineupTeamIdFkeyPatch;
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupOnLineupForLineupTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `team` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `team` being updated. */
+  patch: TeamPatch;
+};
+
+/** The `team` to be created by this mutation. */
+export type LineupTeamIdFkeyTeamCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  role: TeamRole;
+  name?: Maybe<Scalars['String']>;
+  winner?: Maybe<Scalars['Boolean']>;
+  game?: Maybe<TeamGameIdFkeyInput>;
+  lineups?: Maybe<LineupTeamIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineup` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineup` being updated. */
+  patch: LineupPatch;
+};
+
+/** The `lineup` to be created by this mutation. */
+export type LineupSpotLineupIdFkeyLineupCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The fields on `lineupSpot` to look up the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotLineupIdBattingOrderKeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: UpdateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch;
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+/** The fields on `lineupSpot` to look up the row to update. */
+export type LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotLineupIdPositionKeyUpdate = {
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: UpdateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch;
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `lineupSpot` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `lineupSpot` being updated. */
+  patch: LineupSpotPatch;
+};
+
+/** The `lineupSpot` to be created by this mutation. */
+export type LineupSpotPlayerIdFkeyLineupSpotCreateInput = {
+  lineupId?: Maybe<Scalars['Int']>;
+  battingOrder: Scalars['Int'];
+  position: FieldingPosition;
+  lineup?: Maybe<LineupSpotLineupIdFkeyInput>;
+  player?: Maybe<LineupSpotPlayerIdFkeyInput>;
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameStateOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The `player` to be created by this mutation. */
+export type GameStatePlayerAtBatFkeyPlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameState` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameState` being updated. */
+  patch: GameStatePatch;
+};
+
+/** The `gameState` to be created by this mutation. */
+export type BaseRunnerGameStateIdFkeyGameStateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The output of our create `BasepathMovement` mutation. */
+export type CreateBasepathMovementPayload = {
+  __typename?: 'CreateBasepathMovementPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `BasepathMovement` that was created by this mutation. */
+  basepathMovement: Maybe<BasepathMovement>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `BasepathMovement`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `BasepathMovement`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the create `BasepathMovement` mutation. */
+export type CreateBasepathMovementInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `BasepathMovement` to be created by this mutation. */
+  basepathMovement: BasepathMovementInput;
+};
+
+/** An input for mutations affecting `BasepathMovement` */
+export type BasepathMovementInput = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  endBase?: Maybe<BaseType>;
+  wasSafe: Scalars['Boolean'];
+  plateAppearance?: Maybe<BasepathMovementPlateAppearanceIdFkeyInput>;
+  player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
+};
+
+/** The output of our create `Game` mutation. */
+export type CreateGamePayload = {
+  __typename?: 'CreateGamePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Game` that was created by this mutation. */
+  game: Maybe<Game>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the create `Game` mutation. */
+export type CreateGameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Game` to be created by this mutation. */
+  game: GameInput;
+};
+
+/** An input for mutations affecting `Game` */
+export type GameInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  datePlayed?: Maybe<Scalars['Date']>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** The output of our create `GameEvent` mutation. */
+export type CreateGameEventPayload = {
+  __typename?: 'CreateGameEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameEvent` that was created by this mutation. */
+  gameEvent: Maybe<GameEvent>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `GameEvent`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `StolenBaseAttempt` that is related to this `GameEvent`. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /** Reads a single `LineupChange` that is related to this `GameEvent`. */
+  lineupChange: Maybe<LineupChange>;
+};
+
+/** All input for the create `GameEvent` mutation. */
+export type CreateGameEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `GameEvent` to be created by this mutation. */
+  gameEvent: GameEventInput;
+};
+
+/** An input for mutations affecting `GameEvent` */
+export type GameEventInput = {
+  id?: Maybe<Scalars['Int']>;
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  stolenBaseAttemptId?: Maybe<Scalars['Int']>;
+  lineupChangeId?: Maybe<Scalars['Int']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** The output of our create `GameEventRecord` mutation. */
+export type CreateGameEventRecordPayload = {
+  __typename?: 'CreateGameEventRecordPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameEventRecord` that was created by this mutation. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `GameEventRecord`. */
+  game: Maybe<Game>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateBefore: Maybe<GameState>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateAfter: Maybe<GameState>;
+  /** Reads a single `GameEvent` that is related to this `GameEventRecord`. */
+  gameEvent: Maybe<GameEvent>;
+};
+
+/** All input for the create `GameEventRecord` mutation. */
+export type CreateGameEventRecordInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `GameEventRecord` to be created by this mutation. */
+  gameEventRecord: GameEventRecordInput;
+};
+
+/** An input for mutations affecting `GameEventRecord` */
+export type GameEventRecordInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  gameStateBeforeId?: Maybe<Scalars['Int']>;
+  gameStateAfterId?: Maybe<Scalars['Int']>;
+  gameEventId?: Maybe<Scalars['Int']>;
+  game?: Maybe<GameEventRecordGameIdFkeyInput>;
+  gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
+  gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
+  gameEvent?: Maybe<GameEventRecordGameEventIdFkeyInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameEventRecordIdFkeyInverseInput>;
 };
 
 /** The output of our create `GameState` mutation. */
@@ -271,6 +5997,8 @@ export type CreateGameStatePayload = {
   gameState: Maybe<GameState>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `GameState`. */
+  playerByPlayerAtBat: Maybe<Player>;
 };
 
 /** All input for the create `GameState` mutation. */
@@ -287,7 +6015,243 @@ export type CreateGameStateInput = {
 /** An input for mutations affecting `GameState` */
 export type GameStateInput = {
   id?: Maybe<Scalars['Int']>;
-  base: BaseType;
+  playerAtBat?: Maybe<Scalars['UUID']>;
+  inning: Scalars['Int'];
+  halfInning: HalfInning;
+  outs: Scalars['Int'];
+  score: Array<Maybe<Scalars['Int']>>;
+  player?: Maybe<GameStatePlayerAtBatFkeyInput>;
+  baseRunners?: Maybe<BaseRunnerGameStateIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameStateIdFkeyInverseInput>;
+  gameEventRecordsToGameStateBeforeIdUsingId?: Maybe<GameEventRecordGameStateBeforeFkInverseInput>;
+  gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
+};
+
+/** The output of our create `Lineup` mutation. */
+export type CreateLineupPayload = {
+  __typename?: 'CreateLineupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Lineup` that was created by this mutation. */
+  lineup: Maybe<Lineup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Team` that is related to this `Lineup`. */
+  team: Maybe<Team>;
+};
+
+/** All input for the create `Lineup` mutation. */
+export type CreateLineupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Lineup` to be created by this mutation. */
+  lineup: LineupInput;
+};
+
+/** An input for mutations affecting `Lineup` */
+export type LineupInput = {
+  id?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  originalClientId?: Maybe<Scalars['Int']>;
+  team?: Maybe<LineupTeamIdFkeyInput>;
+  lineupSpots?: Maybe<LineupSpotLineupIdFkeyInverseInput>;
+  lineupChangesToLineupBeforeIdUsingId?: Maybe<LineupChangeLineupBeforeIdFkeyInverseInput>;
+  lineupChangesToLineupAfterIdUsingId?: Maybe<LineupChangeLineupAfterIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateLineupIdFkeyInverseInput>;
+};
+
+/** The output of our create `LineupChange` mutation. */
+export type CreateLineupChangePayload = {
+  __typename?: 'CreateLineupChangePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupChange` that was created by this mutation. */
+  lineupChange: Maybe<LineupChange>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupBefore: Maybe<Lineup>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupAfter: Maybe<Lineup>;
+};
+
+/** All input for the create `LineupChange` mutation. */
+export type CreateLineupChangeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LineupChange` to be created by this mutation. */
+  lineupChange: LineupChangeInput;
+};
+
+/** An input for mutations affecting `LineupChange` */
+export type LineupChangeInput = {
+  id?: Maybe<Scalars['Int']>;
+  lineupBeforeId?: Maybe<Scalars['Int']>;
+  lineupAfterId?: Maybe<Scalars['Int']>;
+  lineup?: Maybe<LineupChangeLineupAfterIdFkeyInput>;
+  gameEvents?: Maybe<GameEventLineupChangeIdFkeyInverseInput>;
+};
+
+/** The output of our create `LineupForGameState` mutation. */
+export type CreateLineupForGameStatePayload = {
+  __typename?: 'CreateLineupForGameStatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupForGameState` that was created by this mutation. */
+  lineupForGameState: Maybe<LineupForGameState>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameState` that is related to this `LineupForGameState`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Lineup` that is related to this `LineupForGameState`. */
+  lineup: Maybe<Lineup>;
+};
+
+/** All input for the create `LineupForGameState` mutation. */
+export type CreateLineupForGameStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LineupForGameState` to be created by this mutation. */
+  lineupForGameState: LineupForGameStateInput;
+};
+
+/** An input for mutations affecting `LineupForGameState` */
+export type LineupForGameStateInput = {
+  gameStateId?: Maybe<Scalars['Int']>;
+  lineupId?: Maybe<Scalars['Int']>;
+  gameState?: Maybe<LineupForGameStateGameStateIdFkeyInput>;
+  lineup?: Maybe<LineupForGameStateLineupIdFkeyInput>;
+};
+
+/** The output of our create `LineupSpot` mutation. */
+export type CreateLineupSpotPayload = {
+  __typename?: 'CreateLineupSpotPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupSpot` that was created by this mutation. */
+  lineupSpot: Maybe<LineupSpot>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Lineup` that is related to this `LineupSpot`. */
+  lineup: Maybe<Lineup>;
+  /** Reads a single `Player` that is related to this `LineupSpot`. */
+  player: Maybe<Player>;
+};
+
+/** All input for the create `LineupSpot` mutation. */
+export type CreateLineupSpotInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LineupSpot` to be created by this mutation. */
+  lineupSpot: LineupSpotInput;
+};
+
+/** An input for mutations affecting `LineupSpot` */
+export type LineupSpotInput = {
+  lineupId?: Maybe<Scalars['Int']>;
+  playerId?: Maybe<Scalars['UUID']>;
+  battingOrder: Scalars['Int'];
+  position: FieldingPosition;
+  lineup?: Maybe<LineupSpotLineupIdFkeyInput>;
+  player?: Maybe<LineupSpotPlayerIdFkeyInput>;
+};
+
+/** The output of our create `OutOnPlayRunner` mutation. */
+export type CreateOutOnPlayRunnerPayload = {
+  __typename?: 'CreateOutOnPlayRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `OutOnPlayRunner` that was created by this mutation. */
+  outOnPlayRunner: Maybe<OutOnPlayRunner>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `OutOnPlayRunner`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `OutOnPlayRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the create `OutOnPlayRunner` mutation. */
+export type CreateOutOnPlayRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `OutOnPlayRunner` to be created by this mutation. */
+  outOnPlayRunner: OutOnPlayRunnerInput;
+};
+
+/** An input for mutations affecting `OutOnPlayRunner` */
+export type OutOnPlayRunnerInput = {
+  plateAppearanceId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  plateAppearance?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInput>;
+  player?: Maybe<OutOnPlayRunnerRunnerIdFkeyInput>;
+};
+
+/** The output of our create `PlateAppearance` mutation. */
+export type CreatePlateAppearancePayload = {
+  __typename?: 'CreatePlateAppearancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `PlateAppearance` that was created by this mutation. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the create `PlateAppearance` mutation. */
+export type CreatePlateAppearanceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlateAppearance` to be created by this mutation. */
+  plateAppearance: PlateAppearanceInput;
+};
+
+/** An input for mutations affecting `PlateAppearance` */
+export type PlateAppearanceInput = {
+  id?: Maybe<Scalars['Int']>;
+  type: PlateAppearanceType;
+  contact?: Maybe<ContactQuality>;
+  fieldedBy?: Maybe<FieldingPosition>;
+  runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
 };
 
 /** The output of our create `Player` mutation. */
@@ -321,6 +6285,356 @@ export type PlayerInput = {
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['Datetime']>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+};
+
+/** The output of our create `ScoredRunner` mutation. */
+export type CreateScoredRunnerPayload = {
+  __typename?: 'CreateScoredRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `ScoredRunner` that was created by this mutation. */
+  scoredRunner: Maybe<ScoredRunner>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameEventRecord` that is related to this `ScoredRunner`. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /** Reads a single `Player` that is related to this `ScoredRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the create `ScoredRunner` mutation. */
+export type CreateScoredRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ScoredRunner` to be created by this mutation. */
+  scoredRunner: ScoredRunnerInput;
+};
+
+/** An input for mutations affecting `ScoredRunner` */
+export type ScoredRunnerInput = {
+  gameEventRecordId?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  battedIn: Scalars['Boolean'];
+  gameEventRecord?: Maybe<ScoredRunnerGameEventRecordIdFkeyInput>;
+  player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
+};
+
+/** The output of our create `StolenBaseAttempt` mutation. */
+export type CreateStolenBaseAttemptPayload = {
+  __typename?: 'CreateStolenBaseAttemptPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `StolenBaseAttempt` that was created by this mutation. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `StolenBaseAttempt`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the create `StolenBaseAttempt` mutation. */
+export type CreateStolenBaseAttemptInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `StolenBaseAttempt` to be created by this mutation. */
+  stolenBaseAttempt: StolenBaseAttemptInput;
+};
+
+/** An input for mutations affecting `StolenBaseAttempt` */
+export type StolenBaseAttemptInput = {
+  id?: Maybe<Scalars['Int']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  success: Scalars['Boolean'];
+  player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
+  gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** The output of our create `Team` mutation. */
+export type CreateTeamPayload = {
+  __typename?: 'CreateTeamPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Team` that was created by this mutation. */
+  team: Maybe<Team>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `Team`. */
+  game: Maybe<Game>;
+};
+
+/** All input for the create `Team` mutation. */
+export type CreateTeamInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Team` to be created by this mutation. */
+  team: TeamInput;
+};
+
+/** An input for mutations affecting `Team` */
+export type TeamInput = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  role: TeamRole;
+  name?: Maybe<Scalars['String']>;
+  winner?: Maybe<Scalars['Boolean']>;
+  game?: Maybe<TeamGameIdFkeyInput>;
+  lineups?: Maybe<LineupTeamIdFkeyInverseInput>;
+};
+
+/** The output of our update `BaseRunner` mutation. */
+export type UpdateBaseRunnerPayload = {
+  __typename?: 'UpdateBaseRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `BaseRunner` that was updated by this mutation. */
+  baseRunner: Maybe<BaseRunner>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameState` that is related to this `BaseRunner`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Player` that is related to this `BaseRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `updateBaseRunnerByNodeId` mutation. */
+export type UpdateBaseRunnerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `BaseRunner` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `BaseRunner` being updated. */
+  patch: BaseRunnerPatch;
+};
+
+/** All input for the `updateBaseRunner` mutation. */
+export type UpdateBaseRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `BaseRunner` being updated. */
+  patch: BaseRunnerPatch;
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our update `BasepathMovement` mutation. */
+export type UpdateBasepathMovementPayload = {
+  __typename?: 'UpdateBasepathMovementPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `BasepathMovement` that was updated by this mutation. */
+  basepathMovement: Maybe<BasepathMovement>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `BasepathMovement`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `BasepathMovement`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `updateBasepathMovementByNodeId` mutation. */
+export type UpdateBasepathMovementByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `BasepathMovement` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `BasepathMovement` being updated. */
+  patch: BasepathMovementPatch;
+};
+
+/** All input for the `updateBasepathMovement` mutation. */
+export type UpdateBasepathMovementInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `BasepathMovement` being updated. */
+  patch: BasepathMovementPatch;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our update `Game` mutation. */
+export type UpdateGamePayload = {
+  __typename?: 'UpdateGamePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Game` that was updated by this mutation. */
+  game: Maybe<Game>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `updateGameByNodeId` mutation. */
+export type UpdateGameByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Game` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Game` being updated. */
+  patch: GamePatch;
+};
+
+/** All input for the `updateGame` mutation. */
+export type UpdateGameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Game` being updated. */
+  patch: GamePatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateGameByName` mutation. */
+export type UpdateGameByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Game` being updated. */
+  patch: GamePatch;
+  name: Scalars['String'];
+};
+
+/** The output of our update `GameEvent` mutation. */
+export type UpdateGameEventPayload = {
+  __typename?: 'UpdateGameEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameEvent` that was updated by this mutation. */
+  gameEvent: Maybe<GameEvent>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `GameEvent`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `StolenBaseAttempt` that is related to this `GameEvent`. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /** Reads a single `LineupChange` that is related to this `GameEvent`. */
+  lineupChange: Maybe<LineupChange>;
+};
+
+/** All input for the `updateGameEventByNodeId` mutation. */
+export type UpdateGameEventByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `GameEvent` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `GameEvent` being updated. */
+  patch: GameEventPatch;
+};
+
+/** All input for the `updateGameEvent` mutation. */
+export type UpdateGameEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GameEvent` being updated. */
+  patch: GameEventPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `GameEventRecord` mutation. */
+export type UpdateGameEventRecordPayload = {
+  __typename?: 'UpdateGameEventRecordPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameEventRecord` that was updated by this mutation. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `GameEventRecord`. */
+  game: Maybe<Game>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateBefore: Maybe<GameState>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateAfter: Maybe<GameState>;
+  /** Reads a single `GameEvent` that is related to this `GameEventRecord`. */
+  gameEvent: Maybe<GameEvent>;
+};
+
+/** All input for the `updateGameEventRecordByNodeId` mutation. */
+export type UpdateGameEventRecordByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `GameEventRecord` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `GameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+};
+
+/** All input for the `updateGameEventRecord` mutation. */
+export type UpdateGameEventRecordInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+  id: Scalars['Int'];
 };
 
 /** The output of our update `GameState` mutation. */
@@ -335,6 +6649,8 @@ export type UpdateGameStatePayload = {
   gameState: Maybe<GameState>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `GameState`. */
+  playerByPlayerAtBat: Maybe<Player>;
 };
 
 /** All input for the `updateGameStateByNodeId` mutation. */
@@ -350,12 +6666,6 @@ export type UpdateGameStateByNodeIdInput = {
   patch: GameStatePatch;
 };
 
-/** Represents an update to a `GameState`. Fields that are set will be updated. */
-export type GameStatePatch = {
-  id?: Maybe<Scalars['Int']>;
-  base?: Maybe<BaseType>;
-};
-
 /** All input for the `updateGameState` mutation. */
 export type UpdateGameStateInput = {
   /**
@@ -365,6 +6675,287 @@ export type UpdateGameStateInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** An object where the defined keys will be set on the `GameState` being updated. */
   patch: GameStatePatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `Lineup` mutation. */
+export type UpdateLineupPayload = {
+  __typename?: 'UpdateLineupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Lineup` that was updated by this mutation. */
+  lineup: Maybe<Lineup>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Team` that is related to this `Lineup`. */
+  team: Maybe<Team>;
+};
+
+/** All input for the `updateLineupByNodeId` mutation. */
+export type UpdateLineupByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Lineup` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Lineup` being updated. */
+  patch: LineupPatch;
+};
+
+/** All input for the `updateLineup` mutation. */
+export type UpdateLineupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Lineup` being updated. */
+  patch: LineupPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LineupChange` mutation. */
+export type UpdateLineupChangePayload = {
+  __typename?: 'UpdateLineupChangePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupChange` that was updated by this mutation. */
+  lineupChange: Maybe<LineupChange>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupBefore: Maybe<Lineup>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupAfter: Maybe<Lineup>;
+};
+
+/** All input for the `updateLineupChangeByNodeId` mutation. */
+export type UpdateLineupChangeByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LineupChange` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LineupChange` being updated. */
+  patch: LineupChangePatch;
+};
+
+/** All input for the `updateLineupChange` mutation. */
+export type UpdateLineupChangeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LineupChange` being updated. */
+  patch: LineupChangePatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LineupForGameState` mutation. */
+export type UpdateLineupForGameStatePayload = {
+  __typename?: 'UpdateLineupForGameStatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupForGameState` that was updated by this mutation. */
+  lineupForGameState: Maybe<LineupForGameState>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameState` that is related to this `LineupForGameState`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Lineup` that is related to this `LineupForGameState`. */
+  lineup: Maybe<Lineup>;
+};
+
+/** All input for the `updateLineupForGameStateByNodeId` mutation. */
+export type UpdateLineupForGameStateByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LineupForGameState` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LineupForGameState` being updated. */
+  patch: LineupForGameStatePatch;
+};
+
+/** All input for the `updateLineupForGameState` mutation. */
+export type UpdateLineupForGameStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LineupForGameState` being updated. */
+  patch: LineupForGameStatePatch;
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+/** The output of our update `LineupSpot` mutation. */
+export type UpdateLineupSpotPayload = {
+  __typename?: 'UpdateLineupSpotPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupSpot` that was updated by this mutation. */
+  lineupSpot: Maybe<LineupSpot>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Lineup` that is related to this `LineupSpot`. */
+  lineup: Maybe<Lineup>;
+  /** Reads a single `Player` that is related to this `LineupSpot`. */
+  player: Maybe<Player>;
+};
+
+/** All input for the `updateLineupSpotByNodeId` mutation. */
+export type UpdateLineupSpotByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LineupSpot` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LineupSpot` being updated. */
+  patch: LineupSpotPatch;
+};
+
+/** All input for the `updateLineupSpot` mutation. */
+export type UpdateLineupSpotInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LineupSpot` being updated. */
+  patch: LineupSpotPatch;
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+/** All input for the `updateLineupSpotByLineupIdAndBattingOrder` mutation. */
+export type UpdateLineupSpotByLineupIdAndBattingOrderInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LineupSpot` being updated. */
+  patch: LineupSpotPatch;
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+/** All input for the `updateLineupSpotByLineupIdAndPosition` mutation. */
+export type UpdateLineupSpotByLineupIdAndPositionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LineupSpot` being updated. */
+  patch: LineupSpotPatch;
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+/** The output of our update `OutOnPlayRunner` mutation. */
+export type UpdateOutOnPlayRunnerPayload = {
+  __typename?: 'UpdateOutOnPlayRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `OutOnPlayRunner` that was updated by this mutation. */
+  outOnPlayRunner: Maybe<OutOnPlayRunner>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `OutOnPlayRunner`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `OutOnPlayRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `updateOutOnPlayRunnerByNodeId` mutation. */
+export type UpdateOutOnPlayRunnerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `OutOnPlayRunner` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `OutOnPlayRunner` being updated. */
+  patch: OutOnPlayRunnerPatch;
+};
+
+/** All input for the `updateOutOnPlayRunner` mutation. */
+export type UpdateOutOnPlayRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `OutOnPlayRunner` being updated. */
+  patch: OutOnPlayRunnerPatch;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our update `PlateAppearance` mutation. */
+export type UpdatePlateAppearancePayload = {
+  __typename?: 'UpdatePlateAppearancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `PlateAppearance` that was updated by this mutation. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `updatePlateAppearanceByNodeId` mutation. */
+export type UpdatePlateAppearanceByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlateAppearance` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlateAppearance` being updated. */
+  patch: PlateAppearancePatch;
+};
+
+/** All input for the `updatePlateAppearance` mutation. */
+export type UpdatePlateAppearanceInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `PlateAppearance` being updated. */
+  patch: PlateAppearancePatch;
   id: Scalars['Int'];
 };
 
@@ -395,14 +6986,6 @@ export type UpdatePlayerByNodeIdInput = {
   patch: PlayerPatch;
 };
 
-/** Represents an update to a `Player`. Fields that are set will be updated. */
-export type PlayerPatch = {
-  id?: Maybe<Scalars['UUID']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
-};
-
 /** All input for the `updatePlayer` mutation. */
 export type UpdatePlayerInput = {
   /**
@@ -413,6 +6996,372 @@ export type UpdatePlayerInput = {
   /** An object where the defined keys will be set on the `Player` being updated. */
   patch: PlayerPatch;
   id: Scalars['UUID'];
+};
+
+/** All input for the `updatePlayerByFirstNameAndLastName` mutation. */
+export type UpdatePlayerByFirstNameAndLastNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Player` being updated. */
+  patch: PlayerPatch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The output of our update `ScoredRunner` mutation. */
+export type UpdateScoredRunnerPayload = {
+  __typename?: 'UpdateScoredRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `ScoredRunner` that was updated by this mutation. */
+  scoredRunner: Maybe<ScoredRunner>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameEventRecord` that is related to this `ScoredRunner`. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /** Reads a single `Player` that is related to this `ScoredRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `updateScoredRunnerByNodeId` mutation. */
+export type UpdateScoredRunnerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ScoredRunner` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ScoredRunner` being updated. */
+  patch: ScoredRunnerPatch;
+};
+
+/** All input for the `updateScoredRunner` mutation. */
+export type UpdateScoredRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ScoredRunner` being updated. */
+  patch: ScoredRunnerPatch;
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our update `StolenBaseAttempt` mutation. */
+export type UpdateStolenBaseAttemptPayload = {
+  __typename?: 'UpdateStolenBaseAttemptPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `StolenBaseAttempt` that was updated by this mutation. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `StolenBaseAttempt`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `updateStolenBaseAttemptByNodeId` mutation. */
+export type UpdateStolenBaseAttemptByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `StolenBaseAttempt` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `StolenBaseAttempt` being updated. */
+  patch: StolenBaseAttemptPatch;
+};
+
+/** All input for the `updateStolenBaseAttempt` mutation. */
+export type UpdateStolenBaseAttemptInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `StolenBaseAttempt` being updated. */
+  patch: StolenBaseAttemptPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `Team` mutation. */
+export type UpdateTeamPayload = {
+  __typename?: 'UpdateTeamPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Team` that was updated by this mutation. */
+  team: Maybe<Team>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `Team`. */
+  game: Maybe<Game>;
+};
+
+/** All input for the `updateTeamByNodeId` mutation. */
+export type UpdateTeamByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Team` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Team` being updated. */
+  patch: TeamPatch;
+};
+
+/** All input for the `updateTeam` mutation. */
+export type UpdateTeamInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Team` being updated. */
+  patch: TeamPatch;
+  id: Scalars['Int'];
+};
+
+/** All input for the `updateTeamByGameIdAndRole` mutation. */
+export type UpdateTeamByGameIdAndRoleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Team` being updated. */
+  patch: TeamPatch;
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+/** The output of our delete `BaseRunner` mutation. */
+export type DeleteBaseRunnerPayload = {
+  __typename?: 'DeleteBaseRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `BaseRunner` that was deleted by this mutation. */
+  baseRunner: Maybe<BaseRunner>;
+  deletedBaseRunnerNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameState` that is related to this `BaseRunner`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Player` that is related to this `BaseRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `deleteBaseRunnerByNodeId` mutation. */
+export type DeleteBaseRunnerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `BaseRunner` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteBaseRunner` mutation. */
+export type DeleteBaseRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our delete `BasepathMovement` mutation. */
+export type DeleteBasepathMovementPayload = {
+  __typename?: 'DeleteBasepathMovementPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `BasepathMovement` that was deleted by this mutation. */
+  basepathMovement: Maybe<BasepathMovement>;
+  deletedBasepathMovementNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `BasepathMovement`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `BasepathMovement`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `deleteBasepathMovementByNodeId` mutation. */
+export type DeleteBasepathMovementByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `BasepathMovement` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteBasepathMovement` mutation. */
+export type DeleteBasepathMovementInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our delete `Game` mutation. */
+export type DeleteGamePayload = {
+  __typename?: 'DeleteGamePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Game` that was deleted by this mutation. */
+  game: Maybe<Game>;
+  deletedGameNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `deleteGameByNodeId` mutation. */
+export type DeleteGameByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Game` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteGame` mutation. */
+export type DeleteGameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteGameByName` mutation. */
+export type DeleteGameByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+/** The output of our delete `GameEvent` mutation. */
+export type DeleteGameEventPayload = {
+  __typename?: 'DeleteGameEventPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameEvent` that was deleted by this mutation. */
+  gameEvent: Maybe<GameEvent>;
+  deletedGameEventNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `GameEvent`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `StolenBaseAttempt` that is related to this `GameEvent`. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /** Reads a single `LineupChange` that is related to this `GameEvent`. */
+  lineupChange: Maybe<LineupChange>;
+};
+
+/** All input for the `deleteGameEventByNodeId` mutation. */
+export type DeleteGameEventByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `GameEvent` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteGameEvent` mutation. */
+export type DeleteGameEventInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `GameEventRecord` mutation. */
+export type DeleteGameEventRecordPayload = {
+  __typename?: 'DeleteGameEventRecordPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameEventRecord` that was deleted by this mutation. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  deletedGameEventRecordNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `GameEventRecord`. */
+  game: Maybe<Game>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateBefore: Maybe<GameState>;
+  /** Reads a single `GameState` that is related to this `GameEventRecord`. */
+  gameStateAfter: Maybe<GameState>;
+  /** Reads a single `GameEvent` that is related to this `GameEventRecord`. */
+  gameEvent: Maybe<GameEvent>;
+};
+
+/** All input for the `deleteGameEventRecordByNodeId` mutation. */
+export type DeleteGameEventRecordByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `GameEventRecord` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteGameEventRecord` mutation. */
+export type DeleteGameEventRecordInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
 };
 
 /** The output of our delete `GameState` mutation. */
@@ -428,6 +7377,8 @@ export type DeleteGameStatePayload = {
   deletedGameStateNodeId: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `GameState`. */
+  playerByPlayerAtBat: Maybe<Player>;
 };
 
 /** All input for the `deleteGameStateByNodeId` mutation. */
@@ -443,6 +7394,265 @@ export type DeleteGameStateByNodeIdInput = {
 
 /** All input for the `deleteGameState` mutation. */
 export type DeleteGameStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `Lineup` mutation. */
+export type DeleteLineupPayload = {
+  __typename?: 'DeleteLineupPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Lineup` that was deleted by this mutation. */
+  lineup: Maybe<Lineup>;
+  deletedLineupNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Team` that is related to this `Lineup`. */
+  team: Maybe<Team>;
+};
+
+/** All input for the `deleteLineupByNodeId` mutation. */
+export type DeleteLineupByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Lineup` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLineup` mutation. */
+export type DeleteLineupInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LineupChange` mutation. */
+export type DeleteLineupChangePayload = {
+  __typename?: 'DeleteLineupChangePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupChange` that was deleted by this mutation. */
+  lineupChange: Maybe<LineupChange>;
+  deletedLineupChangeNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupBefore: Maybe<Lineup>;
+  /** Reads a single `Lineup` that is related to this `LineupChange`. */
+  lineupAfter: Maybe<Lineup>;
+};
+
+/** All input for the `deleteLineupChangeByNodeId` mutation. */
+export type DeleteLineupChangeByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LineupChange` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLineupChange` mutation. */
+export type DeleteLineupChangeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LineupForGameState` mutation. */
+export type DeleteLineupForGameStatePayload = {
+  __typename?: 'DeleteLineupForGameStatePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupForGameState` that was deleted by this mutation. */
+  lineupForGameState: Maybe<LineupForGameState>;
+  deletedLineupForGameStateNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameState` that is related to this `LineupForGameState`. */
+  gameState: Maybe<GameState>;
+  /** Reads a single `Lineup` that is related to this `LineupForGameState`. */
+  lineup: Maybe<Lineup>;
+};
+
+/** All input for the `deleteLineupForGameStateByNodeId` mutation. */
+export type DeleteLineupForGameStateByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LineupForGameState` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLineupForGameState` mutation. */
+export type DeleteLineupForGameStateInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+/** The output of our delete `LineupSpot` mutation. */
+export type DeleteLineupSpotPayload = {
+  __typename?: 'DeleteLineupSpotPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LineupSpot` that was deleted by this mutation. */
+  lineupSpot: Maybe<LineupSpot>;
+  deletedLineupSpotNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Lineup` that is related to this `LineupSpot`. */
+  lineup: Maybe<Lineup>;
+  /** Reads a single `Player` that is related to this `LineupSpot`. */
+  player: Maybe<Player>;
+};
+
+/** All input for the `deleteLineupSpotByNodeId` mutation. */
+export type DeleteLineupSpotByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LineupSpot` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLineupSpot` mutation. */
+export type DeleteLineupSpotInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+/** All input for the `deleteLineupSpotByLineupIdAndBattingOrder` mutation. */
+export type DeleteLineupSpotByLineupIdAndBattingOrderInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+/** All input for the `deleteLineupSpotByLineupIdAndPosition` mutation. */
+export type DeleteLineupSpotByLineupIdAndPositionInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+/** The output of our delete `OutOnPlayRunner` mutation. */
+export type DeleteOutOnPlayRunnerPayload = {
+  __typename?: 'DeleteOutOnPlayRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `OutOnPlayRunner` that was deleted by this mutation. */
+  outOnPlayRunner: Maybe<OutOnPlayRunner>;
+  deletedOutOnPlayRunnerNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `PlateAppearance` that is related to this `OutOnPlayRunner`. */
+  plateAppearance: Maybe<PlateAppearance>;
+  /** Reads a single `Player` that is related to this `OutOnPlayRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `deleteOutOnPlayRunnerByNodeId` mutation. */
+export type DeleteOutOnPlayRunnerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `OutOnPlayRunner` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteOutOnPlayRunner` mutation. */
+export type DeleteOutOnPlayRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our delete `PlateAppearance` mutation. */
+export type DeletePlateAppearancePayload = {
+  __typename?: 'DeletePlateAppearancePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `PlateAppearance` that was deleted by this mutation. */
+  plateAppearance: Maybe<PlateAppearance>;
+  deletedPlateAppearanceNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `deletePlateAppearanceByNodeId` mutation. */
+export type DeletePlateAppearanceByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlateAppearance` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deletePlateAppearance` mutation. */
+export type DeletePlateAppearanceInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -487,18 +7697,1883 @@ export type DeletePlayerInput = {
   id: Scalars['UUID'];
 };
 
-export type AddGameStateMutationVariables = Exact<{
-  base: BaseType;
+/** All input for the `deletePlayerByFirstNameAndLastName` mutation. */
+export type DeletePlayerByFirstNameAndLastNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The output of our delete `ScoredRunner` mutation. */
+export type DeleteScoredRunnerPayload = {
+  __typename?: 'DeleteScoredRunnerPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `ScoredRunner` that was deleted by this mutation. */
+  scoredRunner: Maybe<ScoredRunner>;
+  deletedScoredRunnerNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `GameEventRecord` that is related to this `ScoredRunner`. */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /** Reads a single `Player` that is related to this `ScoredRunner`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `deleteScoredRunnerByNodeId` mutation. */
+export type DeleteScoredRunnerByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ScoredRunner` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteScoredRunner` mutation. */
+export type DeleteScoredRunnerInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+/** The output of our delete `StolenBaseAttempt` mutation. */
+export type DeleteStolenBaseAttemptPayload = {
+  __typename?: 'DeleteStolenBaseAttemptPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `StolenBaseAttempt` that was deleted by this mutation. */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  deletedStolenBaseAttemptNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `StolenBaseAttempt`. */
+  runner: Maybe<Player>;
+};
+
+/** All input for the `deleteStolenBaseAttemptByNodeId` mutation. */
+export type DeleteStolenBaseAttemptByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `StolenBaseAttempt` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteStolenBaseAttempt` mutation. */
+export type DeleteStolenBaseAttemptInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `Team` mutation. */
+export type DeleteTeamPayload = {
+  __typename?: 'DeleteTeamPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Team` that was deleted by this mutation. */
+  team: Maybe<Team>;
+  deletedTeamNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `Team`. */
+  game: Maybe<Game>;
+};
+
+/** All input for the `deleteTeamByNodeId` mutation. */
+export type DeleteTeamByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Team` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTeam` mutation. */
+export type DeleteTeamInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** All input for the `deleteTeamByGameIdAndRole` mutation. */
+export type DeleteTeamByGameIdAndRoleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type Subscription = {
+  __typename?: 'Subscription';
+  /**
+   * Exposes the root query type nested one level down. This is helpful for Relay 1
+   * which can only query top level fields if they are in a particular form. (live)
+   */
+  query: Query;
+  /** The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`. (live) */
+  nodeId: Scalars['ID'];
+  /** Fetches an object given its globally unique `ID`. (live) */
+  node: Maybe<Node>;
+  /** Reads a set of `BaseRunner`. (live) */
+  baseRunners: Maybe<Array<BaseRunner>>;
+  /** Reads a set of `BasepathMovement`. (live) */
+  basepathMovements: Maybe<Array<BasepathMovement>>;
+  /** Reads a set of `Game`. (live) */
+  games: Maybe<Array<Game>>;
+  /** Reads a set of `GameEvent`. (live) */
+  gameEvents: Maybe<Array<GameEvent>>;
+  /** Reads a set of `GameEventRecord`. (live) */
+  gameEventRecords: Maybe<Array<GameEventRecord>>;
+  /** Reads a set of `GameState`. (live) */
+  gameStates: Maybe<Array<GameState>>;
+  /** Reads a set of `Lineup`. (live) */
+  lineups: Maybe<Array<Lineup>>;
+  /** Reads a set of `LineupChange`. (live) */
+  lineupChanges: Maybe<Array<LineupChange>>;
+  /** Reads a set of `LineupForGameState`. (live) */
+  lineupForGameStates: Maybe<Array<LineupForGameState>>;
+  /** Reads a set of `LineupSpot`. (live) */
+  lineupSpots: Maybe<Array<LineupSpot>>;
+  /** Reads a set of `OutOnPlayRunner`. (live) */
+  outOnPlayRunners: Maybe<Array<OutOnPlayRunner>>;
+  /** Reads a set of `PlateAppearance`. (live) */
+  plateAppearances: Maybe<Array<PlateAppearance>>;
+  /** Reads a set of `Player`. (live) */
+  players: Maybe<Array<Player>>;
+  /** Reads a set of `ScoredRunner`. (live) */
+  scoredRunners: Maybe<Array<ScoredRunner>>;
+  /** Reads a set of `StolenBaseAttempt`. (live) */
+  stolenBaseAttempts: Maybe<Array<StolenBaseAttempt>>;
+  /** Reads a set of `Team`. (live) */
+  teams: Maybe<Array<Team>>;
+  /**  (live) */
+  baseRunner: Maybe<BaseRunner>;
+  /**  (live) */
+  basepathMovement: Maybe<BasepathMovement>;
+  /**  (live) */
+  game: Maybe<Game>;
+  /**  (live) */
+  gameByName: Maybe<Game>;
+  /**  (live) */
+  gameEvent: Maybe<GameEvent>;
+  /**  (live) */
+  gameEventRecord: Maybe<GameEventRecord>;
+  /**  (live) */
+  gameState: Maybe<GameState>;
+  /**  (live) */
+  lineup: Maybe<Lineup>;
+  /**  (live) */
+  lineupChange: Maybe<LineupChange>;
+  /**  (live) */
+  lineupForGameState: Maybe<LineupForGameState>;
+  /**  (live) */
+  lineupSpot: Maybe<LineupSpot>;
+  /**  (live) */
+  lineupSpotByLineupIdAndBattingOrder: Maybe<LineupSpot>;
+  /**  (live) */
+  lineupSpotByLineupIdAndPosition: Maybe<LineupSpot>;
+  /**  (live) */
+  outOnPlayRunner: Maybe<OutOnPlayRunner>;
+  /**  (live) */
+  plateAppearance: Maybe<PlateAppearance>;
+  /**  (live) */
+  player: Maybe<Player>;
+  /**  (live) */
+  playerByFirstNameAndLastName: Maybe<Player>;
+  /**  (live) */
+  scoredRunner: Maybe<ScoredRunner>;
+  /**  (live) */
+  stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  /**  (live) */
+  team: Maybe<Team>;
+  /**  (live) */
+  teamByGameIdAndRole: Maybe<Team>;
+  /** Reads a single `BaseRunner` using its globally unique `ID`. (live) */
+  baseRunnerByNodeId: Maybe<BaseRunner>;
+  /** Reads a single `BasepathMovement` using its globally unique `ID`. (live) */
+  basepathMovementByNodeId: Maybe<BasepathMovement>;
+  /** Reads a single `Game` using its globally unique `ID`. (live) */
+  gameByNodeId: Maybe<Game>;
+  /** Reads a single `GameEvent` using its globally unique `ID`. (live) */
+  gameEventByNodeId: Maybe<GameEvent>;
+  /** Reads a single `GameEventRecord` using its globally unique `ID`. (live) */
+  gameEventRecordByNodeId: Maybe<GameEventRecord>;
+  /** Reads a single `GameState` using its globally unique `ID`. (live) */
+  gameStateByNodeId: Maybe<GameState>;
+  /** Reads a single `Lineup` using its globally unique `ID`. (live) */
+  lineupByNodeId: Maybe<Lineup>;
+  /** Reads a single `LineupChange` using its globally unique `ID`. (live) */
+  lineupChangeByNodeId: Maybe<LineupChange>;
+  /** Reads a single `LineupForGameState` using its globally unique `ID`. (live) */
+  lineupForGameStateByNodeId: Maybe<LineupForGameState>;
+  /** Reads a single `LineupSpot` using its globally unique `ID`. (live) */
+  lineupSpotByNodeId: Maybe<LineupSpot>;
+  /** Reads a single `OutOnPlayRunner` using its globally unique `ID`. (live) */
+  outOnPlayRunnerByNodeId: Maybe<OutOnPlayRunner>;
+  /** Reads a single `PlateAppearance` using its globally unique `ID`. (live) */
+  plateAppearanceByNodeId: Maybe<PlateAppearance>;
+  /** Reads a single `Player` using its globally unique `ID`. (live) */
+  playerByNodeId: Maybe<Player>;
+  /** Reads a single `ScoredRunner` using its globally unique `ID`. (live) */
+  scoredRunnerByNodeId: Maybe<ScoredRunner>;
+  /** Reads a single `StolenBaseAttempt` using its globally unique `ID`. (live) */
+  stolenBaseAttemptByNodeId: Maybe<StolenBaseAttempt>;
+  /** Reads a single `Team` using its globally unique `ID`. (live) */
+  teamByNodeId: Maybe<Team>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionNodeArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionBaseRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BaseRunnersOrderBy>>;
+  condition?: Maybe<BaseRunnerCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionBasepathMovementsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<BasepathMovementsOrderBy>>;
+  condition?: Maybe<BasepathMovementCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGamesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GamesOrderBy>>;
+  condition?: Maybe<GameCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventsOrderBy>>;
+  condition?: Maybe<GameEventCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventRecordsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
+  condition?: Maybe<GameEventRecordCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameStatesOrderBy>>;
+  condition?: Maybe<GameStateCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupsOrderBy>>;
+  condition?: Maybe<LineupCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupChangesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupChangesOrderBy>>;
+  condition?: Maybe<LineupChangeCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupForGameStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupForGameStatesOrderBy>>;
+  condition?: Maybe<LineupForGameStateCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupSpotsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LineupSpotsOrderBy>>;
+  condition?: Maybe<LineupSpotCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionOutOnPlayRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<OutOnPlayRunnersOrderBy>>;
+  condition?: Maybe<OutOnPlayRunnerCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlateAppearancesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<PlateAppearancesOrderBy>>;
+  condition?: Maybe<PlateAppearanceCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlayersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<PlayersOrderBy>>;
+  condition?: Maybe<PlayerCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionScoredRunnersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ScoredRunnersOrderBy>>;
+  condition?: Maybe<ScoredRunnerCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionStolenBaseAttemptsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<StolenBaseAttemptsOrderBy>>;
+  condition?: Maybe<StolenBaseAttemptCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionTeamsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<TeamsOrderBy>>;
+  condition?: Maybe<TeamCondition>;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionBaseRunnerArgs = {
+  gameStateId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionBasepathMovementArgs = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameByNameArgs = {
+  name: Scalars['String'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventRecordArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameStateArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupChangeArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupForGameStateArgs = {
+  gameStateId: Scalars['Int'];
+  lineupId: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupSpotArgs = {
+  lineupId: Scalars['Int'];
+  playerId: Scalars['UUID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupSpotByLineupIdAndBattingOrderArgs = {
+  lineupId: Scalars['Int'];
+  battingOrder: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupSpotByLineupIdAndPositionArgs = {
+  lineupId: Scalars['Int'];
+  position: FieldingPosition;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionOutOnPlayRunnerArgs = {
+  plateAppearanceId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlateAppearanceArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlayerArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlayerByFirstNameAndLastNameArgs = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionScoredRunnerArgs = {
+  gameEventRecordId: Scalars['Int'];
+  runnerId: Scalars['UUID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionStolenBaseAttemptArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionTeamArgs = {
+  id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionTeamByGameIdAndRoleArgs = {
+  gameId: Scalars['Int'];
+  role: TeamRole;
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionBaseRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionBasepathMovementByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventRecordByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameStateByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupChangeByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupForGameStateByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionLineupSpotByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionOutOnPlayRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlateAppearanceByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionPlayerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionScoredRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionStolenBaseAttemptByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionTeamByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+export type GameEventRecord_GameStateFragment = (
+  { __typename?: 'GameState' }
+  & Pick<GameState, 'inning' | 'halfInning' | 'outs' | 'playerAtBat' | 'score'>
+  & { baseRunners: Array<(
+    { __typename?: 'BaseRunner' }
+    & Pick<BaseRunner, 'runnerId' | 'base'>
+  )> }
+);
+
+export type NewLineups_GameFragment = (
+  { __typename?: 'Game' }
+  & { teams: Array<(
+    { __typename?: 'Team' }
+    & Pick<Team, 'id'>
+    & { lineups: Array<(
+      { __typename?: 'Lineup' }
+      & Pick<Lineup, 'id' | 'originalClientId'>
+    )> }
+  )> }
+);
+
+export type UnpackedGame_GameFragment = (
+  { __typename?: 'Game' }
+  & Pick<Game, 'datePlayed' | 'id' | 'gameLength' | 'location' | 'name' | 'score'>
+  & { gameEventRecords: Array<(
+    { __typename?: 'GameEventRecord' }
+    & { gameEvent: Maybe<(
+      { __typename?: 'GameEvent' }
+      & { lineupChange: Maybe<(
+        { __typename?: 'LineupChange' }
+        & Pick<LineupChange, 'lineupBeforeId' | 'lineupAfterId'>
+      )>, stolenBaseAttempt: Maybe<(
+        { __typename?: 'StolenBaseAttempt' }
+        & Pick<StolenBaseAttempt, 'runnerId' | 'success'>
+      )>, plateAppearance: Maybe<(
+        { __typename?: 'PlateAppearance' }
+        & Pick<PlateAppearance, 'type' | 'contact' | 'fieldedBy' | 'runsScoredOnSacFly'>
+        & { outOnPlayRunners: Array<(
+          { __typename?: 'OutOnPlayRunner' }
+          & Pick<OutOnPlayRunner, 'runnerId'>
+        )>, basepathMovements: Array<(
+          { __typename?: 'BasepathMovement' }
+          & Pick<BasepathMovement, 'runnerId' | 'endBase' | 'wasSafe'>
+        )> }
+      )> }
+    )>, scoredRunners: Array<(
+      { __typename?: 'ScoredRunner' }
+      & Pick<ScoredRunner, 'runnerId' | 'battedIn'>
+    )>, gameStateBefore: Maybe<(
+      { __typename?: 'GameState' }
+      & GameEventRecord_GameStateFragment
+    )>, gameStateAfter: Maybe<(
+      { __typename?: 'GameState' }
+      & GameEventRecord_GameStateFragment
+    )> }
+  )>, teams: Array<(
+    { __typename?: 'Team' }
+    & Pick<Team, 'name' | 'role' | 'winner'>
+    & { lineups: Array<(
+      { __typename?: 'Lineup' }
+      & Pick<Lineup, 'id' | 'originalClientId'>
+      & { lineupSpots: Array<(
+        { __typename?: 'LineupSpot' }
+        & Pick<LineupSpot, 'playerId' | 'position'>
+      )> }
+    )> }
+  )> }
+);
+
+export type CreateEmptyGameMutationVariables = Exact<{
+  input: CreateGameInput;
 }>;
 
 
-export type AddGameStateMutation = (
+export type CreateEmptyGameMutation = (
   { __typename?: 'Mutation' }
-  & { createGameState: Maybe<(
-    { __typename?: 'CreateGameStatePayload' }
-    & { gameState: Maybe<(
-      { __typename?: 'GameState' }
-      & Pick<GameState, 'id' | 'base'>
+  & { createGame: Maybe<(
+    { __typename?: 'CreateGamePayload' }
+    & { game: Maybe<(
+      { __typename?: 'Game' }
+      & NewLineups_GameFragment
     )> }
   )> }
 );
@@ -520,53 +9595,163 @@ export type CreatePlayerMutation = (
   )> }
 );
 
-export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
+export type FillInGameEventsMutationVariables = Exact<{
+  input: UpdateGameInput;
+}>;
 
 
-export type GetAllPlayersQuery = (
-  { __typename?: 'Query' }
+export type FillInGameEventsMutation = (
+  { __typename?: 'Mutation' }
+  & { updateGame: Maybe<(
+    { __typename?: 'UpdateGamePayload' }
+    & { game: Maybe<(
+      { __typename?: 'Game' }
+      & UnpackedGame_GameFragment
+    )> }
+  )> }
+);
+
+export type GetAllPlayersSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllPlayersSubscription = (
+  { __typename?: 'Subscription' }
   & { players: Maybe<Array<(
     { __typename?: 'Player' }
     & Pick<Player, 'id' | 'firstName' | 'lastName'>
   )>> }
 );
 
+export type GetGameQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
 
-export const AddGameStateDocument = gql`
-    mutation AddGameState($base: BaseType!) {
-  createGameState(input: {gameState: {base: $base}}) {
-    gameState {
+
+export type GetGameQuery = (
+  { __typename?: 'Query' }
+  & { game: Maybe<(
+    { __typename?: 'Game' }
+    & UnpackedGame_GameFragment
+  )> }
+);
+
+export const NewLineups_GameFragmentDoc = gql`
+    fragment NewLineups_Game on Game {
+  teams {
+    id
+    lineups {
       id
-      base
+      originalClientId
     }
   }
 }
     `;
-export type AddGameStateMutationFn = Apollo.MutationFunction<AddGameStateMutation, AddGameStateMutationVariables>;
+export const GameEventRecord_GameStateFragmentDoc = gql`
+    fragment GameEventRecord_GameState on GameState {
+  inning
+  halfInning
+  outs
+  playerAtBat
+  score
+  baseRunners {
+    runnerId
+    base
+  }
+}
+    `;
+export const UnpackedGame_GameFragmentDoc = gql`
+    fragment UnpackedGame_Game on Game {
+  datePlayed
+  id
+  gameLength
+  location
+  name
+  score
+  gameEventRecords {
+    gameEvent {
+      lineupChange {
+        lineupBeforeId
+        lineupAfterId
+      }
+      stolenBaseAttempt {
+        runnerId
+        success
+      }
+      plateAppearance {
+        type
+        contact
+        fieldedBy
+        outOnPlayRunners {
+          runnerId
+        }
+        basepathMovements {
+          runnerId
+          endBase
+          wasSafe
+        }
+        runsScoredOnSacFly
+      }
+    }
+    scoredRunners {
+      runnerId
+      battedIn
+    }
+    gameStateBefore {
+      ...GameEventRecord_GameState
+    }
+    gameStateAfter {
+      ...GameEventRecord_GameState
+    }
+  }
+  teams {
+    name
+    role
+    lineups {
+      id
+      originalClientId
+      lineupSpots(orderBy: BATTING_ORDER_ASC) {
+        playerId
+        position
+      }
+    }
+    winner
+  }
+}
+    ${GameEventRecord_GameStateFragmentDoc}`;
+export const CreateEmptyGameDocument = gql`
+    mutation CreateEmptyGame($input: CreateGameInput!) {
+  createGame(input: $input) {
+    game {
+      ...NewLineups_Game
+    }
+  }
+}
+    ${NewLineups_GameFragmentDoc}`;
+export type CreateEmptyGameMutationFn = Apollo.MutationFunction<CreateEmptyGameMutation, CreateEmptyGameMutationVariables>;
 
 /**
- * __useAddGameStateMutation__
+ * __useCreateEmptyGameMutation__
  *
- * To run a mutation, you first call `useAddGameStateMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddGameStateMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateEmptyGameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEmptyGameMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addGameStateMutation, { data, loading, error }] = useAddGameStateMutation({
+ * const [createEmptyGameMutation, { data, loading, error }] = useCreateEmptyGameMutation({
  *   variables: {
- *      base: // value for 'base'
+ *      input: // value for 'input'
  *   },
  * });
  */
-export function useAddGameStateMutation(baseOptions?: Apollo.MutationHookOptions<AddGameStateMutation, AddGameStateMutationVariables>) {
-        return Apollo.useMutation<AddGameStateMutation, AddGameStateMutationVariables>(AddGameStateDocument, baseOptions);
+export function useCreateEmptyGameMutation(baseOptions?: Apollo.MutationHookOptions<CreateEmptyGameMutation, CreateEmptyGameMutationVariables>) {
+        return Apollo.useMutation<CreateEmptyGameMutation, CreateEmptyGameMutationVariables>(CreateEmptyGameDocument, baseOptions);
       }
-export type AddGameStateMutationHookResult = ReturnType<typeof useAddGameStateMutation>;
-export type AddGameStateMutationResult = Apollo.MutationResult<AddGameStateMutation>;
-export type AddGameStateMutationOptions = Apollo.BaseMutationOptions<AddGameStateMutation, AddGameStateMutationVariables>;
+export type CreateEmptyGameMutationHookResult = ReturnType<typeof useCreateEmptyGameMutation>;
+export type CreateEmptyGameMutationResult = Apollo.MutationResult<CreateEmptyGameMutation>;
+export type CreateEmptyGameMutationOptions = Apollo.BaseMutationOptions<CreateEmptyGameMutation, CreateEmptyGameMutationVariables>;
 export const CreatePlayerDocument = gql`
     mutation CreatePlayer($firstName: String!, $lastName: String) {
   createPlayer(input: {player: {firstName: $firstName, lastName: $lastName}}) {
@@ -604,8 +9789,42 @@ export function useCreatePlayerMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreatePlayerMutationHookResult = ReturnType<typeof useCreatePlayerMutation>;
 export type CreatePlayerMutationResult = Apollo.MutationResult<CreatePlayerMutation>;
 export type CreatePlayerMutationOptions = Apollo.BaseMutationOptions<CreatePlayerMutation, CreatePlayerMutationVariables>;
+export const FillInGameEventsDocument = gql`
+    mutation FillInGameEvents($input: UpdateGameInput!) {
+  updateGame(input: $input) {
+    game {
+      ...UnpackedGame_Game
+    }
+  }
+}
+    ${UnpackedGame_GameFragmentDoc}`;
+export type FillInGameEventsMutationFn = Apollo.MutationFunction<FillInGameEventsMutation, FillInGameEventsMutationVariables>;
+
+/**
+ * __useFillInGameEventsMutation__
+ *
+ * To run a mutation, you first call `useFillInGameEventsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFillInGameEventsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [fillInGameEventsMutation, { data, loading, error }] = useFillInGameEventsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useFillInGameEventsMutation(baseOptions?: Apollo.MutationHookOptions<FillInGameEventsMutation, FillInGameEventsMutationVariables>) {
+        return Apollo.useMutation<FillInGameEventsMutation, FillInGameEventsMutationVariables>(FillInGameEventsDocument, baseOptions);
+      }
+export type FillInGameEventsMutationHookResult = ReturnType<typeof useFillInGameEventsMutation>;
+export type FillInGameEventsMutationResult = Apollo.MutationResult<FillInGameEventsMutation>;
+export type FillInGameEventsMutationOptions = Apollo.BaseMutationOptions<FillInGameEventsMutation, FillInGameEventsMutationVariables>;
 export const GetAllPlayersDocument = gql`
-    query GetAllPlayers {
+    subscription GetAllPlayers {
   players {
     id
     firstName
@@ -615,26 +9834,55 @@ export const GetAllPlayersDocument = gql`
     `;
 
 /**
- * __useGetAllPlayersQuery__
+ * __useGetAllPlayersSubscription__
  *
- * To run a query within a React component, call `useGetAllPlayersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllPlayersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllPlayersSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPlayersSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPlayersSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllPlayersSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAllPlayersSubscription, GetAllPlayersSubscriptionVariables>) {
+        return Apollo.useSubscription<GetAllPlayersSubscription, GetAllPlayersSubscriptionVariables>(GetAllPlayersDocument, baseOptions);
+      }
+export type GetAllPlayersSubscriptionHookResult = ReturnType<typeof useGetAllPlayersSubscription>;
+export type GetAllPlayersSubscriptionResult = Apollo.SubscriptionResult<GetAllPlayersSubscription>;
+export const GetGameDocument = gql`
+    query GetGame($id: Int!) {
+  game(id: $id) {
+    ...UnpackedGame_Game
+  }
+}
+    ${UnpackedGame_GameFragmentDoc}`;
+
+/**
+ * __useGetGameQuery__
+ *
+ * To run a query within a React component, call `useGetGameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGameQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllPlayersQuery({
+ * const { data, loading, error } = useGetGameQuery({
  *   variables: {
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetAllPlayersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
-        return Apollo.useQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, baseOptions);
+export function useGetGameQuery(baseOptions: Apollo.QueryHookOptions<GetGameQuery, GetGameQueryVariables>) {
+        return Apollo.useQuery<GetGameQuery, GetGameQueryVariables>(GetGameDocument, baseOptions);
       }
-export function useGetAllPlayersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
-          return Apollo.useLazyQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, baseOptions);
+export function useGetGameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGameQuery, GetGameQueryVariables>) {
+          return Apollo.useLazyQuery<GetGameQuery, GetGameQueryVariables>(GetGameDocument, baseOptions);
         }
-export type GetAllPlayersQueryHookResult = ReturnType<typeof useGetAllPlayersQuery>;
-export type GetAllPlayersLazyQueryHookResult = ReturnType<typeof useGetAllPlayersLazyQuery>;
-export type GetAllPlayersQueryResult = Apollo.QueryResult<GetAllPlayersQuery, GetAllPlayersQueryVariables>;
+export type GetGameQueryHookResult = ReturnType<typeof useGetGameQuery>;
+export type GetGameLazyQueryHookResult = ReturnType<typeof useGetGameLazyQuery>;
+export type GetGameQueryResult = Apollo.QueryResult<GetGameQuery, GetGameQueryVariables>;

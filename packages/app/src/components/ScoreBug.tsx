@@ -1,22 +1,23 @@
 import React, { CSSProperties } from 'react';
 import { Table, TableBody, TableRow, TableCell, Box, Text } from 'grommet';
+import { CaretUpFill, CaretDownFill } from 'grommet-icons';
+
+import { HalfInning, TeamRole } from '@dugout-companion/shared';
 
 import {
   getScore,
-  getBattingTeam,
+  getBattingTeamRole,
   getNumOuts,
   getHalfInning,
   getInning,
 } from 'state/game/selectors';
-import { TeamRole, HalfInning } from 'state/game/types';
 import { useAppSelector } from 'utils/hooks';
-import { CaretUpFill, CaretDownFill } from 'grommet-icons';
 
 const boldStyle: CSSProperties = { fontWeight: 'bold' };
 
 const ScoreBug = () => {
   const [awayScore, homeScore] = useAppSelector(getScore);
-  const battingTeam = useAppSelector(getBattingTeam);
+  const battingTeam = useAppSelector(getBattingTeamRole);
   const halfInning = useAppSelector(getHalfInning);
   const inning = useAppSelector(getInning);
   const numOuts = useAppSelector(getNumOuts);

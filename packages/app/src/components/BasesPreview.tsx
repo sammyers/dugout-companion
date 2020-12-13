@@ -1,9 +1,11 @@
 import React, { FC } from 'react';
 import { Blank, IconProps } from 'grommet-icons';
-import { BaseRunners, BaseType } from 'state/game/types';
+
+import { BaseType } from '@dugout-companion/shared';
+import { BaseRunnerMap } from 'state/game/types';
 
 interface Props {
-  bases: BaseRunners;
+  bases: BaseRunnerMap;
 }
 
 const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {

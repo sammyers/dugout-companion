@@ -17,6 +17,7 @@
     "graphql": "^15.4.0",
     "pg": "^8.5.1",
     "postgraphile": "^4.10.0",
+    "postgraphile-plugin-nested-mutations": "^1.0.1",
     "react": "^17.0.1"
   },
   "devDependencies": {

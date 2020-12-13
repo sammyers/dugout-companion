@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
 import { Text, Box } from 'grommet';
 
+import { PlateAppearanceType } from '@dugout-companion/shared';
+
 import { getPlateAppearanceLabel } from 'utils/labels';
 
-import { PlateAppearanceType } from 'state/game/types';
 import { PlayDescription } from 'state/plays/types';
 
 const PlayTypeTag: FC<{ type: PlateAppearanceType }> = ({ type }) => {
@@ -34,7 +35,8 @@ const PlayTypeTag: FC<{ type: PlateAppearanceType }> = ({ type }) => {
   );
 };
 
-const ScoreTag: FC<{ score: [number, number] }> = ({ score: [away, home] }) => (
+// NOTE: make sure scoring teams are in the right order
+const ScoreTag: FC<{ score: number[] }> = ({ score: [away, home] }) => (
   <Box
     round={{ size: '2px' }}
     border

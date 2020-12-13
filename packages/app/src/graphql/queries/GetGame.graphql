@@ -1,0 +1,5 @@
+query GetGame($id: Int!) {
+  game(id: $id) {
+    ...UnpackedGame_Game
+  }
+}
