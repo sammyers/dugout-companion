@@ -15,12 +15,14 @@ import {
 
 import {
   FieldingPosition,
+  GameInput,
+  GamePatch,
   HalfInning,
   PlateAppearanceType,
   TeamRole,
 } from '@dugout-companion/shared';
 import { AppState } from 'state/store';
-import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
+import { BaseRunnerMap, GameState, GameStatus, LineupSpot } from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -177,3 +179,81 @@ export const getFuture = (state: AppState) => state.game.future;
 
 export const isUndoPossible = createSelector(getPast, past => past.length > 0);
 export const isRedoPossible = createSelector(getFuture, future => future.length > 0);
+
+export const getGameForMutation = createSelector(
+  getPresent,
+  ({ teams, score, gameLength }): GameInput => ({
+    score,
+    gameLength,
+    teams: {
+      create: teams.map(({ name, role, winner, lineups }) => ({
+        name,
+        role,
+        winner,
+        lineups: {
+          create: lineups.map(({ id, lineupSpots }) => ({
+            originalClientId: id,
+            lineupSpots: {
+              create: lineupSpots.map((spot, battingOrder) => ({ battingOrder, ...spot })),
+            },
+          })),
+        },
+      })),
+    },
+  })
+);
+
+export const getGameEventRecordsForMutation = createSelector(
+  getPresent,
+  ({ gameEventRecords }): GamePatch => ({
+    gameEventRecords: {
+      create: gameEventRecords.map(
+        ({ gameEvent, gameStateBefore, gameStateAfter, scoredRunners }) => {
+          let event;
+          if (gameEvent.lineupChange) {
+            event = {
+              lineupChange: {
+                create: gameEvent.lineupChange,
+              },
+            };
+          } else if (gameEvent.stolenBaseAttempt) {
+            event = {
+              stolenBaseAttempt: {
+                create: gameEvent.stolenBaseAttempt,
+              },
+            };
+          } else if (gameEvent.plateAppearance) {
+            event = {
+              plateAppearance: {
+                create: {
+                  ...gameEvent.plateAppearance,
+                  basepathMovements: {
+                    create: gameEvent.plateAppearance.basepathMovements,
+                  },
+                  outOnPlayRunners: {
+                    create: gameEvent.plateAppearance.outOnPlayRunners,
+                  },
+                },
+              },
+            };
+          }
+          const makeGameStateMutation = (gameState: GameState) => ({
+            create: {
+              ...gameState,
+              baseRunners: {
+                create: gameState.baseRunners,
+              },
+            },
+          });
+
+          return {
+            gameEvent: { create: event },
+            gameStateBefore: makeGameStateMutation(gameStateBefore),
+            gameStateAfter: makeGameStateMutation(gameStateAfter),
+            scoredRunners: { create: scoredRunners },
+          };
+        }
+      ),
+    },
+  })
+);

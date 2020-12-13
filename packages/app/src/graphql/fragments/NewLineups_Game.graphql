@@ -1,6 +1,8 @@
 fragment NewLineups_Game on Game {
+  id
   teams {
     id
+    role
     lineups {
       id
       originalClientId

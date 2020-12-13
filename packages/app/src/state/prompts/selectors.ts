@@ -2,13 +2,13 @@ import { createNextState } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
 import { getPresent } from 'state/game/selectors';
+import { applyPlateAppearance } from 'state/game/stateHelpers';
 import { runnersToMap } from 'state/game/utils';
 import { getExtraRunnerMovementForPlateAppearance } from './prompts';
 
 import { PlateAppearanceType } from '@dugout-companion/shared';
 import { PlateAppearance } from 'state/game/types';
 import { AppState } from 'state/store';
-import { applyPlateAppearance } from 'state/game/slice';
 
 export const getSelectedRunnerOption = (state: AppState, runnerId: string) =>
   state.prompts.runnerChoices[runnerId];

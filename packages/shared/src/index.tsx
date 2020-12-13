@@ -9496,7 +9496,14 @@ export type SubscriptionTeamByNodeIdArgs = {
 export type GameEventRecord_GameStateFragment = (
   { __typename?: 'GameState' }
   & Pick<GameState, 'inning' | 'halfInning' | 'outs' | 'playerAtBat' | 'score'>
-  & { baseRunners: Array<(
+  & { lineups: Maybe<Array<Maybe<(
+    { __typename?: 'Lineup' }
+    & Pick<Lineup, 'id'>
+    & { team: Maybe<(
+      { __typename?: 'Team' }
+      & Pick<Team, 'role'>
+    )> }
+  )>>>, baseRunners: Array<(
     { __typename?: 'BaseRunner' }
     & Pick<BaseRunner, 'runnerId' | 'base'>
   )> }
@@ -9504,9 +9511,10 @@ export type GameEventRecord_GameStateFragment = (
 
 export type NewLineups_GameFragment = (
   { __typename?: 'Game' }
+  & Pick<Game, 'id'>
   & { teams: Array<(
     { __typename?: 'Team' }
-    & Pick<Team, 'id'>
+    & Pick<Team, 'id' | 'role'>
     & { lineups: Array<(
       { __typename?: 'Lineup' }
       & Pick<Lineup, 'id' | 'originalClientId'>
@@ -9637,8 +9645,10 @@ export type GetGameQuery = (
 
 export const NewLineups_GameFragmentDoc = gql`
     fragment NewLineups_Game on Game {
+  id
   teams {
     id
+    role
     lineups {
       id
       originalClientId
@@ -9653,6 +9663,12 @@ export const GameEventRecord_GameStateFragmentDoc = gql`
   outs
   playerAtBat
   score
+  lineups {
+    id
+    team {
+      role
+    }
+  }
   baseRunners {
     runnerId
     base

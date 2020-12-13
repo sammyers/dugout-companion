@@ -4,6 +4,12 @@ fragment GameEventRecord_GameState on GameState {
   outs
   playerAtBat
   score
+  lineups {
+    id
+    team {
+      role
+    }
+  }
   baseRunners {
     runnerId
     base

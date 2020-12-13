@@ -1,6 +1,7 @@
 import {
   ContactQuality,
   FieldingPosition,
+  NewLineups_GameFragment,
   PlateAppearanceType,
   TeamRole,
   UnpackedGame_GameFragment,
@@ -10,7 +11,7 @@ import { SimplifyType } from 'utils/common';
 
 export type Game = SimplifyType<
   UnpackedGame_GameFragment,
-  'gameEvent' | 'gameStateBefore' | 'gameStateAfter'
+  'gameEvent' | 'gameStateBefore' | 'gameStateAfter' | 'team'
 >;
 export type GameEventRecord = Game['gameEventRecords'][number];
 export type Team = Game['teams'][number];
@@ -51,6 +52,8 @@ export type AppGameState = SimplifyType<
       nextLineupId: number;
     }
 >;
+
+export type CreatedLineups = SimplifyType<NewLineups_GameFragment, 'originalClientId'>;
 
 export interface AddPlayerPayload {
   playerId: string;

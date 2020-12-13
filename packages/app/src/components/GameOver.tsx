@@ -2,6 +2,8 @@ import { Box, Button, Heading, Main } from 'grommet';
 import React, { useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 
+import SaveGameButton from './SaveGameButton';
+
 import {
   getCurrentGameLength,
   getGameStatus,
@@ -58,6 +60,7 @@ const GameOver = () => {
             onClick={onClickExtendGame}
           />
         )}
+        <SaveGameButton />
         <Button
           color="status-ok"
           plain={false}

@@ -28,6 +28,6 @@ export interface RateStats {
 
 export type PlayerStats = CountingStats & Partial<RateStats>;
 
-export type Player = NonNullable<SimplifyType<GetAllPlayersSubscription['players']>>[number];
+export type Player = NonNullable<SimplifyType<GetAllPlayersSubscription>['players']>[number];
 
 export type NewPlayer = Pick<Player, 'firstName' | 'lastName'>;
