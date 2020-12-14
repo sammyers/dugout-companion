@@ -1,0 +1,5 @@
+subscription GetAllGames {
+  games {
+    ...UnpackedGame_Game
+  }
+}

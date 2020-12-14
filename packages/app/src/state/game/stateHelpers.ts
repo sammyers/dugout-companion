@@ -148,7 +148,7 @@ const recordAndApplyGameEvent = (
     inning,
     halfInning,
     outs,
-    baseRunners: { ...baseRunners },
+    baseRunners: [...baseRunners],
     score: [...score],
     lineups: state.teams.map(({ role, lineups }) => {
       const { id } = _.last(lineups)!;

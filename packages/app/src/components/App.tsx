@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Grommet, Main, Box } from 'grommet';
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom';
 
-import { useGetAllPlayersSubscription } from '@dugout-companion/shared';
+import { useGetAllPlayersSubscription, useGetAllGamesSubscription } from '@dugout-companion/shared';
 
 import GameOver from './GameOver';
 import TopBar from './TopBar';
@@ -14,8 +14,10 @@ import Plays from './plays/Plays';
 import theme from 'theme';
 import { isGameOver } from 'state/game/selectors';
 import { playerActions } from 'state/players/slice';
+import { historyActions } from 'state/history/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
+import { Game } from 'state/game/types';
 import { Player } from 'state/players/types';
 
 const App = () => {
@@ -26,13 +28,20 @@ const App = () => {
 
   const gameOver = useAppSelector(isGameOver);
 
-  const { data } = useGetAllPlayersSubscription();
+  const { data: playerData } = useGetAllPlayersSubscription();
+  const { data: gameData } = useGetAllGamesSubscription();
 
   useEffect(() => {
-    if (data) {
-      dispatch(playerActions.loadPlayers(data.players as Player[]));
+    if (playerData) {
+      dispatch(playerActions.loadPlayers(playerData.players as Player[]));
     }
-  }, [data, dispatch]);
+  }, [playerData, dispatch]);
+
+  useEffect(() => {
+    if (gameData) {
+      dispatch(historyActions.loadGames(gameData.games as Game[]));
+    }
+  }, [gameData, dispatch]);
 
   useEffect(() => {
     if (gameOver && pathname !== '/game-over') {

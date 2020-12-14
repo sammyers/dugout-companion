@@ -84,6 +84,27 @@ create table player (
 );
 grant select, insert (first_name, last_name) on player to :DATABASE_VISITOR;
 
+insert into player (first_name, last_name) values
+  ('Sam', 'Myers'),
+  ('Steven', 'Chan'),
+  ('Cameron', 'Walls'),
+  ('Carlos', 'Ortega'),
+  ('Yukhi', 'Yamashita'),
+  ('James', 'Lockwood'),
+  ('Matthew', 'Chinn'),
+  ('Jason', 'Tong'),
+  ('Andrew', 'Silva'),
+  ('Quincy', 'Zhao'),
+  ('Dale', 'Zelmon'),
+  ('Wynn', 'Padula'),
+  ('Leland', 'Bailey'),
+  ('Michael', 'Cross'),
+  ('Brendan', 'Wilson'),
+  ('Dan', 'Keating'),
+  ('Max', 'Bruk'),
+  ('Hector', 'Franco'),
+  ('Mike', 'Basta');
+
 drop table if exists game cascade;
 create table game (
   id serial primary key,
@@ -112,7 +133,7 @@ create table lineup (
   team_id int references team (id) not null,
   original_client_id int
 );
-grant select, insert (team_id) on lineup to :DATABASE_VISITOR;
+grant select, insert (team_id, original_client_id) on lineup to :DATABASE_VISITOR;
 
 drop table if exists lineup_spot cascade;
 create table lineup_spot (

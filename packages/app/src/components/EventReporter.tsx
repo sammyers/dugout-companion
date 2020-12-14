@@ -62,7 +62,7 @@ const EventReporter = () => {
   return (
     <Box gridArea="reporter" align="center" justify="center">
       {buttonGroups.map(({ color, types }) => (
-        <Box direction="row" align="center" justify="center" alignContent="center" wrap>
+        <Box key={color} direction="row" align="center" justify="center" alignContent="center" wrap>
           {types
             .filter(paType => options.includes(paType))
             .map(paType => (

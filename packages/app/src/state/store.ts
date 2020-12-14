@@ -6,6 +6,7 @@ import { persistStore, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import game from './game/slice';
+import history from './history/slice';
 import players from './players/slice';
 import prompts from './prompts/slice';
 
@@ -13,6 +14,7 @@ const reducer = persistCombineReducers(
   { key: 'root', storage },
   {
     game,
+    history,
     players,
     prompts,
   }

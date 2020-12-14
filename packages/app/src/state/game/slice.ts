@@ -41,7 +41,7 @@ const initialState: AppGameState = {
   outs: 0,
   gameEventRecords: [],
   score: [0, 0],
-  gameLength: 9,
+  gameLength: 1,
   playerAtBat: '',
   upNextHalfInning: '',
   nextLineupId: 1,
@@ -185,28 +185,32 @@ const { actions: gameActions, reducer } = createSlice({
     }),
     fullResetGame: () => ({ ...initialState }),
     substituteLineupIds(state, { payload }: PayloadAction<CreatedLineups>) {
+      const lineupMap = new Map(
+        _.flatten(
+          payload.teams.map(team =>
+            team.lineups.map(({ id, originalClientId }) => [originalClientId, id])
+          )
+        )
+      );
       payload.teams.forEach(({ role, lineups }) => {
-        const lineupMap = new Map(
-          lineups.map(({ id, originalClientId }) => [originalClientId, id])
-        );
         const team = getTeamWithRole(state.teams, role);
         team.lineups.forEach(lineup => {
           lineup.originalClientId = lineup.id;
           lineup.id = lineupMap.get(lineup.originalClientId)!;
         });
-        state.gameEventRecords.forEach(({ gameEvent, gameStateBefore, gameStateAfter }) => {
-          if (gameEvent.lineupChange) {
-            gameEvent.lineupChange.lineupBeforeId = lineupMap.get(
-              gameEvent.lineupChange.lineupBeforeId
-            )!;
-            gameEvent.lineupChange.lineupAfterId = lineupMap.get(
-              gameEvent.lineupChange.lineupAfterId
-            )!;
-          }
-          [gameStateBefore, gameStateAfter].forEach(gameState => {
-            gameState.lineups?.forEach(lineup => {
-              lineup.id = lineupMap.get(lineup.id)!;
-            });
+      });
+      state.gameEventRecords.forEach(({ gameEvent, gameStateBefore, gameStateAfter }) => {
+        if (gameEvent.lineupChange) {
+          gameEvent.lineupChange.lineupBeforeId = lineupMap.get(
+            gameEvent.lineupChange.lineupBeforeId
+          )!;
+          gameEvent.lineupChange.lineupAfterId = lineupMap.get(
+            gameEvent.lineupChange.lineupAfterId
+          )!;
+        }
+        [gameStateBefore, gameStateAfter].forEach(gameState => {
+          gameState.lineups?.forEach(lineup => {
+            lineup.id = lineupMap.get(lineup.id)!;
           });
         });
       });

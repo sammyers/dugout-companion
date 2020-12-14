@@ -21,11 +21,13 @@ const SaveGameButton = () => {
     if (data && data.createGame && data.createGame.game) {
       dispatch(async (dispatch, getState) => {
         dispatch(gameActions.substituteLineupIds(data.createGame!.game as CreatedLineups));
+        const patch = getGameEventRecordsForMutation(getState());
+        console.log(patch);
         await fillInEvents({
           variables: {
             input: {
               id: data.createGame!.game!.id,
-              patch: getGameEventRecordsForMutation(getState()),
+              patch,
             },
           },
         });

@@ -239,7 +239,10 @@ export const getGameEventRecordsForMutation = createSelector(
           }
           const makeGameStateMutation = (gameState: GameState) => ({
             create: {
-              ...gameState,
+              ..._.omit(gameState, 'lineups'),
+              lineupForGameStates: {
+                create: gameState.lineups!.map(({ id }) => ({ lineupId: id })),
+              },
               baseRunners: {
                 create: gameState.baseRunners,
               },

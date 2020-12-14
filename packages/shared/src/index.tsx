@@ -9619,6 +9619,17 @@ export type FillInGameEventsMutation = (
   )> }
 );
 
+export type GetAllGamesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllGamesSubscription = (
+  { __typename?: 'Subscription' }
+  & { games: Maybe<Array<(
+    { __typename?: 'Game' }
+    & UnpackedGame_GameFragment
+  )>> }
+);
+
 export type GetAllPlayersSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -9839,6 +9850,34 @@ export function useFillInGameEventsMutation(baseOptions?: Apollo.MutationHookOpt
 export type FillInGameEventsMutationHookResult = ReturnType<typeof useFillInGameEventsMutation>;
 export type FillInGameEventsMutationResult = Apollo.MutationResult<FillInGameEventsMutation>;
 export type FillInGameEventsMutationOptions = Apollo.BaseMutationOptions<FillInGameEventsMutation, FillInGameEventsMutationVariables>;
+export const GetAllGamesDocument = gql`
+    subscription GetAllGames {
+  games {
+    ...UnpackedGame_Game
+  }
+}
+    ${UnpackedGame_GameFragmentDoc}`;
+
+/**
+ * __useGetAllGamesSubscription__
+ *
+ * To run a query within a React component, call `useGetAllGamesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllGamesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllGamesSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllGamesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAllGamesSubscription, GetAllGamesSubscriptionVariables>) {
+        return Apollo.useSubscription<GetAllGamesSubscription, GetAllGamesSubscriptionVariables>(GetAllGamesDocument, baseOptions);
+      }
+export type GetAllGamesSubscriptionHookResult = ReturnType<typeof useGetAllGamesSubscription>;
+export type GetAllGamesSubscriptionResult = Apollo.SubscriptionResult<GetAllGamesSubscription>;
 export const GetAllPlayersDocument = gql`
     subscription GetAllPlayers {
   players {
