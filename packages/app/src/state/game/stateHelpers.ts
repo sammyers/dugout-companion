@@ -40,18 +40,19 @@ const replaceLineup = (state: AppGameState, role: TeamRole, newLineup: LineupSpo
   _.last(team.lineups)!.lineupSpots = newLineup;
 };
 
-const shouldLineupHaveFourOutfielders = (lineup: LineupSpot[]) => lineup.length > 9;
-const getAvailablePositionsForLineup = (lineup: LineupSpot[]) => {
-  if (shouldLineupHaveFourOutfielders(lineup)) {
+const shouldLineupHaveFourOutfielders = (lineup: LineupSpot[], addingPlayer = false) =>
+  lineup.length > (addingPlayer ? 8 : 9);
+const getAvailablePositionsForLineup = (lineup: LineupSpot[], addingPlayer = false) => {
+  if (shouldLineupHaveFourOutfielders(lineup, addingPlayer)) {
     return allPositions.filter(position => position !== FieldingPosition.CENTER_FIELD);
   }
   return allPositions.filter(
     position => ![FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(position)
   );
 };
-export const getNextAvailablePosition = (lineup: LineupSpot[]) => {
+export const getNextAvailablePosition = (lineup: LineupSpot[], addingPlayer = false) => {
   const takenPositions = _.map(lineup, 'position');
-  const allPositions = getAvailablePositionsForLineup(lineup);
+  const allPositions = getAvailablePositionsForLineup(lineup, addingPlayer);
   return _.first(_.difference(allPositions, takenPositions))!;
 };
 
@@ -188,6 +189,7 @@ const applyMidGameLineupChange = (
       lineupSpots,
     };
     team.lineups.push(newLineup);
+    state.nextLineupId++;
     return makeGameEvent({ lineupChange: { lineupBeforeId, lineupAfterId: nextLineupId } });
   });
 };
@@ -262,7 +264,7 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         state.outs++;
         break;
       case PlateAppearanceType.FIELDERS_CHOICE: {
-        removeRunner(runners, plateAppearance.outOnPlayRunners[0].runnerId);
+        removeRunner(runners, plateAppearance.outOnPlayRunners[0]?.runnerId);
         const runnersScored = moveRunnersOnGroundBall(runners);
         runners[BaseType.FIRST] = state.playerAtBat;
         if (runnersScored.length && state.outs < 2) {

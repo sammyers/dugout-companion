@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
 import { getFuture, getGameHistory, getTeams } from 'state/game/selectors';
-import { getPlayerAtPositionFromTeams } from 'state/game/utils';
+import { getTeamWithRole } from 'state/game/utils';
 import { getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
 import { getPlayDescription } from './plays';
@@ -10,7 +10,12 @@ import { getPlayDescription } from './plays';
 import { GameEventRecord, Team } from 'state/game/types';
 import { Player } from 'state/players/types';
 import { HalfInningPlaysGroup, PlayDescription } from './types';
-import { HalfInning, TeamRole } from '@dugout-companion/shared';
+import { FieldingPosition, HalfInning, TeamRole } from '@dugout-companion/shared';
+
+const getPlayerAtPosition = (team: Team, position: FieldingPosition, lineupId: number) => {
+  const { lineupSpots } = team.lineups.find(lineup => lineup.id === lineupId)!;
+  return lineupSpots.find(spot => spot.position === position)!.playerId;
+};
 
 const makeInterpolatedPlayDescription = (
   play: GameEventRecord,
@@ -20,17 +25,15 @@ const makeInterpolatedPlayDescription = (
   const { description, playerIds, position, newNumOuts, newScore } = getPlayDescription(play);
   let interpolatedDescription = description;
   if (position) {
+    const teamRole =
+      play.gameStateBefore.halfInning === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME;
+    const team = getTeamWithRole(teams, teamRole);
+    const { id: lineupId } = play.gameStateBefore.lineups!.find(
+      lineup => lineup.team.role === teamRole
+    )!;
     interpolatedDescription = description.replace(
       new RegExp(`{${position}}`),
-      formatShortName(
-        playerGetter(
-          getPlayerAtPositionFromTeams(
-            teams,
-            play.gameStateBefore.halfInning === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME,
-            position
-          )!.playerId
-        )
-      )
+      formatShortName(playerGetter(getPlayerAtPosition(team, position, lineupId)))
     );
   }
   playerIds.forEach(playerId => {
@@ -71,7 +74,9 @@ export const getAllPlays = createSelector(
     return groupedPlaysByInning.map(({ inning, halfInning, plays }) => ({
       inning,
       halfInning,
-      plays: plays.map(play => makeInterpolatedPlayDescription(play, playerGetter, teams)),
+      plays: plays
+        .filter(play => !play.gameEvent.lineupChange)
+        .map(play => makeInterpolatedPlayDescription(play, playerGetter, teams)),
     }));
   }
 );

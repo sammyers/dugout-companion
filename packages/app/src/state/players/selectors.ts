@@ -10,7 +10,10 @@ const getPlayer = (state: AppState, playerId: string): Player | undefined =>
 
 export const getPlayerName = (state: AppState, playerId: string) => {
   const player = getPlayer(state, playerId);
-  return player ? `${player.firstName} ${player.lastName}` : '';
+  if (player && player.lastName) {
+    return `${player.firstName} ${player.lastName}`;
+  }
+  return player?.firstName ?? '';
 };
 
 export const getShortPlayerName = (state: AppState, playerId: string) => {

@@ -60,10 +60,11 @@ const { actions: gameActions, reducer } = createSlice({
           originalClientId: null,
           lineupSpots: [],
         });
+        state.nextLineupId++;
       }
       const lineup = getCurrentLineup(team);
       if (!_.some(lineup, { playerId })) {
-        const newSpot = { playerId, position: getNextAvailablePosition(lineup) };
+        const newSpot = { playerId, position: getNextAvailablePosition(lineup, true) };
         const newLineup = updatePositions([...lineup, newSpot]);
         changeLineup(state, teamRole, newLineup);
       }
@@ -169,15 +170,20 @@ const { actions: gameActions, reducer } = createSlice({
       state.status = GameStatus.IN_PROGRESS;
       cleanUpAfterPlateAppearance(state);
     },
-    resetGame(state) {
-      return {
-        ...initialState,
-        teams: state.teams,
-      };
-    },
-    fullResetGame() {
-      return { ...initialState };
-    },
+    resetGame: state => ({
+      ...initialState,
+      teams: state.teams.map(team => ({
+        ...makeInitialTeamState(team.role),
+        lineups: [
+          {
+            id: initialState.nextLineupId,
+            originalClientId: null,
+            lineupSpots: getCurrentLineup(team),
+          },
+        ],
+      })),
+    }),
+    fullResetGame: () => ({ ...initialState }),
     substituteLineupIds(state, { payload }: PayloadAction<CreatedLineups>) {
       payload.teams.forEach(({ role, lineups }) => {
         const lineupMap = new Map(

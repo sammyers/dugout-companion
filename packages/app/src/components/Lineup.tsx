@@ -9,9 +9,9 @@ import LineupPlayer from './LineupPlayer';
 
 import { getLineup, getPlayersNotInGame } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
+import { playerActions } from 'state/players/slice';
 import { getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-import { playerActions } from 'state/players/slice';
 
 const NEW_PLAYER_ID = 'new-player';
 
@@ -78,6 +78,7 @@ const Lineup = ({ teamRole }: { teamRole: TeamRole }) => {
         {teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
       </Heading>
       <TextInput
+        disabled={players.length === 10}
         placeholder="Add Player"
         suggestions={suggestions}
         value={searchValue}
@@ -97,7 +98,7 @@ const Lineup = ({ teamRole }: { teamRole: TeamRole }) => {
             <Box ref={innerRef} {...droppableProps} flex>
               {players.map(({ playerId, position }, index) => (
                 <LineupPlayer
-                  key={playerId}
+                  key={`${playerId}-${position}`}
                   playerId={playerId}
                   position={position}
                   index={index}
