@@ -3,6 +3,8 @@ import { Button } from 'grommet';
 
 import { useCreateEmptyGameMutation, useFillInGameEventsMutation } from '@dugout-companion/shared';
 
+import Spinner from './icons/Spinner';
+
 import { getGameEventRecordsForMutation, getGameForMutation } from 'state/game/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { gameActions } from 'state/game/slice';
@@ -13,8 +15,8 @@ const SaveGameButton = () => {
 
   const game = useAppSelector(getGameForMutation);
 
-  const [createGame] = useCreateEmptyGameMutation();
-  const [fillInEvents] = useFillInGameEventsMutation();
+  const [createGame, { loading: createGameLoading }] = useCreateEmptyGameMutation();
+  const [fillInEvents, { loading: fillInEventsLoading }] = useFillInGameEventsMutation();
 
   const handleClick = useCallback(async () => {
     const { data } = await createGame({ variables: { input: { game } } });
@@ -35,7 +37,15 @@ const SaveGameButton = () => {
     }
   }, [game, createGame, fillInEvents, dispatch]);
 
-  return <Button color="light-2" plain={false} label="Save Game" onClick={handleClick} />;
+  return (
+    <Button
+      color="light-2"
+      plain={false}
+      icon={createGameLoading || fillInEventsLoading ? <Spinner /> : undefined}
+      label="Save Game"
+      onClick={handleClick}
+    />
+  );
 };
 
 export default SaveGameButton;

@@ -82,7 +82,7 @@ create table player (
   unique (first_name, last_name),
   created_at timestamp default now()
 );
-grant select, insert (first_name, last_name) on player to :DATABASE_VISITOR;
+grant select, insert (id, first_name, last_name) on player to :DATABASE_VISITOR;
 
 insert into player (first_name, last_name) values
   ('Sam', 'Myers'),
@@ -241,6 +241,8 @@ drop table if exists game_event_record cascade;
 create table game_event_record (
   id serial primary key,
   game_id int references game (id) not null,
+  event_index int not null,
+  unique (game_id, event_index),
   game_state_before_id int constraint game_event_record_game_state_before_fk references game_state (id) not null,
   game_state_after_id int constraint game_event_record_game_state_after_fk references game_state (id) not null,
   game_event_id int references game_event (id) not null

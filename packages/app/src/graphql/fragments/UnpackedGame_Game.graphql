@@ -5,7 +5,8 @@ fragment UnpackedGame_Game on Game {
   location
   name
   score
-  gameEventRecords {
+  gameEventRecords(orderBy: EVENT_INDEX_ASC) {
+    eventIndex
     gameEvent {
       lineupChange {
         lineupBeforeId

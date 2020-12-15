@@ -73,6 +73,7 @@ export type Query = Node & {
   gameByName: Maybe<Game>;
   gameEvent: Maybe<GameEvent>;
   gameEventRecord: Maybe<GameEventRecord>;
+  gameEventRecordByGameIdAndEventIndex: Maybe<GameEventRecord>;
   gameState: Maybe<GameState>;
   lineup: Maybe<Lineup>;
   lineupChange: Maybe<LineupChange>;
@@ -308,6 +309,13 @@ export type QueryGameEventArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryGameEventRecordArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameEventRecordByGameIdAndEventIndexArgs = {
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
 };
 
 
@@ -855,6 +863,7 @@ export type GameEventRecord = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
   gameStateBeforeId: Scalars['Int'];
   gameStateAfterId: Scalars['Int'];
   gameEventId: Scalars['Int'];
@@ -1065,6 +1074,8 @@ export enum GameEventRecordsOrderBy {
   ID_DESC = 'ID_DESC',
   GAME_ID_ASC = 'GAME_ID_ASC',
   GAME_ID_DESC = 'GAME_ID_DESC',
+  EVENT_INDEX_ASC = 'EVENT_INDEX_ASC',
+  EVENT_INDEX_DESC = 'EVENT_INDEX_DESC',
   GAME_STATE_BEFORE_ID_ASC = 'GAME_STATE_BEFORE_ID_ASC',
   GAME_STATE_BEFORE_ID_DESC = 'GAME_STATE_BEFORE_ID_DESC',
   GAME_STATE_AFTER_ID_ASC = 'GAME_STATE_AFTER_ID_ASC',
@@ -1084,6 +1095,8 @@ export type GameEventRecordCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gameId` field. */
   gameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `eventIndex` field. */
+  eventIndex?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gameStateBeforeId` field. */
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gameStateAfterId` field. */
@@ -1517,6 +1530,8 @@ export type Mutation = {
   updateGameEventRecordByNodeId: Maybe<UpdateGameEventRecordPayload>;
   /** Updates a single `GameEventRecord` using a unique key and a patch. */
   updateGameEventRecord: Maybe<UpdateGameEventRecordPayload>;
+  /** Updates a single `GameEventRecord` using a unique key and a patch. */
+  updateGameEventRecordByGameIdAndEventIndex: Maybe<UpdateGameEventRecordPayload>;
   /** Updates a single `GameState` using its globally unique id and a patch. */
   updateGameStateByNodeId: Maybe<UpdateGameStatePayload>;
   /** Updates a single `GameState` using a unique key and a patch. */
@@ -1591,6 +1606,8 @@ export type Mutation = {
   deleteGameEventRecordByNodeId: Maybe<DeleteGameEventRecordPayload>;
   /** Deletes a single `GameEventRecord` using a unique key. */
   deleteGameEventRecord: Maybe<DeleteGameEventRecordPayload>;
+  /** Deletes a single `GameEventRecord` using a unique key. */
+  deleteGameEventRecordByGameIdAndEventIndex: Maybe<DeleteGameEventRecordPayload>;
   /** Deletes a single `GameState` using its globally unique id. */
   deleteGameStateByNodeId: Maybe<DeleteGameStatePayload>;
   /** Deletes a single `GameState` using a unique key. */
@@ -1805,6 +1822,12 @@ export type MutationUpdateGameEventRecordByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateGameEventRecordArgs = {
   input: UpdateGameEventRecordInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGameEventRecordByGameIdAndEventIndexArgs = {
+  input: UpdateGameEventRecordByGameIdAndEventIndexInput;
 };
 
 
@@ -2027,6 +2050,12 @@ export type MutationDeleteGameEventRecordByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteGameEventRecordArgs = {
   input: DeleteGameEventRecordInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGameEventRecordByGameIdAndEventIndexArgs = {
+  input: DeleteGameEventRecordByGameIdAndEventIndexInput;
 };
 
 
@@ -3604,13 +3633,19 @@ export type ScoredRunnerGameEventRecordIdFkeyInput = {
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectById?: Maybe<GameEventRecordGameEventRecordPkeyConnect>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByGameIdAndEventIndex?: Maybe<GameEventRecordGameEventRecordGameIdEventIndexKeyConnect>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectByNodeId?: Maybe<GameEventRecordNodeIdConnect>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteById?: Maybe<GameEventRecordGameEventRecordPkeyDelete>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByGameIdAndEventIndex?: Maybe<GameEventRecordGameEventRecordGameIdEventIndexKeyDelete>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GameEventRecordNodeIdDelete>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateById?: Maybe<GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordPkeyUpdate>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByGameIdAndEventIndex?: Maybe<GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateByNodeId?: Maybe<ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate>;
   /** A `GameEventRecordInput` object that will be created and connected to this object. */
@@ -3622,6 +3657,12 @@ export type GameEventRecordGameEventRecordPkeyConnect = {
   id: Scalars['Int'];
 };
 
+/** The fields on `gameEventRecord` to look up the row to connect. */
+export type GameEventRecordGameEventRecordGameIdEventIndexKeyConnect = {
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to connect. */
 export type GameEventRecordNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
@@ -3631,6 +3672,12 @@ export type GameEventRecordNodeIdConnect = {
 /** The fields on `gameEventRecord` to look up the row to delete. */
 export type GameEventRecordGameEventRecordPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `gameEventRecord` to look up the row to delete. */
+export type GameEventRecordGameEventRecordGameIdEventIndexKeyDelete = {
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to delete. */
@@ -3650,6 +3697,7 @@ export type GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsi
 export type UpdateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
@@ -3710,13 +3758,19 @@ export type GameEventRecordGameIdFkeyInverseInput = {
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByGameIdAndEventIndex?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate>>;
   /** A `GameEventRecordInput` object that will be created and connected to this object. */
@@ -3733,6 +3787,7 @@ export type GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGam
 /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
 export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
@@ -3889,13 +3944,19 @@ export type GameEventRecordGameStateBeforeFkInverseInput = {
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByGameIdAndEventIndex?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordGameIdEventIndexKeyUpdate>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate>>;
   /** A `GameEventRecordInput` object that will be created and connected to this object. */
@@ -3913,6 +3974,7 @@ export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkU
 export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
@@ -3969,13 +4031,19 @@ export type GameEventRecordGameStateAfterFkInverseInput = {
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByGameIdAndEventIndex?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordGameIdEventIndexKeyUpdate>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate>>;
   /** A `GameEventRecordInput` object that will be created and connected to this object. */
@@ -3993,6 +4061,7 @@ export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUs
 export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
@@ -4381,13 +4450,19 @@ export type GameEventRecordGameEventIdFkeyInverseInput = {
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectById?: Maybe<Array<GameEventRecordGameEventRecordPkeyConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  connectByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyConnect>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<GameEventRecordNodeIdConnect>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteById?: Maybe<Array<GameEventRecordGameEventRecordPkeyDelete>>;
   /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
+  deleteByGameIdAndEventIndex?: Maybe<Array<GameEventRecordGameEventRecordGameIdEventIndexKeyDelete>>;
+  /** The primary key(s) for `gameEventRecord` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<GameEventRecordNodeIdDelete>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateById?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
+  updateByGameIdAndEventIndex?: Maybe<Array<GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate>>;
   /** The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate>>;
   /** A `GameEventRecordInput` object that will be created and connected to this object. */
@@ -4405,6 +4480,7 @@ export type GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsi
 export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
@@ -4567,6 +4643,14 @@ export type ScoredRunnerGameEventRecordIdFkeyScoredRunnerCreateInput = {
   player?: Maybe<ScoredRunnerRunnerIdFkeyInput>;
 };
 
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
@@ -4579,6 +4663,7 @@ export type GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpd
 export type GameEventRecordPatch = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
@@ -4593,6 +4678,7 @@ export type GameEventRecordPatch = {
 export type GameEventRecordGameEventIdFkeyGameEventRecordCreateInput = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
@@ -4989,6 +5075,14 @@ export type GameEventRecordGameEventIdFkeyGameEventCreateInput = {
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordGameIdEventIndexKeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
@@ -5001,6 +5095,7 @@ export type GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUp
 export type GameEventRecordGameStateAfterFkGameEventRecordCreateInput = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
@@ -5048,6 +5143,14 @@ export type GameEventRecordGameStateAfterFkGameStateCreateInput = {
   gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
 };
 
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordGameIdEventIndexKeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
@@ -5060,6 +5163,7 @@ export type GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdU
 export type GameEventRecordGameStateBeforeFkGameEventRecordCreateInput = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex: Scalars['Int'];
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
@@ -5130,6 +5234,14 @@ export type GameEventRecordGameStateBeforeFkGameStateCreateInput = {
   gameEventRecordsToGameStateAfterIdUsingId?: Maybe<GameEventRecordGameStateAfterFkInverseInput>;
 };
 
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
@@ -5141,6 +5253,7 @@ export type GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate = {
 /** The `gameEventRecord` to be created by this mutation. */
 export type GameEventRecordGameIdFkeyGameEventRecordCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
@@ -5190,6 +5303,14 @@ export type GameEventRecordGameIdFkeyGameCreateInput = {
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
 };
 
+/** The fields on `gameEventRecord` to look up the row to update. */
+export type GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEventRecord` being updated. */
+  patch: UpdateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `gameEventRecord` to be connected. */
@@ -5202,6 +5323,7 @@ export type ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeId
 export type ScoredRunnerGameEventRecordIdFkeyGameEventRecordCreateInput = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
@@ -5975,6 +6097,7 @@ export type CreateGameEventRecordInput = {
 export type GameEventRecordInput = {
   id?: Maybe<Scalars['Int']>;
   gameId?: Maybe<Scalars['Int']>;
+  eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['Int']>;
   gameEventId?: Maybe<Scalars['Int']>;
@@ -6635,6 +6758,19 @@ export type UpdateGameEventRecordInput = {
   /** An object where the defined keys will be set on the `GameEventRecord` being updated. */
   patch: GameEventRecordPatch;
   id: Scalars['Int'];
+};
+
+/** All input for the `updateGameEventRecordByGameIdAndEventIndex` mutation. */
+export type UpdateGameEventRecordByGameIdAndEventIndexInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `GameEventRecord` being updated. */
+  patch: GameEventRecordPatch;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
 };
 
 /** The output of our update `GameState` mutation. */
@@ -7364,6 +7500,17 @@ export type DeleteGameEventRecordInput = {
   id: Scalars['Int'];
 };
 
+/** All input for the `deleteGameEventRecordByGameIdAndEventIndex` mutation. */
+export type DeleteGameEventRecordByGameIdAndEventIndexInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
+};
+
 /** The output of our delete `GameState` mutation. */
 export type DeleteGameStatePayload = {
   __typename?: 'DeleteGameStatePayload';
@@ -7913,6 +8060,8 @@ export type Subscription = {
   gameEvent: Maybe<GameEvent>;
   /**  (live) */
   gameEventRecord: Maybe<GameEventRecord>;
+  /**  (live) */
+  gameEventRecordByGameIdAndEventIndex: Maybe<GameEventRecord>;
   /**  (live) */
   gameState: Maybe<GameState>;
   /**  (live) */
@@ -8646,6 +8795,34 @@ export type SubscriptionGameEventArgs = {
  */
 export type SubscriptionGameEventRecordArgs = {
   id: Scalars['Int'];
+};
+
+
+/**
+ * The root subscription type: contains events and live queries you can subscribe to with the `subscription` operation.
+ * 
+ * #### Live Queries
+ * 
+ * Live query fields are differentiated by containing `(live)` at the end of their
+ * description, they are added for each field in the `Query` type. When you
+ * subscribe to a live query field, the selection set will be evaluated and sent to
+ * the client, and then most things\* that would cause the output of the selection
+ * set to change will trigger the selection set to be re-evaluated and the results
+ * to be re-sent to the client.
+ * 
+ * _(\* Not everything: typically only changes to persisted data referenced by the query are detected, not computed fields.)_
+ * 
+ * Live queries can be very expensive, so try and keep them small and focussed.
+ * 
+ * #### Events
+ * 
+ * Event fields will run their selection set when, and only when, the specified
+ * server-side event occurs. This makes them a lot more efficient than Live
+ * Queries, but it is still recommended that you keep payloads fairly small.
+ */
+export type SubscriptionGameEventRecordByGameIdAndEventIndexArgs = {
+  gameId: Scalars['Int'];
+  eventIndex: Scalars['Int'];
 };
 
 
@@ -9527,6 +9704,7 @@ export type UnpackedGame_GameFragment = (
   & Pick<Game, 'datePlayed' | 'id' | 'gameLength' | 'location' | 'name' | 'score'>
   & { gameEventRecords: Array<(
     { __typename?: 'GameEventRecord' }
+    & Pick<GameEventRecord, 'eventIndex'>
     & { gameEvent: Maybe<(
       { __typename?: 'GameEvent' }
       & { lineupChange: Maybe<(
@@ -9694,7 +9872,8 @@ export const UnpackedGame_GameFragmentDoc = gql`
   location
   name
   score
-  gameEventRecords {
+  gameEventRecords(orderBy: EVENT_INDEX_ASC) {
+    eventIndex
     gameEvent {
       lineupChange {
         lineupBeforeId

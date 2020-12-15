@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
-import undoable, { includeAction } from 'redux-undo';
+import undoable from 'redux-undo';
 
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
 import {
@@ -192,7 +192,7 @@ const { actions: gameActions, reducer } = createSlice({
           )
         )
       );
-      payload.teams.forEach(({ role, lineups }) => {
+      payload.teams.forEach(({ role }) => {
         const team = getTeamWithRole(state.teams, role);
         team.lineups.forEach(lineup => {
           lineup.originalClientId = lineup.id;
@@ -219,8 +219,31 @@ const { actions: gameActions, reducer } = createSlice({
 });
 
 export { gameActions };
+
+const lineupEditActions = [
+  gameActions.addPlayerToGame,
+  gameActions.movePlayer,
+  gameActions.removePlayerFromGame,
+  gameActions.changePlayerPosition,
+].map(action => action.type);
 export default undoable(reducer, {
-  filter: includeAction(gameActions.recordPlateAppearance.type),
+  filter: (action, state) => {
+    if (action.type === gameActions.recordPlateAppearance.type) {
+      return true;
+    }
+    if (lineupEditActions.includes(action.type) && state.status === GameStatus.IN_PROGRESS) {
+      return true;
+    }
+    return false;
+  },
+  groupBy: action => {
+    if (lineupEditActions.includes(action.type)) {
+      return 'lineupEdit';
+    }
+    return null;
+  },
   limit: 10,
   syncFilter: true,
+  clearHistoryType: [gameActions.resetGame.type, gameActions.fullResetGame.type],
+  neverSkipReducer: true,
 });

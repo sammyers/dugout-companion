@@ -167,6 +167,7 @@ const recordAndApplyGameEvent = (
 
   const gameEvent = callback(state, recordRunnersScored);
   state.gameEventRecords.push({
+    eventIndex: -1,
     gameEvent,
     scoredRunners,
     gameStateBefore,

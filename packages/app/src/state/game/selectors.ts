@@ -208,7 +208,7 @@ export const getGameEventRecordsForMutation = createSelector(
   ({ gameEventRecords }): GamePatch => ({
     gameEventRecords: {
       create: gameEventRecords.map(
-        ({ gameEvent, gameStateBefore, gameStateAfter, scoredRunners }) => {
+        ({ gameEvent, gameStateBefore, gameStateAfter, scoredRunners }, eventIndex) => {
           let event;
           if (gameEvent.lineupChange) {
             event = {
@@ -250,6 +250,7 @@ export const getGameEventRecordsForMutation = createSelector(
           });
 
           return {
+            eventIndex,
             gameEvent: { create: event },
             gameStateBefore: makeGameStateMutation(gameStateBefore),
             gameStateAfter: makeGameStateMutation(gameStateAfter),

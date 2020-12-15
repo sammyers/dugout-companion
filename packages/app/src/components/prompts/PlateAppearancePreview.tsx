@@ -1,7 +1,7 @@
 import React, { FC, useContext } from 'react';
 import { Box, Text } from 'grommet';
 
-import BasesPreview from 'components/BasesPreview';
+import BasesPreview from 'components/icons/BasesPreview';
 
 import { getPlateAppearancePreview } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';
