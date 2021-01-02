@@ -3,7 +3,6 @@ import _ from 'lodash';
 
 import { getAllPlayersList, getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
-import { getPlateAppearanceDetailPrompt } from 'state/prompts/prompts';
 import {
   getAvailablePositionsForTeam,
   getCurrentLineup,
@@ -26,16 +25,38 @@ import { BaseRunnerMap, GameState, GameStatus, LineupSpot } from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
-export const getTeams = (state: AppState) => state.game.present.teams;
+export const getPresent = (state: AppState) => state.game.present;
+export const getPast = (state: AppState) => state.game.past;
+export const getFuture = (state: AppState) => state.game.future;
 
-export const getRunners = (state: AppState) => state.game.present.baseRunners;
+export const getTeams = createSelector(getPresent, state => state.teams);
+export const getBatter = createSelector(getPresent, state => state.playerAtBat);
+export const getRunners = createSelector(getPresent, state => state.baseRunners);
 export const getRunnerMap = createSelector(getRunners, runnersToMap);
+export const getGameStatus = createSelector(getPresent, state => state.status);
+export const getNumOuts = createSelector(getPresent, state => state.outs);
+export const getScore = createSelector(getPresent, state => state.score);
+export const getHalfInning = createSelector(getPresent, state => state.halfInning);
+export const getInning = createSelector(getPresent, state => state.inning);
+export const getCurrentBatter = createSelector(getPresent, state => state.playerAtBat);
+export const getCurrentGameLength = createSelector(getPresent, state => state.gameLength);
+export const getGameHistory = createSelector(getPresent, state => state.gameEventRecords);
+export const isEditingLineups = createSelector(getPresent, state => state.editingLineups);
+export const getLineupDrafts = createSelector(getPresent, state => state.lineupDrafts);
 
-export const getNumOuts = (state: AppState) => state.game.present.outs;
-export const getScore = (state: AppState) => state.game.present.score;
-export const getHalfInning = (state: AppState) => state.game.present.halfInning;
-export const getInning = (state: AppState) => state.game.present.inning;
-export const getCurrentBatter = (state: AppState) => state.game.present.playerAtBat;
+export const isGameInProgress = createSelector(
+  getGameStatus,
+  status => status === GameStatus.IN_PROGRESS
+);
+export const isGameOver = createSelector(getGameStatus, status => status === GameStatus.FINISHED);
+
+export const isLineupEditable = createSelector(
+  isGameInProgress,
+  isEditingLineups,
+  (inProgress, editing) => !inProgress || editing
+);
+
+export const getDraftLineup = (state: AppState, role: TeamRole) => getLineupDrafts(state)[role];
 
 export const getBattingTeamRole = createSelector(getHalfInning, half =>
   half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
@@ -65,7 +86,6 @@ export const getRunnerNames = createSelector(
     _.mapValues<BaseRunnerMap>(runners, (id: string) => formatShortName(getPlayer(id)))
 );
 
-const getBatter = (state: AppState) => state.game.present.playerAtBat;
 export const getBatterName = createSelector(getBatter, getPlayerGetter, (batterId, getPlayer) =>
   formatShortName(getPlayer(batterId))
 );
@@ -80,7 +100,9 @@ export const getPlayerPosition = (state: AppState, playerId: string) => {
 
 export const getLineups = createSelector(getTeams, teams => teams.map(getCurrentLineup));
 export const getLineup = (state: AppState, teamRole: TeamRole) =>
-  getCurrentLineup(getTeam(state, teamRole));
+  isEditingLineups(state)
+    ? getDraftLineup(state, teamRole)
+    : getCurrentLineup(getTeam(state, teamRole));
 
 export const getPlayersNotInGame = createSelector(
   getAllPlayersList,
@@ -98,13 +120,6 @@ export const canStartGame = createSelector(
     numAwayPlayers >= MIN_PLAYERS_TO_PLAY &&
     numHomePlayers >= MIN_PLAYERS_TO_PLAY
 );
-
-export const getGameStatus = (state: AppState) => state.game.present.status;
-export const isGameInProgress = createSelector(
-  getGameStatus,
-  status => status === GameStatus.IN_PROGRESS
-);
-export const isGameOver = createSelector(getGameStatus, status => status === GameStatus.FINISHED);
 
 export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, (runners, outs) => {
   const notPossible: Set<PlateAppearanceType> = new Set();
@@ -141,19 +156,6 @@ export const getInTheHoleBatterName = createSelector(
   (batterId, getPlayer) => formatShortName(getPlayer(batterId))
 );
 
-export const createPlateAppearancePromptSelector = (paType: PlateAppearanceType) =>
-  createSelector(
-    getCurrentBatter,
-    getNumOuts,
-    getRunnerMap,
-    doesFieldingTeamHaveFourOutfielders,
-    (batterId, outs, runners, fourOutfielders) =>
-      getPlateAppearanceDetailPrompt(paType, batterId!, outs, runners, fourOutfielders)
-  );
-
-export const getGameHistory = (state: AppState) => state.game.present.gameEventRecords;
-
-export const getCurrentGameLength = (state: AppState) => state.game.present.gameLength;
 export const getMinGameLength = createSelector(
   getInning,
   getHalfInning,
@@ -172,10 +174,6 @@ export const isGameInExtraInnings = createSelector(
   getCurrentGameLength,
   (inning, gameLength) => inning > gameLength
 );
-
-export const getPresent = (state: AppState) => state.game.present;
-export const getPast = (state: AppState) => state.game.past;
-export const getFuture = (state: AppState) => state.game.future;
 
 export const isUndoPossible = createSelector(getPast, past => past.length > 0);
 export const isRedoPossible = createSelector(getFuture, future => future.length > 0);

@@ -1,15 +1,15 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Box, Button } from 'grommet';
-
-import { PlateAppearanceType } from '@dugout-companion/shared';
 
 import EventDetailPrompt from './prompts/EventDetailPrompt';
 
 import { getPlateAppearanceOptions } from 'state/game/selectors';
-import { gameActions } from 'state/game/slice';
-import { getPlateAppearanceResult } from 'state/prompts/selectors';
+import { getPlateAppearanceType } from 'state/prompts/selectors';
+import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { getPlateAppearanceLabel } from 'utils/labels';
+
+import { PlateAppearanceType } from '@dugout-companion/shared';
 
 const buttonGroups = [
   {
@@ -39,25 +39,14 @@ const EventReporter = () => {
   const dispatch = useAppDispatch();
 
   const options = useAppSelector(getPlateAppearanceOptions);
+  const pendingPlateAppearance = useAppSelector(getPlateAppearanceType);
 
-  const [pendingPlateAppearance, setPendingPlateAppearance] = useState<PlateAppearanceType>();
-
-  const handleSubmitPlateAppearance = useCallback(() => {
-    if (pendingPlateAppearance) {
-      dispatch((dispatch, getState) => {
-        dispatch(
-          gameActions.recordPlateAppearance(
-            getPlateAppearanceResult(getState(), pendingPlateAppearance)
-          )
-        );
-      });
-    }
-    setPendingPlateAppearance(undefined);
-  }, [dispatch, pendingPlateAppearance, setPendingPlateAppearance]);
-
-  const handleCancelPrompt = useCallback(() => {
-    setPendingPlateAppearance(undefined);
-  }, [setPendingPlateAppearance]);
+  const handleClickPlateAppearance = useCallback(
+    (paType: PlateAppearanceType) => () => {
+      dispatch(promptActions.setPendingPlateAppearance(paType));
+    },
+    [dispatch]
+  );
 
   return (
     <Box gridArea="reporter" align="center" justify="center">
@@ -70,19 +59,13 @@ const EventReporter = () => {
                 key={paType}
                 color={color}
                 label={getPlateAppearanceLabel(paType)}
-                onClick={() => setPendingPlateAppearance(paType)}
+                onClick={handleClickPlateAppearance(paType)}
                 margin="small"
               />
             ))}
         </Box>
       ))}
-      {pendingPlateAppearance && (
-        <EventDetailPrompt
-          paType={pendingPlateAppearance}
-          onSubmit={handleSubmitPlateAppearance}
-          onCancel={handleCancelPrompt}
-        />
-      )}
+      {pendingPlateAppearance && <EventDetailPrompt />}
     </Box>
   );
 };

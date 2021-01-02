@@ -85,6 +85,8 @@ export const getPlayDescription = ({
       newNumOuts = gameStateBefore.outs + 1;
     }
     playerIds.push(runnerId);
+  } else if (lineupChange) {
+    sentences.push('Lineup change');
   } else if (plateAppearance) {
     const { playerAtBat, baseRunners, outs } = gameStateBefore;
     const runners = runnersToMap(baseRunners);

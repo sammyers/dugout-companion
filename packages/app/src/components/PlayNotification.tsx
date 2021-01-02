@@ -27,10 +27,10 @@ const PlayNotification: FC<{ target: HTMLElement }> = ({ target }) => {
       {lastPlay && showNotification && (
         <Layer
           plain
-          position="top-right"
+          position="bottom-left"
           modal={false}
           target={target}
-          margin={{ top: 'medium', right: 'medium' }}
+          margin={{ bottom: 'medium', left: 'medium' }}
         >
           <ThemeContext.Extend value={{ global: { size: { medium: '324px' } } }}>
             <Card background="light-1" pad="small" width="medium">

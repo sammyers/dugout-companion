@@ -1,5 +1,5 @@
-import React, { FC, useCallback, useEffect } from 'react';
-import { Box, Heading } from 'grommet';
+import React, { useCallback } from 'react';
+import { Box } from 'grommet';
 import _ from 'lodash';
 
 import OptionSelector from '../OptionSelector';
@@ -8,31 +8,20 @@ import { getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { getPlayerOptionsForSelector } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
+import { usePromptContext } from '../context';
 
 import { OutOnPlayOptions } from 'state/prompts/types';
 
 export const shouldShowOOPPrompt = ({ multiple, runnerIds }: OutOnPlayOptions) =>
   multiple ? runnerIds.length > 2 : runnerIds.length > 1;
 
-const OutOnPlayPrompt: FC<OutOnPlayOptions & { showTitle?: boolean }> = ({
-  showTitle = true,
-  ...options
-}) => {
-  const { multiple, runnerIds } = options;
+const OutOnPlayPrompt = () => {
+  const { outOnPlayOptions } = usePromptContext();
+  const { multiple, runnerIds } = outOnPlayOptions!;
 
   const dispatch = useAppDispatch();
 
-  const dontShow = !shouldShowOOPPrompt(options);
-
-  useEffect(() => {
-    if (dontShow) {
-      if (multiple) {
-        dispatch(promptActions.setOutOnPlayChoices(runnerIds));
-      } else {
-        dispatch(promptActions.setOutOnPlayChoices([runnerIds[0]]));
-      }
-    }
-  }, [multiple, dontShow, runnerIds, dispatch]);
+  const dontShow = !shouldShowOOPPrompt(outOnPlayOptions!);
 
   const selectedOptions = useAppSelector(getSelectedOutOnPlayOptions);
 
@@ -54,33 +43,22 @@ const OutOnPlayPrompt: FC<OutOnPlayOptions & { showTitle?: boolean }> = ({
 
   if (dontShow) return null;
 
-  let selector;
-  if (multiple) {
-    selector = (
-      <OptionSelector<string>
-        multiple
-        options={runnerOptions}
-        value={selectedOptions}
-        onChange={handleChangeMultiple}
-      />
-    );
-  } else {
-    selector = (
-      <OptionSelector
-        options={runnerOptions}
-        value={selectedOptions[0]}
-        onChange={handleChangeSingle}
-      />
-    );
-  }
   return (
     <Box>
-      {showTitle && (
-        <Heading level={4} margin={{ top: 'none', bottom: 'xsmall' }} alignSelf="center">
-          {multiple ? 'Runners' : 'Runner'} out on play
-        </Heading>
+      {multiple ? (
+        <OptionSelector<string>
+          multiple
+          options={runnerOptions}
+          value={selectedOptions}
+          onChange={handleChangeMultiple}
+        />
+      ) : (
+        <OptionSelector
+          options={runnerOptions}
+          value={selectedOptions[0]}
+          onChange={handleChangeSingle}
+        />
       )}
-      {selector}
     </Box>
   );
 };

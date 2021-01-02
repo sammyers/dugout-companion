@@ -1,15 +1,15 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
 
-import PlateAppearancePreview from './PlateAppearancePreview';
-import FielderPrompt from './subprompts/FielderPrompt';
-import RunnerPrompt from './subprompts/RunnerPrompt';
-import OutOnPlayPrompt from './subprompts/OutOnPlayPrompt';
+import { PromptContextProvider } from './context';
+import PromptStages from './PromptStages';
 
 import { getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
-import { useAppSelector } from 'utils/hooks';
+import { promptActions } from 'state/prompts/slice';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { shouldShowOOPPrompt } from './panels/OutOnPlayPrompt';
 
-import { FieldersChoiceOptions, BasePromptProps } from 'state/prompts/types';
+import { FieldersChoiceOptions, BasePromptProps, PromptUiStage } from 'state/prompts/types';
 
 const FieldersChoicePrompt: FC<FieldersChoiceOptions & BasePromptProps> = ({
   fielderOptions,
@@ -17,25 +17,34 @@ const FieldersChoicePrompt: FC<FieldersChoiceOptions & BasePromptProps> = ({
   getNextOptions,
   setCanSubmit,
 }) => {
+  const dispatch = useAppDispatch();
+
   const [selectedOutOnPlay] = useAppSelector(getSelectedOutOnPlayOptions);
 
   const canSubmit = outOnPlayOptions.runnerIds.length > 1 ? !!selectedOutOnPlay : true;
-
   useEffect(() => setCanSubmit(canSubmit), [canSubmit, setCanSubmit]);
 
-  const runnerOptions = useMemo(() => selectedOutOnPlay && getNextOptions?.(selectedOutOnPlay), [
-    getNextOptions,
-    selectedOutOnPlay,
-  ]);
+  const runnerOptions = useMemo(
+    () => (selectedOutOnPlay && getNextOptions?.(selectedOutOnPlay)) || undefined,
+    [getNextOptions, selectedOutOnPlay]
+  );
+
+  useEffect(() => {
+    const stages = [PromptUiStage.CONTACT];
+    if (shouldShowOOPPrompt(outOnPlayOptions)) {
+      stages.push(PromptUiStage.OUTS_ON_PLAY);
+    }
+    if (runnerOptions) {
+      stages.push(PromptUiStage.RUNNERS);
+    }
+    dispatch(promptActions.setStages(stages));
+  }, [outOnPlayOptions, runnerOptions, dispatch]);
 
   return (
     <Box gap="medium" margin={{ top: 'small' }}>
-      <Box direction="row" gap="small" align="center">
-        <FielderPrompt {...fielderOptions} />
-        <OutOnPlayPrompt {...outOnPlayOptions} />
-      </Box>
-      {runnerOptions && <RunnerPrompt {...runnerOptions} />}
-      {canSubmit && <PlateAppearancePreview />}
+      <PromptContextProvider value={{ fielderOptions, outOnPlayOptions, runnerOptions }}>
+        <PromptStages />
+      </PromptContextProvider>
     </Box>
   );
 };

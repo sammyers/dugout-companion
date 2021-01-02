@@ -50,6 +50,8 @@ export type AppGameState = SimplifyType<
       status: GameStatus;
       upNextHalfInning?: string;
       nextLineupId: number;
+      editingLineups: boolean;
+      lineupDrafts: Record<TeamRole, LineupSpot[]>;
     }
 >;
 

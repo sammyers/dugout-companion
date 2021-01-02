@@ -1,15 +1,13 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
 
-import PromptAccordion, { PromptAccordionPanel } from './PromptAccordion';
-import PlateAppearancePreview from './PlateAppearancePreview';
-import ContactPanel from './panels/ContactPanel';
-import RunnerPrompt from './subprompts/RunnerPrompt';
-
 import { getSelectedContactOption } from 'state/prompts/selectors';
-import { useAppSelector } from 'utils/hooks';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { HitOptions, BasePromptProps } from 'state/prompts/types';
+import { HitOptions, BasePromptProps, PromptUiStage } from 'state/prompts/types';
+import { promptActions } from 'state/prompts/slice';
+import { PromptContextProvider } from './context';
+import PromptStages from './PromptStages';
 
 const HitPrompt: FC<HitOptions & BasePromptProps> = ({
   contactOptions,
@@ -17,6 +15,8 @@ const HitPrompt: FC<HitOptions & BasePromptProps> = ({
   getNextOptions,
   setCanSubmit,
 }) => {
+  const dispatch = useAppDispatch();
+
   useEffect(() => setCanSubmit(true), [setCanSubmit]);
 
   const selectedContactType = useAppSelector(getSelectedContactOption);
@@ -26,17 +26,19 @@ const HitPrompt: FC<HitOptions & BasePromptProps> = ({
     [selectedContactType, getNextOptions]
   );
 
+  useEffect(() => {
+    const stages = [PromptUiStage.CONTACT];
+    if (runnerOptions) {
+      stages.push(PromptUiStage.RUNNERS);
+    }
+    dispatch(promptActions.setStages(stages));
+  }, [runnerOptions, dispatch]);
+
   return (
     <Box gap="medium">
-      <PromptAccordion>
-        <ContactPanel contactOptions={contactOptions} fielderOptions={fielderOptions} />
-        {runnerOptions && (
-          <PromptAccordionPanel label="Runners" preview="">
-            <RunnerPrompt {...runnerOptions} />
-          </PromptAccordionPanel>
-        )}
-      </PromptAccordion>
-      <PlateAppearancePreview />
+      <PromptContextProvider value={{ contactOptions, fielderOptions, runnerOptions }}>
+        <PromptStages />
+      </PromptContextProvider>
     </Box>
   );
 };

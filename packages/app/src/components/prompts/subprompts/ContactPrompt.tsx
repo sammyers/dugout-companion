@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useCallback, useEffect } from 'react';
+import React, { FC, useMemo, useCallback } from 'react';
 
 import OptionSelector from '../OptionSelector';
 
@@ -10,13 +10,6 @@ import { ContactOptions } from 'state/prompts/types';
 
 const ContactPrompt: FC<ContactOptions> = ({ options, required }) => {
   const dispatch = useAppDispatch();
-
-  useEffect(
-    () => () => {
-      dispatch(promptActions.clearContactChoice());
-    },
-    [dispatch]
-  );
 
   const selectedOption = useAppSelector(getSelectedContactOption);
 

@@ -1,16 +1,14 @@
-import React, { FC, useMemo, useCallback, useEffect } from 'react';
-import { Box, Heading } from 'grommet';
+import React, { FC, useMemo, useEffect } from 'react';
+import { Box } from 'grommet';
 
-import FielderPrompt from './subprompts/FielderPrompt';
-import OptionSelector from './OptionSelector';
-import RunnerPrompt from './subprompts/RunnerPrompt';
+import { PromptContextProvider } from './context';
+import PromptStages from './PromptStages';
 
 import { getSelectedSacFlyRunsScored } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
-import { SacrificeFlyOptions, BasePromptProps } from 'state/prompts/types';
-import PlateAppearancePreview from './PlateAppearancePreview';
+import { SacrificeFlyOptions, BasePromptProps, PromptUiStage } from 'state/prompts/types';
 
 const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
   fielderOptions,
@@ -29,32 +27,19 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
     selectedRunsScored,
   ]);
 
-  const handleChangeRunsScored = useCallback(
-    (value: number) => {
-      dispatch(promptActions.setSacFlyRunsScoredChoice(value));
-    },
-    [dispatch]
-  );
+  useEffect(() => {
+    const stages = [PromptUiStage.SAC_FLY_RBIS, PromptUiStage.CONTACT];
+    if (runnerOptions) {
+      stages.push(PromptUiStage.RUNNERS);
+    }
+    dispatch(promptActions.setStages(stages));
+  }, [runnerOptions, dispatch]);
 
   return (
     <Box gap="medium" margin={{ top: 'medium' }}>
-      <Box direction="row" gap="small">
-        {runnersScoredOptions && (
-          <Box gap="xsmall" flex>
-            <Heading level={4} margin="none" alignSelf="center">
-              Runs batted in
-            </Heading>
-            <OptionSelector
-              options={runnersScoredOptions}
-              value={selectedRunsScored}
-              onChange={handleChangeRunsScored}
-            />
-          </Box>
-        )}
-        {fielderOptions && <FielderPrompt {...fielderOptions} />}
-      </Box>
-      {runnerOptions && <RunnerPrompt {...runnerOptions} />}
-      <PlateAppearancePreview />
+      <PromptContextProvider value={{ runnersScoredOptions, fielderOptions, runnerOptions }}>
+        <PromptStages />
+      </PromptContextProvider>
     </Box>
   );
 };

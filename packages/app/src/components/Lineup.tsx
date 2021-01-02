@@ -15,7 +15,12 @@ import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
 const NEW_PLAYER_ID = 'new-player';
 
-const Lineup = ({ teamRole }: { teamRole: TeamRole }) => {
+interface Props {
+  teamRole: TeamRole;
+  editable: boolean;
+}
+
+const Lineup = ({ teamRole, editable }: Props) => {
   const dispatch = useAppDispatch();
 
   const players = useAppSelector(state => getLineup(state, teamRole));
@@ -93,7 +98,10 @@ const Lineup = ({ teamRole }: { teamRole: TeamRole }) => {
             </Box>
           ))}
         </Box>
-        <Droppable droppableId={teamRole === TeamRole.AWAY ? 'AWAY' : 'HOME'}>
+        <Droppable
+          isDropDisabled={!editable}
+          droppableId={teamRole === TeamRole.AWAY ? 'AWAY' : 'HOME'}
+        >
           {({ innerRef, droppableProps, placeholder }) => (
             <Box ref={innerRef} {...droppableProps} flex>
               {players.map(({ playerId, position }, index) => (
@@ -103,6 +111,7 @@ const Lineup = ({ teamRole }: { teamRole: TeamRole }) => {
                   position={position}
                   index={index}
                   team={teamRole}
+                  editable={editable}
                 />
               ))}
               {placeholder}

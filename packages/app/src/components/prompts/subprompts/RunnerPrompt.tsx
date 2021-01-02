@@ -1,70 +1,123 @@
-import React, { FC, useMemo, useCallback, useEffect } from 'react';
-import { Box, Text } from 'grommet';
+import React, { useEffect, useCallback, FC } from 'react';
+import { Box, Button, Text } from 'grommet';
+import _ from 'lodash';
 import { useDispatch } from 'react-redux';
 
-import OptionSelector from '../OptionSelector';
-
 import { getShortPlayerName } from 'state/players/selectors';
-import { getSelectedRunnerOption } from 'state/prompts/selectors';
+import {
+  getGroupedRunnerOptions,
+  getOtherPromptBaserunners,
+  getSelectedRunnerOption,
+} from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
-import { useAppSelector } from 'utils/hooks';
-import { getRunnerOptionLabel } from 'utils/labels';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { RunnerOptions } from 'state/prompts/types';
+import { BaseType } from '@dugout-companion/shared';
+import { BasepathOutcome, RunnerOptions } from 'state/prompts/types';
 
-const RunnerPrompt: FC<RunnerOptions> = ({
-  runnerId,
-  options,
-  defaultOption,
-  getTrailingRunnerOptions,
-}) => {
-  const dispatch = useDispatch();
+const getOptionLayoutProperties = (base: BaseType | null) => {
+  switch (base) {
+    case BaseType.FIRST:
+      return { top: '50%', right: 0, transform: 'translate(50%, -50%)' };
+    case BaseType.SECOND:
+      return { top: 0, left: '50%', transform: 'translate(-50%, -100%)' };
+    case BaseType.THIRD:
+      return { top: '50%', left: 0, transform: 'translate(-35%, -50%)' };
+    case null:
+      return { bottom: 0, left: '50%', transform: 'translate(-50%, 90%)' };
+  }
+};
 
-  useEffect(() => {
-    dispatch(promptActions.setRunnerChoice({ runnerId, option: options[defaultOption] }));
-    return () => {
-      dispatch(promptActions.clearRunnerChoice(runnerId));
-    };
-  }, [dispatch, runnerId, options, defaultOption]);
+interface RunnerOptionGroupProps {
+  runnerId: string;
+  base: BaseType | null;
+  options: BasepathOutcome[];
+}
 
-  const selectedOption = useAppSelector(state => getSelectedRunnerOption(state, runnerId));
-  const runnerName = useAppSelector(state => getShortPlayerName(state, runnerId));
+const RunnerOptionGroup: FC<RunnerOptionGroupProps> = ({ runnerId, base, options }) => {
+  const dispatch = useAppDispatch();
 
-  const formattedOptions = useMemo(
-    () =>
-      options.map(option => ({
-        label: getRunnerOptionLabel(option),
-        value: option.id,
-        negative: option.attemptedAdvance && !option.successfulAdvance,
-      })),
-    [options]
-  );
+  const selected = useAppSelector(getSelectedRunnerOption);
 
-  const trailingRunnerOptions = useMemo(
-    () => selectedOption && getTrailingRunnerOptions?.(selectedOption),
-    [selectedOption, getTrailingRunnerOptions]
-  );
-
-  const handleChange = useCallback(
-    (value: number) =>
-      dispatch(promptActions.setRunnerChoice({ runnerId, option: options[value] })),
-    [dispatch, runnerId, options]
+  const handleSelect = useCallback(
+    (id: number) => () => {
+      dispatch(promptActions.setRunnerChoice({ runnerId, option: id }));
+    },
+    [dispatch, runnerId]
   );
 
   return (
-    <Box gap="small">
-      <Box direction="row" gap="small">
-        <Text alignSelf="center" style={{ whiteSpace: 'nowrap' }}>
-          {runnerName}
-        </Text>
-        <OptionSelector
-          flex
-          options={formattedOptions}
-          value={selectedOption?.id}
-          onChange={handleChange}
+    <Box
+      style={{ position: 'absolute', ...getOptionLayoutProperties(base) }}
+      direction={base && base !== BaseType.SECOND ? 'column' : 'row'}
+      gap="xsmall"
+    >
+      {options.map(option => (
+        <Button
+          key={option.id}
+          primary={selected?.id === option.id}
+          onClick={handleSelect(option.id)}
+          style={selected?.id !== option.id ? { background: 'white' } : undefined}
+          {...(option.attemptedAdvance
+            ? {
+                label: option.successfulAdvance ? (option.endBase ? 'Safe' : 'Scored') : 'Out',
+                color: option.successfulAdvance ? 'status-ok' : 'status-critical',
+              }
+            : {
+                label: 'Held',
+              })}
         />
-      </Box>
-      {trailingRunnerOptions && <RunnerPrompt {...trailingRunnerOptions} />}
+      ))}
+    </Box>
+  );
+};
+
+const getRunnerNameLayoutProperties = (base: BaseType) => {
+  switch (base) {
+    case BaseType.FIRST:
+      return { top: '52%', right: '31.5%', transform: 'translate(50%, -50%)' };
+    case BaseType.SECOND:
+      return { top: '26%', left: '50%', transform: 'translate(-50%, -50%)' };
+    case BaseType.THIRD:
+      return { top: '52%', left: '31.5%', transform: 'translate(-50%, -50%)' };
+  }
+};
+
+interface SmallRunnerLabelProps {
+  runnerId: string;
+  base: BaseType;
+}
+
+const SmallRunnerLabel: FC<SmallRunnerLabelProps> = ({ runnerId, base }) => {
+  const runnerName = useAppSelector(state => getShortPlayerName(state, runnerId));
+
+  return (
+    <Box style={{ position: 'absolute', ...getRunnerNameLayoutProperties(base) }}>
+      <Text size="small" color="white" textAlign="center" style={{ width: 'min-content' }}>
+        {runnerName}
+      </Text>
+    </Box>
+  );
+};
+
+const RunnerPrompt: FC<RunnerOptions> = ({ runnerId }) => {
+  const dispatch = useDispatch();
+
+  const options = useAppSelector(getGroupedRunnerOptions);
+  const runners = useAppSelector(getOtherPromptBaserunners);
+
+  useEffect(() => {
+    dispatch(promptActions.setSelectedRunner(runnerId));
+  }, [runnerId, dispatch]);
+
+  return (
+    <Box fill style={{ position: 'relative' }}>
+      {options.map(({ base, options }) => (
+        <RunnerOptionGroup key={String(base)} runnerId={runnerId} base={base} options={options} />
+      ))}
+      {_.map(runners, (base, runnerId) => (
+        <SmallRunnerLabel key={runnerId} runnerId={runnerId} base={base} />
+      ))}
     </Box>
   );
 };

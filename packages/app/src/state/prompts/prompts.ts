@@ -26,7 +26,12 @@ import {
   getPositionAbbreviation,
 } from 'utils/labels';
 
-import { PlateAppearanceDetailOptions, RunnerOptions, BasepathOutcome } from './types';
+import {
+  PlateAppearanceDetailOptions,
+  RunnerOptions,
+  BasepathOutcome,
+  RunnerPromptState,
+} from './types';
 
 const getTrailingRunner = (runners: BaseRunnerMap, leadBase: BaseType | null) => {
   if (leadBase === null) {
@@ -387,11 +392,12 @@ export const getPlateAppearanceDetailPrompt = (
 };
 
 export const getExtraRunnerMovementForPlateAppearance = (
-  allRunnerChoices: Record<string, BasepathOutcome>
+  allRunnerChoices: Record<string, RunnerPromptState>
 ) => {
   const movements: BasepathMovement[] = [];
 
-  _.forEach(allRunnerChoices, (outcome, runnerId) => {
+  _.forEach(allRunnerChoices, ({ options, selected }, runnerId) => {
+    const outcome = options[selected];
     if (outcome.attemptedAdvance) {
       movements.push({ runnerId, endBase: outcome.endBase, wasSafe: outcome.successfulAdvance });
     }

@@ -10,6 +10,7 @@ import {
   applyPlateAppearance,
   cleanUpAfterPlateAppearance,
   changePlayerPosition,
+  applyMidGameLineupChange,
 } from './stateHelpers';
 import { getAvailablePositionsForTeam, getCurrentLineup, getTeamWithRole } from './utils';
 
@@ -46,6 +47,11 @@ const initialState: AppGameState = {
   upNextHalfInning: '',
   nextLineupId: 1,
   lineups: null,
+  editingLineups: false,
+  lineupDrafts: {
+    [TeamRole.AWAY]: [],
+    [TeamRole.HOME]: [],
+  },
 };
 
 const { actions: gameActions, reducer } = createSlice({
@@ -156,6 +162,26 @@ const { actions: gameActions, reducer } = createSlice({
         cleanUpAfterPlateAppearance(state);
       }
     },
+    editLineup(state) {
+      state.editingLineups = true;
+      state.teams.forEach(team => {
+        state.lineupDrafts[team.role] = getCurrentLineup(team);
+      });
+    },
+    cancelEditingLineup(state) {
+      state.editingLineups = false;
+      state.lineupDrafts = initialState.lineupDrafts;
+    },
+    saveLineup(state) {
+      state.editingLineups = false;
+      state.teams.forEach(team => {
+        const editedLineup = state.lineupDrafts[team.role];
+        if (!_.isEqual(getCurrentLineup(team), editedLineup)) {
+          applyMidGameLineupChange(state, team.role, editedLineup);
+        }
+      });
+      state.lineupDrafts = initialState.lineupDrafts;
+    },
     changeGameLength(state, { payload }: PayloadAction<number>) {
       state.gameLength = payload;
     },
@@ -225,6 +251,7 @@ const lineupEditActions = [
   gameActions.movePlayer,
   gameActions.removePlayerFromGame,
   gameActions.changePlayerPosition,
+  gameActions.saveLineup,
 ].map(action => action.type);
 export default undoable(reducer, {
   filter: (action, state) => {

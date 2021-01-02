@@ -19,8 +19,8 @@ import {
 } from 'state/game/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { ReactComponent as BaseIcon } from 'icons/base.svg';
-import { ReactComponent as HomeIcon } from 'icons/home.svg';
+import { ReactComponent as BaseIcon } from 'graphics/base.svg';
+import { ReactComponent as HomeIcon } from 'graphics/home.svg';
 import PlayNotification from './PlayNotification';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (

@@ -74,7 +74,9 @@ const OptionSelector = <T extends any>({
             justify="center"
             border={index > 0 ? { side: 'left', size: '1px' } : undefined}
           >
-            <Text textAlign="center">{label as ReactNode}</Text>
+            <Text size="small" textAlign="center">
+              {label as ReactNode}
+            </Text>
           </Box>
         );
       })}

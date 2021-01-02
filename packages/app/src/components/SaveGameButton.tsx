@@ -9,14 +9,20 @@ import { getGameEventRecordsForMutation, getGameForMutation } from 'state/game/s
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { gameActions } from 'state/game/slice';
 import { CreatedLineups } from 'state/game/types';
+import { useState } from 'react';
+import { StatusGood } from 'grommet-icons';
 
 const SaveGameButton = () => {
   const dispatch = useAppDispatch();
 
   const game = useAppSelector(getGameForMutation);
 
+  const [success, setSuccess] = useState(false);
+
   const [createGame, { loading: createGameLoading }] = useCreateEmptyGameMutation();
-  const [fillInEvents, { loading: fillInEventsLoading }] = useFillInGameEventsMutation();
+  const [fillInEvents, { loading: fillInEventsLoading }] = useFillInGameEventsMutation({
+    onCompleted: () => setSuccess(true),
+  });
 
   const handleClick = useCallback(async () => {
     const { data } = await createGame({ variables: { input: { game } } });
@@ -41,7 +47,14 @@ const SaveGameButton = () => {
     <Button
       color="light-2"
       plain={false}
-      icon={createGameLoading || fillInEventsLoading ? <Spinner /> : undefined}
+      disabled={success}
+      icon={
+        success ? (
+          <StatusGood />
+        ) : createGameLoading || fillInEventsLoading ? (
+          <Spinner />
+        ) : undefined
+      }
       label="Save Game"
       onClick={handleClick}
     />
