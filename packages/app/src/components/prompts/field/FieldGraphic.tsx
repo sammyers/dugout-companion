@@ -81,7 +81,7 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
       }}
     >
       <filter id="blur">
-        <feGaussianBlur stdDeviation={'0'} />
+        <feGaussianBlur stdDeviation={runnerMode ? '2' : '0'} />
       </filter>
       <animated.g transform={fieldSpring.transform}>
         <g filter="url(#blur)">

@@ -1,7 +1,7 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { getSelectedRunnerOption } from 'state/prompts/selectors';
+import { createSelectedRunnerOptionSelector } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector } from 'utils/hooks';
 
@@ -22,12 +22,26 @@ const RunnerPromptManager: FC<RunnerOptions> = ({
     };
   }, [dispatch, runnerId, options, defaultOption]);
 
-  const selectedOption = useAppSelector(getSelectedRunnerOption);
+  const selectedOptionSelector = useMemo(() => createSelectedRunnerOptionSelector(runnerId), [
+    runnerId,
+  ]);
+  const selectedOption = useAppSelector(selectedOptionSelector);
 
   const trailingRunnerOptions = useMemo(
     () => selectedOption && getTrailingRunnerOptions?.(selectedOption),
     [selectedOption, getTrailingRunnerOptions]
   );
+
+  useEffect(() => {
+    if (trailingRunnerOptions) {
+      dispatch(
+        promptActions.linkNextRunner({
+          current: trailingRunnerOptions.runnerId,
+          previous: runnerId,
+        })
+      );
+    }
+  }, [runnerId, trailingRunnerOptions, dispatch]);
 
   if (trailingRunnerOptions) {
     return <RunnerPromptManager {...trailingRunnerOptions} />;

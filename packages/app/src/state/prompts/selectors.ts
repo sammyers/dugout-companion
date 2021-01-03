@@ -45,6 +45,7 @@ export const canMoveToPreviousStage = createSelector(
 );
 
 export const getSelectedRunner = (state: AppState) => state.prompts.selectedRunner;
+
 const getAllRunnerPrompts = (state: AppState) => state.prompts.runnerPrompts;
 const getSelectedRunnerPromptState = createSelector(
   getAllRunnerPrompts,
@@ -52,16 +53,38 @@ const getSelectedRunnerPromptState = createSelector(
   (prompts, runnerId) => (runnerId ? prompts[runnerId] : undefined)
 );
 
+const getForwardRunnerAdjacencies = (state: AppState) => state.prompts.runnerAdjacencies.forward;
+const getBackwardRunnerAdjacencies = (state: AppState) => state.prompts.runnerAdjacencies.backward;
+export const canSelectNextRunner = createSelector(
+  getSelectedRunner,
+  getForwardRunnerAdjacencies,
+  (runnerId, adjacencies) => !!runnerId && runnerId in adjacencies
+);
+export const canSelectPreviousRunner = createSelector(
+  getSelectedRunner,
+  getBackwardRunnerAdjacencies,
+  (runnerId, adjacencies) => !!runnerId && runnerId in adjacencies
+);
+
 export const getRunnerOptions = createSelector(
   getSelectedRunnerPromptState,
   promptState => promptState?.options
 );
-export const getSelectedRunnerOption = createSelector(
+export const getCurrentSelectedRunnerOption = createSelector(
   getSelectedRunnerPromptState,
   getRunnerOptions,
   (promptState, options) => promptState && options![promptState.selected]
 );
-export const getSelectedBase = createSelector(getSelectedRunnerOption, option => option?.endBase);
+export const getSelectedBase = createSelector(
+  getCurrentSelectedRunnerOption,
+  option => option?.endBase
+);
+
+export const createSelectedRunnerOptionSelector = (runnerId: string) =>
+  createSelector(getAllRunnerPrompts, prompts => {
+    const prompt = prompts[runnerId];
+    return prompt?.options?.[prompt?.selected];
+  });
 
 export const getGroupedRunnerOptions = createSelector(getRunnerOptions, options => {
   if (!options) return [];

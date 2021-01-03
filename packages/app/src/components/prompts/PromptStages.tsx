@@ -1,7 +1,7 @@
 import React, { useMemo, ReactNode, useCallback } from 'react';
 import Slider from '@farbenmeer/react-spring-slider';
 import { Box, Button, Text } from 'grommet';
-import { FormNextLink, FormPreviousLink } from 'grommet-icons';
+import { Next, Previous } from 'grommet-icons';
 
 import InteractableField from './panels/InteractableField';
 import OutOnPlayPrompt from './panels/OutOnPlayPrompt';
@@ -34,6 +34,19 @@ const PromptStages = () => {
   const handleClickNext = useCallback(() => {
     dispatch(promptActions.goToNextStage());
   }, [dispatch]);
+
+  const stageHeading = useMemo(() => {
+    switch (currentStage) {
+      case PromptUiStage.CONTACT:
+        return 'Select contact details:';
+      case PromptUiStage.RUNNERS:
+        return 'Select final runner positions:';
+      case PromptUiStage.OUTS_ON_PLAY:
+        return 'Select runners out on the play:';
+      case PromptUiStage.SAC_FLY_RBIS:
+        return 'Select number of runs scored:';
+    }
+  }, [currentStage]);
 
   const [sliderPanes, activeIndex] = useMemo(() => {
     const panes: ReactNode[] = [];
@@ -93,21 +106,28 @@ const PromptStages = () => {
   }, [allStages, currentStage]);
 
   return (
-    <Box height="medium" width="large">
-      <Box direction="row" justify="between" align="center" background="brand" pad="small">
-        <Button
-          plain
-          icon={<FormPreviousLink size="medium" />}
-          disabled={!previousStageAvailable}
-          onClick={handleClickPrevious}
-        />
-        <Text>Current Stage</Text>
-        <Button
-          plain
-          icon={<FormNextLink size="medium" />}
-          disabled={!nextStageAvailable}
-          onClick={handleClickNext}
-        />
+    <Box height="400px" width="large">
+      <Box
+        direction="row"
+        justify="between"
+        align="center"
+        background="brand"
+        pad="small"
+        round="4px"
+      >
+        <Box flex align="start">
+          {previousStageAvailable && (
+            <Button plain icon={<Previous size="medium" />} onClick={handleClickPrevious} />
+          )}
+        </Box>
+        <Text size="large" weight="bold">
+          {stageHeading}
+        </Text>
+        <Box flex align="end">
+          {nextStageAvailable && (
+            <Button plain icon={<Next size="medium" />} onClick={handleClickNext} />
+          )}
+        </Box>
       </Box>
       <Slider activeIndex={activeIndex}>{sliderPanes}</Slider>
       <PromptStateManager />

@@ -20,6 +20,10 @@ export interface PromptState {
   stages: PromptUiStage[];
   currentStage?: PromptUiStage;
   selectedRunner?: string;
+  runnerAdjacencies: {
+    forward: Record<string, string>;
+    backward: Record<string, string>;
+  };
   runnerPrompts: Record<string, RunnerPromptState>;
   contactChoice?: ContactOption;
   fielderChoice?: FielderOption;
@@ -29,6 +33,10 @@ export interface PromptState {
 
 const initialState: PromptState = {
   stages: [],
+  runnerAdjacencies: {
+    forward: {},
+    backward: {},
+  },
   runnerPrompts: {},
   outOnPlayChoices: [],
   sacFlyRunsScoredChoice: 1,
@@ -69,8 +77,28 @@ const { reducer, actions } = createSlice({
         }
       }
     },
+    linkNextRunner(state, { payload }: PayloadAction<{ current: string; previous: string }>) {
+      state.runnerAdjacencies.forward[payload.previous] = payload.current;
+      state.runnerAdjacencies.backward[payload.current] = payload.previous;
+    },
     setSelectedRunner(state, { payload }: PayloadAction<string>) {
       state.selectedRunner = payload;
+    },
+    selectNextRunner(state) {
+      if (state.selectedRunner) {
+        const nextRunner = state.runnerAdjacencies.forward[state.selectedRunner];
+        if (nextRunner) {
+          state.selectedRunner = nextRunner;
+        }
+      }
+    },
+    selectPreviousRunner(state) {
+      if (state.selectedRunner) {
+        const previousRunner = state.runnerAdjacencies.backward[state.selectedRunner];
+        if (previousRunner) {
+          state.selectedRunner = previousRunner;
+        }
+      }
     },
     setRunnerOptions(state, { payload }: PayloadAction<RunnerOptions>) {
       state.runnerPrompts[payload.runnerId] = {
@@ -83,6 +111,12 @@ const { reducer, actions } = createSlice({
     },
     clearRunnerChoice(state, { payload }: PayloadAction<string>) {
       delete state.runnerPrompts[payload];
+      const nextRunner = state.runnerAdjacencies.forward[payload];
+      const previousRunner = state.runnerAdjacencies.backward[payload];
+      delete state.runnerAdjacencies.forward[previousRunner];
+      delete state.runnerAdjacencies.forward[payload];
+      delete state.runnerAdjacencies.backward[nextRunner];
+      delete state.runnerAdjacencies.backward[payload];
     },
     setContactChoice(state, { payload }: PayloadAction<ContactOption>) {
       state.contactChoice = payload;

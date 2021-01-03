@@ -5,9 +5,12 @@ import { useDispatch } from 'react-redux';
 
 import { getShortPlayerName } from 'state/players/selectors';
 import {
+  canSelectNextRunner,
+  canSelectPreviousRunner,
   getGroupedRunnerOptions,
   getOtherPromptBaserunners,
-  getSelectedRunnerOption,
+  getSelectedRunner,
+  getCurrentSelectedRunnerOption,
 } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
@@ -18,13 +21,13 @@ import { BasepathOutcome, RunnerOptions } from 'state/prompts/types';
 const getOptionLayoutProperties = (base: BaseType | null) => {
   switch (base) {
     case BaseType.FIRST:
-      return { top: '50%', right: 0, transform: 'translate(50%, -50%)' };
+      return { top: '50%', right: 0, transform: 'translate(35%, -50%)' };
     case BaseType.SECOND:
       return { top: 0, left: '50%', transform: 'translate(-50%, -100%)' };
     case BaseType.THIRD:
       return { top: '50%', left: 0, transform: 'translate(-35%, -50%)' };
     case null:
-      return { bottom: 0, left: '50%', transform: 'translate(-50%, 90%)' };
+      return { bottom: 0, left: '50%', transform: 'translate(-50%, 100%)' };
   }
 };
 
@@ -37,7 +40,7 @@ interface RunnerOptionGroupProps {
 const RunnerOptionGroup: FC<RunnerOptionGroupProps> = ({ runnerId, base, options }) => {
   const dispatch = useAppDispatch();
 
-  const selected = useAppSelector(getSelectedRunnerOption);
+  const selected = useAppSelector(getCurrentSelectedRunnerOption);
 
   const handleSelect = useCallback(
     (id: number) => () => {
@@ -105,19 +108,56 @@ const RunnerPrompt: FC<RunnerOptions> = ({ runnerId }) => {
 
   const options = useAppSelector(getGroupedRunnerOptions);
   const runners = useAppSelector(getOtherPromptBaserunners);
+  const selectedRunner = useAppSelector(getSelectedRunner);
+  const selectedRunnerName = useAppSelector(state =>
+    getShortPlayerName(state, selectedRunner ?? '')
+  );
+  const showNext = useAppSelector(canSelectNextRunner);
+  const showPrevious = useAppSelector(canSelectPreviousRunner);
+
+  const selectNext = useCallback(() => {
+    dispatch(promptActions.selectNextRunner());
+  }, [dispatch]);
+
+  const selectPrevious = useCallback(() => {
+    dispatch(promptActions.selectPreviousRunner());
+  }, [dispatch]);
 
   useEffect(() => {
+    // set initial runner
     dispatch(promptActions.setSelectedRunner(runnerId));
   }, [runnerId, dispatch]);
 
   return (
     <Box fill style={{ position: 'relative' }}>
-      {options.map(({ base, options }) => (
-        <RunnerOptionGroup key={String(base)} runnerId={runnerId} base={base} options={options} />
-      ))}
+      {selectedRunner &&
+        options.map(({ base, options }) => (
+          <RunnerOptionGroup
+            key={String(base)}
+            runnerId={selectedRunner}
+            base={base}
+            options={options}
+          />
+        ))}
       {_.map(runners, (base, runnerId) => (
         <SmallRunnerLabel key={runnerId} runnerId={runnerId} base={base} />
       ))}
+      <Box
+        pad="small"
+        gap="xsmall"
+        background="white"
+        border
+        round="8px"
+        align="center"
+        style={{ position: 'absolute', top: 0, right: 0, transform: 'translate(50%, -30%)' }}
+      >
+        <Text size="small">Selected runner:</Text>
+        <Text weight="bold">{selectedRunnerName}</Text>
+        <Box direction="row" gap="xsmall" margin={{ top: 'xsmall' }}>
+          {showPrevious && <Button label="Previous Runner" onClick={selectPrevious} />}
+          {showNext && <Button label="Next Runner" onClick={selectNext} />}
+        </Box>
+      </Box>
     </Box>
   );
 };

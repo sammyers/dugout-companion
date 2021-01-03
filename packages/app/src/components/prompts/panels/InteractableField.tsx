@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC } from 'react';
-import { Box, Stack } from 'grommet';
+import { Box, Collapsible, Stack } from 'grommet';
 import { shallowEqual } from 'react-redux';
-import { animated, useTransition } from 'react-spring';
+import { animated, useSpring, useTransition } from 'react-spring';
 
 import FieldGraphic from '../field/FieldGraphic';
 import ContactPrompt from '../subprompts/ContactPrompt';
@@ -32,7 +32,7 @@ const Overlay: FC<Props & { style: CSSProperties }> = ({ mode, style }) => {
 };
 
 const InteractableField: FC<Props> = ({ mode }) => {
-  const { contactOptions } = usePromptContext();
+  const { contactOptions, fielderOptions } = usePromptContext();
   // NOTE: this is causing unnecessary re-renders
   const runners = useAppSelector(getRunnerPromptBases, shallowEqual);
   const selectedBase = useAppSelector(getSelectedBase);
@@ -47,32 +47,40 @@ const InteractableField: FC<Props> = ({ mode }) => {
     }
   );
 
-  const showContactOptions = mode === 'fielders' && !!contactOptions;
+  const marginSpring = useSpring({
+    marginTop: mode === 'runners' ? '44px' : '8px',
+  });
 
   return (
     <Box>
-      {showContactOptions && <ContactPrompt {...contactOptions!} />}
-      <Box
-        alignSelf="center"
-        flex={{ grow: 0, shrink: 0 }}
-        basis="auto"
-        height="medium"
-        width="medium"
-        margin={{ top: 'small' }}
-      >
-        <Stack>
-          <Box>
-            <FieldGraphic
-              runnerMode={mode === 'runners'}
-              selectedBase={selectedBase}
-              runners={runners}
-            />
-          </Box>
-          {transitions.map(({ item, key, props }) => (
-            <Overlay key={key} mode={item} style={props} />
-          ))}
-        </Stack>
-      </Box>
+      <Collapsible open={mode === 'fielders' && !!contactOptions}>
+        <Box margin={{ top: 'small' }}>
+          {contactOptions && <ContactPrompt {...contactOptions!} />}
+        </Box>
+      </Collapsible>
+      <Collapsible open={!!fielderOptions || mode === 'runners'}>
+        <AnimatedBox
+          alignSelf="center"
+          flex={{ grow: 0, shrink: 0 }}
+          basis="auto"
+          height="medium"
+          width="medium"
+          style={{ marginTop: marginSpring.marginTop }}
+        >
+          <Stack>
+            <Box>
+              <FieldGraphic
+                runnerMode={mode === 'runners'}
+                selectedBase={selectedBase}
+                runners={runners}
+              />
+            </Box>
+            {transitions.map(({ item, key, props }) => (
+              <Overlay key={key} mode={item} style={props} />
+            ))}
+          </Stack>
+        </AnimatedBox>
+      </Collapsible>
     </Box>
   );
 };

@@ -36,7 +36,7 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
   }, [runnerOptions, dispatch]);
 
   return (
-    <Box gap="medium" margin={{ top: 'medium' }}>
+    <Box gap="medium">
       <PromptContextProvider value={{ runnersScoredOptions, fielderOptions, runnerOptions }}>
         <PromptStages />
       </PromptContextProvider>

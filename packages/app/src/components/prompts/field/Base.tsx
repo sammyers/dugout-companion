@@ -4,7 +4,7 @@ import React, { FC } from 'react';
 import BaseAnimation from './BaseAnimation';
 
 import theme from 'theme';
-import { getSelectedRunnerOption } from 'state/prompts/selectors';
+import { getCurrentSelectedRunnerOption } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';
 
 import { BasepathOutcome } from 'state/prompts/types';
@@ -27,7 +27,7 @@ const getAnimationColor = (outcome?: BasepathOutcome) => {
 };
 
 const Base: FC<Props> = ({ base, transform, stroke, strokeWidth, occupied, active }) => {
-  const selected = useAppSelector(getSelectedRunnerOption);
+  const selected = useAppSelector(getCurrentSelectedRunnerOption);
 
   return (
     <g transform={transform}>
