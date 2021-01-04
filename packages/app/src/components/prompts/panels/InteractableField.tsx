@@ -6,7 +6,7 @@ import { animated, useSpring, useTransition } from 'react-spring';
 import FieldGraphic from '../field/FieldGraphic';
 import ContactPrompt from '../subprompts/ContactPrompt';
 import FielderPrompt from '../subprompts/FielderPrompt';
-import RunnerPrompt from '../subprompts/RunnerPrompt';
+import RunnerPrompt from '../runners/RunnerPrompt';
 
 import { getRunnerPromptBases, getSelectedBase } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';

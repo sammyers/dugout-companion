@@ -32,7 +32,7 @@ const Base: FC<Props> = ({ base, transform, stroke, strokeWidth, occupied, activ
   return (
     <g transform={transform}>
       <path
-        fill={occupied ? brandColor : 'white'}
+        fill={base && occupied ? brandColor : 'white'}
         d={
           base
             ? 'm 0,0 l 4.2499 4.2499 l -4.2499 4.2513 l -4.2513 -4.2513 l 4.2513 -4.2499 z'

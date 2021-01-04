@@ -167,3 +167,20 @@ export const getPrompt = createSelector(
   (paType, batterId, outs, runners, fourOutfielders) =>
     getPlateAppearanceDetailPrompt(paType!, batterId!, outs, runners, fourOutfielders)
 );
+
+export const getAllRunnersOut = createSelector(
+  getSelectedOutOnPlayOptions,
+  getAllRunnerChoices,
+  (outsOnPlay, runners) => {
+    const runnersThrownOut = _.keys(
+      _.pickBy(runners, ({ options, selected }) => {
+        const selectedOption = options[selected];
+        return selectedOption.attemptedAdvance && !selectedOption.successfulAdvance;
+      })
+    );
+    return [...outsOnPlay, ...runnersThrownOut];
+  }
+);
+export const getAllRunnersScored = createSelector(getPlateAppearancePreview, ({ scoredRunners }) =>
+  scoredRunners.map(runner => runner.runnerId)
+);
