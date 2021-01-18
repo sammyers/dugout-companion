@@ -14,13 +14,16 @@ import {
   getCurrentPromptStage,
   getPromptStages,
 } from 'state/prompts/selectors';
+import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { usePromptContext } from './context';
 
 import { PromptUiStage } from 'state/prompts/types';
-import { promptActions } from 'state/prompts/slice';
 
 const PromptStages = () => {
   const dispatch = useAppDispatch();
+
+  const { contactOptions, outOnPlayOptions } = usePromptContext();
 
   const currentStage = useAppSelector(getCurrentPromptStage);
   const allStages = useAppSelector(getPromptStages);
@@ -38,15 +41,22 @@ const PromptStages = () => {
   const stageHeading = useMemo(() => {
     switch (currentStage) {
       case PromptUiStage.CONTACT:
-        return 'Select contact details:';
+        if (contactOptions) {
+          return 'Select contact details:';
+        } else {
+          return 'Select which fielder made the play:';
+        }
       case PromptUiStage.RUNNERS:
         return 'Select final runner positions:';
       case PromptUiStage.OUTS_ON_PLAY:
-        return 'Select runners out on the play:';
+        if (outOnPlayOptions?.multiple) {
+          return 'Select which runners were out on the play:';
+        }
+        return 'Select which runner was out on the play:';
       case PromptUiStage.SAC_FLY_RBIS:
-        return 'Select number of runs scored:';
+        return 'Select number of runs batted in:';
     }
-  }, [currentStage]);
+  }, [currentStage, contactOptions, outOnPlayOptions]);
 
   const [sliderPanes, activeIndex] = useMemo(() => {
     const panes: ReactNode[] = [];

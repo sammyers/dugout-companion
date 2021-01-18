@@ -9,7 +9,7 @@ import {
   getRunnerMap,
 } from 'state/game/selectors';
 import { applyPlateAppearance } from 'state/game/stateHelpers';
-import { runnersToMap } from 'state/game/utils';
+import { getBaseForRunner, runnersToMap } from 'state/game/utils';
 import {
   getExtraRunnerMovementForPlateAppearance,
   getPlateAppearanceDetailPrompt,
@@ -19,6 +19,8 @@ import { BaseType } from '@dugout-companion/shared';
 import { PlateAppearance } from 'state/game/types';
 import { AppState } from 'state/store';
 import { BasepathOutcome } from './types';
+import { getPlayerOptionsForSelector } from 'state/players/selectors';
+import { formatShortBaseName } from 'utils/labels';
 
 export const getPlateAppearanceType = (state: AppState) => state.prompts.plateAppearanceType;
 
@@ -184,3 +186,16 @@ export const getAllRunnersOut = createSelector(
 export const getAllRunnersScored = createSelector(getPlateAppearancePreview, ({ scoredRunners }) =>
   scoredRunners.map(runner => runner.runnerId)
 );
+
+export const getDetailedOutOnPlayOptions = (state: AppState, runnerIds: string[]) => {
+  const runnerMap = getRunnerMap(state);
+  const options = getPlayerOptionsForSelector(state, runnerIds);
+
+  return options.map(({ value, label }) => ({
+    value,
+    label,
+    extra: _.includes(runnerMap, value)
+      ? `Started at ${formatShortBaseName(getBaseForRunner(runnerMap, value))}`
+      : 'Batter',
+  }));
+};

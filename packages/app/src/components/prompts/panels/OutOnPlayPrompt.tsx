@@ -4,9 +4,8 @@ import _ from 'lodash';
 
 import OptionSelector from '../OptionSelector';
 
-import { getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
+import { getDetailedOutOnPlayOptions, getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
-import { getPlayerOptionsForSelector } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { usePromptContext } from '../context';
 
@@ -39,14 +38,15 @@ const OutOnPlayPrompt = () => {
     [dispatch]
   );
 
-  const runnerOptions = useAppSelector(state => getPlayerOptionsForSelector(state, runnerIds));
+  const runnerOptions = useAppSelector(state => getDetailedOutOnPlayOptions(state, runnerIds));
 
   if (dontShow) return null;
 
   return (
-    <Box>
+    <Box fill>
       {multiple ? (
         <OptionSelector<string>
+          vertical
           multiple
           options={runnerOptions}
           value={selectedOptions}
@@ -54,6 +54,7 @@ const OutOnPlayPrompt = () => {
         />
       ) : (
         <OptionSelector
+          vertical
           options={runnerOptions}
           value={selectedOptions[0]}
           onChange={handleChangeSingle}

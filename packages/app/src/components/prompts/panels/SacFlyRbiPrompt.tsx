@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Box, Heading } from 'grommet';
+import { Box } from 'grommet';
 
 import OptionSelector from '../OptionSelector';
 
@@ -25,10 +25,7 @@ const SacFlyRbiPrompt = () => {
   if (!runnersScoredOptions) return null;
 
   return (
-    <Box gap="xsmall" flex>
-      <Heading level={4} margin="none" alignSelf="center">
-        Runs batted in
-      </Heading>
+    <Box flex gap="xsmall" margin="small">
       <OptionSelector
         options={runnersScoredOptions}
         value={selectedRunsScored}

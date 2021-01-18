@@ -70,13 +70,7 @@ const EventDetailPrompt = () => {
             {getPlateAppearanceLabel(paType)} by {batter}
           </Heading>
           <Box flex align="end">
-            {canSubmit && (
-              <Button
-                color="status-ok"
-                label={`Record ${getPlateAppearanceLabel(paType)}`}
-                onClick={handleSubmit}
-              />
-            )}
+            {canSubmit && <Button color="status-ok" label="Submit" onClick={handleSubmit} />}
           </Box>
         </Box>
         {promptView}
