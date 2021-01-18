@@ -8,18 +8,12 @@ import { getSelectedContactOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { OutOptions, BasePromptProps, PromptUiStage } from 'state/prompts/types';
+import { OutOptions, PromptUiStage } from 'state/prompts/types';
 
-const OutPrompt: FC<OutOptions & BasePromptProps> = ({
-  contactOptions,
-  getNextOptions,
-  setCanSubmit,
-}) => {
+const OutPrompt: FC<OutOptions> = ({ contactOptions, getNextOptions }) => {
   const dispatch = useAppDispatch();
 
   const selectedContactType = useAppSelector(getSelectedContactOption);
-
-  useEffect(() => setCanSubmit(!!selectedContactType), [selectedContactType, setCanSubmit]);
 
   const { fielderOptions, runnerOptions } = useMemo(
     () => (selectedContactType && getNextOptions(selectedContactType.contactType)) ?? {},
@@ -31,8 +25,11 @@ const OutPrompt: FC<OutOptions & BasePromptProps> = ({
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
     }
+    if (!!selectedContactType) {
+      stages.push(PromptUiStage.SUMMARY);
+    }
     dispatch(promptActions.setStages(stages));
-  }, [runnerOptions, dispatch]);
+  }, [runnerOptions, selectedContactType, dispatch]);
 
   return (
     <Box gap="medium">

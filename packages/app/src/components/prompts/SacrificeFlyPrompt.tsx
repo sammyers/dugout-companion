@@ -8,19 +8,16 @@ import { getSelectedSacFlyRunsScored } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
-import { SacrificeFlyOptions, BasePromptProps, PromptUiStage } from 'state/prompts/types';
+import { SacrificeFlyOptions, PromptUiStage } from 'state/prompts/types';
 
-const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
+const SacrificeFlyPrompt: FC<SacrificeFlyOptions> = ({
   fielderOptions,
   runnersScoredOptions,
   getNextOptions,
-  setCanSubmit,
 }) => {
   const dispatch = useAppDispatch();
 
   const selectedRunsScored = useAppSelector(getSelectedSacFlyRunsScored);
-
-  useEffect(() => setCanSubmit(true), [setCanSubmit]);
 
   const runnerOptions = useMemo(() => getNextOptions?.(selectedRunsScored), [
     getNextOptions,
@@ -32,6 +29,7 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions & BasePromptProps> = ({
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
     }
+    stages.push(PromptUiStage.SUMMARY);
     dispatch(promptActions.setStages(stages));
   }, [runnerOptions, dispatch]);
 

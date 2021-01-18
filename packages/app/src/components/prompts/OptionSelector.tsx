@@ -71,14 +71,14 @@ const OptionSelector = <T extends any>({
           label = value = option;
         }
 
+        const key = `${index}_of_${options.length}`;
         const selected = isSelected(value);
         const handleClick = handleClickOption(value);
 
         if (vertical) {
           return (
-            <Box style={{ position: 'relative' }}>
+            <Box key={key} style={{ position: 'relative' }}>
               <Button
-                key={`${index}_of_${options.length}`}
                 size="large"
                 label={label as ReactNode}
                 onClick={handleClick}
@@ -103,6 +103,7 @@ const OptionSelector = <T extends any>({
 
         return (
           <Box
+            key={key}
             flex
             width={typeof label === 'string' && label.length < 4 ? 'xxsmall' : 'xsmall'}
             background={selected ? 'brand' : undefined}

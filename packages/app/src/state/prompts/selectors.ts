@@ -22,6 +22,7 @@ import { BasepathOutcome } from './types';
 import { getPlayerOptionsForSelector } from 'state/players/selectors';
 import { formatShortBaseName } from 'utils/labels';
 
+export const getCanSubmit = (state: AppState) => state.prompts.canSubmit;
 export const getPlateAppearanceType = (state: AppState) => state.prompts.plateAppearanceType;
 
 export const getPromptStages = (state: AppState) => state.prompts.stages;

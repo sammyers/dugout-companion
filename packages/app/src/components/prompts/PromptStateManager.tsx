@@ -5,7 +5,6 @@ import RunnerPromptManager from './subprompts/RunnerPromptManager';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch } from 'utils/hooks';
 import { usePromptContext } from './context';
-import { shouldShowOOPPrompt } from './panels/OutOnPlayPrompt';
 
 const PromptStateManager = () => {
   const dispatch = useAppDispatch();
@@ -13,10 +12,10 @@ const PromptStateManager = () => {
   const { outOnPlayOptions, runnerOptions } = usePromptContext();
 
   useEffect(() => {
-    if (outOnPlayOptions && !shouldShowOOPPrompt(outOnPlayOptions)) {
+    if (outOnPlayOptions) {
       const { multiple, runnerIds } = outOnPlayOptions;
       if (multiple) {
-        dispatch(promptActions.setOutOnPlayChoices(runnerIds));
+        dispatch(promptActions.setOutOnPlayChoices(runnerIds.slice(-2)));
       } else {
         dispatch(promptActions.setOutOnPlayChoices([runnerIds[0]]));
       }

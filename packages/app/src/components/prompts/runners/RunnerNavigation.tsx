@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react';
-import { Box, Button, Stack, Text } from 'grommet';
+import { Box, Button } from 'grommet';
 import { useDispatch } from 'react-redux';
+
+import PulseButton from '../PulseButton';
 
 import { canSelectNextRunner, canSelectPreviousRunner } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
@@ -20,38 +22,22 @@ const RunnerNavigation = () => {
     dispatch(promptActions.selectPreviousRunner());
   }, [dispatch]);
 
-  const nextButtonColor = showNext ? 'neutral-3' : 'accent-4';
+  const moveToNextStage = useCallback(() => {
+    dispatch(promptActions.goToNextStage());
+  }, [dispatch]);
 
   return (
-    <Box
-      direction="row"
-      align="center"
-      gap="small"
-      pad={{ left: 'xlarge' }}
-      style={{ position: 'absolute', bottom: 0, right: 0, transform: 'translateX(50%)' }}
-    >
+    <Box direction="row" align="center" gap="small" pad={{ left: 'xlarge' }}>
       <Box width="xsmall">
         {showPrevious && (
           <Button color="light-4" size="small" label="Previous Runner" onClick={selectPrevious} />
         )}
       </Box>
-
-      <Stack>
-        <Box
-          height="xsmall"
-          width="xsmall"
-          background={nextButtonColor}
-          round="50%"
-          animation="pulse"
-        />
-        <Button onClick={showNext ? selectNext : undefined} fill>
-          <Box justify="center" align="center" round="50%" background={nextButtonColor}>
-            <Text weight="bold" textAlign="center">
-              {showNext ? 'Next Runner' : 'Done'}
-            </Text>
-          </Box>
-        </Button>
-      </Stack>
+      <PulseButton
+        label={showNext ? 'Next Runner' : 'Done'}
+        color={showNext ? 'neutral-3' : 'accent-4'}
+        onClick={showNext ? selectNext : moveToNextStage}
+      />
     </Box>
   );
 };

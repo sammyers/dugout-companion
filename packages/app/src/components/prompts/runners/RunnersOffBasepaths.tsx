@@ -25,7 +25,9 @@ const Section: FC<SectionProps> = ({ title, color, data }) => {
         {title}
       </Text>
       {data.map(runnerId => (
-        <Text size="small">{getName(runnerId)}</Text>
+        <Text key={runnerId} size="small">
+          {getName(runnerId)}
+        </Text>
       ))}
     </Box>
   );

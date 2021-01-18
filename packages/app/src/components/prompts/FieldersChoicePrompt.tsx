@@ -9,20 +9,18 @@ import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { shouldShowOOPPrompt } from './panels/OutOnPlayPrompt';
 
-import { FieldersChoiceOptions, BasePromptProps, PromptUiStage } from 'state/prompts/types';
+import { FieldersChoiceOptions, PromptUiStage } from 'state/prompts/types';
 
-const FieldersChoicePrompt: FC<FieldersChoiceOptions & BasePromptProps> = ({
+const FieldersChoicePrompt: FC<FieldersChoiceOptions> = ({
   fielderOptions,
   outOnPlayOptions,
   getNextOptions,
-  setCanSubmit,
 }) => {
   const dispatch = useAppDispatch();
 
   const [selectedOutOnPlay] = useAppSelector(getSelectedOutOnPlayOptions);
 
   const canSubmit = outOnPlayOptions.runnerIds.length > 1 ? !!selectedOutOnPlay : true;
-  useEffect(() => setCanSubmit(canSubmit), [canSubmit, setCanSubmit]);
 
   const runnerOptions = useMemo(
     () => (selectedOutOnPlay && getNextOptions?.(selectedOutOnPlay)) || undefined,
@@ -37,8 +35,11 @@ const FieldersChoicePrompt: FC<FieldersChoiceOptions & BasePromptProps> = ({
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
     }
+    if (canSubmit) {
+      stages.push(PromptUiStage.SUMMARY);
+    }
     dispatch(promptActions.setStages(stages));
-  }, [outOnPlayOptions, runnerOptions, dispatch]);
+  }, [outOnPlayOptions, runnerOptions, canSubmit, dispatch]);
 
   return (
     <Box gap="medium" margin={{ top: 'small' }}>

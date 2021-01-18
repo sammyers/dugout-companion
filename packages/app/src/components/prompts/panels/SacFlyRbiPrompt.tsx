@@ -25,8 +25,9 @@ const SacFlyRbiPrompt = () => {
   if (!runnersScoredOptions) return null;
 
   return (
-    <Box flex gap="xsmall" margin="small">
+    <Box fill flex gap="xsmall" margin="small">
       <OptionSelector
+        vertical
         options={runnersScoredOptions}
         value={selectedRunsScored}
         onChange={handleChangeRunsScored}

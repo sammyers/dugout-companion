@@ -1,4 +1,4 @@
-import React, { useEffect, ReactNode, useState, useCallback } from 'react';
+import React, { useEffect, ReactNode, useCallback } from 'react';
 import { Layer, Box, Button, Heading } from 'grommet';
 
 import HitPrompt from './HitPrompt';
@@ -15,8 +15,6 @@ import { getPlateAppearanceLabel } from 'utils/labels';
 
 const EventDetailPrompt = () => {
   const dispatch = useAppDispatch();
-
-  const [canSubmit, setCanSubmit] = useState(false);
 
   const paType = useAppSelector(getPlateAppearanceType)!;
   const prompt = useAppSelector(getPrompt);
@@ -43,19 +41,19 @@ const EventDetailPrompt = () => {
   let promptView: ReactNode;
   switch (prompt.kind) {
     case 'hit':
-      promptView = <HitPrompt {...prompt} setCanSubmit={setCanSubmit} />;
+      promptView = <HitPrompt {...prompt} />;
       break;
     case 'out':
-      promptView = <OutPrompt {...prompt} setCanSubmit={setCanSubmit} />;
+      promptView = <OutPrompt {...prompt} />;
       break;
     case 'sacrificeFly':
-      promptView = <SacrificeFlyPrompt {...prompt} setCanSubmit={setCanSubmit} />;
+      promptView = <SacrificeFlyPrompt {...prompt} />;
       break;
     case 'fieldersChoice':
-      promptView = <FieldersChoicePrompt {...prompt} setCanSubmit={setCanSubmit} />;
+      promptView = <FieldersChoicePrompt {...prompt} />;
       break;
     case 'doublePlay':
-      promptView = <DoublePlayPrompt {...prompt} setCanSubmit={setCanSubmit} />;
+      promptView = <DoublePlayPrompt {...prompt} />;
       break;
   }
 
@@ -69,9 +67,7 @@ const EventDetailPrompt = () => {
           <Heading level={3} margin="none">
             {getPlateAppearanceLabel(paType)} by {batter}
           </Heading>
-          <Box flex align="end">
-            {canSubmit && <Button color="status-ok" label="Submit" onClick={handleSubmit} />}
-          </Box>
+          <Box flex align="end" />
         </Box>
         {promptView}
       </Box>

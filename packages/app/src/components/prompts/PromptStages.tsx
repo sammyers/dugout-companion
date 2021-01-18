@@ -1,15 +1,15 @@
 import React, { useMemo, ReactNode, useCallback } from 'react';
 import Slider from '@farbenmeer/react-spring-slider';
 import { Box, Button, Text } from 'grommet';
-import { Next, Previous } from 'grommet-icons';
+import { Previous } from 'grommet-icons';
 
 import InteractableField from './panels/InteractableField';
 import OutOnPlayPrompt from './panels/OutOnPlayPrompt';
 import SacFlyRbiPrompt from './panels/SacFlyRbiPrompt';
 import PromptStateManager from './PromptStateManager';
+import PrimaryPromptNav from './PrimaryPromptNav';
 
 import {
-  canMoveToNextStage,
   canMoveToPreviousStage,
   getCurrentPromptStage,
   getPromptStages,
@@ -19,6 +19,7 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { usePromptContext } from './context';
 
 import { PromptUiStage } from 'state/prompts/types';
+import PromptSummary from './panels/PromptSummary';
 
 const PromptStages = () => {
   const dispatch = useAppDispatch();
@@ -27,15 +28,10 @@ const PromptStages = () => {
 
   const currentStage = useAppSelector(getCurrentPromptStage);
   const allStages = useAppSelector(getPromptStages);
-  const nextStageAvailable = useAppSelector(canMoveToNextStage);
   const previousStageAvailable = useAppSelector(canMoveToPreviousStage);
 
   const handleClickPrevious = useCallback(() => {
     dispatch(promptActions.goToPreviousStage());
-  }, [dispatch]);
-
-  const handleClickNext = useCallback(() => {
-    dispatch(promptActions.goToNextStage());
   }, [dispatch]);
 
   const stageHeading = useMemo(() => {
@@ -110,13 +106,17 @@ const PromptStages = () => {
             }
           }
           break;
+        case PromptUiStage.SUMMARY:
+          panes.push(<PromptSummary />);
+          updateIndex(stage);
+          break;
       }
     });
     return [panes, index];
   }, [allStages, currentStage]);
 
   return (
-    <Box height="400px" width="large">
+    <Box height="400px" width="large" style={{ position: 'relative' }}>
       <Box
         direction="row"
         justify="between"
@@ -133,13 +133,10 @@ const PromptStages = () => {
         <Text size="large" weight="bold">
           {stageHeading}
         </Text>
-        <Box flex align="end">
-          {nextStageAvailable && (
-            <Button plain icon={<Next size="medium" />} onClick={handleClickNext} />
-          )}
-        </Box>
+        <Box flex align="end" />
       </Box>
       <Slider activeIndex={activeIndex}>{sliderPanes}</Slider>
+      <PrimaryPromptNav />
       <PromptStateManager />
     </Box>
   );

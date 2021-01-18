@@ -16,6 +16,7 @@ import {
 } from './types';
 
 export interface PromptState {
+  canSubmit: boolean;
   plateAppearanceType?: PlateAppearanceType;
   stages: PromptUiStage[];
   currentStage?: PromptUiStage;
@@ -32,6 +33,7 @@ export interface PromptState {
 }
 
 const initialState: PromptState = {
+  canSubmit: false,
   stages: [],
   runnerAdjacencies: {
     forward: {},
@@ -46,6 +48,9 @@ const { reducer, actions } = createSlice({
   name: 'prompt',
   initialState,
   reducers: {
+    setCanSubmit(state, { payload }: PayloadAction<boolean>) {
+      state.canSubmit = payload;
+    },
     setPendingPlateAppearance(state, { payload }: PayloadAction<PlateAppearanceType>) {
       state.plateAppearanceType = payload;
     },
