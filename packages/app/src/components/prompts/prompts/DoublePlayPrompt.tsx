@@ -1,13 +1,13 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
 
-import { PromptContextProvider } from './context';
-import PromptStages from './PromptStages';
+import { PromptContextProvider } from '../context';
+import PromptStages from '../PromptStages';
 
 import { getSelectedOutOnPlayOptions, getSelectedContactOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import { shouldShowOOPPrompt } from './panels/OutOnPlayPrompt';
+import { shouldShowOOPPrompt } from '../panels/OutOnPlayPanel';
 
 import { DoublePlayOptions, PromptUiStage } from 'state/prompts/types';
 
@@ -28,6 +28,10 @@ const DoublePlayPrompt: FC<DoublePlayOptions> = ({ contactOptions, getNextOption
       selectedOutsOnPlay.length === (nextOptions.outOnPlayOptions.multiple ? 2 : 1));
   const canSubmit = !!selectedContactType && outsOnPlayFulfilled;
 
+  useEffect(() => {
+    dispatch(promptActions.setCanSubmit(canSubmit));
+  }, [dispatch, canSubmit]);
+
   const runnerOptions = useMemo(
     () =>
       (nextOptions &&
@@ -44,9 +48,6 @@ const DoublePlayPrompt: FC<DoublePlayOptions> = ({ contactOptions, getNextOption
     }
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
-    }
-    if (canSubmit) {
-      stages.push(PromptUiStage.SUMMARY);
     }
     dispatch(promptActions.setStages(stages));
   }, [nextOptions, runnerOptions, canSubmit, dispatch]);

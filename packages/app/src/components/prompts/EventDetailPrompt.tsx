@@ -1,11 +1,11 @@
 import React, { useEffect, ReactNode, useCallback } from 'react';
 import { Layer, Box, Button, Heading } from 'grommet';
 
-import HitPrompt from './HitPrompt';
-import OutPrompt from './OutPrompt';
-import SacrificeFlyPrompt from './SacrificeFlyPrompt';
-import FieldersChoicePrompt from './FieldersChoicePrompt';
-import DoublePlayPrompt from './DoublePlayPrompt';
+import HitPrompt from './prompts/HitPrompt';
+import OutPrompt from './prompts/OutPrompt';
+import SacrificeFlyPrompt from './prompts/SacrificeFlyPrompt';
+import FieldersChoicePrompt from './prompts/FieldersChoicePrompt';
+import DoublePlayPrompt from './prompts/DoublePlayPrompt';
 
 import { getBatterName } from 'state/game/selectors';
 import { getPrompt, getPlateAppearanceType } from 'state/prompts/selectors';

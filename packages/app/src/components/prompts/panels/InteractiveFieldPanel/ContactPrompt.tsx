@@ -1,6 +1,6 @@
 import React, { FC, useMemo, useCallback } from 'react';
 
-import OptionSelector from '../OptionSelector';
+import OptionSelector from 'components/prompts/util/OptionSelector';
 
 import { getSelectedContactOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';

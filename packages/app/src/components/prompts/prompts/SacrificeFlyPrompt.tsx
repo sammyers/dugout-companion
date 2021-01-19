@@ -1,8 +1,8 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
 
-import { PromptContextProvider } from './context';
-import PromptStages from './PromptStages';
+import { PromptContextProvider } from '../context';
+import PromptStages from '../PromptStages';
 
 import { getSelectedSacFlyRunsScored } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
@@ -25,11 +25,14 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions> = ({
   ]);
 
   useEffect(() => {
+    dispatch(promptActions.setCanSubmit(true));
+  }, [dispatch]);
+
+  useEffect(() => {
     const stages = [PromptUiStage.SAC_FLY_RBIS, PromptUiStage.CONTACT];
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
     }
-    stages.push(PromptUiStage.SUMMARY);
     dispatch(promptActions.setStages(stages));
   }, [runnerOptions, dispatch]);
 

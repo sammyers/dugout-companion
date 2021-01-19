@@ -95,7 +95,6 @@ export enum PromptUiStage {
   CONTACT,
   OUTS_ON_PLAY,
   RUNNERS,
-  SUMMARY,
 }
 
 export interface RunnerPromptState {

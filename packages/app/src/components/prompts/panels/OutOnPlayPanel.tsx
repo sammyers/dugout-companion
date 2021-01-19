@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { Box } from 'grommet';
 import _ from 'lodash';
 
-import OptionSelector from '../OptionSelector';
+import OptionSelector from '../util/OptionSelector';
 
 import { getDetailedOutOnPlayOptions, getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
@@ -14,7 +14,7 @@ import { OutOnPlayOptions } from 'state/prompts/types';
 export const shouldShowOOPPrompt = ({ multiple, runnerIds }: OutOnPlayOptions) =>
   multiple ? runnerIds.length > 2 : runnerIds.length > 1;
 
-const OutOnPlayPrompt = () => {
+const OutOnPlayPanel = () => {
   const { outOnPlayOptions } = usePromptContext();
   const { multiple, runnerIds } = outOnPlayOptions!;
 
@@ -64,4 +64,4 @@ const OutOnPlayPrompt = () => {
   );
 };
 
-export default OutOnPlayPrompt;
+export default OutOnPlayPanel;

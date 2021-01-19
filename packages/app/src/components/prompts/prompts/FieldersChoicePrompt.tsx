@@ -1,13 +1,13 @@
 import React, { FC, useMemo, useEffect } from 'react';
 import { Box } from 'grommet';
 
-import { PromptContextProvider } from './context';
-import PromptStages from './PromptStages';
+import { PromptContextProvider } from '../context';
+import PromptStages from '../PromptStages';
 
 import { getSelectedOutOnPlayOptions } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import { shouldShowOOPPrompt } from './panels/OutOnPlayPrompt';
+import { shouldShowOOPPrompt } from '../panels/OutOnPlayPanel';
 
 import { FieldersChoiceOptions, PromptUiStage } from 'state/prompts/types';
 
@@ -22,6 +22,10 @@ const FieldersChoicePrompt: FC<FieldersChoiceOptions> = ({
 
   const canSubmit = outOnPlayOptions.runnerIds.length > 1 ? !!selectedOutOnPlay : true;
 
+  useEffect(() => {
+    dispatch(promptActions.setCanSubmit(canSubmit));
+  }, [dispatch, canSubmit]);
+
   const runnerOptions = useMemo(
     () => (selectedOutOnPlay && getNextOptions?.(selectedOutOnPlay)) || undefined,
     [getNextOptions, selectedOutOnPlay]
@@ -34,9 +38,6 @@ const FieldersChoicePrompt: FC<FieldersChoiceOptions> = ({
     }
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
-    }
-    if (canSubmit) {
-      stages.push(PromptUiStage.SUMMARY);
     }
     dispatch(promptActions.setStages(stages));
   }, [outOnPlayOptions, runnerOptions, canSubmit, dispatch]);

@@ -18,7 +18,7 @@ import { useAppSelector } from 'utils/hooks';
 
 import { RunnerOptions } from 'state/prompts/types';
 
-const RunnerPrompt: FC<RunnerOptions> = ({ runnerId }) => {
+const RunnerOverlay: FC<RunnerOptions> = ({ runnerId }) => {
   const dispatch = useDispatch();
 
   const options = useAppSelector(getGroupedRunnerOptions);
@@ -69,4 +69,4 @@ const RunnerPrompt: FC<RunnerOptions> = ({ runnerId }) => {
   );
 };
 
-export default RunnerPrompt;
+export default RunnerOverlay;

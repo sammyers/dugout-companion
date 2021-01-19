@@ -3,9 +3,9 @@ import Slider from '@farbenmeer/react-spring-slider';
 import { Box, Button, Text } from 'grommet';
 import { Previous } from 'grommet-icons';
 
-import InteractableField from './panels/InteractableField';
-import OutOnPlayPrompt from './panels/OutOnPlayPrompt';
-import SacFlyRbiPrompt from './panels/SacFlyRbiPrompt';
+import InteractableField from './panels/InteractiveFieldPanel/InteractiveFieldPanel';
+import OutOnPlayPrompt from './panels/OutOnPlayPanel';
+import SacFlyRbiPrompt from './panels/SacFlyRbiPanel';
 import PromptStateManager from './PromptStateManager';
 import PrimaryPromptNav from './PrimaryPromptNav';
 
@@ -19,7 +19,6 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { usePromptContext } from './context';
 
 import { PromptUiStage } from 'state/prompts/types';
-import PromptSummary from './panels/PromptSummary';
 
 const PromptStages = () => {
   const dispatch = useAppDispatch();
@@ -105,10 +104,6 @@ const PromptStages = () => {
               index = contactStageIndex;
             }
           }
-          break;
-        case PromptUiStage.SUMMARY:
-          panes.push(<PromptSummary />);
-          updateIndex(stage);
           break;
       }
     });

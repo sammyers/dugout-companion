@@ -216,6 +216,14 @@ const getRunnerOptionsRecursive = (
   };
 };
 
+const getExpectedBases = (runners: BaseRunnerMap, numAdvanced: number = 1) => {
+  const runnersToBases = _.invert(runners) as Record<string, BaseType>;
+  const expectedBases = _.mapValues(runnersToBases, (base: BaseType) =>
+    getNewBase(base, numAdvanced)
+  );
+  return expectedBases;
+};
+
 export const getPlateAppearanceDetailPrompt = (
   paType: PlateAppearanceType,
   batterId: string,
@@ -254,6 +262,7 @@ export const getPlateAppearanceDetailPrompt = (
           if (outs === 2) {
             return { fielderOptions };
           }
+          const expectedBases = getExpectedBases(newRunners);
           if (contactType === ContactQuality.GROUNDER) {
             moveRunnersOnGroundBall(newRunners);
           }
@@ -262,7 +271,7 @@ export const getPlateAppearanceDetailPrompt = (
             runnerOptions: getRunnerOptions(
               newRunners,
               outs + 1,
-              {},
+              expectedBases,
               contactType === ContactQuality.GROUNDER
             ),
           };
@@ -301,9 +310,10 @@ export const getPlateAppearanceDetailPrompt = (
             ? runnerOut => {
                 const newRunners = { ...runners };
                 removeRunner(newRunners, runnerOut);
+                const expectedBases = getExpectedBases(newRunners);
                 moveRunnersOnGroundBall(newRunners);
                 newRunners[BaseType.FIRST] = batterId;
-                return getRunnerOptions(newRunners, outs + 1);
+                return getRunnerOptions(newRunners, outs + 1, expectedBases);
               }
             : undefined,
       };
@@ -342,12 +352,13 @@ export const getPlateAppearanceDetailPrompt = (
                   ? runnersOut => {
                       const newRunners = { ...runners };
                       runnersOut.forEach(runnerId => removeRunner(newRunners, runnerId));
+                      const expectedBases = getExpectedBases(newRunners);
                       moveRunnersOnGroundBall(newRunners);
                       if (!runnersOut.includes(batterId)) {
                         // the rare fielder's choice double play
                         newRunners[BaseType.FIRST] = batterId;
                       }
-                      return getRunnerOptions(newRunners, outs + 2);
+                      return getRunnerOptions(newRunners, outs + 2, expectedBases);
                     }
                   : undefined,
             };
@@ -374,11 +385,7 @@ export const getPlateAppearanceDetailPrompt = (
         paType,
         batterId
       );
-
-      const runnersToBases = _.invert(runners) as Record<string, BaseType>;
-      const expectedBases = _.mapValues(runnersToBases, (base: BaseType) =>
-        getNewBase(base, getNumBasesForPlateAppearance(paType))
-      );
+      const expectedBases = getExpectedBases(runners, getNumBasesForPlateAppearance(paType));
 
       return {
         kind: 'hit',

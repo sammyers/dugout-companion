@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 import { Box } from 'grommet';
 
-import OptionSelector from '../OptionSelector';
+import OptionSelector from '../util/OptionSelector';
 
 import { getSelectedSacFlyRunsScored } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { usePromptContext } from '../context';
 
-const SacFlyRbiPrompt = () => {
+const SacFlyRbiPanel = () => {
   const dispatch = useAppDispatch();
 
   const selectedRunsScored = useAppSelector(getSelectedSacFlyRunsScored);
@@ -36,4 +36,4 @@ const SacFlyRbiPrompt = () => {
   );
 };
 
-export default SacFlyRbiPrompt;
+export default SacFlyRbiPanel;

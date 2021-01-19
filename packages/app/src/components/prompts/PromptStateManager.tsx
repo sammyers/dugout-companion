@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
+import _ from 'lodash';
 
-import RunnerPromptManager from './subprompts/RunnerPromptManager';
+import RunnerPromptManager from './RunnerPromptManager';
 
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch } from 'utils/hooks';
@@ -17,7 +18,7 @@ const PromptStateManager = () => {
       if (multiple) {
         dispatch(promptActions.setOutOnPlayChoices(runnerIds.slice(-2)));
       } else {
-        dispatch(promptActions.setOutOnPlayChoices([runnerIds[0]]));
+        dispatch(promptActions.setOutOnPlayChoices([_.last(runnerIds)!]));
       }
     }
   }, [outOnPlayOptions, dispatch]);

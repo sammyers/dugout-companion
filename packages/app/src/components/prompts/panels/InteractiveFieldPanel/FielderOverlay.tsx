@@ -60,7 +60,7 @@ const positions: Record<FieldingPosition, CSSProperties> = {
   },
 };
 
-const FielderPrompt: FC<FielderOptions> = ({ options }) => {
+const FielderOverlay: FC<FielderOptions> = ({ options }) => {
   const dispatch = useAppDispatch();
 
   const selectedOption = useAppSelector(getSelectedFielderOption);
@@ -96,4 +96,4 @@ const FielderPrompt: FC<FielderOptions> = ({ options }) => {
   );
 };
 
-export default FielderPrompt;
+export default FielderOverlay;
