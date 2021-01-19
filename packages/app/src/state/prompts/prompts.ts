@@ -26,7 +26,12 @@ import {
   getPositionAbbreviation,
 } from 'utils/labels';
 
-import { PlateAppearanceDetailOptions, RunnerOptions, BasepathOutcome } from './types';
+import {
+  PlateAppearanceDetailOptions,
+  RunnerOptions,
+  BasepathOutcome,
+  RunnerPromptState,
+} from './types';
 
 const getTrailingRunner = (runners: BaseRunnerMap, leadBase: BaseType | null) => {
   if (leadBase === null) {
@@ -211,6 +216,14 @@ const getRunnerOptionsRecursive = (
   };
 };
 
+const getExpectedBases = (runners: BaseRunnerMap, numAdvanced: number = 1) => {
+  const runnersToBases = _.invert(runners) as Record<string, BaseType>;
+  const expectedBases = _.mapValues(runnersToBases, (base: BaseType) =>
+    getNewBase(base, numAdvanced)
+  );
+  return expectedBases;
+};
+
 export const getPlateAppearanceDetailPrompt = (
   paType: PlateAppearanceType,
   batterId: string,
@@ -249,6 +262,7 @@ export const getPlateAppearanceDetailPrompt = (
           if (outs === 2) {
             return { fielderOptions };
           }
+          const expectedBases = getExpectedBases(newRunners);
           if (contactType === ContactQuality.GROUNDER) {
             moveRunnersOnGroundBall(newRunners);
           }
@@ -257,7 +271,7 @@ export const getPlateAppearanceDetailPrompt = (
             runnerOptions: getRunnerOptions(
               newRunners,
               outs + 1,
-              {},
+              expectedBases,
               contactType === ContactQuality.GROUNDER
             ),
           };
@@ -296,9 +310,10 @@ export const getPlateAppearanceDetailPrompt = (
             ? runnerOut => {
                 const newRunners = { ...runners };
                 removeRunner(newRunners, runnerOut);
+                const expectedBases = getExpectedBases(newRunners);
                 moveRunnersOnGroundBall(newRunners);
                 newRunners[BaseType.FIRST] = batterId;
-                return getRunnerOptions(newRunners, outs + 1);
+                return getRunnerOptions(newRunners, outs + 1, expectedBases);
               }
             : undefined,
       };
@@ -337,12 +352,13 @@ export const getPlateAppearanceDetailPrompt = (
                   ? runnersOut => {
                       const newRunners = { ...runners };
                       runnersOut.forEach(runnerId => removeRunner(newRunners, runnerId));
+                      const expectedBases = getExpectedBases(newRunners);
                       moveRunnersOnGroundBall(newRunners);
                       if (!runnersOut.includes(batterId)) {
                         // the rare fielder's choice double play
                         newRunners[BaseType.FIRST] = batterId;
                       }
-                      return getRunnerOptions(newRunners, outs + 2);
+                      return getRunnerOptions(newRunners, outs + 2, expectedBases);
                     }
                   : undefined,
             };
@@ -369,11 +385,7 @@ export const getPlateAppearanceDetailPrompt = (
         paType,
         batterId
       );
-
-      const runnersToBases = _.invert(runners) as Record<string, BaseType>;
-      const expectedBases = _.mapValues(runnersToBases, (base: BaseType) =>
-        getNewBase(base, getNumBasesForPlateAppearance(paType))
-      );
+      const expectedBases = getExpectedBases(runners, getNumBasesForPlateAppearance(paType));
 
       return {
         kind: 'hit',
@@ -387,11 +399,12 @@ export const getPlateAppearanceDetailPrompt = (
 };
 
 export const getExtraRunnerMovementForPlateAppearance = (
-  allRunnerChoices: Record<string, BasepathOutcome>
+  allRunnerChoices: Record<string, RunnerPromptState>
 ) => {
   const movements: BasepathMovement[] = [];
 
-  _.forEach(allRunnerChoices, (outcome, runnerId) => {
+  _.forEach(allRunnerChoices, ({ options, selected }, runnerId) => {
+    const outcome = options[selected];
     if (outcome.attemptedAdvance) {
       movements.push({ runnerId, endBase: outcome.endBase, wasSafe: outcome.successfulAdvance });
     }

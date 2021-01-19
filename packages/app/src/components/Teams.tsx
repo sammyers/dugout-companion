@@ -1,16 +1,33 @@
 import React, { useCallback } from 'react';
-import { Box } from 'grommet';
+import { Box, Button } from 'grommet';
+import { Edit, LinkPrevious, Save } from 'grommet-icons';
 import { DragDropContext, DragDropContextProps } from 'react-beautiful-dnd';
 
 import { TeamRole } from '@dugout-companion/shared';
 
 import Lineup from './Lineup';
 
+import { isGameInProgress, isLineupEditable } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { useAppDispatch } from 'utils/hooks';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
 const Teams = () => {
   const dispatch = useAppDispatch();
+
+  const gameInProgress = useAppSelector(isGameInProgress);
+  const editable = useAppSelector(isLineupEditable);
+
+  const onEdit = useCallback(() => {
+    dispatch(gameActions.editLineup());
+  }, [dispatch]);
+
+  const onCancel = useCallback(() => {
+    dispatch(gameActions.cancelEditingLineup());
+  }, [dispatch]);
+
+  const onSave = useCallback(() => {
+    dispatch(gameActions.saveLineup());
+  }, [dispatch]);
 
   const handleDragEnd: DragDropContextProps['onDragEnd'] = useCallback(
     ({ source, destination }) => {
@@ -36,9 +53,32 @@ const Teams = () => {
         gap="medium"
         flex={{ shrink: 0 }}
         basis="auto"
+        style={{ position: 'relative' }}
       >
-        <Lineup teamRole={TeamRole.AWAY} />
-        <Lineup teamRole={TeamRole.HOME} />
+        {gameInProgress && (
+          <Box
+            style={{ position: 'absolute', top: 0 }}
+            margin={{ horizontal: 'auto', vertical: 'small' }}
+            direction="row"
+            gap="xsmall"
+          >
+            {editable ? (
+              [
+                <Button
+                  plain={false}
+                  icon={<LinkPrevious />}
+                  color="status-critical"
+                  onClick={onCancel}
+                />,
+                <Button primary plain={false} icon={<Save />} color="status-ok" onClick={onSave} />,
+              ]
+            ) : (
+              <Button primary plain={false} icon={<Edit />} onClick={onEdit} />
+            )}
+          </Box>
+        )}
+        <Lineup teamRole={TeamRole.AWAY} editable={editable} />
+        <Lineup teamRole={TeamRole.HOME} editable={editable} />
       </Box>
     </DragDropContext>
   );

@@ -16,9 +16,10 @@ import { LineupSpot } from 'state/game/types';
 interface Props extends LineupSpot {
   team: TeamRole;
   index: number;
+  editable: boolean;
 }
 
-const LineupPlayer: FC<Props> = ({ playerId, index, team }) => {
+const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
   const dispatch = useAppDispatch();
 
   const name = useAppSelector(state => getPlayerName(state, playerId));
@@ -46,7 +47,7 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team }) => {
   );
 
   return (
-    <Draggable draggableId={playerId} index={index}>
+    <Draggable draggableId={playerId} index={index} isDragDisabled={!editable}>
       {({ innerRef, draggableProps, dragHandleProps }) => (
         <Box
           ref={innerRef}
@@ -57,24 +58,36 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team }) => {
           align="center"
           justify="between"
         >
-          <Text margin={{ right: 'auto' }}>{name}</Text>
-          <ThemeContext.Extend value={{ global: { size: { xsmall: '108px' } } }}>
-            <Box width="xsmall" margin={{ right: 'small' }}>
-              <Select
-                value={position}
-                options={positionOptions}
-                labelKey="label"
-                valueKey={{ key: 'position', reduce: true }}
-                onChange={handleChangePosition}
+          <Text margin={editable ? { right: 'auto' } : undefined}>{name}</Text>
+          {editable ? (
+            <>
+              <ThemeContext.Extend value={{ global: { size: { xsmall: '108px' } } }}>
+                <Box width="xsmall" margin={{ right: 'small' }}>
+                  <Select
+                    value={position}
+                    options={positionOptions}
+                    labelKey="label"
+                    valueKey={{ key: 'position', reduce: true }}
+                    onChange={handleChangePosition}
+                  />
+                </Box>
+              </ThemeContext.Extend>
+              <Button
+                plain={false}
+                icon={<Close size="small" color="status-critical" />}
+                color="status-critical"
+                onClick={handleRemove}
               />
-            </Box>
-          </ThemeContext.Extend>
-          <Button
-            plain={false}
-            icon={<Close size="small" color="status-critical" />}
-            color="status-critical"
-            onClick={handleRemove}
-          />
+            </>
+          ) : (
+            <Text
+              weight="bold"
+              style={{ fontStyle: 'italic' }}
+              margin={{ left: 'medium', right: 'auto' }}
+            >
+              {getPositionAbbreviation(position)}
+            </Text>
+          )}
         </Box>
       )}
     </Draggable>

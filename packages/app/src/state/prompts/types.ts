@@ -90,6 +90,14 @@ export type PlateAppearanceDetailOptions =
   | FieldersChoiceOptions
   | DoublePlayOptions;
 
-export interface BasePromptProps {
-  setCanSubmit: (value: boolean) => void;
+export enum PromptUiStage {
+  SAC_FLY_RBIS,
+  CONTACT,
+  OUTS_ON_PLAY,
+  RUNNERS,
+}
+
+export interface RunnerPromptState {
+  options: BasepathOutcome[];
+  selected: number;
 }

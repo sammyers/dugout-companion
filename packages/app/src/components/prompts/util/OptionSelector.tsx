@@ -1,9 +1,10 @@
 import React, { ReactNode, useCallback } from 'react';
-import { Box, BoxProps, Text } from 'grommet';
+import { Box, BoxProps, Button, Text } from 'grommet';
 import _ from 'lodash';
 
 interface BaseProps<T> {
-  options: (T | { value: T; label: ReactNode; negative?: boolean })[];
+  options: (T | { value: T; label: ReactNode; extra?: string })[];
+  vertical?: boolean;
 }
 
 interface SingleChoiceProps<T> extends BaseProps<T> {
@@ -25,7 +26,8 @@ const OptionSelector = <T extends any>({
   multiple,
   value,
   onChange,
-  ...props
+  vertical,
+  ...otherProps
 }: Props<T> & BoxProps) => {
   const isSelected = useCallback(
     (val: T) => (multiple ? (value as T[]).includes(val) : val === value),
@@ -47,34 +49,74 @@ const OptionSelector = <T extends any>({
     [multiple, value, onChange]
   );
 
+  const boxProps = vertical
+    ? ({
+        flex: true,
+        direction: 'column',
+        justify: 'center',
+        align: 'center',
+        gap: 'medium',
+      } as const)
+    : ({ direction: 'row', border: true, round: true, overflow: 'hidden' } as const);
+
   return (
-    <Box direction="row" round border overflow="hidden" {...props}>
+    <Box {...boxProps} {...otherProps}>
       {options.map((option, index) => {
-        let label, value, negative;
+        let label, value, extra;
         if (_.isObject(option) && 'label' in option) {
           label = option.label;
           value = option.value;
-          negative = option.negative;
+          extra = option.extra;
         } else {
           label = value = option;
-          negative = false;
         }
+
+        const key = `${index}_of_${options.length}`;
         const selected = isSelected(value);
+        const handleClick = handleClickOption(value);
+
+        if (vertical) {
+          return (
+            <Box key={key} style={{ position: 'relative' }}>
+              <Button
+                size="large"
+                label={label as ReactNode}
+                onClick={handleClick}
+                primary={selected}
+              />
+              {extra && (
+                <Box
+                  pad={{ left: 'small' }}
+                  style={{
+                    position: 'absolute',
+                    top: '50%',
+                    right: 0,
+                    transform: 'translate(100%,-50%)',
+                  }}
+                >
+                  <Text style={{ fontStyle: 'italic' }}>{extra}</Text>
+                </Box>
+              )}
+            </Box>
+          );
+        }
 
         return (
           <Box
-            key={`${index}_of_${options.length}`}
+            key={key}
             flex
             width={typeof label === 'string' && label.length < 4 ? 'xxsmall' : 'xsmall'}
-            onClick={handleClickOption(value)}
-            background={selected ? 'brand' : negative ? 'status-critical-light' : undefined}
+            background={selected ? 'brand' : undefined}
             hoverIndicator={!selected}
             pad="small"
             align="center"
             justify="center"
             border={index > 0 ? { side: 'left', size: '1px' } : undefined}
+            onClick={handleClick}
           >
-            <Text textAlign="center">{label as ReactNode}</Text>
+            <Text size="small" textAlign="center">
+              {label as ReactNode}
+            </Text>
           </Box>
         );
       })}

@@ -294,6 +294,7 @@ type Query implements Node {
   gameByName(name: String!): Game
   gameEvent(id: Int!): GameEvent
   gameEventRecord(id: Int!): GameEventRecord
+  gameEventRecordByGameIdAndEventIndex(gameId: Int!, eventIndex: Int!): GameEventRecord
   gameState(id: Int!): GameState
   lineup(id: Int!): Lineup
   lineupChange(id: Int!): LineupChange
@@ -939,6 +940,7 @@ type GameEventRecord implements Node {
   nodeId: ID!
   id: Int!
   gameId: Int!
+  eventIndex: Int!
   gameStateBeforeId: Int!
   gameStateAfterId: Int!
   gameEventId: Int!
@@ -1207,6 +1209,8 @@ enum GameEventRecordsOrderBy {
   ID_DESC
   GAME_ID_ASC
   GAME_ID_DESC
+  EVENT_INDEX_ASC
+  EVENT_INDEX_DESC
   GAME_STATE_BEFORE_ID_ASC
   GAME_STATE_BEFORE_ID_DESC
   GAME_STATE_AFTER_ID_ASC
@@ -1227,6 +1231,9 @@ input GameEventRecordCondition {
 
   """Checks for equality with the object’s `gameId` field."""
   gameId: Int
+
+  """Checks for equality with the object’s `eventIndex` field."""
+  eventIndex: Int
 
   """Checks for equality with the object’s `gameStateBeforeId` field."""
   gameStateBeforeId: Int
@@ -1882,6 +1889,14 @@ type Mutation {
     input: UpdateGameEventRecordInput!
   ): UpdateGameEventRecordPayload
 
+  """Updates a single `GameEventRecord` using a unique key and a patch."""
+  updateGameEventRecordByGameIdAndEventIndex(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGameEventRecordByGameIdAndEventIndexInput!
+  ): UpdateGameEventRecordPayload
+
   """Updates a single `GameState` using its globally unique id and a patch."""
   updateGameStateByNodeId(
     """
@@ -2190,6 +2205,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteGameEventRecordInput!
+  ): DeleteGameEventRecordPayload
+
+  """Deletes a single `GameEventRecord` using a unique key."""
+  deleteGameEventRecordByGameIdAndEventIndex(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGameEventRecordByGameIdAndEventIndexInput!
   ): DeleteGameEventRecordPayload
 
   """Deletes a single `GameState` using its globally unique id."""
@@ -4562,6 +4585,11 @@ input ScoredRunnerGameEventRecordIdFkeyInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  connectByGameIdAndEventIndex: GameEventRecordGameEventRecordGameIdEventIndexKeyConnect
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   connectByNodeId: GameEventRecordNodeIdConnect
 
   """
@@ -4572,12 +4600,22 @@ input ScoredRunnerGameEventRecordIdFkeyInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  deleteByGameIdAndEventIndex: GameEventRecordGameEventRecordGameIdEventIndexKeyDelete
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   deleteByNodeId: GameEventRecordNodeIdDelete
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
   """
   updateById: GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
+  """
+  updateByGameIdAndEventIndex: GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
@@ -4595,6 +4633,12 @@ input GameEventRecordGameEventRecordPkeyConnect {
   id: Int!
 }
 
+"""The fields on `gameEventRecord` to look up the row to connect."""
+input GameEventRecordGameEventRecordGameIdEventIndexKeyConnect {
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The globally unique `ID` look up for the row to connect."""
 input GameEventRecordNodeIdConnect {
   """
@@ -4606,6 +4650,12 @@ input GameEventRecordNodeIdConnect {
 """The fields on `gameEventRecord` to look up the row to delete."""
 input GameEventRecordGameEventRecordPkeyDelete {
   id: Int!
+}
+
+"""The fields on `gameEventRecord` to look up the row to delete."""
+input GameEventRecordGameEventRecordGameIdEventIndexKeyDelete {
+  gameId: Int!
+  eventIndex: Int!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -4631,6 +4681,7 @@ An object where the defined keys will be set on the `gameEventRecord` being upda
 input updateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch {
   id: Int
   gameId: Int
+  eventIndex: Int
   gameStateBeforeId: Int
   gameStateAfterId: Int
   gameEventId: Int
@@ -4724,6 +4775,11 @@ input GameEventRecordGameIdFkeyInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  connectByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyConnect!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   connectByNodeId: [GameEventRecordNodeIdConnect!]
 
   """
@@ -4734,12 +4790,22 @@ input GameEventRecordGameIdFkeyInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  deleteByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyDelete!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   deleteByNodeId: [GameEventRecordNodeIdDelete!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
   """
   updateById: [GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
+  """
+  updateByGameIdAndEventIndex: [GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
@@ -4766,6 +4832,7 @@ An object where the defined keys will be set on the `gameEventRecord` being upda
 """
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   id: Int
+  eventIndex: Int
   gameStateBeforeId: Int
   gameStateAfterId: Int
   gameEventId: Int
@@ -5017,6 +5084,11 @@ input GameEventRecordGameStateBeforeFkInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  connectByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyConnect!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   connectByNodeId: [GameEventRecordNodeIdConnect!]
 
   """
@@ -5027,12 +5099,22 @@ input GameEventRecordGameStateBeforeFkInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  deleteByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyDelete!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   deleteByNodeId: [GameEventRecordNodeIdDelete!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
   """
   updateById: [GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
+  """
+  updateByGameIdAndEventIndex: [GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordGameIdEventIndexKeyUpdate!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
@@ -5060,6 +5142,7 @@ An object where the defined keys will be set on the `gameEventRecord` being upda
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch {
   id: Int
   gameId: Int
+  eventIndex: Int
   gameStateAfterId: Int
   gameEventId: Int
   game: GameEventRecordGameIdFkeyInput
@@ -5152,6 +5235,11 @@ input GameEventRecordGameStateAfterFkInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  connectByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyConnect!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   connectByNodeId: [GameEventRecordNodeIdConnect!]
 
   """
@@ -5162,12 +5250,22 @@ input GameEventRecordGameStateAfterFkInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  deleteByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyDelete!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   deleteByNodeId: [GameEventRecordNodeIdDelete!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
   """
   updateById: [GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
+  """
+  updateByGameIdAndEventIndex: [GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordGameIdEventIndexKeyUpdate!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
@@ -5195,6 +5293,7 @@ An object where the defined keys will be set on the `gameEventRecord` being upda
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch {
   id: Int
   gameId: Int
+  eventIndex: Int
   gameStateBeforeId: Int
   gameEventId: Int
   game: GameEventRecordGameIdFkeyInput
@@ -5839,6 +5938,11 @@ input GameEventRecordGameEventIdFkeyInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  connectByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyConnect!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   connectByNodeId: [GameEventRecordNodeIdConnect!]
 
   """
@@ -5849,12 +5953,22 @@ input GameEventRecordGameEventIdFkeyInverseInput {
   """
   The primary key(s) for `gameEventRecord` for the far side of the relationship.
   """
+  deleteByGameIdAndEventIndex: [GameEventRecordGameEventRecordGameIdEventIndexKeyDelete!]
+
+  """
+  The primary key(s) for `gameEventRecord` for the far side of the relationship.
+  """
   deleteByNodeId: [GameEventRecordNodeIdDelete!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
   """
   updateById: [GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
+  """
+  updateByGameIdAndEventIndex: [GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate!]
 
   """
   The primary key(s) and patch data for `gameEventRecord` for the far side of the relationship.
@@ -5882,6 +5996,7 @@ An object where the defined keys will be set on the `gameEventRecord` being upda
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch {
   id: Int
   gameId: Int
+  eventIndex: Int
   gameStateBeforeId: Int
   gameStateAfterId: Int
   game: GameEventRecordGameIdFkeyInput
@@ -6112,6 +6227,16 @@ input ScoredRunnerGameEventRecordIdFkeyScoredRunnerCreateInput {
   player: ScoredRunnerRunnerIdFkeyInput
 }
 
+"""The fields on `gameEventRecord` to look up the row to update."""
+input GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEventRecord` being updated.
+  """
+  patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch!
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate {
   """
@@ -6131,6 +6256,7 @@ Represents an update to a `GameEventRecord`. Fields that are set will be updated
 input GameEventRecordPatch {
   id: Int
   gameId: Int
+  eventIndex: Int
   gameStateBeforeId: Int
   gameStateAfterId: Int
   gameEventId: Int
@@ -6145,6 +6271,7 @@ input GameEventRecordPatch {
 input GameEventRecordGameEventIdFkeyGameEventRecordCreateInput {
   id: Int
   gameId: Int
+  eventIndex: Int!
   gameStateBeforeId: Int
   gameStateAfterId: Int
   game: GameEventRecordGameIdFkeyInput
@@ -6689,6 +6816,16 @@ input GameEventRecordGameEventIdFkeyGameEventCreateInput {
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
+"""The fields on `gameEventRecord` to look up the row to update."""
+input GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameEventRecordGameIdEventIndexKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEventRecord` being updated.
+  """
+  patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch!
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate {
   """
@@ -6706,6 +6843,7 @@ input GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate {
 input GameEventRecordGameStateAfterFkGameEventRecordCreateInput {
   id: Int
   gameId: Int
+  eventIndex: Int!
   gameStateBeforeId: Int
   gameEventId: Int
   game: GameEventRecordGameIdFkeyInput
@@ -6760,6 +6898,16 @@ input GameEventRecordGameStateAfterFkGameStateCreateInput {
   gameEventRecordsToGameStateAfterIdUsingId: GameEventRecordGameStateAfterFkInverseInput
 }
 
+"""The fields on `gameEventRecord` to look up the row to update."""
+input GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameEventRecordGameIdEventIndexKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEventRecord` being updated.
+  """
+  patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch!
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate {
   """
@@ -6777,6 +6925,7 @@ input GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate 
 input GameEventRecordGameStateBeforeFkGameEventRecordCreateInput {
   id: Int
   gameId: Int
+  eventIndex: Int!
   gameStateAfterId: Int
   gameEventId: Int
   game: GameEventRecordGameIdFkeyInput
@@ -6862,6 +7011,16 @@ input GameEventRecordGameStateBeforeFkGameStateCreateInput {
   gameEventRecordsToGameStateAfterIdUsingId: GameEventRecordGameStateAfterFkInverseInput
 }
 
+"""The fields on `gameEventRecord` to look up the row to update."""
+input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEventRecord` being updated.
+  """
+  patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch!
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
   """
@@ -6878,6 +7037,7 @@ input GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
 """The `gameEventRecord` to be created by this mutation."""
 input GameEventRecordGameIdFkeyGameEventRecordCreateInput {
   id: Int
+  eventIndex: Int!
   gameStateBeforeId: Int
   gameStateAfterId: Int
   gameEventId: Int
@@ -6934,6 +7094,16 @@ input GameEventRecordGameIdFkeyGameCreateInput {
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
 }
 
+"""The fields on `gameEventRecord` to look up the row to update."""
+input GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGameEventRecordGameIdEventIndexKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEventRecord` being updated.
+  """
+  patch: updateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch!
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate {
   """
@@ -6951,6 +7121,7 @@ input ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate
 input ScoredRunnerGameEventRecordIdFkeyGameEventRecordCreateInput {
   id: Int
   gameId: Int
+  eventIndex: Int!
   gameStateBeforeId: Int
   gameStateAfterId: Int
   gameEventId: Int
@@ -7905,6 +8076,7 @@ input CreateGameEventRecordInput {
 input GameEventRecordInput {
   id: Int
   gameId: Int
+  eventIndex: Int!
   gameStateBeforeId: Int
   gameStateAfterId: Int
   gameEventId: Int
@@ -8707,6 +8879,24 @@ input UpdateGameEventRecordInput {
   """
   patch: GameEventRecordPatch!
   id: Int!
+}
+
+"""
+All input for the `updateGameEventRecordByGameIdAndEventIndex` mutation.
+"""
+input UpdateGameEventRecordByGameIdAndEventIndexInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `GameEventRecord` being updated.
+  """
+  patch: GameEventRecordPatch!
+  gameId: Int!
+  eventIndex: Int!
 }
 
 """The output of our update `GameState` mutation."""
@@ -9647,6 +9837,19 @@ input DeleteGameEventRecordInput {
   id: Int!
 }
 
+"""
+All input for the `deleteGameEventRecordByGameIdAndEventIndex` mutation.
+"""
+input DeleteGameEventRecordByGameIdAndEventIndexInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  gameId: Int!
+  eventIndex: Int!
+}
+
 """The output of our delete `GameState` mutation."""
 type DeleteGameStatePayload {
   """
@@ -10536,6 +10739,9 @@ type Subscription {
 
   """ (live)"""
   gameEventRecord(id: Int!): GameEventRecord
+
+  """ (live)"""
+  gameEventRecordByGameIdAndEventIndex(gameId: Int!, eventIndex: Int!): GameEventRecord
 
   """ (live)"""
   gameState(id: Int!): GameState

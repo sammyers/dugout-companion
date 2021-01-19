@@ -1,20 +1,17 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { Box, Text } from 'grommet';
 
-import BasesPreview from 'components/BasesPreview';
+import BasesPreview from 'components/icons/BasesPreview';
 
 import { getPlateAppearancePreview } from 'state/prompts/selectors';
 import { useAppSelector } from 'utils/hooks';
-import { promptContext } from './EventDetailPrompt';
 
 const PlateAppearancePreview: FC = () => {
-  const paType = useContext(promptContext);
-
   const {
     runners,
     scoredRunners: { length: runs },
     outs,
-  } = useAppSelector(state => getPlateAppearancePreview(state, paType));
+  } = useAppSelector(getPlateAppearancePreview);
 
   return (
     <Box direction="row" align="center" alignSelf="center" gap="medium">

@@ -6,11 +6,11 @@ import { Route, useHistory } from 'react-router-dom';
 import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
 import SettingsMenu from './SettingsMenu';
+import BasesPreview from './icons/BasesPreview';
 
 import { canStartGame, getRunnerNames, isGameInProgress } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import BasesPreview from './BasesPreview';
 
 const TopBar = () => {
   const dispatch = useAppDispatch();

@@ -167,6 +167,7 @@ const recordAndApplyGameEvent = (
 
   const gameEvent = callback(state, recordRunnersScored);
   state.gameEventRecords.push({
+    eventIndex: -1,
     gameEvent,
     scoredRunners,
     gameStateBefore,
@@ -174,7 +175,7 @@ const recordAndApplyGameEvent = (
   });
 };
 
-const applyMidGameLineupChange = (
+export const applyMidGameLineupChange = (
   state: AppGameState,
   role: TeamRole,
   lineupSpots: LineupSpot[]
@@ -196,7 +197,7 @@ const applyMidGameLineupChange = (
 
 export const changeLineup = (state: AppGameState, role: TeamRole, newLineup: LineupSpot[]) => {
   if (state.status === GameStatus.IN_PROGRESS) {
-    applyMidGameLineupChange(state, role, newLineup);
+    state.lineupDrafts[role] = newLineup;
   } else {
     replaceLineup(state, role, newLineup);
   }

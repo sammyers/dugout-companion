@@ -5,7 +5,9 @@ const theme: ThemeType = {
     colors: {
       brand: '#1c5253',
       'accent-3': '#C3DFE0',
+      'status-critical': '#FF4040',
       'status-critical-light': '#ffcccc',
+      'status-ok': '#00C781',
       'status-ok-light': '#ccffed',
     },
     focus: {
@@ -19,7 +21,7 @@ const theme: ThemeType = {
       height: '6px',
       extend: {
         borderRadius: '3px',
-      },
+      } as any,
     },
   },
   accordion: {

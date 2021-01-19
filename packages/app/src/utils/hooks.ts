@@ -1,5 +1,5 @@
 import { useEffect, EffectCallback } from 'react';
-import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import { useDispatch, createSelectorHook } from 'react-redux';
 
 import { AppState, AppDispatch } from 'state/store';
 
@@ -7,4 +7,4 @@ import { AppState, AppDispatch } from 'state/store';
 export const useMount = (effect: EffectCallback) => useEffect(effect, []);
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector;
+export const useAppSelector = createSelectorHook<AppState>();
