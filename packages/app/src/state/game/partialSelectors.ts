@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { HalfInning, TeamRole } from '@dugout-companion/shared';
+import { HalfInning, TeamRole } from '@sammyers/dc-shared';
 
 import { getBaseForRunner, getCurrentLineup, getTeamWithRole, runnersToMap } from './utils';
 

@@ -19,7 +19,7 @@ import {
   HalfInning,
   PlateAppearanceType,
   TeamRole,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameState, GameStatus, LineupSpot } from './types';
 

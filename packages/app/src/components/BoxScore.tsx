@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Box, Card, DataTable, Text } from 'grommet';
 import { Redirect } from 'react-router-dom';
 
-import { TeamRole } from '@dugout-companion/shared';
+import { TeamRole } from '@sammyers/dc-shared';
 
 import { isGameInProgress, getPlayerPosition } from 'state/game/selectors';
 import { getShortPlayerName } from 'state/players/selectors';

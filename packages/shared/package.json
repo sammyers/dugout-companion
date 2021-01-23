@@ -1,12 +1,12 @@
 {
-  "name": "@dugout-companion/shared",
-  "version": "1.0.0",
+  "name": "@sammyers/dc-shared",
+  "version": "0.0.2",
   "description": "Common type definitions and utilites for Dugout Companion",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
-  "repository": "https://github.com/sammyers/dugout-companion",
   "author": "Sam Myers <sammyers.dev@gmail.com>",
   "license": "MIT",
+  "repository": "https://github.com/sammyers/dugout-companion",
   "scripts": {
     "codegen": "graphql-codegen --config codegen.yml",
     "build": "yarn codegen && tsc -b",

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Grommet, Main, Box } from 'grommet';
 import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom';
 
-import { useGetAllPlayersSubscription, useGetAllGamesSubscription } from '@dugout-companion/shared';
+import { useGetAllPlayersQuery, useGetAllGamesQuery } from '@sammyers/dc-shared';
 
 import GameOver from './GameOver';
 import TopBar from './TopBar';
@@ -28,8 +28,8 @@ const App = () => {
 
   const gameOver = useAppSelector(isGameOver);
 
-  const { data: playerData } = useGetAllPlayersSubscription();
-  const { data: gameData } = useGetAllGamesSubscription();
+  const { data: playerData } = useGetAllPlayersQuery();
+  const { data: gameData } = useGetAllGamesQuery();
 
   useEffect(() => {
     if (playerData) {

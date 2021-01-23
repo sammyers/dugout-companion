@@ -28,7 +28,7 @@ Trace:
 
 npm manifest: 
   {
-    "name": "@dugout-companion/server",
+    "name": "@sammyers/dc-server",
     "version": "1.0.0",
     "description": "Backend for Dugout Companion",
     "main": "server.ts",
@@ -37,10 +37,10 @@ npm manifest:
     "license": "MIT",
     "scripts": {
       "start:dev": "yarn run build:dev",
-      "build:dev": "tsc-watch -b --onSuccess 'node -r @dugout-companion/shared/env build/server.js'"
+      "build:dev": "tsc-watch -b --onSuccess 'node -r @sammyers/dc-shared/env build/server.js'"
     },
     "dependencies": {
-      "@dugout-companion/shared": "1.0.0",
+      "@sammyers/dc-shared": "1.0.0",
       "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
       "express": "^4.17.1",
       "graphql": "^15.4.0",

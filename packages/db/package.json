@@ -1,17 +1,18 @@
 {
-  "name": "@dugout-companion/db",
-  "version": "1.0.0",
+  "name": "@sammyers/dc-db",
+  "version": "0.0.1",
   "description": "Database migrations and scripts for Dugout Companion.",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "setup": "node -r @dugout-companion/shared/env ./scripts/setup.js",
-    "gm": "node -r @dugout-companion/shared/env node_modules/.bin/graphile-migrate",
-    "migrate": "yarn gm migrate",
-    "watch": "yarn gm watch",
-    "commit": "yarn gm commit",
-    "uncommit": "yarn gm uncommit",
-    "reset": "yarn gm reset"
+    "setup": "env $(node ../config/env.mjs) ./scripts/setup.js",
+    "gm": "env $(node ../config/env.mjs) node node_modules/.bin/graphile-migrate",
+    "migrate": "NODE_ENV=development yarn gm migrate",
+    "watch": "NODE_ENV=development yarn gm watch",
+    "commit": "NODE_ENV=development yarn gm commit",
+    "uncommit": "NODE_ENV=development yarn gm uncommit",
+    "reset": "NODE_ENV=development yarn gm reset",
+    "migrate:prod": "PROD_MIGRATE=true yarn gm migrate"
   },
   "dependencies": {
     "dotenv": "^8.2.0",

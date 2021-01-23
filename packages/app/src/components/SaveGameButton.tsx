@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Button } from 'grommet';
 
-import { useCreateEmptyGameMutation, useFillInGameEventsMutation } from '@dugout-companion/shared';
+import { useCreateEmptyGameMutation, useFillInGameEventsMutation } from '@sammyers/dc-shared';
 
 import Spinner from './icons/Spinner';
 

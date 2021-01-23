@@ -8,7 +8,7 @@ import {
   ContactQuality,
   FieldingPosition,
   PlateAppearanceType,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import { GameEventRecord, HitContactType, HitType } from 'state/game/types';
 import { RawPlayDescription } from './types';
 

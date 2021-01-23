@@ -5,7 +5,7 @@ import {
   PlateAppearanceType,
   TeamRole,
   UnpackedGame_GameFragment,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 
 import { SimplifyType } from 'utils/common';
 

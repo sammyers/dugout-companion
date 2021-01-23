@@ -5,7 +5,7 @@ import { getCurrentSelectedRunnerOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 import { BasepathOutcome } from 'state/prompts/types';
 
 const getOptionLayoutProperties = (base: BaseType | null) => {

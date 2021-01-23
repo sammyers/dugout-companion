@@ -1,11 +1,6 @@
 import _ from 'lodash';
 
-import {
-  BaseType,
-  FieldingPosition,
-  PlateAppearanceType,
-  TeamRole,
-} from '@dugout-companion/shared';
+import { BaseType, FieldingPosition, PlateAppearanceType, TeamRole } from '@sammyers/dc-shared';
 
 import { BaseRunners, Team, BaseRunnerMap } from './types';
 

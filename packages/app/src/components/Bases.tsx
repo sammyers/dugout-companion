@@ -4,7 +4,7 @@ import { Blank, Redo, Undo } from 'grommet-icons';
 import { Redirect } from 'react-router-dom';
 import { ActionCreators } from 'redux-undo';
 
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 
 import EventReporter from './EventReporter';
 

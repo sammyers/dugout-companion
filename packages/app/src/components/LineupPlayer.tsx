@@ -3,7 +3,7 @@ import { Box, Text, Button, Select, ThemeContext } from 'grommet';
 import { Close } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { FieldingPosition, TeamRole } from '@dugout-companion/shared';
+import { FieldingPosition, TeamRole } from '@sammyers/dc-shared';
 
 import { getAvailablePositions, getPlayerPosition } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';

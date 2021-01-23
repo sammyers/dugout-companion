@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Card, CardHeader, Text, CardBody } from 'grommet';
 
-import { HalfInning } from '@dugout-companion/shared';
+import { HalfInning } from '@sammyers/dc-shared';
 
 import Play from './Play';
 

@@ -1,0 +1,6 @@
+dispatch:
+  - url: "*/graphql"
+    service: backend
+
+  - url: "*/.*"
+    service: default

@@ -7,7 +7,7 @@ import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { getPositionAbbreviation } from 'utils/labels';
 
-import { FieldingPosition } from '@dugout-companion/shared';
+import { FieldingPosition } from '@sammyers/dc-shared';
 import { FielderOptions } from 'state/prompts/types';
 
 const positions: Record<FieldingPosition, CSSProperties> = {

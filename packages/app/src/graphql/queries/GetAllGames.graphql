@@ -1,4 +1,4 @@
-subscription GetAllGames {
+query GetAllGames {
   games {
     ...UnpackedGame_Game
   }

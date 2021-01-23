@@ -3,7 +3,7 @@ import { Box, Text, TextInput, TextInputProps, Heading } from 'grommet';
 import _ from 'lodash';
 import { Droppable } from 'react-beautiful-dnd';
 
-import { TeamRole } from '@dugout-companion/shared';
+import { TeamRole } from '@sammyers/dc-shared';
 
 import LineupPlayer from './LineupPlayer';
 

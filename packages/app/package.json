@@ -1,6 +1,6 @@
 {
-  "name": "@dugout-companion/app",
-  "version": "1.0.0",
+  "name": "@sammyers/dc-app",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "start": "react-scripts start",
@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.3",
-    "@dugout-companion/shared": "^1.0.0",
+    "@sammyers/dc-shared": "^0.0.2",
     "@farbenmeer/react-spring-slider": "^1.3.3",
     "@graphile/subscriptions-lds": "^4.9.0",
     "@reduxjs/toolkit": "^1.4.0",

@@ -2,7 +2,7 @@ import React, { useCallback, FC } from 'react';
 import _ from 'lodash';
 import { useSpring, animated, useSprings } from 'react-spring';
 
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 
 import Base from './Base';
 

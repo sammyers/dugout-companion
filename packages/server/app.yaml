@@ -1,0 +1,16 @@
+runtime: nodejs14
+env: flex
+service: backend
+
+manual_scaling:
+  instances: 1
+resources:
+  cpu: .5
+  memory_gb: .5
+  disk_size_gb: 10
+
+beta_settings:
+  cloud_sql_instances: dugout-companion:us-west1:dc-db=tcp:5432
+
+env_variables:
+  ENABLE_GRAPHIQL: true

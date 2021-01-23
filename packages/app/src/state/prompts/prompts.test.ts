@@ -1,4 +1,4 @@
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 
 import { getAvailableBases, getRunnerOptions } from './prompts';
 

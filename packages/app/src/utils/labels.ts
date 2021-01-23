@@ -3,7 +3,7 @@ import {
   ContactQuality,
   FieldingPosition,
   PlateAppearanceType,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import { HitContactType } from 'state/game/types';
 import { BasepathOutcome } from 'state/prompts/types';
 

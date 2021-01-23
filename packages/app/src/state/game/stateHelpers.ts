@@ -23,7 +23,7 @@ import {
   ContactQuality,
   PlateAppearanceType,
   BaseType,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import {
   LineupSpot,
   AppGameState,

@@ -1,4 +1,4 @@
-import { FieldingPosition, HalfInning, PlateAppearanceType } from '@dugout-companion/shared';
+import { FieldingPosition, HalfInning, PlateAppearanceType } from '@sammyers/dc-shared';
 
 export interface RawPlayDescription {
   description: string;

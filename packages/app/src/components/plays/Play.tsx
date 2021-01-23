@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Text, Box } from 'grommet';
 
-import { PlateAppearanceType } from '@dugout-companion/shared';
+import { PlateAppearanceType } from '@sammyers/dc-shared';
 
 import { getPlateAppearanceLabel } from 'utils/labels';
 

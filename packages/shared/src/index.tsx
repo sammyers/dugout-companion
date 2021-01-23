@@ -9797,22 +9797,22 @@ export type FillInGameEventsMutation = (
   )> }
 );
 
-export type GetAllGamesSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type GetAllGamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllGamesSubscription = (
-  { __typename?: 'Subscription' }
+export type GetAllGamesQuery = (
+  { __typename?: 'Query' }
   & { games: Maybe<Array<(
     { __typename?: 'Game' }
     & UnpackedGame_GameFragment
   )>> }
 );
 
-export type GetAllPlayersSubscriptionVariables = Exact<{ [key: string]: never; }>;
+export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllPlayersSubscription = (
-  { __typename?: 'Subscription' }
+export type GetAllPlayersQuery = (
+  { __typename?: 'Query' }
   & { players: Maybe<Array<(
     { __typename?: 'Player' }
     & Pick<Player, 'id' | 'firstName' | 'lastName'>
@@ -10030,7 +10030,7 @@ export type FillInGameEventsMutationHookResult = ReturnType<typeof useFillInGame
 export type FillInGameEventsMutationResult = Apollo.MutationResult<FillInGameEventsMutation>;
 export type FillInGameEventsMutationOptions = Apollo.BaseMutationOptions<FillInGameEventsMutation, FillInGameEventsMutationVariables>;
 export const GetAllGamesDocument = gql`
-    subscription GetAllGames {
+    query GetAllGames {
   games {
     ...UnpackedGame_Game
   }
@@ -10038,27 +10038,31 @@ export const GetAllGamesDocument = gql`
     ${UnpackedGame_GameFragmentDoc}`;
 
 /**
- * __useGetAllGamesSubscription__
+ * __useGetAllGamesQuery__
  *
- * To run a query within a React component, call `useGetAllGamesSubscription` and pass it any options that fit your needs.
- * When your component renders, `useGetAllGamesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllGamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllGamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllGamesSubscription({
+ * const { data, loading, error } = useGetAllGamesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAllGamesSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAllGamesSubscription, GetAllGamesSubscriptionVariables>) {
-        return Apollo.useSubscription<GetAllGamesSubscription, GetAllGamesSubscriptionVariables>(GetAllGamesDocument, baseOptions);
+export function useGetAllGamesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllGamesQuery, GetAllGamesQueryVariables>) {
+        return Apollo.useQuery<GetAllGamesQuery, GetAllGamesQueryVariables>(GetAllGamesDocument, baseOptions);
       }
-export type GetAllGamesSubscriptionHookResult = ReturnType<typeof useGetAllGamesSubscription>;
-export type GetAllGamesSubscriptionResult = Apollo.SubscriptionResult<GetAllGamesSubscription>;
+export function useGetAllGamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllGamesQuery, GetAllGamesQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllGamesQuery, GetAllGamesQueryVariables>(GetAllGamesDocument, baseOptions);
+        }
+export type GetAllGamesQueryHookResult = ReturnType<typeof useGetAllGamesQuery>;
+export type GetAllGamesLazyQueryHookResult = ReturnType<typeof useGetAllGamesLazyQuery>;
+export type GetAllGamesQueryResult = Apollo.QueryResult<GetAllGamesQuery, GetAllGamesQueryVariables>;
 export const GetAllPlayersDocument = gql`
-    subscription GetAllPlayers {
+    query GetAllPlayers {
   players {
     id
     firstName
@@ -10068,25 +10072,29 @@ export const GetAllPlayersDocument = gql`
     `;
 
 /**
- * __useGetAllPlayersSubscription__
+ * __useGetAllPlayersQuery__
  *
- * To run a query within a React component, call `useGetAllPlayersSubscription` and pass it any options that fit your needs.
- * When your component renders, `useGetAllPlayersSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllPlayersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPlayersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetAllPlayersSubscription({
+ * const { data, loading, error } = useGetAllPlayersQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetAllPlayersSubscription(baseOptions?: Apollo.SubscriptionHookOptions<GetAllPlayersSubscription, GetAllPlayersSubscriptionVariables>) {
-        return Apollo.useSubscription<GetAllPlayersSubscription, GetAllPlayersSubscriptionVariables>(GetAllPlayersDocument, baseOptions);
+export function useGetAllPlayersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
+        return Apollo.useQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, baseOptions);
       }
-export type GetAllPlayersSubscriptionHookResult = ReturnType<typeof useGetAllPlayersSubscription>;
-export type GetAllPlayersSubscriptionResult = Apollo.SubscriptionResult<GetAllPlayersSubscription>;
+export function useGetAllPlayersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, baseOptions);
+        }
+export type GetAllPlayersQueryHookResult = ReturnType<typeof useGetAllPlayersQuery>;
+export type GetAllPlayersLazyQueryHookResult = ReturnType<typeof useGetAllPlayersLazyQuery>;
+export type GetAllPlayersQueryResult = Apollo.QueryResult<GetAllPlayersQuery, GetAllPlayersQueryVariables>;
 export const GetGameDocument = gql`
     query GetGame($id: Int!) {
   game(id: $id) {

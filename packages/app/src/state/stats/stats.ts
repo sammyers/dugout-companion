@@ -1,4 +1,4 @@
-import { ContactQuality, PlateAppearanceType } from '@dugout-companion/shared';
+import { ContactQuality, PlateAppearanceType } from '@sammyers/dc-shared';
 import _ from 'lodash';
 
 import { GameEventRecord } from 'state/game/types';

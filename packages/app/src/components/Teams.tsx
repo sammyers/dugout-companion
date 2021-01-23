@@ -3,7 +3,7 @@ import { Box, Button } from 'grommet';
 import { Edit, LinkPrevious, Save } from 'grommet-icons';
 import { DragDropContext, DragDropContextProps } from 'react-beautiful-dnd';
 
-import { TeamRole } from '@dugout-companion/shared';
+import { TeamRole } from '@sammyers/dc-shared';
 
 import Lineup from './Lineup';
 

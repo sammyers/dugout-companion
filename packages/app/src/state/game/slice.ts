@@ -14,7 +14,7 @@ import {
 } from './stateHelpers';
 import { getAvailablePositionsForTeam, getCurrentLineup, getTeamWithRole } from './utils';
 
-import { HalfInning, TeamRole } from '@dugout-companion/shared';
+import { HalfInning, TeamRole } from '@sammyers/dc-shared';
 import {
   Team,
   AddPlayerPayload,

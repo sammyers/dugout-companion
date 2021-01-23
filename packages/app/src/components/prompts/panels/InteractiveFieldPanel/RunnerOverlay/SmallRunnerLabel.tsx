@@ -4,7 +4,7 @@ import { Box, Text } from 'grommet';
 import { getShortPlayerName } from 'state/players/selectors';
 import { useAppSelector } from 'utils/hooks';
 
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 
 const getRunnerNameLayoutProperties = (base: BaseType) => {
   switch (base) {
