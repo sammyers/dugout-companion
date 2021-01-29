@@ -12,26 +12,49 @@ const doesPlayerExist = (newPlayer: NewPlayer, players: Record<string, Player>) 
 
 type PlayerMap = Record<string, Player>;
 
+export interface PlayerState {
+  synced: PlayerMap;
+  unsynced: PlayerMap;
+}
+
+const initialState: PlayerState = {
+  synced: {},
+  unsynced: {},
+};
+
+interface SyncPlayerPayload {
+  offlineId: string;
+  id: string;
+}
+
 const { actions: playerActions, reducer } = createSlice({
   name: 'players',
-  initialState: {} as PlayerMap,
+  initialState,
   reducers: {
-    loadPlayers: (_state, { payload }: PayloadAction<Player[]>) =>
-      _.reduce(
+    loadPlayers: (state, { payload }: PayloadAction<Player[]>) => {
+      state.synced = _.reduce(
         payload,
         (all, player) => ({
           ...all,
           [player.id]: player,
         }),
         {} as PlayerMap
-      ),
-    addPlayer: {
+      );
+    },
+    loadPlayer(state, { payload }: PayloadAction<Player>) {
+      state.synced[payload.id] = payload;
+    },
+    createPlayerOffline: {
       reducer(state, { payload }: PayloadAction<Player>) {
-        if (!doesPlayerExist(payload, state)) {
-          state[payload.id] = payload;
+        if (!doesPlayerExist(payload, state.unsynced)) {
+          state.unsynced[payload.id] = payload;
         }
       },
       prepare: (player: NewPlayer) => ({ payload: { ...player, id: uuidv1() } }),
+    },
+    syncPlayer(state, { payload }: PayloadAction<SyncPlayerPayload>) {
+      state.synced[payload.id] = { ...state.unsynced[payload.offlineId], id: payload.id };
+      delete state.unsynced[payload.offlineId];
     },
   },
 });

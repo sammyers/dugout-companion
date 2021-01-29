@@ -130,8 +130,10 @@ const PromptStages = () => {
         </Text>
         <Box flex align="end" />
       </Box>
-      <Slider activeIndex={activeIndex}>{sliderPanes}</Slider>
-      <PrimaryPromptNav />
+      <Box fill>
+        <Slider activeIndex={activeIndex}>{sliderPanes}</Slider>
+        <PrimaryPromptNav />
+      </Box>
       <PromptStateManager />
     </Box>
   );

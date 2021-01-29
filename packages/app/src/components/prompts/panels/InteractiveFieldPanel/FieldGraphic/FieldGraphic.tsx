@@ -43,19 +43,29 @@ const baseTransforms = [
 const AnimatedBase = animated(Base);
 
 const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
-  const fieldSpring = useSpring({
+  // const fieldSpring = useSpring({
+  //   transform: runnerMode ? 'translate(-175,-218) scale(2,2)' : 'translate(0,0) scale(1,1)',
+  //   fillOpacity: runnerMode ? 0.5 : 1,
+  //   stdDeviation: runnerMode ? 2 : 1,
+  //   stroke: runnerMode ? brandColor : 'black',
+  // });
+  const fieldSpring = {
     transform: runnerMode ? 'translate(-175,-218) scale(2,2)' : 'translate(0,0) scale(1,1)',
     fillOpacity: runnerMode ? 0.5 : 1,
     stdDeviation: runnerMode ? 2 : 1,
     stroke: runnerMode ? brandColor : 'black',
-  });
-  const baseSprings = useSprings(
-    4,
-    baseTransforms.map(({ normal, small, large }) => ({
-      transform: runnerMode ? `${normal} ${large}` : `${normal} ${small}`,
-      strokeWidth: runnerMode ? '2px' : '1px',
-    }))
-  );
+  };
+  // const baseSprings = useSprings(
+  //   4,
+  //   baseTransforms.map(({ normal, small, large }) => ({
+  //     transform: runnerMode ? `${normal} ${large}` : `${normal} ${small}`,
+  //     strokeWidth: runnerMode ? '2px' : '1px',
+  //   }))
+  // );
+  const baseSprings = baseTransforms.map(({ normal, small, large }) => ({
+    transform: runnerMode ? `${normal} ${large}` : `${normal} ${small}`,
+    strokeWidth: runnerMode ? '2px' : '1px',
+  }));
 
   const baseOccupied = useCallback(
     (base: BaseType | null) => _.some(runners, occupiedBase => base === occupiedBase),
@@ -83,10 +93,12 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
       <filter id="blur">
         <feGaussianBlur stdDeviation={runnerMode ? '2' : '0'} />
       </filter>
-      <animated.g transform={fieldSpring.transform}>
+      <g transform={fieldSpring.transform}>
+        {/* <animated.g transform={fieldSpring.transform}> */}
         <g filter="url(#blur)">
           <g transform="matrix(1,0,0,1,-30,-81)">
-            <animated.path
+            {/* <animated.path */}
+            <path
               d="M43.054,171.551C78.254,119.828 137.589,85.838 204.8,85.838C272.011,85.838 331.346,119.828 366.546,171.551L215.036,323.068L194.564,323.068L43.054,171.551Z"
               style={{
                 fill: 'rgb(104,182,132)',
@@ -97,7 +109,8 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
             />
           </g>
           <g transform="matrix(1,0,0,1,-27.5,-77.742)">
-            <animated.path
+            {/* <animated.path */}
+            <path
               d="M120.598,248.341C122.418,204.73 158.395,169.885 202.447,169.885C246.403,169.885 282.321,204.58 284.284,248.059L212.536,319.81L192.064,319.81L120.598,248.341Z"
               style={{
                 fill: 'rgb(163,122,116)',
@@ -114,7 +127,8 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
             />
           </g>
           <g transform="matrix(1,0,0,1,-27.5,-77.742)">
-            <animated.path
+            {/* <animated.path */}
+            <path
               d="M209.171,205.636L244.507,240.972C243.34,242.923 242.669,245.205 242.669,247.643C242.669,250.089 243.345,252.378 244.519,254.334L210.965,287.888C208.688,285.938 205.73,284.759 202.5,284.759C199.27,284.759 196.312,285.938 194.035,287.888L160.648,254.501C161.885,252.508 162.599,250.158 162.599,247.643C162.599,245.135 161.89,242.793 160.66,240.805L195.829,205.636C197.781,206.803 200.063,207.473 202.5,207.473C204.937,207.473 207.219,206.803 209.171,205.636Z"
               style={{
                 fill: 'rgb(104,182,132)',
@@ -125,7 +139,8 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
             />
           </g>
           <g transform="matrix(0.61869,0,0,0.61869,48.1631,11.6204)">
-            <animated.circle
+            {/* <animated.circle */}
+            <circle
               cx="205.143"
               cy="254.407"
               r="14.547"
@@ -160,7 +175,8 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
             occupied={runnerMode && baseOccupied(bases[i])}
           />
         ))}
-      </animated.g>
+        {/* </animated.g> */}
+      </g>
     </svg>
   );
 };

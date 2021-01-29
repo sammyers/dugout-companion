@@ -85,7 +85,7 @@ const loadVars = async () => {
       const rootPassword = await getSecret("DATABASE_ROOT_PASSWORD");
       setEnvVar(
         "DATABASE_URL",
-        `sslmode=disable dbname=${DB_NAME} user=postgres password=${rootPassword} hostaddr=${ip}`
+        `postgres://postgres:${rootPassword}@${ip}/${DB_NAME}?sslmode=disable`
       );
     } else {
       setEnvVar("DATABASE_URL", makeConnectionString(owner, ownerPassword));

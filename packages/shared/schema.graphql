@@ -705,7 +705,7 @@ type LineupSpot implements Node {
   lineupId: Int!
   playerId: UUID!
   battingOrder: Int!
-  position: FieldingPosition!
+  position: FieldingPosition
 
   """Reads a single `Lineup` that is related to this `LineupSpot`."""
   lineup: Lineup
@@ -7617,7 +7617,7 @@ input LineupSpotPatch {
 input LineupSpotLineupIdFkeyLineupSpotCreateInput {
   playerId: UUID
   battingOrder: Int!
-  position: FieldingPosition!
+  position: FieldingPosition
   lineup: LineupSpotLineupIdFkeyInput
   player: LineupSpotPlayerIdFkeyInput
 }
@@ -7820,7 +7820,7 @@ input PlayerOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate {
 input LineupSpotPlayerIdFkeyLineupSpotCreateInput {
   lineupId: Int
   battingOrder: Int!
-  position: FieldingPosition!
+  position: FieldingPosition
   lineup: LineupSpotLineupIdFkeyInput
   player: LineupSpotPlayerIdFkeyInput
 }
@@ -8307,7 +8307,7 @@ input LineupSpotInput {
   lineupId: Int
   playerId: UUID
   battingOrder: Int!
-  position: FieldingPosition!
+  position: FieldingPosition
   lineup: LineupSpotLineupIdFkeyInput
   player: LineupSpotPlayerIdFkeyInput
 }

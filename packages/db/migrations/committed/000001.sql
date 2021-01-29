@@ -1,5 +1,5 @@
 --! Previous: -
---! Hash: sha1:0c4231bd0ad6838d0d8406ff912bc4cd1b673765
+--! Hash: sha1:d4f1b306fc530a87bdc3d6c1629b69440ec59a5a
 
 -- Enter migration here
 alter default privileges revoke all on sequences from public;
@@ -142,7 +142,7 @@ create table lineup_spot (
   player_id uuid references player (id),
   primary key (lineup_id, player_id),
   batting_order int not null,
-  position fielding_position not null,
+  position fielding_position,
   unique (lineup_id, batting_order),
   unique (lineup_id, position)
 );
@@ -249,7 +249,7 @@ create table game_event_record (
   game_event_id int references game_event (id) not null
 );
 grant select,
-  insert (game_id, game_state_before_id, game_state_after_id, game_event_id)
+  insert (game_id, event_index, game_state_before_id, game_state_after_id, game_event_id)
   on game_event_record to :DATABASE_VISITOR;
 comment on constraint game_event_record_game_state_before_fk on game_event_record is E'@fieldName gameStateBefore';
 comment on constraint game_event_record_game_state_after_fk on game_event_record is E'@fieldName gameStateAfter';

@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.3",
-    "@sammyers/dc-shared": "^0.0.2",
+    "@sammyers/dc-shared": "^0.0.3",
     "@farbenmeer/react-spring-slider": "^1.3.3",
     "@graphile/subscriptions-lds": "^4.9.0",
     "@reduxjs/toolkit": "^1.4.0",

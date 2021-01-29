@@ -29,7 +29,9 @@ const NameCell: FC<NameCellProps> = ({ playerId, lineupSpot }) => {
       <Text weight="bold" style={{ whiteSpace: 'nowrap' }}>
         {name}
       </Text>
-      <Text style={{ fontStyle: 'italic' }}>{getPositionAbbreviation(position)}</Text>
+      <Text style={{ fontStyle: 'italic' }}>
+        {position ? getPositionAbbreviation(position) : ''}
+      </Text>
     </Box>
   );
 };

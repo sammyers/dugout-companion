@@ -52,6 +52,7 @@ export type AppGameState = SimplifyType<
       nextLineupId: number;
       editingLineups: boolean;
       lineupDrafts: Record<TeamRole, LineupSpot[]>;
+      saved: boolean;
     }
 >;
 
@@ -70,5 +71,5 @@ export interface MovePlayerPayload {
 }
 export interface ChangePlayerPositionPayload {
   playerId: string;
-  position: FieldingPosition;
+  position: FieldingPosition | null;
 }

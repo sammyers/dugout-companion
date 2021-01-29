@@ -1,6 +1,6 @@
 {
   "name": "@sammyers/dc-shared",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Common type definitions and utilites for Dugout Companion",
   "main": "build/index.js",
   "typings": "build/index.d.ts",

@@ -11,8 +11,9 @@ import {
   getScore,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { GameStatus } from 'state/game/types';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+
+import { GameStatus } from 'state/game/types';
 
 const GameOver = () => {
   const dispatch = useAppDispatch();
@@ -51,7 +52,7 @@ const GameOver = () => {
           {awayScore} - {homeScore}
         </Heading>
       </Box>
-      <Box gap="small">
+      <Box gap="medium">
         {gameLength < maxGameLength && (
           <Button
             color="light-1"
@@ -61,18 +62,20 @@ const GameOver = () => {
           />
         )}
         <SaveGameButton />
-        <Button
-          color="status-ok"
-          plain={false}
-          label="New Game (same teams)"
-          onClick={onClickResetGame}
-        />
-        <Button
-          color="status-ok"
-          plain={false}
-          label="New Game (reset teams)"
-          onClick={onClickFullResetGame}
-        />
+        <Box direction="row" gap="small">
+          <Button
+            color="status-ok"
+            plain={false}
+            label="New Game (same teams)"
+            onClick={onClickResetGame}
+          />
+          <Button
+            color="status-ok"
+            plain={false}
+            label="New Game (reset teams)"
+            onClick={onClickFullResetGame}
+          />
+        </Box>
       </Box>
     </Main>
   );
