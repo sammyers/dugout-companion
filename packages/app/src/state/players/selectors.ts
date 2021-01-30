@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { formatShortName } from './utils';
+import { formatName, formatShortName } from './utils';
 
 import { AppState } from 'state/store';
 import { Player } from './types';
@@ -19,10 +19,7 @@ const getPlayer = (state: AppState, playerId: string): Player | undefined =>
 
 export const getPlayerName = (state: AppState, playerId: string) => {
   const player = getPlayer(state, playerId);
-  if (player && player.lastName) {
-    return `${player.firstName} ${player.lastName}`;
-  }
-  return player?.firstName ?? '';
+  return formatName(player);
 };
 
 export const getShortPlayerName = (state: AppState, playerId: string) => {

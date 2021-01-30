@@ -10,7 +10,7 @@ import LineupPlayer from './LineupPlayer';
 import { getLineupToEdit, getPlayersNotInGame } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { playerActions } from 'state/players/slice';
-import { getNameParts } from 'state/players/utils';
+import { formatName, getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
 
@@ -37,7 +37,7 @@ const Lineup = ({ teamRole, editable }: Props) => {
     if (!searchValue.length) return [];
 
     const existingSuggestions = availablePlayers
-      .filter(({ firstName }) => firstName.toLowerCase().startsWith(searchValue.toLowerCase()))
+      .filter(player => formatName(player).toLowerCase().startsWith(searchValue.toLowerCase()))
       .map(player => ({
         value: player.id,
         label: (

@@ -2,6 +2,13 @@ import _ from 'lodash';
 
 import { Player } from './types';
 
+export const formatName = (player?: Player) => {
+  if (player && player.lastName) {
+    return `${player.firstName} ${player.lastName}`;
+  }
+  return player?.firstName ?? '';
+};
+
 export const formatShortName = (player?: Player) => {
   if (!player) {
     return '';
