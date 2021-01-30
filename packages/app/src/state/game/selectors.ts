@@ -144,6 +144,9 @@ export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, 
 });
 
 const getNextBatter = (batterId: string | undefined, lineup: LineupSpot[]) => {
+  if (!lineup.length) {
+    return '';
+  }
   const lineupIndex = _.findIndex(lineup, ({ playerId }) => playerId === batterId);
   if (lineupIndex === lineup.length - 1) {
     return lineup[0].playerId;
