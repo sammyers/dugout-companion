@@ -12,7 +12,8 @@
     "commit": "NODE_ENV=development yarn gm commit",
     "uncommit": "NODE_ENV=development yarn gm uncommit",
     "reset": "NODE_ENV=development yarn gm reset",
-    "migrate:prod": "PROD_MIGRATE=true yarn gm migrate"
+    "migrate:prod": "PROD_MIGRATE=true yarn gm migrate",
+    "compile": "./scripts/compile_migrations.sh"
   },
   "dependencies": {
     "dotenv": "^8.2.0",

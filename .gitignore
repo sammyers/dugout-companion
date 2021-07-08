@@ -3,7 +3,7 @@ node_modules
 build
 
 .env
-.env.prod
+prod.env
 
 tsconfig.tsbuildinfo
 yarn-error.log*
