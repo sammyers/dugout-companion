@@ -1,9 +1,8 @@
 version: "3.3"
 services:
   db:
-    container_name: dc-db
     restart: always
-    image: dc-db
+    image: sam4core/dc-db
     build:
       context: ./packages/db
     volumes:
@@ -15,9 +14,8 @@ services:
     ports:
       - 5433:5432
   server:
-    container_name: dc-server
     restart: always
-    image: dc-server
+    image: sam4core/dc-server
     build:
       context: ./packages/server
     env_file:
@@ -29,9 +27,8 @@ services:
     ports:
       - 5434:5434
   app:
-    container_name: dc-app
     restart: always
-    image: dc-app
+    image: sam4core/dc-app
     build:
       context: ./packages/app
     depends_on:
