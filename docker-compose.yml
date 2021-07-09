@@ -28,6 +28,18 @@ services:
       - network
     ports:
       - 5434:5434
+  app:
+    container_name: dc-app
+    restart: always
+    image: dc-app
+    build:
+      context: ./packages/app
+    depends_on:
+      - server
+    networks:
+      - network
+    ports:
+      - 8080:80
 
 networks:
   network:
