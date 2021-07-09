@@ -3,7 +3,7 @@ import {
   ContactQuality,
   FieldingPosition,
   PlateAppearanceType,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import _ from 'lodash';
 
 import { HitContactType, BaseRunnerMap, BasepathMovement } from 'state/game/types';

@@ -1,0 +1,16 @@
+{
+  "name": "@sammyers/dc-config",
+  "version": "0.0.2",
+  "description": "Common configuration for Dugout Companion",
+  "repository": "https://github.com/sammyers/dugout-companion",
+  "author": "Sam Myers <sammyers.dev@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "dc-env": "./env.mjs"
+  },
+  "dependencies": {
+    "@google-cloud/secret-manager": "^3.3.0",
+    "dotenv": "^8.2.0",
+    "query-string": "^6.13.8"
+  }
+}

@@ -1,4 +1,4 @@
-import { BaseType, ContactQuality, FieldingPosition } from '@dugout-companion/shared';
+import { BaseType, ContactQuality, FieldingPosition } from '@sammyers/dc-shared';
 
 export interface ContactOption {
   id: number;

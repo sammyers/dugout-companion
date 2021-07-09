@@ -1,11 +1,16 @@
 import { createSelector } from '@reduxjs/toolkit';
-import _ from 'lodash';
 
-import { HalfInning, TeamRole } from '@dugout-companion/shared';
+import { HalfInning, TeamRole } from '@sammyers/dc-shared';
 
-import { getBaseForRunner, getCurrentLineup, getTeamWithRole, runnersToMap } from './utils';
+import {
+  getBaseForRunner,
+  getCurrentLineup,
+  getNextBatter,
+  getTeamWithRole,
+  runnersToMap,
+} from './utils';
 
-import { AppGameState, LineupSpot } from './types';
+import { AppGameState } from './types';
 
 export const getTeams = (state: AppGameState) => state.teams;
 export const getRunners = (state: AppGameState) => state.baseRunners;
@@ -22,11 +27,16 @@ export const getBattingTeamRole = createSelector(getHalfInning, half =>
 export const getBattingTeam = createSelector(getTeams, getBattingTeamRole, getTeamWithRole);
 export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
 
-const getNextBatter = (batterId: string | undefined, lineup: LineupSpot[]) => {
-  const lineupIndex = _.findIndex(lineup, ({ playerId }) => playerId === batterId);
-  if (lineupIndex === lineup.length - 1) {
-    return lineup[0].playerId;
-  }
-  return lineup[lineupIndex + 1].playerId;
-};
 export const getOnDeckBatter = createSelector(getCurrentBatter, getBattingLineup, getNextBatter);
+
+export const isEditingLineups = (state: AppGameState) => state.editingLineups;
+export const getLineupDrafts = (state: AppGameState) => state.lineupDrafts;
+export const getDraftLineup = (state: AppGameState, role: TeamRole) => getLineupDrafts(state)[role];
+
+export const getTeam = (state: AppGameState, role: TeamRole) =>
+  getTeamWithRole(getTeams(state), role);
+
+export const getLineupToEdit = (state: AppGameState, teamRole: TeamRole) =>
+  isEditingLineups(state)
+    ? getDraftLineup(state, teamRole)
+    : getCurrentLineup(getTeam(state, teamRole));

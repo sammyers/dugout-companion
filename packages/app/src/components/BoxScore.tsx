@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Box, Card, DataTable, Text } from 'grommet';
 import { Redirect } from 'react-router-dom';
 
-import { TeamRole } from '@dugout-companion/shared';
+import { TeamRole } from '@sammyers/dc-shared';
 
 import { isGameInProgress, getPlayerPosition } from 'state/game/selectors';
 import { getShortPlayerName } from 'state/players/selectors';
@@ -29,7 +29,9 @@ const NameCell: FC<NameCellProps> = ({ playerId, lineupSpot }) => {
       <Text weight="bold" style={{ whiteSpace: 'nowrap' }}>
         {name}
       </Text>
-      <Text style={{ fontStyle: 'italic' }}>{getPositionAbbreviation(position)}</Text>
+      <Text style={{ fontStyle: 'italic' }}>
+        {position ? getPositionAbbreviation(position) : ''}
+      </Text>
     </Box>
   );
 };
@@ -56,6 +58,9 @@ const TeamBoxScore: FC<TeamBoxScoreProps> = ({ rows, team }) => {
           { property: 'atBats', header: 'AB' },
           { property: 'runsScored', header: 'R' },
           { property: 'hits', header: 'H' },
+          { property: 'doubles', header: '2B' },
+          { property: 'triples', header: '3B' },
+          { property: 'homeRuns', header: 'HR' },
           { property: 'runsBattedIn', header: 'RBI' },
           { property: 'walks', header: 'BB' },
           { property: 'leftOnBase', header: 'LOB' },

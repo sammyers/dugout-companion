@@ -1,15 +1,26 @@
-import React, { useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { Box, Button } from 'grommet';
-import { Edit, LinkPrevious, Save } from 'grommet-icons';
+import { Edit, LinkPrevious, Save, Transaction } from 'grommet-icons';
 import { DragDropContext, DragDropContextProps } from 'react-beautiful-dnd';
 
-import { TeamRole } from '@dugout-companion/shared';
+import { TeamRole } from '@sammyers/dc-shared';
 
 import Lineup from './Lineup';
 
 import { isGameInProgress, isLineupEditable } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+
+const ButtonContainer: FC = ({ children }) => (
+  <Box
+    style={{ position: 'absolute', top: 0 }}
+    margin={{ horizontal: 'auto', vertical: 'small' }}
+    direction="row"
+    gap="xsmall"
+  >
+    {children}
+  </Box>
+);
 
 const Teams = () => {
   const dispatch = useAppDispatch();
@@ -44,6 +55,10 @@ const Teams = () => {
     [dispatch]
   );
 
+  const handleFlipTeams = useCallback(() => {
+    dispatch(gameActions.flipTeams());
+  }, [dispatch]);
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Box
@@ -55,28 +70,33 @@ const Teams = () => {
         basis="auto"
         style={{ position: 'relative' }}
       >
-        {gameInProgress && (
-          <Box
-            style={{ position: 'absolute', top: 0 }}
-            margin={{ horizontal: 'auto', vertical: 'small' }}
-            direction="row"
-            gap="xsmall"
-          >
-            {editable ? (
+        <ButtonContainer>
+          {gameInProgress ? (
+            editable ? (
               [
                 <Button
+                  key="back-button"
                   plain={false}
                   icon={<LinkPrevious />}
                   color="status-critical"
                   onClick={onCancel}
                 />,
-                <Button primary plain={false} icon={<Save />} color="status-ok" onClick={onSave} />,
+                <Button
+                  key="save-button"
+                  primary
+                  plain={false}
+                  icon={<Save />}
+                  color="status-ok"
+                  onClick={onSave}
+                />,
               ]
             ) : (
               <Button primary plain={false} icon={<Edit />} onClick={onEdit} />
-            )}
-          </Box>
-        )}
+            )
+          ) : (
+            <Button plain={false} icon={<Transaction />} onClick={handleFlipTeams} />
+          )}
+        </ButtonContainer>
         <Lineup teamRole={TeamRole.AWAY} editable={editable} />
         <Lineup teamRole={TeamRole.HOME} editable={editable} />
       </Box>

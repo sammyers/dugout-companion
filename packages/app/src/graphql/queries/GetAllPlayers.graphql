@@ -1,4 +1,4 @@
-subscription GetAllPlayers {
+query GetAllPlayers {
   players {
     id
     firstName

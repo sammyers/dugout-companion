@@ -9,7 +9,7 @@ import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { getPlateAppearanceLabel } from 'utils/labels';
 
-import { PlateAppearanceType } from '@dugout-companion/shared';
+import { PlateAppearanceType } from '@sammyers/dc-shared';
 
 const buttonGroups = [
   {

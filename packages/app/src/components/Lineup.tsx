@@ -3,15 +3,16 @@ import { Box, Text, TextInput, TextInputProps, Heading } from 'grommet';
 import _ from 'lodash';
 import { Droppable } from 'react-beautiful-dnd';
 
-import { TeamRole } from '@dugout-companion/shared';
+import { TeamRole, useCreatePlayerMutation } from '@sammyers/dc-shared';
 
 import LineupPlayer from './LineupPlayer';
 
-import { getLineup, getPlayersNotInGame } from 'state/game/selectors';
+import { getLineupToEdit, getPlayersNotInGame } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { playerActions } from 'state/players/slice';
-import { getNameParts } from 'state/players/utils';
+import { formatName, getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
+import { useNetworkStatus } from 'utils/network';
 
 const NEW_PLAYER_ID = 'new-player';
 
@@ -23,16 +24,20 @@ interface Props {
 const Lineup = ({ teamRole, editable }: Props) => {
   const dispatch = useAppDispatch();
 
-  const players = useAppSelector(state => getLineup(state, teamRole));
+  const players = useAppSelector(state => getLineupToEdit(state, teamRole));
   const availablePlayers = useAppSelector(getPlayersNotInGame);
 
   const [searchValue, setSearchValue] = useState('');
+
+  const online = useNetworkStatus();
+
+  const [createPlayer] = useCreatePlayerMutation();
 
   const suggestions = useMemo(() => {
     if (!searchValue.length) return [];
 
     const existingSuggestions = availablePlayers
-      .filter(({ firstName }) => firstName.toLowerCase().startsWith(searchValue.toLowerCase()))
+      .filter(player => formatName(player).toLowerCase().startsWith(searchValue.toLowerCase()))
       .map(player => ({
         value: player.id,
         label: (
@@ -63,18 +68,28 @@ const Lineup = ({ teamRole, editable }: Props) => {
   );
 
   const handleSuggestionSelect: NonNullable<TextInputProps['onSelect']> = useCallback(
-    ({ suggestion }) => {
+    async ({ suggestion }) => {
       if (suggestion) {
         let playerId = suggestion.value;
         if (playerId === NEW_PLAYER_ID) {
-          const { payload } = dispatch(playerActions.addPlayer(getNameParts(searchValue)));
-          playerId = payload.id;
+          const nameParts = getNameParts(searchValue);
+          if (online) {
+            const { data } = await createPlayer({ variables: nameParts });
+            const player = data?.createPlayer?.player;
+            if (player) {
+              dispatch(playerActions.loadPlayer(player));
+              playerId = player.id;
+            }
+          } else {
+            const { payload } = dispatch(playerActions.createPlayerOffline(nameParts));
+            playerId = payload.id;
+          }
         }
         dispatch(gameActions.addPlayerToGame({ teamRole, playerId }));
         setSearchValue('');
       }
     },
-    [teamRole, dispatch, searchValue, setSearchValue]
+    [online, teamRole, dispatch, searchValue, setSearchValue, createPlayer]
   );
 
   return (
@@ -82,14 +97,15 @@ const Lineup = ({ teamRole, editable }: Props) => {
       <Heading level={4} textAlign="center" margin={{ top: 'none' }}>
         {teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
       </Heading>
-      <TextInput
-        disabled={players.length === 10}
-        placeholder="Add Player"
-        suggestions={suggestions}
-        value={searchValue}
-        onChange={handleSearchChange}
-        onSelect={handleSuggestionSelect}
-      />
+      {editable && (
+        <TextInput
+          placeholder="Add Player"
+          suggestions={suggestions}
+          value={searchValue}
+          onChange={handleSearchChange}
+          onSelect={handleSuggestionSelect}
+        />
+      )}
       <Box direction="row" margin={{ top: 'small' }}>
         <Box width="xxsmall">
           {_.range(1, Math.max(9, players.length) + 1).map(lineupSpot => (

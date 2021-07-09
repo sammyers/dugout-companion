@@ -1,4 +1,4 @@
-require("@dugout-companion/shared/env");
+require("@sammyers/dc-config/env.mjs");
 const pg = require("pg");
 
 const {

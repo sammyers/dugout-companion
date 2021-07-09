@@ -1,6 +1,7 @@
 import React, { useCallback, ChangeEvent, useState } from 'react';
 import { Box, Button, DropButton, Heading, RangeInput, Text } from 'grommet';
-import { Add, PowerReset, Subtract } from 'grommet-icons';
+import { Add, Erase, PowerReset, Subtract } from 'grommet-icons';
+import { PURGE } from 'redux-persist';
 
 import {
   getCurrentGameLength,
@@ -29,6 +30,23 @@ const ResetConfirm = () => {
   );
 };
 
+const PurgeConfirm = () => {
+  const dispatch = useAppDispatch();
+
+  const onConfirm = useCallback(() => {
+    dispatch({ type: PURGE, result: () => null });
+  }, [dispatch]);
+
+  return (
+    <Box pad="small" width="small" gap="small">
+      <Text textAlign="center" size="small">
+        Purge locally persisted state? Don't do this unless you really need to!
+      </Text>
+      <Button size="small" color="status-critical" label="Purge" onClick={onConfirm} />
+    </Box>
+  );
+};
+
 const SettingsMenu = () => {
   const dispatch = useAppDispatch();
 
@@ -37,8 +55,6 @@ const SettingsMenu = () => {
   const currentGameLength = useAppSelector(getCurrentGameLength);
   const inProgress = useAppSelector(isGameInProgress);
   const inExtraInnings = useAppSelector(isGameInExtraInnings);
-
-  const [resetConfirmOpen, setResetConfirmOpen] = useState(false);
 
   const handleChangeGameLength = useCallback(
     ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -95,13 +111,18 @@ const SettingsMenu = () => {
           icon={<PowerReset color="status-critical" />}
           color="status-critical"
           alignSelf="center"
-          open={resetConfirmOpen}
-          onOpen={() => setResetConfirmOpen(true)}
           dropContent={<ResetConfirm />}
           dropProps={{ align: { top: 'bottom' } }}
-          onClose={() => setResetConfirmOpen(false)}
         />
       )}
+      <DropButton
+        label="Purge local data"
+        icon={<Erase color="status-critical" />}
+        color="status-critical"
+        alignSelf="center"
+        dropContent={<PurgeConfirm />}
+        dropProps={{ align: { top: 'bottom' } }}
+      />
     </Box>
   );
 };

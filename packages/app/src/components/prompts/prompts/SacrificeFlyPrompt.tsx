@@ -29,12 +29,16 @@ const SacrificeFlyPrompt: FC<SacrificeFlyOptions> = ({
   }, [dispatch]);
 
   useEffect(() => {
-    const stages = [PromptUiStage.SAC_FLY_RBIS, PromptUiStage.CONTACT];
+    const stages: PromptUiStage[] = [];
+    if ((runnersScoredOptions?.length || 0) > 1) {
+      stages.push(PromptUiStage.SAC_FLY_RBIS);
+    }
+    stages.push(PromptUiStage.CONTACT);
     if (runnerOptions) {
       stages.push(PromptUiStage.RUNNERS);
     }
     dispatch(promptActions.setStages(stages));
-  }, [runnerOptions, dispatch]);
+  }, [runnersScoredOptions, runnerOptions, dispatch]);
 
   return (
     <Box gap="medium">

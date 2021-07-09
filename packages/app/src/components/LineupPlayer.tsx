@@ -3,7 +3,7 @@ import { Box, Text, Button, Select, ThemeContext } from 'grommet';
 import { Close } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
-import { FieldingPosition, TeamRole } from '@dugout-companion/shared';
+import { FieldingPosition, TeamRole } from '@sammyers/dc-shared';
 
 import { getAvailablePositions, getPlayerPosition } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
@@ -28,10 +28,12 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
   const availablePositions = useAppSelector(state => getAvailablePositions(state, team));
   const positionOptions = useMemo(
     () =>
-      availablePositions.map(position => ({
-        position,
-        label: getPositionAbbreviation(position),
-      })),
+      availablePositions
+        .map(position => ({
+          position: position as FieldingPosition | '',
+          label: getPositionAbbreviation(position),
+        }))
+        .concat({ position: '', label: '' }),
     [availablePositions]
   );
 
@@ -40,8 +42,8 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
   }, [playerId, dispatch]);
 
   const handleChangePosition = useCallback(
-    ({ value }: { value: FieldingPosition }) => {
-      dispatch(gameActions.changePlayerPosition({ playerId, position: value }));
+    ({ value }: { value: FieldingPosition | '' }) => {
+      dispatch(gameActions.changePlayerPosition({ playerId, position: value || null }));
     },
     [dispatch, playerId]
   );
@@ -64,7 +66,7 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
               <ThemeContext.Extend value={{ global: { size: { xsmall: '108px' } } }}>
                 <Box width="xsmall" margin={{ right: 'small' }}>
                   <Select
-                    value={position}
+                    value={position ?? ''}
                     options={positionOptions}
                     labelKey="label"
                     valueKey={{ key: 'position', reduce: true }}
@@ -85,7 +87,7 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
               style={{ fontStyle: 'italic' }}
               margin={{ left: 'medium', right: 'auto' }}
             >
-              {getPositionAbbreviation(position)}
+              {position ? getPositionAbbreviation(position) : ''}
             </Text>
           )}
         </Box>

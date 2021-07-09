@@ -14,7 +14,7 @@ import {
 } from './stateHelpers';
 import { getAvailablePositionsForTeam, getCurrentLineup, getTeamWithRole } from './utils';
 
-import { HalfInning, TeamRole } from '@dugout-companion/shared';
+import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
 import {
   Team,
   AddPlayerPayload,
@@ -25,6 +25,8 @@ import {
   PlateAppearance,
   CreatedLineups,
 } from './types';
+import { playerActions } from 'state/players/slice';
+import { getLineupToEdit } from './partialSelectors';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
   name: '',
@@ -42,7 +44,7 @@ const initialState: AppGameState = {
   outs: 0,
   gameEventRecords: [],
   score: [0, 0],
-  gameLength: 1,
+  gameLength: 9,
   playerAtBat: '',
   upNextHalfInning: '',
   nextLineupId: 1,
@@ -52,6 +54,7 @@ const initialState: AppGameState = {
     [TeamRole.AWAY]: [],
     [TeamRole.HOME]: [],
   },
+  saved: false,
 };
 
 const { actions: gameActions, reducer } = createSlice({
@@ -68,7 +71,7 @@ const { actions: gameActions, reducer } = createSlice({
         });
         state.nextLineupId++;
       }
-      const lineup = getCurrentLineup(team);
+      const lineup = getLineupToEdit(state, team.role);
       if (!_.some(lineup, { playerId })) {
         const newSpot = { playerId, position: getNextAvailablePosition(lineup, true) };
         const newLineup = updatePositions([...lineup, newSpot]);
@@ -79,7 +82,7 @@ const { actions: gameActions, reducer } = createSlice({
       if (payload.fromTeam === payload.toTeam) {
         const team = getTeamWithRole(state.teams, payload.fromTeam);
         const newLineup = reorderItemInList(
-          getCurrentLineup(team),
+          getLineupToEdit(state, team.role),
           payload.startIndex,
           payload.endIndex
         );
@@ -87,8 +90,8 @@ const { actions: gameActions, reducer } = createSlice({
       } else {
         const sourceTeam = getTeamWithRole(state.teams, payload.fromTeam);
         const destTeam = getTeamWithRole(state.teams, payload.toTeam);
-        const oldSourceLineup = getCurrentLineup(sourceTeam);
-        const oldDestLineup = getCurrentLineup(destTeam);
+        const oldSourceLineup = getLineupToEdit(state, sourceTeam.role);
+        const oldDestLineup = getLineupToEdit(state, destTeam.role);
         let [newSourceLineup, newDestLineup] = moveItemBetweenLists(
           oldSourceLineup,
           oldDestLineup,
@@ -100,7 +103,7 @@ const { actions: gameActions, reducer } = createSlice({
 
         if (
           currentPlayerWithPosition ||
-          !getAvailablePositionsForTeam(destTeam).includes(position)
+          !getAvailablePositionsForTeam(destTeam).includes(position as FieldingPosition)
         ) {
           newDestLineup = changePlayerPosition(newDestLineup, playerId);
         }
@@ -110,17 +113,19 @@ const { actions: gameActions, reducer } = createSlice({
       }
     },
     removePlayerFromGame(state, { payload }: PayloadAction<string>) {
-      const team = state.teams.find(team => _.some(getCurrentLineup(team), { playerId: payload }))!;
+      const team = state.teams.find(team =>
+        _.some(getLineupToEdit(state, team.role), { playerId: payload })
+      )!;
       const newLineup = updatePositions(
-        getCurrentLineup(team).filter(spot => spot.playerId !== payload)
+        getLineupToEdit(state, team.role).filter(spot => spot.playerId !== payload)
       );
       changeLineup(state, team.role, newLineup);
     },
     changePlayerPosition(state, { payload }: PayloadAction<ChangePlayerPositionPayload>) {
       const team = state.teams.find(team =>
-        _.some(getCurrentLineup(team), { playerId: payload.playerId })
+        _.some(getLineupToEdit(state, team.role), { playerId: payload.playerId })
       )!;
-      const lineup = getCurrentLineup(team);
+      const lineup = getLineupToEdit(state, team.role);
       const currentPlayerWithPosition = _.find(lineup, {
         position: payload.position,
       });
@@ -135,6 +140,13 @@ const { actions: gameActions, reducer } = createSlice({
       }
       changeLineup(state, team.role, newLineup);
     },
+    flipTeams(state) {
+      if (state.status === GameStatus.NOT_STARTED) {
+        state.teams.reverse();
+        state.teams[0].role = TeamRole.AWAY;
+        state.teams[1].role = TeamRole.HOME;
+      }
+    },
     startGame(state) {
       state.playerAtBat = getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId;
       state.upNextHalfInning = getCurrentLineup(
@@ -144,23 +156,6 @@ const { actions: gameActions, reducer } = createSlice({
     },
     recordPlateAppearance(state, { payload }: PayloadAction<PlateAppearance>) {
       applyPlateAppearance(state, payload);
-
-      const [awayScore, homeScore] = state.score;
-      const homeLeadingAfterTop =
-        state.outs === 3 && state.halfInning === HalfInning.TOP && awayScore < homeScore;
-      const awayLeadingAfterBottom =
-        state.outs === 3 && state.halfInning === HalfInning.BOTTOM && awayScore > homeScore;
-
-      if (
-        state.inning >= state.gameLength &&
-        (homeLeadingAfterTop ||
-          awayLeadingAfterBottom ||
-          (state.halfInning === HalfInning.BOTTOM && awayScore < homeScore))
-      ) {
-        state.status = GameStatus.FINISHED;
-      } else {
-        cleanUpAfterPlateAppearance(state);
-      }
     },
     editLineup(state) {
       state.editingLineups = true;
@@ -241,12 +236,62 @@ const { actions: gameActions, reducer } = createSlice({
         });
       });
     },
+    setGameSaved(state) {
+      state.saved = true;
+    },
   },
+  extraReducers: builder =>
+    builder.addCase(playerActions.syncPlayer, (state, { payload }) => {
+      state.teams.forEach(team => {
+        team.lineups.forEach(lineup => {
+          lineup.lineupSpots.forEach(spot => {
+            if (spot.playerId === payload.offlineId) {
+              spot.playerId = payload.id;
+            }
+          });
+        });
+      });
+      state.gameEventRecords.forEach(event => {
+        [event.gameStateBefore, event.gameStateAfter].forEach(gameState => {
+          gameState.baseRunners.forEach(runner => {
+            if (runner.runnerId === payload.offlineId) {
+              runner.runnerId = payload.id;
+            }
+          });
+          if (gameState.playerAtBat === payload.offlineId) {
+            gameState.playerAtBat = payload.id;
+          }
+        });
+        event.scoredRunners.forEach(runner => {
+          if (runner.runnerId === payload.offlineId) {
+            runner.runnerId = payload.id;
+          }
+        });
+        const { plateAppearance, stolenBaseAttempt } = event.gameEvent;
+        if (plateAppearance) {
+          plateAppearance.outOnPlayRunners.forEach(runner => {
+            if (runner.runnerId === payload.offlineId) {
+              runner.runnerId = payload.id;
+            }
+          });
+          plateAppearance.basepathMovements.forEach(movement => {
+            if (movement.runnerId === payload.offlineId) {
+              movement.runnerId = payload.id;
+            }
+          });
+        } else if (stolenBaseAttempt) {
+          if (stolenBaseAttempt.runnerId === payload.offlineId) {
+            stolenBaseAttempt.runnerId = payload.id;
+          }
+        }
+      });
+    }),
 });
 
 export { gameActions };
 
 const lineupEditActions = [
+  gameActions.editLineup,
   gameActions.addPlayerToGame,
   gameActions.movePlayer,
   gameActions.removePlayerFromGame,
@@ -271,6 +316,10 @@ export default undoable(reducer, {
   },
   limit: 10,
   syncFilter: true,
-  clearHistoryType: [gameActions.resetGame.type, gameActions.fullResetGame.type],
+  clearHistoryType: [
+    gameActions.resetGame.type,
+    gameActions.fullResetGame.type,
+    playerActions.syncPlayer.type,
+  ],
   neverSkipReducer: true,
 });

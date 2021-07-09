@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import { getAllPlayersList, getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
+import * as partialSelectors from './partialSelectors';
 import {
   getAvailablePositionsForTeam,
   getCurrentLineup,
@@ -19,7 +20,7 @@ import {
   HalfInning,
   PlateAppearanceType,
   TeamRole,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameState, GameStatus, LineupSpot } from './types';
 
@@ -29,7 +30,7 @@ export const getPresent = (state: AppState) => state.game.present;
 export const getPast = (state: AppState) => state.game.past;
 export const getFuture = (state: AppState) => state.game.future;
 
-export const getTeams = createSelector(getPresent, state => state.teams);
+export const getTeams = createSelector(getPresent, partialSelectors.getTeams);
 export const getBatter = createSelector(getPresent, state => state.playerAtBat);
 export const getRunners = createSelector(getPresent, state => state.baseRunners);
 export const getRunnerMap = createSelector(getRunners, runnersToMap);
@@ -41,8 +42,8 @@ export const getInning = createSelector(getPresent, state => state.inning);
 export const getCurrentBatter = createSelector(getPresent, state => state.playerAtBat);
 export const getCurrentGameLength = createSelector(getPresent, state => state.gameLength);
 export const getGameHistory = createSelector(getPresent, state => state.gameEventRecords);
-export const isEditingLineups = createSelector(getPresent, state => state.editingLineups);
-export const getLineupDrafts = createSelector(getPresent, state => state.lineupDrafts);
+export const isEditingLineups = createSelector(getPresent, partialSelectors.isEditingLineups);
+export const getLineupDrafts = createSelector(getPresent, partialSelectors.getLineupDrafts);
 
 export const isGameInProgress = createSelector(
   getGameStatus,
@@ -56,7 +57,8 @@ export const isLineupEditable = createSelector(
   (inProgress, editing) => !inProgress || editing
 );
 
-export const getDraftLineup = (state: AppState, role: TeamRole) => getLineupDrafts(state)[role];
+export const getDraftLineup = (state: AppState, role: TeamRole) =>
+  partialSelectors.getDraftLineup(getPresent(state), role);
 
 export const getBattingTeamRole = createSelector(getHalfInning, half =>
   half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
@@ -65,7 +67,8 @@ export const getFieldingTeamRole = createSelector(getHalfInning, half =>
   half === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME
 );
 
-export const getTeam = (state: AppState, role: TeamRole) => getTeamWithRole(getTeams(state), role);
+export const getTeam = (state: AppState, role: TeamRole) =>
+  partialSelectors.getTeam(getPresent(state), role);
 export const getBattingTeam = createSelector(getTeams, getBattingTeamRole, getTeamWithRole);
 export const getFieldingTeam = createSelector(getTeams, getFieldingTeamRole, getTeamWithRole);
 
@@ -94,15 +97,19 @@ export const getPlayerAtPosition = (state: AppState, role: TeamRole, position: F
   getPlayerAtPositionFromTeams(getTeams(state), role, position);
 
 export const getPlayerPosition = (state: AppState, playerId: string) => {
-  const team = getTeams(state).find(team => _.some(getCurrentLineup(team), { playerId }));
-  return _.find(getCurrentLineup(team!), { playerId })!.position;
+  if (isEditingLineups(state)) {
+    const drafts = getLineupDrafts(state);
+    const allSpots = [...drafts.AWAY, ...drafts.HOME];
+    return allSpots.find(spot => spot.playerId === playerId)!.position;
+  } else {
+    const team = getTeams(state).find(team => _.some(getCurrentLineup(team), { playerId }))!;
+    return _.find(getCurrentLineup(team), { playerId })!.position;
+  }
 };
 
 export const getLineups = createSelector(getTeams, teams => teams.map(getCurrentLineup));
-export const getLineup = (state: AppState, teamRole: TeamRole) =>
-  isEditingLineups(state)
-    ? getDraftLineup(state, teamRole)
-    : getCurrentLineup(getTeam(state, teamRole));
+export const getLineupToEdit = (state: AppState, teamRole: TeamRole) =>
+  partialSelectors.getLineupToEdit(getPresent(state), teamRole);
 
 export const getPlayersNotInGame = createSelector(
   getAllPlayersList,
@@ -137,6 +144,9 @@ export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, 
 });
 
 const getNextBatter = (batterId: string | undefined, lineup: LineupSpot[]) => {
+  if (!lineup.length) {
+    return '';
+  }
   const lineupIndex = _.findIndex(lineup, ({ playerId }) => playerId === batterId);
   if (lineupIndex === lineup.length - 1) {
     return lineup[0].playerId;
@@ -174,6 +184,8 @@ export const isGameInExtraInnings = createSelector(
   getCurrentGameLength,
   (inning, gameLength) => inning > gameLength
 );
+
+export const wasGameSaved = createSelector(getPresent, game => game.saved);
 
 export const isUndoPossible = createSelector(getPast, past => past.length > 0);
 export const isRedoPossible = createSelector(getFuture, future => future.length > 0);

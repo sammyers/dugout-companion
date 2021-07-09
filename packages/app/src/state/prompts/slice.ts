@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { gameActions } from 'state/game/slice';
 import { getPlateAppearanceResult, getPlateAppearanceType } from './selectors';
 
-import { PlateAppearanceType } from '@dugout-companion/shared';
+import { PlateAppearanceType } from '@sammyers/dc-shared';
 import { AppDispatch, AppState } from 'state/store';
 
 import {

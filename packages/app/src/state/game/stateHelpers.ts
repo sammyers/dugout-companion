@@ -14,6 +14,9 @@ import {
   getBaseNumber,
   getBaseForRunner,
   allPositions,
+  isPlayerInLineup,
+  getNextBatter,
+  getCurrentLineup,
 } from './utils';
 
 import {
@@ -23,7 +26,7 @@ import {
   ContactQuality,
   PlateAppearanceType,
   BaseType,
-} from '@dugout-companion/shared';
+} from '@sammyers/dc-shared';
 import {
   LineupSpot,
   AppGameState,
@@ -53,13 +56,13 @@ const getAvailablePositionsForLineup = (lineup: LineupSpot[], addingPlayer = fal
 export const getNextAvailablePosition = (lineup: LineupSpot[], addingPlayer = false) => {
   const takenPositions = _.map(lineup, 'position');
   const allPositions = getAvailablePositionsForLineup(lineup, addingPlayer);
-  return _.first(_.difference(allPositions, takenPositions))!;
+  return _.first(_.difference(allPositions, takenPositions)) ?? null;
 };
 
 export const changePlayerPosition = (
   lineup: LineupSpot[],
   playerId: string,
-  position: FieldingPosition = getNextAvailablePosition(lineup)
+  position: FieldingPosition | null = getNextAvailablePosition(lineup)
 ) =>
   lineup.map(spot => ({
     playerId: spot.playerId,
@@ -69,6 +72,9 @@ export const changePlayerPosition = (
 export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
   const fourOutfielders = lineup.length > 9;
   const positions = new Set(_.map(lineup, 'position'));
+  const positionsNotTaken = getAvailablePositionsForLineup(lineup).filter(
+    position => !positions.has(position)
+  );
   return _.map(lineup, ({ playerId, position }) => {
     if (fourOutfielders && position === FieldingPosition.CENTER_FIELD) {
       return {
@@ -84,7 +90,9 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
       };
     } else if (
       !fourOutfielders &&
-      [FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(position)
+      [FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(
+        position as FieldingPosition
+      )
     ) {
       return {
         playerId,
@@ -92,6 +100,11 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
           [FieldingPosition.CENTER_FIELD, getNextAvailablePosition(lineup)],
           pos => !positions.has(pos)
         )!,
+      };
+    } else if (!position && positionsNotTaken.length) {
+      return {
+        playerId,
+        position: positionsNotTaken.pop()!,
       };
     }
     return { playerId, position };
@@ -167,12 +180,28 @@ const recordAndApplyGameEvent = (
 
   const gameEvent = callback(state, recordRunnersScored);
   state.gameEventRecords.push({
-    eventIndex: -1,
+    eventIndex: state.gameEventRecords.length,
     gameEvent,
     scoredRunners,
     gameStateBefore,
     gameStateAfter: getRecordedGameState(state),
   });
+};
+
+const isNotInLineupAnymore = (playerId: string, oldLineup: LineupSpot[], newLineup: LineupSpot[]) =>
+  isPlayerInLineup(playerId, oldLineup) && !isPlayerInLineup(playerId, newLineup);
+
+const getNextPlayerAfterLineupChange = (
+  removedPlayer: string,
+  oldLineup: LineupSpot[],
+  newLineup: LineupSpot[]
+) => {
+  const lineupIndex = oldLineup.findIndex(spot => spot.playerId === removedPlayer);
+  console.log(removedPlayer, lineupIndex, _.cloneDeep(oldLineup), _.cloneDeep(newLineup));
+  if (lineupIndex > newLineup.length - 1) {
+    return newLineup[0].playerId;
+  }
+  return newLineup[lineupIndex].playerId;
 };
 
 export const applyMidGameLineupChange = (
@@ -189,6 +218,22 @@ export const applyMidGameLineupChange = (
       originalClientId: null,
       lineupSpots,
     };
+    const oldLineup = getCurrentLineup(team);
+    if (isNotInLineupAnymore(state.playerAtBat, oldLineup, lineupSpots)) {
+      state.playerAtBat = getNextPlayerAfterLineupChange(
+        state.playerAtBat,
+        oldLineup,
+        newLineup.lineupSpots
+      );
+    }
+    if (isNotInLineupAnymore(state.upNextHalfInning!, oldLineup, lineupSpots)) {
+      state.upNextHalfInning = getNextPlayerAfterLineupChange(
+        state.upNextHalfInning!,
+        oldLineup,
+        newLineup.lineupSpots
+      );
+    }
+
     team.lineups.push(newLineup);
     state.nextLineupId++;
     return makeGameEvent({ lineupChange: { lineupBeforeId, lineupAfterId: nextLineupId } });
@@ -324,6 +369,24 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
     );
 
     state.baseRunners = runnersFromMap(runners);
+
+    const [awayScore, homeScore] = state.score;
+    const homeLeadingAfterTop =
+      state.outs === 3 && state.halfInning === HalfInning.TOP && awayScore < homeScore;
+    const awayLeadingAfterBottom =
+      state.outs === 3 && state.halfInning === HalfInning.BOTTOM && awayScore > homeScore;
+
+    if (
+      state.inning >= state.gameLength &&
+      (homeLeadingAfterTop ||
+        awayLeadingAfterBottom ||
+        (state.halfInning === HalfInning.BOTTOM && awayScore < homeScore))
+    ) {
+      state.status = GameStatus.FINISHED;
+    } else {
+      cleanUpAfterPlateAppearance(state);
+    }
+
     return makeGameEvent({ plateAppearance });
   });
 };

@@ -1,18 +1,25 @@
 {
-  "name": "@dugout-companion/server",
-  "version": "1.0.0",
+  "name": "@sammyers/dc-server",
+  "version": "0.0.1",
   "description": "Backend for Dugout Companion",
   "main": "server.ts",
   "repository": "https://github.com/sammyers/dugout-companion",
   "author": "Sam Myers <sammyers.dev@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start:dev": "yarn run build:dev",
-    "build:dev": "tsc-watch -b --onSuccess 'node -r @dugout-companion/shared/env build/server.js'"
+    "start:dev": "NODE_ENV=development yarn run build:dev",
+    "build:dev": "tsc-watch -b --onSuccess 'yarn run start'",
+    "build": "tsc -b",
+    "start": "env $(node node_modules/.bin/dc-env) node build/server.js"
+  },
+  "engines": {
+    "node": "14.x.x"
   },
   "dependencies": {
-    "@dugout-companion/shared": "1.0.0",
+    "@google-cloud/secret-manager": "^3.3.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
+    "@graphile/subscriptions-lds": "^4.9.0",
+    "@sammyers/dc-config": "0.0.2",
     "express": "^4.17.1",
     "graphql": "^15.4.0",
     "pg": "^8.5.1",

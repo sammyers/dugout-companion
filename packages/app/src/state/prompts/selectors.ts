@@ -15,7 +15,7 @@ import {
   getPlateAppearanceDetailPrompt,
 } from './prompts';
 
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 import { PlateAppearance } from 'state/game/types';
 import { AppState } from 'state/store';
 import { BasepathOutcome } from './types';

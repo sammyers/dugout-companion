@@ -1,13 +1,8 @@
 import _ from 'lodash';
 
-import {
-  BaseType,
-  FieldingPosition,
-  PlateAppearanceType,
-  TeamRole,
-} from '@dugout-companion/shared';
+import { BaseType, FieldingPosition, PlateAppearanceType, TeamRole } from '@sammyers/dc-shared';
 
-import { BaseRunners, Team, BaseRunnerMap } from './types';
+import { BaseRunners, Team, BaseRunnerMap, LineupSpot } from './types';
 
 export const getTeamWithRole = (teams: Team[], role: TeamRole) =>
   teams.find(team => team.role === role)!;
@@ -194,3 +189,14 @@ export const moveRunnersOnGroundBall = (runners: BaseRunnerMap) => {
 
 export const mustAllRunnersAdvance = (runners: BaseRunnerMap) =>
   _.every(runners, (_runnerId, base) => mustRunnerAdvance(base as BaseType, runners));
+
+export const isPlayerInLineup = (playerId: string, lineup: LineupSpot[]) =>
+  _.some(lineup, spot => spot.playerId === playerId);
+
+export const getNextBatter = (batterId: string | undefined, lineup: LineupSpot[]) => {
+  const lineupIndex = _.findIndex(lineup, ({ playerId }) => playerId === batterId);
+  if (lineupIndex === lineup.length - 1) {
+    return lineup[0].playerId;
+  }
+  return lineup[lineupIndex + 1].playerId;
+};

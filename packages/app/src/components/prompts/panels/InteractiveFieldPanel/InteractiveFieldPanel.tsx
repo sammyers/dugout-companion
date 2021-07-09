@@ -23,11 +23,13 @@ interface Props {
 const Overlay: FC<Props & { style: CSSProperties }> = ({ mode, style }) => {
   const { fielderOptions, runnerOptions } = usePromptContext();
   return (
-    <AnimatedBox style={style} fill>
+    // <AnimatedBox style={style} fill>
+    <Box style={style} fill>
       {mode === 'runners'
         ? runnerOptions && <RunnerPrompt {...runnerOptions} />
         : fielderOptions && <FielderPrompt {...fielderOptions} />}
-    </AnimatedBox>
+      {/* </AnimatedBox> */}
+    </Box>
   );
 };
 
@@ -37,25 +39,33 @@ const InteractiveFieldPanel: FC<Props> = ({ mode }) => {
   const runners = useAppSelector(getRunnerPromptBases, shallowEqual);
   const selectedBase = useAppSelector(getSelectedBase);
 
-  const transitions = useTransition(
-    modes.filter(m => m === mode),
-    item => item,
-    {
-      from: { position: 'absolute', opacity: 0, top: '-50%' },
-      enter: { opacity: 1, top: '0%' },
-      leave: { opacity: 0, top: '-50%' },
-    }
-  );
+  // const transitions = useTransition(
+  //   modes.filter(m => m === mode),
+  //   item => item,
+  //   {
+  //     from: { position: 'absolute', opacity: 0, top: '-50%' },
+  //     enter: { opacity: 1, top: '0%' },
+  //     leave: { opacity: 0, top: '-50%' },
+  //   }
+  // );
+  const transitions = modes.filter(m => m === mode);
 
-  const marginSpring = useSpring({
+  // const marginSpring = useSpring({
+  //   marginTop: mode === 'runners' ? '44px' : '8px',
+  // });
+  const marginSpring = {
     marginTop: mode === 'runners' ? '44px' : '8px',
-  });
+  };
 
   const active = !!fielderOptions || mode === 'runners';
-  const filterSpring = useSpring({
+  // const filterSpring = useSpring({
+  //   opacity: active ? 1 : 0.7,
+  //   saturation: active ? 0 : 1,
+  // });
+  const filterSpring = {
     opacity: active ? 1 : 0.7,
     saturation: active ? 0 : 1,
-  });
+  };
 
   return (
     <Box>
@@ -64,7 +74,8 @@ const InteractiveFieldPanel: FC<Props> = ({ mode }) => {
           {contactOptions && <ContactPrompt {...contactOptions!} />}
         </Box>
       </Collapsible>
-      <AnimatedBox
+      {/* <AnimatedBox */}
+      <Box
         alignSelf="center"
         flex={{ grow: 0, shrink: 0 }}
         basis="auto"
@@ -73,10 +84,14 @@ const InteractiveFieldPanel: FC<Props> = ({ mode }) => {
         style={{ marginTop: marginSpring.marginTop }}
       >
         <Stack>
-          <AnimatedBox
+          {/* <AnimatedBox */}
+          <Box
             style={{
               opacity: filterSpring.opacity,
-              filter: filterSpring.saturation.interpolate(s => `blur(${s * 2}px) grayscale(${s})`),
+              // filter: filterSpring.saturation.interpolate(s => `blur(${s * 2}px) grayscale(${s})`),
+              filter: `blur(${filterSpring.saturation * 2}px) grayscale(${
+                filterSpring.saturation
+              })`,
             }}
           >
             <FieldGraphic
@@ -84,12 +99,17 @@ const InteractiveFieldPanel: FC<Props> = ({ mode }) => {
               selectedBase={selectedBase}
               runners={runners}
             />
-          </AnimatedBox>
-          {transitions.map(({ item, key, props }) => (
+            {/* </AnimatedBox> */}
+          </Box>
+          {/* {transitions.map(({ item, key, props }) => (
             <Overlay key={key} mode={item} style={props} />
+          ))} */}
+          {transitions.map(item => (
+            <Overlay key={item} mode={item} style={{ position: 'absolute', top: 0 }} />
           ))}
         </Stack>
-      </AnimatedBox>
+        {/* </AnimatedBox> */}
+      </Box>
     </Box>
   );
 };

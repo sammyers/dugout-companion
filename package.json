@@ -5,9 +5,10 @@
     "packages/*"
   ],
   "scripts": {
-    "app": "yarn workspace @dugout-companion/app",
-    "server": "yarn workspace @dugout-companion/server",
-    "shared": "yarn workspace @dugout-companion/shared",
-    "db": "yarn workspace @dugout-companion/db"
+    "app": "yarn workspace @sammyers/dc-app",
+    "dashboard": "yarn workspace @sammyers/dc-dashboard",
+    "db": "yarn workspace @sammyers/dc-db",
+    "server": "yarn workspace @sammyers/dc-server",
+    "shared": "yarn workspace @sammyers/dc-shared"
   }
 }

@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+  db:
+    restart: always
+    image: sam4core/dc-db
+    build:
+      context: ./packages/db
+    volumes:
+      - db:/var/lib/postgresql/data
+    env_file:
+      - ./prod.env
+    networks:
+      - network
+    ports:
+      - 5433:5432
+  server:
+    restart: always
+    image: sam4core/dc-server
+    build:
+      context: ./packages/server
+    env_file:
+      - ./prod.env
+    depends_on:
+      - db
+    networks:
+      - network
+    ports:
+      - 5434:5434
+  app:
+    restart: always
+    image: sam4core/dc-app
+    build:
+      context: ./packages/app
+    depends_on:
+      - server
+    networks:
+      - network
+    ports:
+      - 8080:80
+
+networks:
+  network:
+
+volumes:
+  db:

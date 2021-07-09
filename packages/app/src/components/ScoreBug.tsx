@@ -2,7 +2,7 @@ import React, { CSSProperties } from 'react';
 import { Table, TableBody, TableRow, TableCell, Box, Text } from 'grommet';
 import { CaretUpFill, CaretDownFill } from 'grommet-icons';
 
-import { HalfInning, TeamRole } from '@dugout-companion/shared';
+import { HalfInning, TeamRole } from '@sammyers/dc-shared';
 
 import {
   getScore,

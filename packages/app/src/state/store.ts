@@ -1,6 +1,6 @@
-import { ApolloClient, InMemoryCache, HttpLink, split } from '@apollo/client';
-import { WebSocketLink } from '@apollo/client/link/ws';
-import { getMainDefinition } from '@apollo/client/utilities';
+import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
+// import { WebSocketLink } from '@apollo/client/link/ws';
+// import { getMainDefinition } from '@apollo/client/utilities';
 import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -20,26 +20,28 @@ const reducer = persistCombineReducers(
   }
 );
 
-const httpLink = new HttpLink({ uri: 'http://localhost:4000/graphql' });
+const isDev = process.env.NODE_ENV === 'development';
 
-const wsLink = new WebSocketLink({
-  uri: 'ws://localhost:4000/graphql',
-  options: {
-    reconnect: true,
-  },
-});
+const httpLink = new HttpLink({ uri: isDev ? 'http://localhost:4000/graphql' : '/graphql' });
 
-const splitLink = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
-  },
-  wsLink,
-  httpLink
-);
+// const wsLink = new WebSocketLink({
+//   uri: isDev ? 'ws://localhost:4000/graphql' : `wss://${window.location.host}/graphql`,
+//   options: {
+//     reconnect: true,
+//   },
+// });
+
+// const splitLink = split(
+//   ({ query }) => {
+//     const definition = getMainDefinition(query);
+//     return definition.kind === 'OperationDefinition' && definition.operation === 'subscription';
+//   },
+//   wsLink,
+//   httpLink
+// );
 
 export const apolloClient = new ApolloClient({
-  link: splitLink,
+  link: httpLink,
   cache: new InMemoryCache(),
 });
 

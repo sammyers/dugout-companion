@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Blank, IconProps } from 'grommet-icons';
 
-import { BaseType } from '@dugout-companion/shared';
+import { BaseType } from '@sammyers/dc-shared';
 import { BaseRunnerMap } from 'state/game/types';
 
 interface Props {

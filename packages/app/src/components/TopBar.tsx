@@ -34,9 +34,9 @@ const TopBar = () => {
     <Header background="brand">
       <Nav direction="row" pad="medium">
         <AnchorLink to="/teams">Teams</AnchorLink>
-        {gameInProgress && <AnchorLink to="/field">Field</AnchorLink>}
         {gameInProgress && <AnchorLink to="/box-score">Box Score</AnchorLink>}
         {gameInProgress && <AnchorLink to="/plays">Plays</AnchorLink>}
+        {gameInProgress && <AnchorLink to="/field">Scorekeeper</AnchorLink>}
       </Nav>
       <Box direction="row" margin={{ right: 'small' }}>
         {gameInProgress && (

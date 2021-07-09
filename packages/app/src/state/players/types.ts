@@ -1,4 +1,4 @@
-import { GetAllPlayersSubscription } from '@dugout-companion/shared';
+import { GetAllPlayersQuery } from '@sammyers/dc-shared';
 import { SimplifyType } from 'utils/common';
 
 export interface CountingStats {
@@ -28,6 +28,6 @@ export interface RateStats {
 
 export type PlayerStats = CountingStats & Partial<RateStats>;
 
-export type Player = NonNullable<SimplifyType<GetAllPlayersSubscription>['players']>[number];
+export type Player = NonNullable<SimplifyType<GetAllPlayersQuery>['players']>[number];
 
 export type NewPlayer = Pick<Player, 'firstName' | 'lastName'>;
