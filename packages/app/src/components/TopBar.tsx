@@ -25,7 +25,7 @@ const TopBar = () => {
     history.push('/field');
   }, [dispatch, history]);
 
-  const settingsButtonRef = useRef<HTMLButtonElement | null>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null);
   const [showSettings, setShowSettings] = useState(false);
 
   const toggleSettings = useCallback(() => setShowSettings(show => !show), [setShowSettings]);

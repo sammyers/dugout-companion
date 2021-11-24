@@ -5,8 +5,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "setup": "env $(node ../config/env.mjs) ./scripts/setup.js",
-    "gm": "env $(node ../config/env.mjs) node node_modules/.bin/graphile-migrate",
+    "setup": "env $(node ../config/env.js) ./scripts/setup.js",
+    "setup:dev": "NODE_ENV=development yarn setup",
+    "gm": "env $(node ../config/env.js) node node_modules/.bin/graphile-migrate",
     "migrate": "NODE_ENV=development yarn gm migrate",
     "watch": "NODE_ENV=development yarn gm watch",
     "commit": "NODE_ENV=development yarn gm commit",
@@ -15,6 +16,7 @@
     "migrate:prod": "PROD_MIGRATE=true yarn gm migrate",
     "compile": "./scripts/compile_migrations.sh"
   },
+  "type": "module",
   "dependencies": {
     "dotenv": "^8.2.0",
     "graphile-migrate": "^1.0.2",

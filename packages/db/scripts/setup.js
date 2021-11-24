@@ -1,5 +1,6 @@
-require("@sammyers/dc-config/env.mjs");
-const pg = require("pg");
+#!/usr/bin/env node
+import "@sammyers/dc-config/env.js";
+import pg from "pg";
 
 const {
   ROOT_DATABASE_URL,
@@ -29,8 +30,10 @@ const main = async () => {
   // Wait for PostgreSQL to come up
   let attempts = 0;
   while (true) {
+    console.log("loop 1");
     try {
       await pgPool.query('select true as "Connection test";');
+      console.log("Connection test succeeded.");
       break;
     } catch (e) {
       if (e.code === "28P01") {
@@ -58,6 +61,7 @@ const main = async () => {
     await client.query(`DROP ROLE IF EXISTS ${DATABASE_VISITOR};`);
     await client.query(`DROP ROLE IF EXISTS ${DATABASE_AUTHENTICATOR};`);
     await client.query(`DROP ROLE IF EXISTS ${DATABASE_OWNER};`);
+    console.log("Reset existing database and roles.");
 
     // Now to set up the database cleanly:
     // Ref: https://devcenter.heroku.com/articles/heroku-postgresql#connection-permissions
@@ -67,19 +71,27 @@ const main = async () => {
       // IMPORTANT: don't grant SUPERUSER in production, we only need this so we can load the watch fixtures!
       `CREATE ROLE ${DATABASE_OWNER} WITH LOGIN PASSWORD '${DATABASE_OWNER_PASSWORD}' SUPERUSER;`
     );
+    console.log("Created root role.");
 
     // This is the no-access role that PostGraphile will run as by default`);
     await client.query(
       `CREATE ROLE ${DATABASE_AUTHENTICATOR} WITH LOGIN PASSWORD '${DATABASE_AUTHENTICATOR_PASSWORD}' NOINHERIT;`
     );
+    console.log("Created authenticator role.");
 
     // This is the role that PostGraphile will switch to (from ${DATABASE_AUTHENTICATOR}) during a GraphQL request
     await client.query(`CREATE ROLE ${DATABASE_VISITOR};`);
+    console.log("Created visitor role.");
 
     // This enables PostGraphile to switch from ${DATABASE_AUTHENTICATOR} to ${DATABASE_VISITOR}
     await client.query(
       `GRANT ${DATABASE_VISITOR} TO ${DATABASE_AUTHENTICATOR};`
     );
+
+    await client.query(
+      `CREATE DATABASE ${DATABASE_NAME} OWNER ${DATABASE_OWNER}`
+    );
+    console.log("Created database.");
   } finally {
     client.release();
   }

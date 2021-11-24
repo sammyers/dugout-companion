@@ -1,5 +1,5 @@
 --! Previous: -
---! Hash: sha1:d4f1b306fc530a87bdc3d6c1629b69440ec59a5a
+--! Hash: sha1:2844943f379579d394a866237a1c8fa6274d9ea3
 
 -- Enter migration here
 alter default privileges revoke all on sequences from public;
@@ -87,23 +87,28 @@ grant select, insert (id, first_name, last_name) on player to :DATABASE_VISITOR;
 
 insert into player (first_name, last_name) values
   ('Sam', 'Myers'),
+  ('Jason', 'Zagorski'),
   ('Steven', 'Chan'),
   ('Cameron', 'Walls'),
   ('Carlos', 'Ortega'),
-  ('Yukhi', 'Yamashita'),
+  ('Erik', 'Johnson'),
+  ('Yuhki', 'Yamashita'),
   ('James', 'Lockwood'),
   ('Matthew', 'Chinn'),
+  ('Austin', 'Mueller'),
   ('Jason', 'Tong'),
+  ('Santiago', 'Andujar'),
   ('Andrew', 'Silva'),
   ('Quincy', 'Zhao'),
   ('Dale', 'Zelmon'),
-  ('Wynn', 'Padula'),
+  ('Chris', 'Hunter'),
   ('Leland', 'Bailey'),
   ('Michael', 'Cross'),
   ('Brendan', 'Wilson'),
   ('Dan', 'Keating'),
   ('Max', 'Bruk'),
   ('Hector', 'Franco'),
+  ('Jymie', 'Graham'),
   ('Mike', 'Basta');
 
 drop table if exists game cascade;

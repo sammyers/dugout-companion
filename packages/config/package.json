@@ -6,8 +6,9 @@
   "author": "Sam Myers <sammyers.dev@gmail.com>",
   "license": "MIT",
   "bin": {
-    "dc-env": "./env.mjs"
+    "dc-env": "./env.js"
   },
+  "type": "module",
   "dependencies": {
     "@google-cloud/secret-manager": "^3.3.0",
     "dotenv": "^8.2.0",

@@ -12,9 +12,6 @@
     "build": "tsc -b",
     "start": "env $(node node_modules/.bin/dc-env) node build/server.js"
   },
-  "engines": {
-    "node": "14.x.x"
-  },
   "dependencies": {
     "@google-cloud/secret-manager": "^3.3.0",
     "@graphile-contrib/pg-simplify-inflector": "^6.1.0",
