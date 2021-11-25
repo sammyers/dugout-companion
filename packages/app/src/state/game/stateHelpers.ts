@@ -15,7 +15,6 @@ import {
   getBaseForRunner,
   allPositions,
   isPlayerInLineup,
-  getNextBatter,
   getCurrentLineup,
 } from './utils';
 

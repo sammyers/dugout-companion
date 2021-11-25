@@ -58,7 +58,7 @@ const EventDetailPrompt = () => {
   }
 
   return (
-    <Layer responsive={false}>
+    <Layer responsive={false} animation="fadeIn">
       <Box pad="medium" gap="medium">
         <Box direction="row" justify="around" align="center">
           <Box flex align="start">

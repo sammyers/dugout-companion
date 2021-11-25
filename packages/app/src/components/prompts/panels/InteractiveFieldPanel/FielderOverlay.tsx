@@ -1,4 +1,5 @@
 import React, { FC, useMemo, useCallback, useEffect, CSSProperties } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from 'grommet';
 import _ from 'lodash';
 
@@ -10,54 +11,22 @@ import { getPositionAbbreviation } from 'utils/labels';
 import { FieldingPosition } from '@sammyers/dc-shared';
 import { FielderOptions } from 'state/prompts/types';
 
+const AnimatedButton = motion(Button);
+
+const pct = (val: number) => `${val}%`;
+
 const positions: Record<FieldingPosition, CSSProperties> = {
-  [FieldingPosition.PITCHER]: {
-    left: '50%',
-    top: '62%',
-    transform: 'translateX(-50%)',
-  },
-  [FieldingPosition.CATCHER]: {
-    left: '50%',
-    bottom: '5%',
-    transform: 'translateX(-50%)',
-  },
-  [FieldingPosition.FIRST_BASE]: {
-    top: '55%',
-    right: '25%',
-  },
-  [FieldingPosition.SECOND_BASE]: {
-    top: '40%',
-    right: '32%',
-  },
-  [FieldingPosition.THIRD_BASE]: {
-    top: '55%',
-    left: '25%',
-  },
-  [FieldingPosition.SHORTSTOP]: {
-    top: '40%',
-    left: '32%',
-  },
-  [FieldingPosition.LEFT_FIELD]: {
-    left: '16%',
-    top: '30%',
-  },
-  [FieldingPosition.CENTER_FIELD]: {
-    left: '50%',
-    top: '15%',
-    transform: 'translateX(-50%)',
-  },
-  [FieldingPosition.LEFT_CENTER]: {
-    left: '30%',
-    top: '15%',
-  },
-  [FieldingPosition.RIGHT_CENTER]: {
-    right: '32%',
-    top: '15%',
-  },
-  [FieldingPosition.RIGHT_FIELD]: {
-    right: '16%',
-    top: '30%',
-  },
+  [FieldingPosition.PITCHER]: { top: 62, left: 50 },
+  [FieldingPosition.CATCHER]: { top: 82, left: 50 },
+  [FieldingPosition.FIRST_BASE]: { top: 55, right: 31 },
+  [FieldingPosition.SECOND_BASE]: { top: 38, right: 38 },
+  [FieldingPosition.THIRD_BASE]: { top: 55, left: 31 },
+  [FieldingPosition.SHORTSTOP]: { top: 38, left: 38 },
+  [FieldingPosition.LEFT_FIELD]: { top: 25, left: 22 },
+  [FieldingPosition.CENTER_FIELD]: { top: 12, left: 50 },
+  [FieldingPosition.LEFT_CENTER]: { top: 15, left: 40 },
+  [FieldingPosition.RIGHT_CENTER]: { top: 15, right: 40 },
+  [FieldingPosition.RIGHT_FIELD]: { top: 25, right: 22 },
 };
 
 const FielderOverlay: FC<FielderOptions> = ({ options }) => {
@@ -80,19 +49,32 @@ const FielderOverlay: FC<FielderOptions> = ({ options }) => {
   const selectorOptions = useMemo(() => _.map(options, 'position'), [options]);
 
   return (
-    <>
-      {selectorOptions.map(position => (
-        <Button
-          key={position}
-          primary
-          size="small"
-          color={selectedOption?.position === position ? 'brand' : 'white'}
-          label={getPositionAbbreviation(position)}
-          style={{ position: 'absolute', ...positions[position] }}
-          onClick={handleChange(position)}
-        />
-      ))}
-    </>
+    <AnimatePresence>
+      {selectorOptions.map(position => {
+        const { top, ...style } = positions[position];
+        const animateFrom = top! <= 30 ? '-15%' : '110%';
+        return (
+          <AnimatedButton
+            key={position}
+            primary
+            size="small"
+            color={selectedOption?.position === position ? 'brand' : 'white'}
+            label={getPositionAbbreviation(position)}
+            style={{
+              position: 'absolute',
+              transform: `translateX(${style.left ? '-' : ''}50%)`,
+              [style.left ? 'left' : 'right']: pct(
+                (style.left as number) ?? (style.right as number)
+              ),
+            }}
+            initial={{ top: animateFrom }}
+            animate={{ top: pct(top as number) }}
+            exit={{ top: animateFrom }}
+            onClick={handleChange(position)}
+          />
+        );
+      })}
+    </AnimatePresence>
   );
 };
 

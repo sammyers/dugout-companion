@@ -1,5 +1,5 @@
-import React, { useMemo, ReactNode, useCallback } from 'react';
-import Slider from '@farbenmeer/react-spring-slider';
+import React, { useMemo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Box, Button, Text } from 'grommet';
 import { Previous } from 'grommet-icons';
 
@@ -19,6 +19,8 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { usePromptContext } from './context';
 
 import { PromptUiStage } from 'state/prompts/types';
+
+const AnimatedBox = motion(Box);
 
 const PromptStages = () => {
   const dispatch = useAppDispatch();
@@ -53,62 +55,27 @@ const PromptStages = () => {
     }
   }, [currentStage, contactOptions, outOnPlayOptions]);
 
-  const [sliderPanes, activeIndex] = useMemo(() => {
-    const panes: ReactNode[] = [];
-    const contactAndRunnersSeparate = [
-      PromptUiStage.CONTACT,
-      PromptUiStage.OUTS_ON_PLAY,
-      PromptUiStage.RUNNERS,
-    ].every(stage => allStages.includes(stage));
-    let currentIndex = 0;
-    let index = 0;
-    let contactStageIndex = 0;
+  const contactAndRunnersSeparate = [
+    PromptUiStage.CONTACT,
+    PromptUiStage.OUTS_ON_PLAY,
+    PromptUiStage.RUNNERS,
+  ].every(stage => allStages.includes(stage));
 
-    const updateIndex = (stage: PromptUiStage) => {
-      if (stage === currentStage) {
-        index = currentIndex;
-      }
-      currentIndex++;
-    };
+  const currentStagePanel = useMemo(() => {
+    if (currentStage === PromptUiStage.SAC_FLY_RBIS) {
+      return <SacFlyRbiPrompt />;
+    } else if (currentStage === PromptUiStage.OUTS_ON_PLAY) {
+      return <OutOnPlayPrompt />;
+    } else if (currentStage) {
+      return (
+        <InteractableField mode={currentStage === PromptUiStage.CONTACT ? 'fielders' : 'runners'} />
+      );
+    }
+  }, [currentStage]);
 
-    allStages.forEach(stage => {
-      switch (stage) {
-        case PromptUiStage.SAC_FLY_RBIS:
-          panes.push(<SacFlyRbiPrompt key={stage} />);
-          updateIndex(stage);
-          break;
-        case PromptUiStage.CONTACT:
-          panes.push(
-            <InteractableField
-              key={stage}
-              mode={
-                contactAndRunnersSeparate || currentStage === PromptUiStage.CONTACT
-                  ? 'fielders'
-                  : 'runners'
-              }
-            />
-          );
-          contactStageIndex = currentIndex;
-          updateIndex(stage);
-          break;
-        case PromptUiStage.OUTS_ON_PLAY:
-          panes.push(<OutOnPlayPrompt key={stage} />);
-          updateIndex(stage);
-          break;
-        case PromptUiStage.RUNNERS:
-          if (contactAndRunnersSeparate) {
-            panes.push(<InteractableField key={stage} mode="runners" />);
-            updateIndex(stage);
-          } else {
-            if (stage === currentStage) {
-              index = contactStageIndex;
-            }
-          }
-          break;
-      }
-    });
-    return [panes, index];
-  }, [allStages, currentStage]);
+  if (currentStage === undefined) {
+    return null;
+  }
 
   return (
     <Box height="400px" width="large" style={{ position: 'relative' }}>
@@ -130,8 +97,23 @@ const PromptStages = () => {
         </Text>
         <Box flex align="end" />
       </Box>
-      <Box fill>
-        <Slider activeIndex={activeIndex}>{sliderPanes}</Slider>
+      <Box fill style={{ position: 'relative', overflow: 'hidden' }}>
+        <AnimatePresence initial={false}>
+          <AnimatedBox
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}
+            key={
+              [PromptUiStage.CONTACT, PromptUiStage.RUNNERS].includes(currentStage!) &&
+              !contactAndRunnersSeparate
+                ? PromptUiStage.CONTACT
+                : currentStage
+            }
+            initial={{ x: 500, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -500, opacity: 0 }}
+          >
+            {currentStagePanel}
+          </AnimatedBox>
+        </AnimatePresence>
         <PrimaryPromptNav />
       </Box>
       <PromptStateManager />

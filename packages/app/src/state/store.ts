@@ -20,9 +20,7 @@ const reducer = persistCombineReducers(
   }
 );
 
-const isDev = process.env.NODE_ENV === 'development';
-
-const httpLink = new HttpLink({ uri: isDev ? 'http://localhost:4000/graphql' : '/graphql' });
+const httpLink = new HttpLink({ uri: '/graphql' });
 
 // const wsLink = new WebSocketLink({
 //   uri: isDev ? 'ws://localhost:4000/graphql' : `wss://${window.location.host}/graphql`,

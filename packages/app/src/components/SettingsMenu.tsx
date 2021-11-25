@@ -1,4 +1,4 @@
-import React, { useCallback, ChangeEvent, useState } from 'react';
+import React, { useCallback, ChangeEvent } from 'react';
 import { Box, Button, DropButton, Heading, RangeInput, Text } from 'grommet';
 import { Add, Erase, PowerReset, Subtract } from 'grommet-icons';
 import { PURGE } from 'redux-persist';

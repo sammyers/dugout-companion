@@ -1,7 +1,7 @@
 import React, { CSSProperties, FC } from 'react';
-import { Box, Collapsible, Stack } from 'grommet';
+import { Box, Stack } from 'grommet';
 import { shallowEqual } from 'react-redux';
-import { animated, useSpring, useTransition } from 'react-spring';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import ContactPrompt from './ContactPrompt';
 import FieldGraphic from './FieldGraphic';
@@ -14,7 +14,7 @@ import { usePromptContext } from '../../context';
 
 const modes = ['fielders', 'runners'] as const;
 
-const AnimatedBox = animated(Box);
+const AnimatedBox = motion(Box);
 
 interface Props {
   mode: typeof modes[number];
@@ -23,75 +23,54 @@ interface Props {
 const Overlay: FC<Props & { style: CSSProperties }> = ({ mode, style }) => {
   const { fielderOptions, runnerOptions } = usePromptContext();
   return (
-    // <AnimatedBox style={style} fill>
     <Box style={style} fill>
       {mode === 'runners'
         ? runnerOptions && <RunnerPrompt {...runnerOptions} />
         : fielderOptions && <FielderPrompt {...fielderOptions} />}
-      {/* </AnimatedBox> */}
     </Box>
   );
 };
 
 const InteractiveFieldPanel: FC<Props> = ({ mode }) => {
-  const { contactOptions, fielderOptions } = usePromptContext();
+  const { contactOptions } = usePromptContext();
   // NOTE: this is causing unnecessary re-renders
   const runners = useAppSelector(getRunnerPromptBases, shallowEqual);
   const selectedBase = useAppSelector(getSelectedBase);
 
-  // const transitions = useTransition(
-  //   modes.filter(m => m === mode),
-  //   item => item,
-  //   {
-  //     from: { position: 'absolute', opacity: 0, top: '-50%' },
-  //     enter: { opacity: 1, top: '0%' },
-  //     leave: { opacity: 0, top: '-50%' },
-  //   }
-  // );
-  const transitions = modes.filter(m => m === mode);
-
-  // const marginSpring = useSpring({
-  //   marginTop: mode === 'runners' ? '44px' : '8px',
-  // });
-  const marginSpring = {
-    marginTop: mode === 'runners' ? '44px' : '8px',
-  };
-
-  const active = !!fielderOptions || mode === 'runners';
-  // const filterSpring = useSpring({
-  //   opacity: active ? 1 : 0.7,
-  //   saturation: active ? 0 : 1,
-  // });
-  const filterSpring = {
-    opacity: active ? 1 : 0.7,
-    saturation: active ? 0 : 1,
-  };
+  const overlays = modes.filter(m => m === mode);
 
   return (
-    <Box>
-      <Collapsible open={mode === 'fielders' && !!contactOptions}>
-        <Box margin={{ top: 'small' }}>
-          {contactOptions && <ContactPrompt {...contactOptions!} />}
-        </Box>
-      </Collapsible>
-      {/* <AnimatedBox */}
+    <Box style={{ position: 'relative' }}>
+      <AnimatePresence>
+        {mode === 'fielders' && !!contactOptions && (
+          <AnimatedBox
+            background="white"
+            margin={{ top: 'small' }}
+            style={{ position: 'absolute', left: 0, right: 0, zIndex: 3 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {contactOptions && <ContactPrompt {...contactOptions!} />}
+          </AnimatedBox>
+        )}
+      </AnimatePresence>
       <Box
         alignSelf="center"
         flex={{ grow: 0, shrink: 0 }}
         basis="auto"
         height="medium"
         width="medium"
-        style={{ marginTop: marginSpring.marginTop }}
+        style={{
+          overflowY: mode === 'runners' ? 'visible' : 'hidden',
+          overflowX: 'visible',
+          marginTop: mode === 'runners' ? 44 : contactOptions ? 64 : 8,
+        }}
       >
         <Stack>
-          {/* <AnimatedBox */}
           <Box
             style={{
-              opacity: filterSpring.opacity,
-              // filter: filterSpring.saturation.interpolate(s => `blur(${s * 2}px) grayscale(${s})`),
-              filter: `blur(${filterSpring.saturation * 2}px) grayscale(${
-                filterSpring.saturation
-              })`,
+              aspectRatio: '10/7',
             }}
           >
             <FieldGraphic
@@ -99,16 +78,11 @@ const InteractiveFieldPanel: FC<Props> = ({ mode }) => {
               selectedBase={selectedBase}
               runners={runners}
             />
-            {/* </AnimatedBox> */}
           </Box>
-          {/* {transitions.map(({ item, key, props }) => (
-            <Overlay key={key} mode={item} style={props} />
-          ))} */}
-          {transitions.map(item => (
+          {overlays.map(item => (
             <Overlay key={item} mode={item} style={{ position: 'absolute', top: 0 }} />
           ))}
         </Stack>
-        {/* </AnimatedBox> */}
       </Box>
     </Box>
   );

@@ -15,6 +15,9 @@ const theme: ThemeType = {
         color: 'transparent',
       },
     },
+    font: {
+      family: 'Nunito Sans',
+    },
   },
   rangeInput: {
     track: {
@@ -26,6 +29,11 @@ const theme: ThemeType = {
   },
   accordion: {
     border: undefined,
+  },
+  button: {
+    border: {
+      radius: '4px',
+    },
   },
 };
 
