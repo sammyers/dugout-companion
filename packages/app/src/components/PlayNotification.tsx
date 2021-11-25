@@ -20,7 +20,8 @@ const PlayNotification: FC<{ target: HTMLElement }> = ({ target }) => {
         setShowNotification(false);
       }, 5000);
     }
-  }, [lastPlay, setShowNotification]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastPlay?.description, setShowNotification]);
 
   return (
     <>
