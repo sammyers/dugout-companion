@@ -16,7 +16,6 @@ import {
 import {
   FieldingPosition,
   GameInput,
-  GamePatch,
   HalfInning,
   PlateAppearanceType,
   TeamRole,
@@ -192,7 +191,7 @@ export const isRedoPossible = createSelector(getFuture, future => future.length 
 
 export const getGameForMutation = createSelector(
   getPresent,
-  ({ teams, score, gameLength }): GameInput => ({
+  ({ teams, score, gameLength, gameEventRecords }): GameInput => ({
     score,
     gameLength,
     teams: {
@@ -210,12 +209,6 @@ export const getGameForMutation = createSelector(
         },
       })),
     },
-  })
-);
-
-export const getGameEventRecordsForMutation = createSelector(
-  getPresent,
-  ({ gameEventRecords }): GamePatch => ({
     gameEventRecords: {
       create: gameEventRecords.map(
         ({ gameEvent, gameStateBefore, gameStateAfter, scoredRunners }, eventIndex) => {

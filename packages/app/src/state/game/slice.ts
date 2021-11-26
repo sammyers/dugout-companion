@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 import undoable from 'redux-undo';
+import { v4 as uuid4 } from 'uuid';
 
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
 import {
@@ -23,7 +24,6 @@ import {
   GameStatus,
   AppGameState,
   PlateAppearance,
-  CreatedLineups,
 } from './types';
 import { playerActions } from 'state/players/slice';
 import { getLineupToEdit } from './partialSelectors';
@@ -47,7 +47,6 @@ const initialState: AppGameState = {
   gameLength: 9,
   playerAtBat: '',
   upNextHalfInning: '',
-  nextLineupId: 1,
   lineups: null,
   editingLineups: false,
   lineupDrafts: {
@@ -65,11 +64,9 @@ const { actions: gameActions, reducer } = createSlice({
       const team = getTeamWithRole(state.teams, teamRole);
       if (!team.lineups.length) {
         team.lineups.push({
-          id: state.nextLineupId,
-          originalClientId: null,
+          id: uuid4(),
           lineupSpots: [],
         });
-        state.nextLineupId++;
       }
       const lineup = getLineupToEdit(state, team.role);
       if (!_.some(lineup, { playerId })) {
@@ -197,45 +194,13 @@ const { actions: gameActions, reducer } = createSlice({
         ...makeInitialTeamState(team.role),
         lineups: [
           {
-            id: initialState.nextLineupId,
-            originalClientId: null,
+            id: uuid4(),
             lineupSpots: getCurrentLineup(team),
           },
         ],
       })),
     }),
     fullResetGame: () => ({ ...initialState }),
-    substituteLineupIds(state, { payload }: PayloadAction<CreatedLineups>) {
-      const lineupMap = new Map(
-        _.flatten(
-          payload.teams.map(team =>
-            team.lineups.map(({ id, originalClientId }) => [originalClientId, id])
-          )
-        )
-      );
-      payload.teams.forEach(({ role }) => {
-        const team = getTeamWithRole(state.teams, role);
-        team.lineups.forEach(lineup => {
-          lineup.originalClientId = lineup.id;
-          lineup.id = lineupMap.get(lineup.originalClientId)!;
-        });
-      });
-      state.gameEventRecords.forEach(({ gameEvent, gameStateBefore, gameStateAfter }) => {
-        if (gameEvent.lineupChange) {
-          gameEvent.lineupChange.lineupBeforeId = lineupMap.get(
-            gameEvent.lineupChange.lineupBeforeId
-          )!;
-          gameEvent.lineupChange.lineupAfterId = lineupMap.get(
-            gameEvent.lineupChange.lineupAfterId
-          )!;
-        }
-        [gameStateBefore, gameStateAfter].forEach(gameState => {
-          gameState.lineups?.forEach(lineup => {
-            lineup.id = lineupMap.get(lineup.id)!;
-          });
-        });
-      });
-    },
     setGameSaved(state) {
       state.saved = true;
     },

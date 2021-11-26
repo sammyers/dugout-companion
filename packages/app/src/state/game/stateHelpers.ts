@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { v4 as uuid4 } from 'uuid';
 
 import { getOnDeckBatter, getBattingTeamRole, getCurrentBaseForRunner } from './partialSelectors';
 import {
@@ -209,11 +210,12 @@ export const applyMidGameLineupChange = (
   lineupSpots: LineupSpot[]
 ) => {
   recordAndApplyGameEvent(state, state => {
-    const { nextLineupId, teams } = state;
+    const { teams } = state;
     const team = getTeamWithRole(teams, role);
     const lineupBeforeId = _.last(team.lineups)!.id;
+    const lineupAfterId = uuid4();
     const newLineup = {
-      id: nextLineupId,
+      id: lineupAfterId,
       originalClientId: null,
       lineupSpots,
     };
@@ -234,8 +236,7 @@ export const applyMidGameLineupChange = (
     }
 
     team.lineups.push(newLineup);
-    state.nextLineupId++;
-    return makeGameEvent({ lineupChange: { lineupBeforeId, lineupAfterId: nextLineupId } });
+    return makeGameEvent({ lineupChange: { lineupBeforeId, lineupAfterId } });
   });
 };
 

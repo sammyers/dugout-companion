@@ -1,0 +1,7 @@
+mutation CreateGame($input: CreateGameInput!) {
+  createGame(input: $input) {
+    game {
+      ...UnpackedGame_Game
+    }
+  }
+}

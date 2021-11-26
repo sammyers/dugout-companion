@@ -47,7 +47,6 @@ fragment UnpackedGame_Game on Game {
     role
     lineups {
       id
-      originalClientId
       lineupSpots(orderBy: BATTING_ORDER_ASC) {
         playerId
         position

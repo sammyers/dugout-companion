@@ -1,4 +1,4 @@
-query GetGame($id: Int!) {
+query GetGame($id: UUID!) {
   game(id: $id) {
     ...UnpackedGame_Game
   }

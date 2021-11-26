@@ -288,28 +288,28 @@ type Query implements Node {
     """
     condition: TeamCondition
   ): [Team!]
-  baseRunner(gameStateId: Int!, runnerId: UUID!): BaseRunner
-  basepathMovement(plateAppearanceId: Int!, runnerId: UUID!): BasepathMovement
-  game(id: Int!): Game
+  baseRunner(gameStateId: UUID!, runnerId: UUID!): BaseRunner
+  basepathMovement(plateAppearanceId: UUID!, runnerId: UUID!): BasepathMovement
+  game(id: UUID!): Game
   gameByName(name: String!): Game
-  gameEvent(id: Int!): GameEvent
-  gameEventRecord(id: Int!): GameEventRecord
-  gameEventRecordByGameIdAndEventIndex(gameId: Int!, eventIndex: Int!): GameEventRecord
-  gameState(id: Int!): GameState
-  lineup(id: Int!): Lineup
-  lineupChange(id: Int!): LineupChange
-  lineupForGameState(gameStateId: Int!, lineupId: Int!): LineupForGameState
-  lineupSpot(lineupId: Int!, playerId: UUID!): LineupSpot
-  lineupSpotByLineupIdAndBattingOrder(lineupId: Int!, battingOrder: Int!): LineupSpot
-  lineupSpotByLineupIdAndPosition(lineupId: Int!, position: FieldingPosition!): LineupSpot
-  outOnPlayRunner(plateAppearanceId: Int!, runnerId: UUID!): OutOnPlayRunner
-  plateAppearance(id: Int!): PlateAppearance
+  gameEvent(id: UUID!): GameEvent
+  gameEventRecord(id: UUID!): GameEventRecord
+  gameEventRecordByGameIdAndEventIndex(gameId: UUID!, eventIndex: Int!): GameEventRecord
+  gameState(id: UUID!): GameState
+  lineup(id: UUID!): Lineup
+  lineupChange(id: UUID!): LineupChange
+  lineupForGameState(gameStateId: UUID!, lineupId: UUID!): LineupForGameState
+  lineupSpot(lineupId: UUID!, playerId: UUID!): LineupSpot
+  lineupSpotByLineupIdAndBattingOrder(lineupId: UUID!, battingOrder: Int!): LineupSpot
+  lineupSpotByLineupIdAndPosition(lineupId: UUID!, position: FieldingPosition!): LineupSpot
+  outOnPlayRunner(plateAppearanceId: UUID!, runnerId: UUID!): OutOnPlayRunner
+  plateAppearance(id: UUID!): PlateAppearance
   player(id: UUID!): Player
   playerByFirstNameAndLastName(firstName: String!, lastName: String!): Player
-  scoredRunner(gameEventRecordId: Int!, runnerId: UUID!): ScoredRunner
-  stolenBaseAttempt(id: Int!): StolenBaseAttempt
-  team(id: Int!): Team
-  teamByGameIdAndRole(gameId: Int!, role: TeamRole!): Team
+  scoredRunner(gameEventRecordId: UUID!, runnerId: UUID!): ScoredRunner
+  stolenBaseAttempt(id: UUID!): StolenBaseAttempt
+  team(id: UUID!): Team
+  teamByGameIdAndRole(gameId: UUID!, role: TeamRole!): Team
 
   """Reads a single `BaseRunner` using its globally unique `ID`."""
   baseRunnerByNodeId(
@@ -441,7 +441,7 @@ type BaseRunner implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
   base: BaseType!
 
@@ -468,12 +468,16 @@ type GameState implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  id: Int!
+  id: UUID!
+  gameId: UUID!
   playerAtBat: UUID!
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+
+  """Reads a single `Game` that is related to this `GameState`."""
+  game: Game
 
   """Reads a single `Player` that is related to this `GameState`."""
   playerByPlayerAtBat: Player
@@ -559,6 +563,221 @@ type GameState implements Node {
 enum HalfInning {
   TOP
   BOTTOM
+}
+
+type Game implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  name: String
+  location: String
+  score: [Int]!
+  gameLength: Int!
+  datePlayed: Date
+
+  """Reads and enables pagination through a set of `Team`."""
+  teams(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Team`."""
+    orderBy: [TeamsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TeamCondition
+  ): [Team!]!
+
+  """Reads and enables pagination through a set of `GameState`."""
+  gameStates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameState`."""
+    orderBy: [GameStatesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameStateCondition
+  ): [GameState!]!
+
+  """Reads and enables pagination through a set of `GameEventRecord`."""
+  gameEventRecords(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameEventRecord`."""
+    orderBy: [GameEventRecordsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameEventRecordCondition
+  ): [GameEventRecord!]!
+}
+
+"""The day, does not include a time."""
+scalar Date
+
+type Team implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  gameId: UUID!
+  role: TeamRole!
+  name: String
+  winner: Boolean
+
+  """Reads a single `Game` that is related to this `Team`."""
+  game: Game
+
+  """Reads and enables pagination through a set of `Lineup`."""
+  lineups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Lineup`."""
+    orderBy: [LineupsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LineupCondition
+  ): [Lineup!]!
+}
+
+enum TeamRole {
+  AWAY
+  HOME
+}
+
+type Lineup implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  teamId: UUID!
+
+  """Reads a single `Team` that is related to this `Lineup`."""
+  team: Team
+
+  """Reads and enables pagination through a set of `LineupSpot`."""
+  lineupSpots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LineupSpot`."""
+    orderBy: [LineupSpotsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LineupSpotCondition
+  ): [LineupSpot!]!
+
+  """Reads and enables pagination through a set of `LineupChange`."""
+  lineupChangesByLineupBeforeId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LineupChange`."""
+    orderBy: [LineupChangesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LineupChangeCondition
+  ): [LineupChange!]!
+
+  """Reads and enables pagination through a set of `LineupChange`."""
+  lineupChangesByLineupAfterId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LineupChange`."""
+    orderBy: [LineupChangesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LineupChangeCondition
+  ): [LineupChange!]!
+
+  """Reads and enables pagination through a set of `LineupForGameState`."""
+  lineupForGameStates(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LineupForGameState`."""
+    orderBy: [LineupForGameStatesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LineupForGameStateCondition
+  ): [LineupForGameState!]!
+}
+
+type LineupSpot implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  lineupId: UUID!
+  playerId: UUID!
+  battingOrder: Int!
+  position: FieldingPosition
+
+  """Reads a single `Lineup` that is related to this `LineupSpot`."""
+  lineup: Lineup
+
+  """Reads a single `Player` that is related to this `LineupSpot`."""
+  player: Player
+}
+
+enum FieldingPosition {
+  PITCHER
+  CATCHER
+  FIRST_BASE
+  SECOND_BASE
+  THIRD_BASE
+  SHORTSTOP
+  LEFT_FIELD
+  CENTER_FIELD
+  LEFT_CENTER
+  RIGHT_CENTER
+  RIGHT_FIELD
 }
 
 type Player implements Node {
@@ -697,321 +916,56 @@ A point in time as described by the [ISO
 """
 scalar Datetime
 
-type LineupSpot implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  lineupId: Int!
-  playerId: UUID!
-  battingOrder: Int!
-  position: FieldingPosition
-
-  """Reads a single `Lineup` that is related to this `LineupSpot`."""
-  lineup: Lineup
-
-  """Reads a single `Player` that is related to this `LineupSpot`."""
-  player: Player
-}
-
-enum FieldingPosition {
-  PITCHER
-  CATCHER
-  FIRST_BASE
-  SECOND_BASE
-  THIRD_BASE
-  SHORTSTOP
-  LEFT_FIELD
-  CENTER_FIELD
-  LEFT_CENTER
-  RIGHT_CENTER
-  RIGHT_FIELD
-}
-
-type Lineup implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
-  teamId: Int!
-  originalClientId: Int
-
-  """Reads a single `Team` that is related to this `Lineup`."""
-  team: Team
-
-  """Reads and enables pagination through a set of `LineupSpot`."""
-  lineupSpots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LineupSpot`."""
-    orderBy: [LineupSpotsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LineupSpotCondition
-  ): [LineupSpot!]!
-
-  """Reads and enables pagination through a set of `LineupChange`."""
-  lineupChangesByLineupBeforeId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LineupChange`."""
-    orderBy: [LineupChangesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LineupChangeCondition
-  ): [LineupChange!]!
-
-  """Reads and enables pagination through a set of `LineupChange`."""
-  lineupChangesByLineupAfterId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LineupChange`."""
-    orderBy: [LineupChangesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LineupChangeCondition
-  ): [LineupChange!]!
-
-  """Reads and enables pagination through a set of `LineupForGameState`."""
-  lineupForGameStates(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LineupForGameState`."""
-    orderBy: [LineupForGameStatesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LineupForGameStateCondition
-  ): [LineupForGameState!]!
-}
-
-type Team implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
-  gameId: Int!
-  role: TeamRole!
-  name: String
-  winner: Boolean
-
-  """Reads a single `Game` that is related to this `Team`."""
-  game: Game
-
-  """Reads and enables pagination through a set of `Lineup`."""
-  lineups(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Lineup`."""
-    orderBy: [LineupsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LineupCondition
-  ): [Lineup!]!
-}
-
-enum TeamRole {
-  AWAY
-  HOME
-}
-
-type Game implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
-  name: String
-  location: String
-  score: [Int]!
-  gameLength: Int!
-  datePlayed: Date
-
-  """Reads and enables pagination through a set of `Team`."""
-  teams(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `Team`."""
-    orderBy: [TeamsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TeamCondition
-  ): [Team!]!
-
-  """Reads and enables pagination through a set of `GameEventRecord`."""
-  gameEventRecords(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `GameEventRecord`."""
-    orderBy: [GameEventRecordsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GameEventRecordCondition
-  ): [GameEventRecord!]!
-}
-
-"""The day, does not include a time."""
-scalar Date
-
-"""Methods to use when ordering `Team`."""
-enum TeamsOrderBy {
+"""Methods to use when ordering `LineupSpot`."""
+enum LineupSpotsOrderBy {
   NATURAL
-  ID_ASC
-  ID_DESC
-  GAME_ID_ASC
-  GAME_ID_DESC
-  ROLE_ASC
-  ROLE_DESC
-  NAME_ASC
-  NAME_DESC
-  WINNER_ASC
-  WINNER_DESC
+  LINEUP_ID_ASC
+  LINEUP_ID_DESC
+  PLAYER_ID_ASC
+  PLAYER_ID_DESC
+  BATTING_ORDER_ASC
+  BATTING_ORDER_DESC
+  POSITION_ASC
+  POSITION_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `Team` object types. All fields are tested for equality and combined with a logical ‘and.’
+A condition to be used against `LineupSpot` object types. All fields are tested
+for equality and combined with a logical ‘and.’
 """
-input TeamCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
+input LineupSpotCondition {
+  """Checks for equality with the object’s `lineupId` field."""
+  lineupId: UUID
 
-  """Checks for equality with the object’s `gameId` field."""
-  gameId: Int
+  """Checks for equality with the object’s `playerId` field."""
+  playerId: UUID
 
-  """Checks for equality with the object’s `role` field."""
-  role: TeamRole
+  """Checks for equality with the object’s `battingOrder` field."""
+  battingOrder: Int
 
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `winner` field."""
-  winner: Boolean
+  """Checks for equality with the object’s `position` field."""
+  position: FieldingPosition
 }
 
-type GameEventRecord implements Node {
+type BasepathMovement implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  id: Int!
-  gameId: Int!
-  eventIndex: Int!
-  gameStateBeforeId: Int!
-  gameStateAfterId: Int!
-  gameEventId: Int!
+  plateAppearanceId: UUID!
+  runnerId: UUID!
+  endBase: BaseType
+  wasSafe: Boolean!
 
-  """Reads a single `Game` that is related to this `GameEventRecord`."""
-  game: Game
-
-  """Reads a single `GameState` that is related to this `GameEventRecord`."""
-  gameStateBefore: GameState
-
-  """Reads a single `GameState` that is related to this `GameEventRecord`."""
-  gameStateAfter: GameState
-
-  """Reads a single `GameEvent` that is related to this `GameEventRecord`."""
-  gameEvent: GameEvent
-
-  """Reads and enables pagination through a set of `ScoredRunner`."""
-  scoredRunners(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `ScoredRunner`."""
-    orderBy: [ScoredRunnersOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ScoredRunnerCondition
-  ): [ScoredRunner!]!
-}
-
-type GameEvent implements Node {
   """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  Reads a single `PlateAppearance` that is related to this `BasepathMovement`.
   """
-  nodeId: ID!
-  id: Int!
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
-
-  """Reads a single `PlateAppearance` that is related to this `GameEvent`."""
   plateAppearance: PlateAppearance
 
-  """
-  Reads a single `StolenBaseAttempt` that is related to this `GameEvent`.
-  """
-  stolenBaseAttempt: StolenBaseAttempt
-
-  """Reads a single `LineupChange` that is related to this `GameEvent`."""
-  lineupChange: LineupChange
-
-  """Reads and enables pagination through a set of `GameEventRecord`."""
-  gameEventRecords(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `GameEventRecord`."""
-    orderBy: [GameEventRecordsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GameEventRecordCondition
-  ): [GameEventRecord!]!
+  """Reads a single `Player` that is related to this `BasepathMovement`."""
+  runner: Player
 }
 
 type PlateAppearance implements Node {
@@ -1019,7 +973,7 @@ type PlateAppearance implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  id: Int!
+  id: UUID!
   type: PlateAppearanceType!
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -1081,25 +1035,6 @@ enum ContactQuality {
   LONG_FLY
 }
 
-type BasepathMovement implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  plateAppearanceId: Int!
-  runnerId: UUID!
-  endBase: BaseType
-  wasSafe: Boolean!
-
-  """
-  Reads a single `PlateAppearance` that is related to this `BasepathMovement`.
-  """
-  plateAppearance: PlateAppearance
-
-  """Reads a single `Player` that is related to this `BasepathMovement`."""
-  runner: Player
-}
-
 """Methods to use when ordering `BasepathMovement`."""
 enum BasepathMovementsOrderBy {
   NATURAL
@@ -1121,7 +1056,7 @@ tested for equality and combined with a logical ‘and.’
 """
 input BasepathMovementCondition {
   """Checks for equality with the object’s `plateAppearanceId` field."""
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
 
   """Checks for equality with the object’s `runnerId` field."""
   runnerId: UUID
@@ -1138,7 +1073,7 @@ type OutOnPlayRunner implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 
   """
@@ -1167,7 +1102,7 @@ tested for equality and combined with a logical ‘and.’
 """
 input OutOnPlayRunnerCondition {
   """Checks for equality with the object’s `plateAppearanceId` field."""
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
 
   """Checks for equality with the object’s `runnerId` field."""
   runnerId: UUID
@@ -1178,245 +1113,12 @@ type StolenBaseAttempt implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-  id: Int!
+  id: UUID!
   runnerId: UUID!
   success: Boolean!
 
   """Reads a single `Player` that is related to this `StolenBaseAttempt`."""
   runner: Player
-}
-
-type LineupChange implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
-  lineupBeforeId: Int!
-  lineupAfterId: Int!
-
-  """Reads a single `Lineup` that is related to this `LineupChange`."""
-  lineupBefore: Lineup
-
-  """Reads a single `Lineup` that is related to this `LineupChange`."""
-  lineupAfter: Lineup
-}
-
-"""Methods to use when ordering `GameEventRecord`."""
-enum GameEventRecordsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  GAME_ID_ASC
-  GAME_ID_DESC
-  EVENT_INDEX_ASC
-  EVENT_INDEX_DESC
-  GAME_STATE_BEFORE_ID_ASC
-  GAME_STATE_BEFORE_ID_DESC
-  GAME_STATE_AFTER_ID_ASC
-  GAME_STATE_AFTER_ID_DESC
-  GAME_EVENT_ID_ASC
-  GAME_EVENT_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `GameEventRecord` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input GameEventRecordCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `gameId` field."""
-  gameId: Int
-
-  """Checks for equality with the object’s `eventIndex` field."""
-  eventIndex: Int
-
-  """Checks for equality with the object’s `gameStateBeforeId` field."""
-  gameStateBeforeId: Int
-
-  """Checks for equality with the object’s `gameStateAfterId` field."""
-  gameStateAfterId: Int
-
-  """Checks for equality with the object’s `gameEventId` field."""
-  gameEventId: Int
-}
-
-type ScoredRunner implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  gameEventRecordId: Int!
-  runnerId: UUID!
-  battedIn: Boolean!
-
-  """
-  Reads a single `GameEventRecord` that is related to this `ScoredRunner`.
-  """
-  gameEventRecord: GameEventRecord
-
-  """Reads a single `Player` that is related to this `ScoredRunner`."""
-  runner: Player
-}
-
-"""Methods to use when ordering `ScoredRunner`."""
-enum ScoredRunnersOrderBy {
-  NATURAL
-  GAME_EVENT_RECORD_ID_ASC
-  GAME_EVENT_RECORD_ID_DESC
-  RUNNER_ID_ASC
-  RUNNER_ID_DESC
-  BATTED_IN_ASC
-  BATTED_IN_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `ScoredRunner` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input ScoredRunnerCondition {
-  """Checks for equality with the object’s `gameEventRecordId` field."""
-  gameEventRecordId: Int
-
-  """Checks for equality with the object’s `runnerId` field."""
-  runnerId: UUID
-
-  """Checks for equality with the object’s `battedIn` field."""
-  battedIn: Boolean
-}
-
-"""Methods to use when ordering `Lineup`."""
-enum LineupsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  TEAM_ID_ASC
-  TEAM_ID_DESC
-  ORIGINAL_CLIENT_ID_ASC
-  ORIGINAL_CLIENT_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `Lineup` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input LineupCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `teamId` field."""
-  teamId: Int
-
-  """Checks for equality with the object’s `originalClientId` field."""
-  originalClientId: Int
-}
-
-"""Methods to use when ordering `LineupSpot`."""
-enum LineupSpotsOrderBy {
-  NATURAL
-  LINEUP_ID_ASC
-  LINEUP_ID_DESC
-  PLAYER_ID_ASC
-  PLAYER_ID_DESC
-  BATTING_ORDER_ASC
-  BATTING_ORDER_DESC
-  POSITION_ASC
-  POSITION_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `LineupSpot` object types. All fields are tested
-for equality and combined with a logical ‘and.’
-"""
-input LineupSpotCondition {
-  """Checks for equality with the object’s `lineupId` field."""
-  lineupId: Int
-
-  """Checks for equality with the object’s `playerId` field."""
-  playerId: UUID
-
-  """Checks for equality with the object’s `battingOrder` field."""
-  battingOrder: Int
-
-  """Checks for equality with the object’s `position` field."""
-  position: FieldingPosition
-}
-
-"""Methods to use when ordering `LineupChange`."""
-enum LineupChangesOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  LINEUP_BEFORE_ID_ASC
-  LINEUP_BEFORE_ID_DESC
-  LINEUP_AFTER_ID_ASC
-  LINEUP_AFTER_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `LineupChange` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LineupChangeCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `lineupBeforeId` field."""
-  lineupBeforeId: Int
-
-  """Checks for equality with the object’s `lineupAfterId` field."""
-  lineupAfterId: Int
-}
-
-type LineupForGameState implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  gameStateId: Int!
-  lineupId: Int!
-
-  """
-  Reads a single `GameState` that is related to this `LineupForGameState`.
-  """
-  gameState: GameState
-
-  """Reads a single `Lineup` that is related to this `LineupForGameState`."""
-  lineup: Lineup
-}
-
-"""Methods to use when ordering `LineupForGameState`."""
-enum LineupForGameStatesOrderBy {
-  NATURAL
-  GAME_STATE_ID_ASC
-  GAME_STATE_ID_DESC
-  LINEUP_ID_ASC
-  LINEUP_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `LineupForGameState` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LineupForGameStateCondition {
-  """Checks for equality with the object’s `gameStateId` field."""
-  gameStateId: Int
-
-  """Checks for equality with the object’s `lineupId` field."""
-  lineupId: Int
 }
 
 """Methods to use when ordering `StolenBaseAttempt`."""
@@ -1438,7 +1140,7 @@ tested for equality and combined with a logical ‘and.’
 """
 input StolenBaseAttemptCondition {
   """Checks for equality with the object’s `id` field."""
-  id: Int
+  id: UUID
 
   """Checks for equality with the object’s `runnerId` field."""
   runnerId: UUID
@@ -1452,6 +1154,8 @@ enum GameStatesOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
   PLAYER_AT_BAT_ASC
   PLAYER_AT_BAT_DESC
   INNING_ASC
@@ -1472,7 +1176,10 @@ for equality and combined with a logical ‘and.’
 """
 input GameStateCondition {
   """Checks for equality with the object’s `id` field."""
-  id: Int
+  id: UUID
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: UUID
 
   """Checks for equality with the object’s `playerAtBat` field."""
   playerAtBat: UUID
@@ -1509,13 +1216,326 @@ for equality and combined with a logical ‘and.’
 """
 input BaseRunnerCondition {
   """Checks for equality with the object’s `gameStateId` field."""
-  gameStateId: Int
+  gameStateId: UUID
 
   """Checks for equality with the object’s `runnerId` field."""
   runnerId: UUID
 
   """Checks for equality with the object’s `base` field."""
   base: BaseType
+}
+
+type ScoredRunner implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  gameEventRecordId: UUID!
+  runnerId: UUID!
+  battedIn: Boolean!
+
+  """
+  Reads a single `GameEventRecord` that is related to this `ScoredRunner`.
+  """
+  gameEventRecord: GameEventRecord
+
+  """Reads a single `Player` that is related to this `ScoredRunner`."""
+  runner: Player
+}
+
+type GameEventRecord implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  gameId: UUID!
+  eventIndex: Int!
+  gameStateBeforeId: UUID!
+  gameStateAfterId: UUID!
+  gameEventId: UUID!
+
+  """Reads a single `Game` that is related to this `GameEventRecord`."""
+  game: Game
+
+  """Reads a single `GameState` that is related to this `GameEventRecord`."""
+  gameStateBefore: GameState
+
+  """Reads a single `GameState` that is related to this `GameEventRecord`."""
+  gameStateAfter: GameState
+
+  """Reads a single `GameEvent` that is related to this `GameEventRecord`."""
+  gameEvent: GameEvent
+
+  """Reads and enables pagination through a set of `ScoredRunner`."""
+  scoredRunners(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `ScoredRunner`."""
+    orderBy: [ScoredRunnersOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ScoredRunnerCondition
+  ): [ScoredRunner!]!
+}
+
+type GameEvent implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
+
+  """Reads a single `PlateAppearance` that is related to this `GameEvent`."""
+  plateAppearance: PlateAppearance
+
+  """
+  Reads a single `StolenBaseAttempt` that is related to this `GameEvent`.
+  """
+  stolenBaseAttempt: StolenBaseAttempt
+
+  """Reads a single `LineupChange` that is related to this `GameEvent`."""
+  lineupChange: LineupChange
+
+  """Reads and enables pagination through a set of `GameEventRecord`."""
+  gameEventRecords(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameEventRecord`."""
+    orderBy: [GameEventRecordsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameEventRecordCondition
+  ): [GameEventRecord!]!
+}
+
+type LineupChange implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  lineupBeforeId: UUID!
+  lineupAfterId: UUID!
+
+  """Reads a single `Lineup` that is related to this `LineupChange`."""
+  lineupBefore: Lineup
+
+  """Reads a single `Lineup` that is related to this `LineupChange`."""
+  lineupAfter: Lineup
+}
+
+"""Methods to use when ordering `GameEventRecord`."""
+enum GameEventRecordsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  EVENT_INDEX_ASC
+  EVENT_INDEX_DESC
+  GAME_STATE_BEFORE_ID_ASC
+  GAME_STATE_BEFORE_ID_DESC
+  GAME_STATE_AFTER_ID_ASC
+  GAME_STATE_AFTER_ID_DESC
+  GAME_EVENT_ID_ASC
+  GAME_EVENT_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `GameEventRecord` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input GameEventRecordCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: UUID
+
+  """Checks for equality with the object’s `eventIndex` field."""
+  eventIndex: Int
+
+  """Checks for equality with the object’s `gameStateBeforeId` field."""
+  gameStateBeforeId: UUID
+
+  """Checks for equality with the object’s `gameStateAfterId` field."""
+  gameStateAfterId: UUID
+
+  """Checks for equality with the object’s `gameEventId` field."""
+  gameEventId: UUID
+}
+
+"""Methods to use when ordering `ScoredRunner`."""
+enum ScoredRunnersOrderBy {
+  NATURAL
+  GAME_EVENT_RECORD_ID_ASC
+  GAME_EVENT_RECORD_ID_DESC
+  RUNNER_ID_ASC
+  RUNNER_ID_DESC
+  BATTED_IN_ASC
+  BATTED_IN_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ScoredRunner` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input ScoredRunnerCondition {
+  """Checks for equality with the object’s `gameEventRecordId` field."""
+  gameEventRecordId: UUID
+
+  """Checks for equality with the object’s `runnerId` field."""
+  runnerId: UUID
+
+  """Checks for equality with the object’s `battedIn` field."""
+  battedIn: Boolean
+}
+
+"""Methods to use when ordering `LineupChange`."""
+enum LineupChangesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  LINEUP_BEFORE_ID_ASC
+  LINEUP_BEFORE_ID_DESC
+  LINEUP_AFTER_ID_ASC
+  LINEUP_AFTER_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LineupChange` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input LineupChangeCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `lineupBeforeId` field."""
+  lineupBeforeId: UUID
+
+  """Checks for equality with the object’s `lineupAfterId` field."""
+  lineupAfterId: UUID
+}
+
+type LineupForGameState implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  gameStateId: UUID!
+  lineupId: UUID!
+
+  """
+  Reads a single `GameState` that is related to this `LineupForGameState`.
+  """
+  gameState: GameState
+
+  """Reads a single `Lineup` that is related to this `LineupForGameState`."""
+  lineup: Lineup
+}
+
+"""Methods to use when ordering `LineupForGameState`."""
+enum LineupForGameStatesOrderBy {
+  NATURAL
+  GAME_STATE_ID_ASC
+  GAME_STATE_ID_DESC
+  LINEUP_ID_ASC
+  LINEUP_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LineupForGameState` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input LineupForGameStateCondition {
+  """Checks for equality with the object’s `gameStateId` field."""
+  gameStateId: UUID
+
+  """Checks for equality with the object’s `lineupId` field."""
+  lineupId: UUID
+}
+
+"""Methods to use when ordering `Lineup`."""
+enum LineupsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TEAM_ID_ASC
+  TEAM_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Lineup` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input LineupCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `teamId` field."""
+  teamId: UUID
+}
+
+"""Methods to use when ordering `Team`."""
+enum TeamsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  ROLE_ASC
+  ROLE_DESC
+  NAME_ASC
+  NAME_DESC
+  WINNER_ASC
+  WINNER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Team` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input TeamCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: UUID
+
+  """Checks for equality with the object’s `role` field."""
+  role: TeamRole
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `winner` field."""
+  winner: Boolean
 }
 
 """Methods to use when ordering `Game`."""
@@ -1542,7 +1562,7 @@ A condition to be used against `Game` object types. All fields are tested for eq
 """
 input GameCondition {
   """Checks for equality with the object’s `id` field."""
-  id: Int
+  id: UUID
 
   """Checks for equality with the object’s `name` field."""
   name: String
@@ -1581,16 +1601,16 @@ for equality and combined with a logical ‘and.’
 """
 input GameEventCondition {
   """Checks for equality with the object’s `id` field."""
-  id: Int
+  id: UUID
 
   """Checks for equality with the object’s `plateAppearanceId` field."""
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
 
   """Checks for equality with the object’s `stolenBaseAttemptId` field."""
-  stolenBaseAttemptId: Int
+  stolenBaseAttemptId: UUID
 
   """Checks for equality with the object’s `lineupChangeId` field."""
-  lineupChangeId: Int
+  lineupChangeId: UUID
 }
 
 """Methods to use when ordering `PlateAppearance`."""
@@ -1616,7 +1636,7 @@ tested for equality and combined with a logical ‘and.’
 """
 input PlateAppearanceCondition {
   """Checks for equality with the object’s `id` field."""
-  id: Int
+  id: UUID
 
   """Checks for equality with the object’s `type` field."""
   type: PlateAppearanceType
@@ -2461,7 +2481,7 @@ input CreateBaseRunnerInput {
 
 """An input for mutations affecting `BaseRunner`"""
 input BaseRunnerInput {
-  gameStateId: Int
+  gameStateId: UUID
   runnerId: UUID
   base: BaseType!
   gameState: BaseRunnerGameStateIdFkeyInput
@@ -2510,7 +2530,7 @@ input BaseRunnerGameStateIdFkeyInput {
 
 """The fields on `gameState` to look up the row to connect."""
 input GameStateGameStatePkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -2523,7 +2543,7 @@ input GameStateNodeIdConnect {
 
 """The fields on `gameState` to look up the row to delete."""
 input GameStateGameStatePkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -2540,19 +2560,366 @@ input GameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyUsingGameStatePkeyUpdate 
   An object where the defined keys will be set on the `gameState` being updated.
   """
   patch: updateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameState` being updated.
 """
 input updateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
   outs: Int
   score: [Int]
+  game: GameStateGameIdFkeyInput
+  player: GameStatePlayerAtBatFkeyInput
+  baseRunners: BaseRunnerGameStateIdFkeyInverseInput
+  lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
+  gameEventRecordsToGameStateBeforeIdUsingId: GameEventRecordGameStateBeforeFkInverseInput
+  gameEventRecordsToGameStateAfterIdUsingId: GameEventRecordGameStateAfterFkInverseInput
+}
+
+"""
+Input for the nested mutation of `game` in the `GameStateInput` mutation.
+"""
+input GameStateGameIdFkeyInput {
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectById: GameGamePkeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByName: GameGameNameKeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByNodeId: GameNodeIdConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteById: GameGamePkeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByName: GameGameNameKeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByNodeId: GameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateById: GameOnGameStateForGameStateGameIdFkeyUsingGamePkeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByName: GameOnGameStateForGameStateGameIdFkeyUsingGameNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByNodeId: GameStateOnGameStateForGameStateGameIdFkeyNodeIdUpdate
+
+  """
+  A `GameInput` object that will be created and connected to this object.
+  """
+  create: GameStateGameIdFkeyGameCreateInput
+}
+
+"""The fields on `game` to look up the row to connect."""
+input GameGamePkeyConnect {
+  id: UUID!
+}
+
+"""The fields on `game` to look up the row to connect."""
+input GameGameNameKeyConnect {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input GameNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `game` to look up the row to delete."""
+input GameGamePkeyDelete {
+  id: UUID!
+}
+
+"""The fields on `game` to look up the row to delete."""
+input GameGameNameKeyDelete {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input GameNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `game` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnGameStateForGameStateGameIdFkeyUsingGamePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameStateForGameStateGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `game` being updated.
+"""
+input updateGameOnGameStateForGameStateGameIdFkeyPatch {
+  id: UUID
+  name: String
+  location: String
+  score: [Int]
+  gameLength: Int
+  datePlayed: Date
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `team` in the `GameInput` mutation."""
+input TeamGameIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `team` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  connectById: [TeamTeamPkeyConnect!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  connectByGameIdAndRole: [TeamTeamGameIdRoleKeyConnect!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  connectByNodeId: [TeamNodeIdConnect!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  deleteById: [TeamTeamPkeyDelete!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  deleteByGameIdAndRole: [TeamTeamGameIdRoleKeyDelete!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  deleteByNodeId: [TeamNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `team` for the far side of the relationship.
+  """
+  updateById: [TeamOnTeamForTeamGameIdFkeyUsingTeamPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `team` for the far side of the relationship.
+  """
+  updateByGameIdAndRole: [TeamOnTeamForTeamGameIdFkeyUsingTeamGameIdRoleKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `team` for the far side of the relationship.
+  """
+  updateByNodeId: [GameOnTeamForTeamGameIdFkeyNodeIdUpdate!]
+
+  """
+  A `TeamInput` object that will be created and connected to this object.
+  """
+  create: [TeamGameIdFkeyTeamCreateInput!]
+}
+
+"""The fields on `team` to look up the row to connect."""
+input TeamTeamPkeyConnect {
+  id: UUID!
+}
+
+"""The fields on `team` to look up the row to connect."""
+input TeamTeamGameIdRoleKeyConnect {
+  gameId: UUID!
+  role: TeamRole!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input TeamNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `team` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `team` to look up the row to delete."""
+input TeamTeamPkeyDelete {
+  id: UUID!
+}
+
+"""The fields on `team` to look up the row to delete."""
+input TeamTeamGameIdRoleKeyDelete {
+  gameId: UUID!
+  role: TeamRole!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input TeamNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `team` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `team` to look up the row to update."""
+input TeamOnTeamForTeamGameIdFkeyUsingTeamPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `team` being updated.
+  """
+  patch: updateTeamOnTeamForTeamGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `team` being updated.
+"""
+input updateTeamOnTeamForTeamGameIdFkeyPatch {
+  id: UUID
+  role: TeamRole
+  name: String
+  winner: Boolean
+  game: TeamGameIdFkeyInput
+  lineups: LineupTeamIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `game` in the `TeamInput` mutation."""
+input TeamGameIdFkeyInput {
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectById: GameGamePkeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByName: GameGameNameKeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByNodeId: GameNodeIdConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteById: GameGamePkeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByName: GameGameNameKeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByNodeId: GameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateById: GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByName: GameOnTeamForTeamGameIdFkeyUsingGameNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByNodeId: TeamOnTeamForTeamGameIdFkeyNodeIdUpdate
+
+  """
+  A `GameInput` object that will be created and connected to this object.
+  """
+  create: TeamGameIdFkeyGameCreateInput
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnTeamForTeamGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `game` being updated.
+"""
+input updateGameOnTeamForTeamGameIdFkeyPatch {
+  id: UUID
+  name: String
+  location: String
+  score: [Int]
+  gameLength: Int
+  datePlayed: Date
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `gameState` in the `GameInput` mutation.
+"""
+input GameStateGameIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `gameState` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `gameState` for the far side of the relationship.
+  """
+  connectById: [GameStateGameStatePkeyConnect!]
+
+  """
+  The primary key(s) for `gameState` for the far side of the relationship.
+  """
+  connectByNodeId: [GameStateNodeIdConnect!]
+
+  """
+  The primary key(s) for `gameState` for the far side of the relationship.
+  """
+  deleteById: [GameStateGameStatePkeyDelete!]
+
+  """
+  The primary key(s) for `gameState` for the far side of the relationship.
+  """
+  deleteByNodeId: [GameStateNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `gameState` for the far side of the relationship.
+  """
+  updateById: [GameStateOnGameStateForGameStateGameIdFkeyUsingGameStatePkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameState` for the far side of the relationship.
+  """
+  updateByNodeId: [GameOnGameStateForGameStateGameIdFkeyNodeIdUpdate!]
+
+  """
+  A `GameStateInput` object that will be created and connected to this object.
+  """
+  create: [GameStateGameIdFkeyGameStateCreateInput!]
+}
+
+"""The fields on `gameState` to look up the row to update."""
+input GameStateOnGameStateForGameStateGameIdFkeyUsingGameStatePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameState` being updated.
+  """
+  patch: updateGameStateOnGameStateForGameStateGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `gameState` being updated.
+"""
+input updateGameStateOnGameStateForGameStateGameIdFkeyPatch {
+  id: UUID
+  playerAtBat: UUID
+  inning: Int
+  halfInning: HalfInning
+  outs: Int
+  score: [Int]
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -2744,19 +3111,19 @@ input LineupSpotPlayerIdFkeyInverseInput {
 
 """The fields on `lineupSpot` to look up the row to connect."""
 input LineupSpotLineupSpotPkeyConnect {
-  lineupId: Int!
+  lineupId: UUID!
   playerId: UUID!
 }
 
 """The fields on `lineupSpot` to look up the row to connect."""
 input LineupSpotLineupSpotLineupIdBattingOrderKeyConnect {
-  lineupId: Int!
+  lineupId: UUID!
   battingOrder: Int!
 }
 
 """The fields on `lineupSpot` to look up the row to connect."""
 input LineupSpotLineupSpotLineupIdPositionKeyConnect {
-  lineupId: Int!
+  lineupId: UUID!
   position: FieldingPosition!
 }
 
@@ -2770,19 +3137,19 @@ input LineupSpotNodeIdConnect {
 
 """The fields on `lineupSpot` to look up the row to delete."""
 input LineupSpotLineupSpotPkeyDelete {
-  lineupId: Int!
+  lineupId: UUID!
   playerId: UUID!
 }
 
 """The fields on `lineupSpot` to look up the row to delete."""
 input LineupSpotLineupSpotLineupIdBattingOrderKeyDelete {
-  lineupId: Int!
+  lineupId: UUID!
   battingOrder: Int!
 }
 
 """The fields on `lineupSpot` to look up the row to delete."""
 input LineupSpotLineupSpotLineupIdPositionKeyDelete {
-  lineupId: Int!
+  lineupId: UUID!
   position: FieldingPosition!
 }
 
@@ -2800,7 +3167,7 @@ input LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotPkeyUpdate {
   An object where the defined keys will be set on the `lineupSpot` being updated.
   """
   patch: updateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch!
-  lineupId: Int!
+  lineupId: UUID!
   playerId: UUID!
 }
 
@@ -2808,7 +3175,7 @@ input LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotPkeyUpdate {
 An object where the defined keys will be set on the `lineupSpot` being updated.
 """
 input updateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch {
-  lineupId: Int
+  lineupId: UUID
   battingOrder: Int
   position: FieldingPosition
   lineup: LineupSpotLineupIdFkeyInput
@@ -2849,7 +3216,7 @@ input LineupSpotLineupIdFkeyInput {
 
 """The fields on `lineup` to look up the row to connect."""
 input LineupLineupPkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -2862,7 +3229,7 @@ input LineupNodeIdConnect {
 
 """The fields on `lineup` to look up the row to delete."""
 input LineupLineupPkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -2879,16 +3246,15 @@ input LineupOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupPkeyUpdate {
   An object where the defined keys will be set on the `lineup` being updated.
   """
   patch: updateLineupOnLineupSpotForLineupSpotLineupIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineup` being updated.
 """
 input updateLineupOnLineupSpotForLineupSpotLineupIdFkeyPatch {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -2937,226 +3303,21 @@ input LineupTeamIdFkeyInput {
   create: LineupTeamIdFkeyTeamCreateInput
 }
 
-"""The fields on `team` to look up the row to connect."""
-input TeamTeamPkeyConnect {
-  id: Int!
-}
-
-"""The fields on `team` to look up the row to connect."""
-input TeamTeamGameIdRoleKeyConnect {
-  gameId: Int!
-  role: TeamRole!
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input TeamNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `team` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `team` to look up the row to delete."""
-input TeamTeamPkeyDelete {
-  id: Int!
-}
-
-"""The fields on `team` to look up the row to delete."""
-input TeamTeamGameIdRoleKeyDelete {
-  gameId: Int!
-  role: TeamRole!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input TeamNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `team` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """The fields on `team` to look up the row to update."""
 input TeamOnLineupForLineupTeamIdFkeyUsingTeamPkeyUpdate {
   """
   An object where the defined keys will be set on the `team` being updated.
   """
   patch: updateTeamOnLineupForLineupTeamIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `team` being updated.
 """
 input updateTeamOnLineupForLineupTeamIdFkeyPatch {
-  id: Int
-  gameId: Int
-  role: TeamRole
-  name: String
-  winner: Boolean
-  game: TeamGameIdFkeyInput
-  lineups: LineupTeamIdFkeyInverseInput
-}
-
-"""Input for the nested mutation of `game` in the `TeamInput` mutation."""
-input TeamGameIdFkeyInput {
-  """The primary key(s) for `game` for the far side of the relationship."""
-  connectById: GameGamePkeyConnect
-
-  """The primary key(s) for `game` for the far side of the relationship."""
-  connectByName: GameGameNameKeyConnect
-
-  """The primary key(s) for `game` for the far side of the relationship."""
-  connectByNodeId: GameNodeIdConnect
-
-  """The primary key(s) for `game` for the far side of the relationship."""
-  deleteById: GameGamePkeyDelete
-
-  """The primary key(s) for `game` for the far side of the relationship."""
-  deleteByName: GameGameNameKeyDelete
-
-  """The primary key(s) for `game` for the far side of the relationship."""
-  deleteByNodeId: GameNodeIdDelete
-
-  """
-  The primary key(s) and patch data for `game` for the far side of the relationship.
-  """
-  updateById: GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate
-
-  """
-  The primary key(s) and patch data for `game` for the far side of the relationship.
-  """
-  updateByName: GameOnTeamForTeamGameIdFkeyUsingGameNameKeyUpdate
-
-  """
-  The primary key(s) and patch data for `game` for the far side of the relationship.
-  """
-  updateByNodeId: TeamOnTeamForTeamGameIdFkeyNodeIdUpdate
-
-  """
-  A `GameInput` object that will be created and connected to this object.
-  """
-  create: TeamGameIdFkeyGameCreateInput
-}
-
-"""The fields on `game` to look up the row to connect."""
-input GameGamePkeyConnect {
-  id: Int!
-}
-
-"""The fields on `game` to look up the row to connect."""
-input GameGameNameKeyConnect {
-  name: String!
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input GameNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `game` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `game` to look up the row to delete."""
-input GameGamePkeyDelete {
-  id: Int!
-}
-
-"""The fields on `game` to look up the row to delete."""
-input GameGameNameKeyDelete {
-  name: String!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input GameNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `game` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `game` to look up the row to update."""
-input GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate {
-  """
-  An object where the defined keys will be set on the `game` being updated.
-  """
-  patch: updateGameOnTeamForTeamGameIdFkeyPatch!
-  id: Int!
-}
-
-"""
-An object where the defined keys will be set on the `game` being updated.
-"""
-input updateGameOnTeamForTeamGameIdFkeyPatch {
-  id: Int
-  name: String
-  location: String
-  score: [Int]
-  gameLength: Int
-  datePlayed: Date
-  teams: TeamGameIdFkeyInverseInput
-  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
-}
-
-"""Input for the nested mutation of `team` in the `GameInput` mutation."""
-input TeamGameIdFkeyInverseInput {
-  """
-  Flag indicating whether all other `team` records that match this relationship should be removed.
-  """
-  deleteOthers: Boolean
-
-  """The primary key(s) for `team` for the far side of the relationship."""
-  connectById: [TeamTeamPkeyConnect!]
-
-  """The primary key(s) for `team` for the far side of the relationship."""
-  connectByGameIdAndRole: [TeamTeamGameIdRoleKeyConnect!]
-
-  """The primary key(s) for `team` for the far side of the relationship."""
-  connectByNodeId: [TeamNodeIdConnect!]
-
-  """The primary key(s) for `team` for the far side of the relationship."""
-  deleteById: [TeamTeamPkeyDelete!]
-
-  """The primary key(s) for `team` for the far side of the relationship."""
-  deleteByGameIdAndRole: [TeamTeamGameIdRoleKeyDelete!]
-
-  """The primary key(s) for `team` for the far side of the relationship."""
-  deleteByNodeId: [TeamNodeIdDelete!]
-
-  """
-  The primary key(s) and patch data for `team` for the far side of the relationship.
-  """
-  updateById: [TeamOnTeamForTeamGameIdFkeyUsingTeamPkeyUpdate!]
-
-  """
-  The primary key(s) and patch data for `team` for the far side of the relationship.
-  """
-  updateByGameIdAndRole: [TeamOnTeamForTeamGameIdFkeyUsingTeamGameIdRoleKeyUpdate!]
-
-  """
-  The primary key(s) and patch data for `team` for the far side of the relationship.
-  """
-  updateByNodeId: [GameOnTeamForTeamGameIdFkeyNodeIdUpdate!]
-
-  """
-  A `TeamInput` object that will be created and connected to this object.
-  """
-  create: [TeamGameIdFkeyTeamCreateInput!]
-}
-
-"""The fields on `team` to look up the row to update."""
-input TeamOnTeamForTeamGameIdFkeyUsingTeamPkeyUpdate {
-  """
-  An object where the defined keys will be set on the `team` being updated.
-  """
-  patch: updateTeamOnTeamForTeamGameIdFkeyPatch!
-  id: Int!
-}
-
-"""
-An object where the defined keys will be set on the `team` being updated.
-"""
-input updateTeamOnTeamForTeamGameIdFkeyPatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   role: TeamRole
   name: String
   winner: Boolean
@@ -3205,15 +3366,14 @@ input LineupOnLineupForLineupTeamIdFkeyUsingLineupPkeyUpdate {
   An object where the defined keys will be set on the `lineup` being updated.
   """
   patch: updateLineupOnLineupForLineupTeamIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineup` being updated.
 """
 input updateLineupOnLineupForLineupTeamIdFkeyPatch {
-  id: Int
-  originalClientId: Int
+  id: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -3302,7 +3462,7 @@ input LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotPkeyUpdate {
   An object where the defined keys will be set on the `lineupSpot` being updated.
   """
   patch: updateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch!
-  lineupId: Int!
+  lineupId: UUID!
   playerId: UUID!
 }
 
@@ -3433,7 +3593,7 @@ input BasepathMovementRunnerIdFkeyInverseInput {
 
 """The fields on `basepathMovement` to look up the row to connect."""
 input BasepathMovementBasepathMovementPkeyConnect {
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3447,7 +3607,7 @@ input BasepathMovementNodeIdConnect {
 
 """The fields on `basepathMovement` to look up the row to delete."""
 input BasepathMovementBasepathMovementPkeyDelete {
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3465,7 +3625,7 @@ input BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingBase
   An object where the defined keys will be set on the `basepathMovement` being updated.
   """
   patch: updateBasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3473,7 +3633,7 @@ input BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingBase
 An object where the defined keys will be set on the `basepathMovement` being updated.
 """
 input updateBasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   endBase: BaseType
   wasSafe: Boolean
   plateAppearance: BasepathMovementPlateAppearanceIdFkeyInput
@@ -3522,7 +3682,7 @@ input BasepathMovementPlateAppearanceIdFkeyInput {
 
 """The fields on `plateAppearance` to look up the row to connect."""
 input PlateAppearancePlateAppearancePkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -3535,7 +3695,7 @@ input PlateAppearanceNodeIdConnect {
 
 """The fields on `plateAppearance` to look up the row to delete."""
 input PlateAppearancePlateAppearancePkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -3552,14 +3712,14 @@ input PlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyU
   An object where the defined keys will be set on the `plateAppearance` being updated.
   """
   patch: updatePlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `plateAppearance` being updated.
 """
 input updatePlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch {
-  id: Int
+  id: UUID
   type: PlateAppearanceType
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -3620,7 +3780,7 @@ input BasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkey
   An object where the defined keys will be set on the `basepathMovement` being updated.
   """
   patch: updateBasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyPatch!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3751,7 +3911,7 @@ input OutOnPlayRunnerRunnerIdFkeyInverseInput {
 
 """The fields on `outOnPlayRunner` to look up the row to connect."""
 input OutOnPlayRunnerOutOnPlayRunnerPkeyConnect {
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3765,7 +3925,7 @@ input OutOnPlayRunnerNodeIdConnect {
 
 """The fields on `outOnPlayRunner` to look up the row to delete."""
 input OutOnPlayRunnerOutOnPlayRunnerPkeyDelete {
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3783,7 +3943,7 @@ input OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingOutOnPl
   An object where the defined keys will be set on the `outOnPlayRunner` being updated.
   """
   patch: updateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -3791,7 +3951,7 @@ input OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingOutOnPl
 An object where the defined keys will be set on the `outOnPlayRunner` being updated.
 """
 input updateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   plateAppearance: OutOnPlayRunnerPlateAppearanceIdFkeyInput
   player: OutOnPlayRunnerRunnerIdFkeyInput
 }
@@ -3842,14 +4002,14 @@ input PlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyUsi
   An object where the defined keys will be set on the `plateAppearance` being updated.
   """
   patch: updatePlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `plateAppearance` being updated.
 """
 input updatePlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch {
-  id: Int
+  id: UUID
   type: PlateAppearanceType
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -3910,7 +4070,7 @@ input OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyUsi
   An object where the defined keys will be set on the `outOnPlayRunner` being updated.
   """
   patch: updateOutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyPatch!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -4039,7 +4199,7 @@ input StolenBaseAttemptRunnerIdFkeyInverseInput {
 
 """The fields on `stolenBaseAttempt` to look up the row to connect."""
 input StolenBaseAttemptStolenBaseAttemptPkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -4052,7 +4212,7 @@ input StolenBaseAttemptNodeIdConnect {
 
 """The fields on `stolenBaseAttempt` to look up the row to delete."""
 input StolenBaseAttemptStolenBaseAttemptPkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -4069,14 +4229,14 @@ input StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingS
   An object where the defined keys will be set on the `stolenBaseAttempt` being updated.
   """
   patch: updateStolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `stolenBaseAttempt` being updated.
 """
 input updateStolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch {
-  id: Int
+  id: UUID
   success: Boolean
   player: StolenBaseAttemptRunnerIdFkeyInput
   gameEvents: GameEventStolenBaseAttemptIdFkeyInverseInput
@@ -4202,18 +4362,20 @@ input GameStateOnGameStateForGameStatePlayerAtBatFkeyUsingGameStatePkeyUpdate {
   An object where the defined keys will be set on the `gameState` being updated.
   """
   patch: updateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameState` being updated.
 """
 input updateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   inning: Int
   halfInning: HalfInning
   outs: Int
   score: [Int]
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -4268,7 +4430,7 @@ input BaseRunnerGameStateIdFkeyInverseInput {
 
 """The fields on `baseRunner` to look up the row to connect."""
 input BaseRunnerBaseRunnerPkeyConnect {
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
 }
 
@@ -4282,7 +4444,7 @@ input BaseRunnerNodeIdConnect {
 
 """The fields on `baseRunner` to look up the row to delete."""
 input BaseRunnerBaseRunnerPkeyDelete {
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
 }
 
@@ -4300,7 +4462,7 @@ input BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyUsingBaseRunnerPkeyUpdat
   An object where the defined keys will be set on the `baseRunner` being updated.
   """
   patch: updateBaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch!
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
 }
 
@@ -4434,7 +4596,7 @@ input BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingBaseRunnerPkeyUpdate {
   An object where the defined keys will be set on the `baseRunner` being updated.
   """
   patch: updateBaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch!
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
 }
 
@@ -4442,7 +4604,7 @@ input BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingBaseRunnerPkeyUpdate {
 An object where the defined keys will be set on the `baseRunner` being updated.
 """
 input updateBaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch {
-  gameStateId: Int
+  gameStateId: UUID
   base: BaseType
   gameState: BaseRunnerGameStateIdFkeyInput
   player: BaseRunnerRunnerIdFkeyInput
@@ -4465,7 +4627,7 @@ input PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate {
 Represents an update to a `BaseRunner`. Fields that are set will be updated.
 """
 input BaseRunnerPatch {
-  gameStateId: Int
+  gameStateId: UUID
   runnerId: UUID
   base: BaseType
   gameState: BaseRunnerGameStateIdFkeyInput
@@ -4474,7 +4636,7 @@ input BaseRunnerPatch {
 
 """The `baseRunner` to be created by this mutation."""
 input BaseRunnerRunnerIdFkeyBaseRunnerCreateInput {
-  gameStateId: Int
+  gameStateId: UUID
   base: BaseType!
   gameState: BaseRunnerGameStateIdFkeyInput
   player: BaseRunnerRunnerIdFkeyInput
@@ -4527,7 +4689,7 @@ input ScoredRunnerRunnerIdFkeyInverseInput {
 
 """The fields on `scoredRunner` to look up the row to connect."""
 input ScoredRunnerScoredRunnerPkeyConnect {
-  gameEventRecordId: Int!
+  gameEventRecordId: UUID!
   runnerId: UUID!
 }
 
@@ -4541,7 +4703,7 @@ input ScoredRunnerNodeIdConnect {
 
 """The fields on `scoredRunner` to look up the row to delete."""
 input ScoredRunnerScoredRunnerPkeyDelete {
-  gameEventRecordId: Int!
+  gameEventRecordId: UUID!
   runnerId: UUID!
 }
 
@@ -4559,7 +4721,7 @@ input ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingScoredRunnerPkey
   An object where the defined keys will be set on the `scoredRunner` being updated.
   """
   patch: updateScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch!
-  gameEventRecordId: Int!
+  gameEventRecordId: UUID!
   runnerId: UUID!
 }
 
@@ -4567,7 +4729,7 @@ input ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingScoredRunnerPkey
 An object where the defined keys will be set on the `scoredRunner` being updated.
 """
 input updateScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch {
-  gameEventRecordId: Int
+  gameEventRecordId: UUID
   battedIn: Boolean
   gameEventRecord: ScoredRunnerGameEventRecordIdFkeyInput
   player: ScoredRunnerRunnerIdFkeyInput
@@ -4630,12 +4792,12 @@ input ScoredRunnerGameEventRecordIdFkeyInput {
 
 """The fields on `gameEventRecord` to look up the row to connect."""
 input GameEventRecordGameEventRecordPkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The fields on `gameEventRecord` to look up the row to connect."""
 input GameEventRecordGameEventRecordGameIdEventIndexKeyConnect {
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -4649,12 +4811,12 @@ input GameEventRecordNodeIdConnect {
 
 """The fields on `gameEventRecord` to look up the row to delete."""
 input GameEventRecordGameEventRecordPkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The fields on `gameEventRecord` to look up the row to delete."""
 input GameEventRecordGameEventRecordGameIdEventIndexKeyDelete {
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -4672,19 +4834,19 @@ input GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGame
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEventRecord` being updated.
 """
 input updateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -4741,20 +4903,21 @@ input GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGamePkeyUpdate {
   An object where the defined keys will be set on the `game` being updated.
   """
   patch: updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `game` being updated.
 """
 input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
-  id: Int
+  id: UUID
   name: String
   location: String
   score: [Int]
   gameLength: Int
   datePlayed: Date
   teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
 }
 
@@ -4824,18 +4987,18 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEvent
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEventRecord` being updated.
 """
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
-  id: Int
+  id: UUID
   eventIndex: Int
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -4889,19 +5052,21 @@ input GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGameStat
   An object where the defined keys will be set on the `gameState` being updated.
   """
   patch: updateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameState` being updated.
 """
 input updateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
   outs: Int
   score: [Int]
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -4956,8 +5121,8 @@ input LineupForGameStateGameStateIdFkeyInverseInput {
 
 """The fields on `lineupForGameState` to look up the row to connect."""
 input LineupForGameStateLineupForGameStatePkeyConnect {
-  gameStateId: Int!
-  lineupId: Int!
+  gameStateId: UUID!
+  lineupId: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -4970,8 +5135,8 @@ input LineupForGameStateNodeIdConnect {
 
 """The fields on `lineupForGameState` to look up the row to delete."""
 input LineupForGameStateLineupForGameStatePkeyDelete {
-  gameStateId: Int!
-  lineupId: Int!
+  gameStateId: UUID!
+  lineupId: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -4988,15 +5153,15 @@ input LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkey
   An object where the defined keys will be set on the `lineupForGameState` being updated.
   """
   patch: updateLineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch!
-  gameStateId: Int!
-  lineupId: Int!
+  gameStateId: UUID!
+  lineupId: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineupForGameState` being updated.
 """
 input updateLineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch {
-  lineupId: Int
+  lineupId: UUID
   gameState: LineupForGameStateGameStateIdFkeyInput
   lineup: LineupForGameStateLineupIdFkeyInput
 }
@@ -5047,19 +5212,21 @@ input GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyUsingGame
   An object where the defined keys will be set on the `gameState` being updated.
   """
   patch: updateGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameState` being updated.
 """
 input updateGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
   outs: Int
   score: [Int]
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -5133,18 +5300,18 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGa
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEventRecord` being updated.
 """
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -5198,19 +5365,21 @@ input GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGameState
   An object where the defined keys will be set on the `gameState` being updated.
   """
   patch: updateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameState` being updated.
 """
 input updateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
   outs: Int
   score: [Int]
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -5284,18 +5453,18 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGam
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEventRecord` being updated.
 """
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int
-  gameStateBeforeId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -5345,7 +5514,7 @@ input GameEventRecordGameEventIdFkeyInput {
 
 """The fields on `gameEvent` to look up the row to connect."""
 input GameEventGameEventPkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -5358,7 +5527,7 @@ input GameEventNodeIdConnect {
 
 """The fields on `gameEvent` to look up the row to delete."""
 input GameEventGameEventPkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -5375,17 +5544,17 @@ input GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGameEventP
   An object where the defined keys will be set on the `gameEvent` being updated.
   """
   patch: updateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEvent` being updated.
 """
 input updateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch {
-  id: Int
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -5438,14 +5607,14 @@ input PlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyUsingPlateAppea
   An object where the defined keys will be set on the `plateAppearance` being updated.
   """
   patch: updatePlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `plateAppearance` being updated.
 """
 input updatePlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyPatch {
-  id: Int
+  id: UUID
   type: PlateAppearanceType
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -5506,16 +5675,16 @@ input GameEventOnGameEventForGameEventPlateAppearanceIdFkeyUsingGameEventPkeyUpd
   An object where the defined keys will be set on the `gameEvent` being updated.
   """
   patch: updateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEvent` being updated.
 """
 input updateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch {
-  id: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
+  id: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -5568,14 +5737,14 @@ input StolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyUsingStolen
   An object where the defined keys will be set on the `stolenBaseAttempt` being updated.
   """
   patch: updateStolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `stolenBaseAttempt` being updated.
 """
 input updateStolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch {
-  id: Int
+  id: UUID
   runnerId: UUID
   success: Boolean
   player: StolenBaseAttemptRunnerIdFkeyInput
@@ -5633,16 +5802,16 @@ input GameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyUsingGameEventPkeyU
   An object where the defined keys will be set on the `gameEvent` being updated.
   """
   patch: updateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEvent` being updated.
 """
 input updateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch {
-  id: Int
-  plateAppearanceId: Int
-  lineupChangeId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -5691,7 +5860,7 @@ input GameEventLineupChangeIdFkeyInput {
 
 """The fields on `lineupChange` to look up the row to connect."""
 input LineupChangeLineupChangePkeyConnect {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -5704,7 +5873,7 @@ input LineupChangeNodeIdConnect {
 
 """The fields on `lineupChange` to look up the row to delete."""
 input LineupChangeLineupChangePkeyDelete {
-  id: Int!
+  id: UUID!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -5721,16 +5890,16 @@ input LineupChangeOnGameEventForGameEventLineupChangeIdFkeyUsingLineupChangePkey
   An object where the defined keys will be set on the `lineupChange` being updated.
   """
   patch: updateLineupChangeOnGameEventForGameEventLineupChangeIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineupChange` being updated.
 """
 input updateLineupChangeOnGameEventForGameEventLineupChangeIdFkeyPatch {
-  id: Int
-  lineupBeforeId: Int
-  lineupAfterId: Int
+  id: UUID
+  lineupBeforeId: UUID
+  lineupAfterId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -5773,16 +5942,15 @@ input LineupOnLineupChangeForLineupChangeLineupAfterIdFkeyUsingLineupPkeyUpdate 
   An object where the defined keys will be set on the `lineup` being updated.
   """
   patch: updateLineupOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineup` being updated.
 """
 input updateLineupOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -5841,15 +6009,15 @@ input LineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyUsingLineupChan
   An object where the defined keys will be set on the `lineupChange` being updated.
   """
   patch: updateLineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineupChange` being updated.
 """
 input updateLineupChangeOnLineupChangeForLineupChangeLineupBeforeIdFkeyPatch {
-  id: Int
-  lineupAfterId: Int
+  id: UUID
+  lineupAfterId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -5905,16 +6073,16 @@ input GameEventOnGameEventForGameEventLineupChangeIdFkeyUsingGameEventPkeyUpdate
   An object where the defined keys will be set on the `gameEvent` being updated.
   """
   patch: updateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEvent` being updated.
 """
 input updateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch {
-  id: Int
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -5987,18 +6155,18 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGame
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `gameEventRecord` being updated.
 """
 input updateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -6057,7 +6225,7 @@ input ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingScoredR
   An object where the defined keys will be set on the `scoredRunner` being updated.
   """
   patch: updateScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch!
-  gameEventRecordId: Int!
+  gameEventRecordId: UUID!
   runnerId: UUID!
 }
 
@@ -6212,7 +6380,7 @@ input GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpd
 Represents an update to a `ScoredRunner`. Fields that are set will be updated.
 """
 input ScoredRunnerPatch {
-  gameEventRecordId: Int
+  gameEventRecordId: UUID
   runnerId: UUID
   battedIn: Boolean
   gameEventRecord: ScoredRunnerGameEventRecordIdFkeyInput
@@ -6233,7 +6401,7 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyUsingGame
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch!
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -6254,12 +6422,12 @@ input GameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpdate {
 Represents an update to a `GameEventRecord`. Fields that are set will be updated.
 """
 input GameEventRecordPatch {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -6269,11 +6437,11 @@ input GameEventRecordPatch {
 
 """The `gameEventRecord` to be created by this mutation."""
 input GameEventRecordGameEventIdFkeyGameEventRecordCreateInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int!
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -6298,10 +6466,10 @@ input LineupChangeOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate {
 Represents an update to a `GameEvent`. Fields that are set will be updated.
 """
 input GameEventPatch {
-  id: Int
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -6310,9 +6478,9 @@ input GameEventPatch {
 
 """The `gameEvent` to be created by this mutation."""
 input GameEventLineupChangeIdFkeyGameEventCreateInput {
-  id: Int
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -6336,17 +6504,17 @@ input LineupOnLineupChangeForLineupChangeLineupBeforeIdFkeyNodeIdUpdate {
 Represents an update to a `LineupChange`. Fields that are set will be updated.
 """
 input LineupChangePatch {
-  id: Int
-  lineupBeforeId: Int
-  lineupAfterId: Int
+  id: UUID
+  lineupBeforeId: UUID
+  lineupAfterId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
 
 """The `lineupChange` to be created by this mutation."""
 input LineupChangeLineupBeforeIdFkeyLineupChangeCreateInput {
-  id: Int
-  lineupAfterId: Int
+  id: UUID
+  lineupAfterId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -6402,15 +6570,15 @@ input LineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyUsingLineupChang
   An object where the defined keys will be set on the `lineupChange` being updated.
   """
   patch: updateLineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineupChange` being updated.
 """
 input updateLineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyPatch {
-  id: Int
-  lineupBeforeId: Int
+  id: UUID
+  lineupBeforeId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -6430,8 +6598,8 @@ input LineupOnLineupChangeForLineupChangeLineupAfterIdFkeyNodeIdUpdate {
 
 """The `lineupChange` to be created by this mutation."""
 input LineupChangeLineupAfterIdFkeyLineupChangeCreateInput {
-  id: Int
-  lineupBeforeId: Int
+  id: UUID
+  lineupBeforeId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -6487,15 +6655,15 @@ input LineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyUsi
   An object where the defined keys will be set on the `lineupForGameState` being updated.
   """
   patch: updateLineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch!
-  gameStateId: Int!
-  lineupId: Int!
+  gameStateId: UUID!
+  lineupId: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineupForGameState` being updated.
 """
 input updateLineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch {
-  gameStateId: Int
+  gameStateId: UUID
   gameState: LineupForGameStateGameStateIdFkeyInput
   lineup: LineupForGameStateLineupIdFkeyInput
 }
@@ -6538,16 +6706,15 @@ input LineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyUsingLineupPkey
   An object where the defined keys will be set on the `lineup` being updated.
   """
   patch: updateLineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
 An object where the defined keys will be set on the `lineup` being updated.
 """
 input updateLineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyPatch {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -6572,9 +6739,8 @@ input LineupForGameStateOnLineupForGameStateForLineupForGameStateLineupIdFkeyNod
 Represents an update to a `Lineup`. Fields that are set will be updated.
 """
 input LineupPatch {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -6584,9 +6750,8 @@ input LineupPatch {
 
 """The `lineup` to be created by this mutation."""
 input LineupForGameStateLineupIdFkeyLineupCreateInput {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -6611,15 +6776,15 @@ input LineupOnLineupForGameStateForLineupForGameStateLineupIdFkeyNodeIdUpdate {
 Represents an update to a `LineupForGameState`. Fields that are set will be updated.
 """
 input LineupForGameStatePatch {
-  gameStateId: Int
-  lineupId: Int
+  gameStateId: UUID
+  lineupId: UUID
   gameState: LineupForGameStateGameStateIdFkeyInput
   lineup: LineupForGameStateLineupIdFkeyInput
 }
 
 """The `lineupForGameState` to be created by this mutation."""
 input LineupForGameStateLineupIdFkeyLineupForGameStateCreateInput {
-  gameStateId: Int
+  gameStateId: UUID
   gameState: LineupForGameStateGameStateIdFkeyInput
   lineup: LineupForGameStateLineupIdFkeyInput
 }
@@ -6639,9 +6804,8 @@ input LineupChangeOnLineupChangeForLineupChangeLineupAfterIdFkeyNodeIdUpdate {
 
 """The `lineup` to be created by this mutation."""
 input LineupChangeLineupAfterIdFkeyLineupCreateInput {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -6664,9 +6828,9 @@ input GameEventOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate {
 
 """The `lineupChange` to be created by this mutation."""
 input GameEventLineupChangeIdFkeyLineupChangeCreateInput {
-  id: Int
-  lineupBeforeId: Int
-  lineupAfterId: Int
+  id: UUID
+  lineupBeforeId: UUID
+  lineupAfterId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -6686,9 +6850,9 @@ input StolenBaseAttemptOnGameEventForGameEventStolenBaseAttemptIdFkeyNodeIdUpdat
 
 """The `gameEvent` to be created by this mutation."""
 input GameEventStolenBaseAttemptIdFkeyGameEventCreateInput {
-  id: Int
-  plateAppearanceId: Int
-  lineupChangeId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -6712,7 +6876,7 @@ input GameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyNodeIdUpdate {
 Represents an update to a `StolenBaseAttempt`. Fields that are set will be updated.
 """
 input StolenBaseAttemptPatch {
-  id: Int
+  id: UUID
   runnerId: UUID
   success: Boolean
   player: StolenBaseAttemptRunnerIdFkeyInput
@@ -6721,7 +6885,7 @@ input StolenBaseAttemptPatch {
 
 """The `stolenBaseAttempt` to be created by this mutation."""
 input GameEventStolenBaseAttemptIdFkeyStolenBaseAttemptCreateInput {
-  id: Int
+  id: UUID
   runnerId: UUID
   success: Boolean!
   player: StolenBaseAttemptRunnerIdFkeyInput
@@ -6743,9 +6907,9 @@ input PlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyNodeIdUpdate {
 
 """The `gameEvent` to be created by this mutation."""
 input GameEventPlateAppearanceIdFkeyGameEventCreateInput {
-  id: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
+  id: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -6769,7 +6933,7 @@ input GameEventOnGameEventForGameEventPlateAppearanceIdFkeyNodeIdUpdate {
 Represents an update to a `PlateAppearance`. Fields that are set will be updated.
 """
 input PlateAppearancePatch {
-  id: Int
+  id: UUID
   type: PlateAppearanceType
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -6781,7 +6945,7 @@ input PlateAppearancePatch {
 
 """The `plateAppearance` to be created by this mutation."""
 input GameEventPlateAppearanceIdFkeyPlateAppearanceCreateInput {
-  id: Int
+  id: UUID
   type: PlateAppearanceType!
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -6806,10 +6970,10 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameEventIdFkeyNodeIdUpd
 
 """The `gameEvent` to be created by this mutation."""
 input GameEventRecordGameEventIdFkeyGameEventCreateInput {
-  id: Int
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -6822,7 +6986,7 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkUsingGam
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkPatch!
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -6841,11 +7005,11 @@ input GameStateOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUpdate {
 
 """The `gameEventRecord` to be created by this mutation."""
 input GameEventRecordGameStateAfterFkGameEventRecordCreateInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int!
-  gameStateBeforeId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -6870,12 +7034,14 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateAfterFkNodeIdUp
 Represents an update to a `GameState`. Fields that are set will be updated.
 """
 input GameStatePatch {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
   outs: Int
   score: [Int]
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -6885,12 +7051,14 @@ input GameStatePatch {
 
 """The `gameState` to be created by this mutation."""
 input GameEventRecordGameStateAfterFkGameStateCreateInput {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -6904,7 +7072,7 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkUsingGa
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch!
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -6923,11 +7091,11 @@ input GameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdUpdate 
 
 """The `gameEventRecord` to be created by this mutation."""
 input GameEventRecordGameStateBeforeFkGameEventRecordCreateInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int!
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -6950,12 +7118,14 @@ input LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkey
 
 """The `gameState` to be created by this mutation."""
 input LineupForGameStateGameStateIdFkeyGameStateCreateInput {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -6978,7 +7148,7 @@ input GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyNodeIdUpd
 
 """The `lineupForGameState` to be created by this mutation."""
 input LineupForGameStateGameStateIdFkeyLineupForGameStateCreateInput {
-  lineupId: Int
+  lineupId: UUID
   gameState: LineupForGameStateGameStateIdFkeyInput
   lineup: LineupForGameStateLineupIdFkeyInput
 }
@@ -6998,12 +7168,14 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdU
 
 """The `gameState` to be created by this mutation."""
 input GameEventRecordGameStateBeforeFkGameStateCreateInput {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -7017,7 +7189,7 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameEvent
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPatch!
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -7036,11 +7208,11 @@ input GameOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
 
 """The `gameEventRecord` to be created by this mutation."""
 input GameEventRecordGameIdFkeyGameEventRecordCreateInput {
-  id: Int
+  id: UUID
   eventIndex: Int!
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -7072,25 +7244,27 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
 
 """Represents an update to a `Game`. Fields that are set will be updated."""
 input GamePatch {
-  id: Int
+  id: UUID
   name: String
   location: String
   score: [Int]
   gameLength: Int
   datePlayed: Date
   teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
 }
 
 """The `game` to be created by this mutation."""
 input GameEventRecordGameIdFkeyGameCreateInput {
-  id: Int
+  id: UUID
   name: String
   location: String
   score: [Int]!
   gameLength: Int
   datePlayed: Date
   teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
 }
 
@@ -7100,7 +7274,7 @@ input GameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyUsingGame
   An object where the defined keys will be set on the `gameEventRecord` being updated.
   """
   patch: updateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyPatch!
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -7119,12 +7293,12 @@ input ScoredRunnerOnScoredRunnerForScoredRunnerGameEventRecordIdFkeyNodeIdUpdate
 
 """The `gameEventRecord` to be created by this mutation."""
 input ScoredRunnerGameEventRecordIdFkeyGameEventRecordCreateInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int!
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -7147,7 +7321,7 @@ input PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate {
 
 """The `scoredRunner` to be created by this mutation."""
 input ScoredRunnerRunnerIdFkeyScoredRunnerCreateInput {
-  gameEventRecordId: Int
+  gameEventRecordId: UUID
   battedIn: Boolean!
   gameEventRecord: ScoredRunnerGameEventRecordIdFkeyInput
   player: ScoredRunnerRunnerIdFkeyInput
@@ -7227,11 +7401,13 @@ input PlayerOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate {
 
 """The `gameState` to be created by this mutation."""
 input GameStatePlayerAtBatFkeyGameStateCreateInput {
-  id: Int
+  id: UUID
+  gameId: UUID
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -7292,7 +7468,7 @@ input PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate {
 
 """The `stolenBaseAttempt` to be created by this mutation."""
 input StolenBaseAttemptRunnerIdFkeyStolenBaseAttemptCreateInput {
-  id: Int
+  id: UUID
   success: Boolean!
   player: StolenBaseAttemptRunnerIdFkeyInput
   gameEvents: GameEventStolenBaseAttemptIdFkeyInverseInput
@@ -7353,7 +7529,7 @@ input PlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyNod
 Represents an update to a `OutOnPlayRunner`. Fields that are set will be updated.
 """
 input OutOnPlayRunnerPatch {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   runnerId: UUID
   plateAppearance: OutOnPlayRunnerPlateAppearanceIdFkeyInput
   player: OutOnPlayRunnerRunnerIdFkeyInput
@@ -7381,7 +7557,7 @@ input OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppearanceIdFkeyNod
 
 """The `plateAppearance` to be created by this mutation."""
 input OutOnPlayRunnerPlateAppearanceIdFkeyPlateAppearanceCreateInput {
-  id: Int
+  id: UUID
   type: PlateAppearanceType!
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -7406,7 +7582,7 @@ input PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate {
 
 """The `outOnPlayRunner` to be created by this mutation."""
 input OutOnPlayRunnerRunnerIdFkeyOutOnPlayRunnerCreateInput {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   plateAppearance: OutOnPlayRunnerPlateAppearanceIdFkeyInput
   player: OutOnPlayRunnerRunnerIdFkeyInput
 }
@@ -7466,7 +7642,7 @@ input PlateAppearanceOnBasepathMovementForBasepathMovementPlateAppearanceIdFkeyN
 Represents an update to a `BasepathMovement`. Fields that are set will be updated.
 """
 input BasepathMovementPatch {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   runnerId: UUID
   endBase: BaseType
   wasSafe: Boolean
@@ -7498,7 +7674,7 @@ input BasepathMovementOnBasepathMovementForBasepathMovementPlateAppearanceIdFkey
 
 """The `plateAppearance` to be created by this mutation."""
 input BasepathMovementPlateAppearanceIdFkeyPlateAppearanceCreateInput {
-  id: Int
+  id: UUID
   type: PlateAppearanceType!
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -7523,7 +7699,7 @@ input PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate {
 
 """The `basepathMovement` to be created by this mutation."""
 input BasepathMovementRunnerIdFkeyBasepathMovementCreateInput {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   endBase: BaseType
   wasSafe: Boolean!
   plateAppearance: BasepathMovementPlateAppearanceIdFkeyInput
@@ -7574,7 +7750,7 @@ input LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotLineupIdBatt
   An object where the defined keys will be set on the `lineupSpot` being updated.
   """
   patch: updateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch!
-  lineupId: Int!
+  lineupId: UUID!
   battingOrder: Int!
 }
 
@@ -7584,7 +7760,7 @@ input LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyUsingLineupSpotLineupIdPosi
   An object where the defined keys will be set on the `lineupSpot` being updated.
   """
   patch: updateLineupSpotOnLineupSpotForLineupSpotLineupIdFkeyPatch!
-  lineupId: Int!
+  lineupId: UUID!
   position: FieldingPosition!
 }
 
@@ -7605,7 +7781,7 @@ input LineupOnLineupSpotForLineupSpotLineupIdFkeyNodeIdUpdate {
 Represents an update to a `LineupSpot`. Fields that are set will be updated.
 """
 input LineupSpotPatch {
-  lineupId: Int
+  lineupId: UUID
   playerId: UUID
   battingOrder: Int
   position: FieldingPosition
@@ -7637,8 +7813,7 @@ input TeamOnLineupForLineupTeamIdFkeyNodeIdUpdate {
 
 """The `lineup` to be created by this mutation."""
 input LineupTeamIdFkeyLineupCreateInput {
-  id: Int
-  originalClientId: Int
+  id: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -7647,90 +7822,12 @@ input LineupTeamIdFkeyLineupCreateInput {
 }
 
 """The fields on `team` to look up the row to update."""
-input TeamOnTeamForTeamGameIdFkeyUsingTeamGameIdRoleKeyUpdate {
-  """
-  An object where the defined keys will be set on the `team` being updated.
-  """
-  patch: updateTeamOnTeamForTeamGameIdFkeyPatch!
-  gameId: Int!
-  role: TeamRole!
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input GameOnTeamForTeamGameIdFkeyNodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `team` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `team` being updated.
-  """
-  patch: TeamPatch!
-}
-
-"""Represents an update to a `Team`. Fields that are set will be updated."""
-input TeamPatch {
-  id: Int
-  gameId: Int
-  role: TeamRole
-  name: String
-  winner: Boolean
-  game: TeamGameIdFkeyInput
-  lineups: LineupTeamIdFkeyInverseInput
-}
-
-"""The `team` to be created by this mutation."""
-input TeamGameIdFkeyTeamCreateInput {
-  id: Int
-  role: TeamRole!
-  name: String
-  winner: Boolean
-  game: TeamGameIdFkeyInput
-  lineups: LineupTeamIdFkeyInverseInput
-}
-
-"""The fields on `game` to look up the row to update."""
-input GameOnTeamForTeamGameIdFkeyUsingGameNameKeyUpdate {
-  """
-  An object where the defined keys will be set on the `game` being updated.
-  """
-  patch: updateGameOnTeamForTeamGameIdFkeyPatch!
-  name: String!
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input TeamOnTeamForTeamGameIdFkeyNodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `game` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `game` being updated.
-  """
-  patch: GamePatch!
-}
-
-"""The `game` to be created by this mutation."""
-input TeamGameIdFkeyGameCreateInput {
-  id: Int
-  name: String
-  location: String
-  score: [Int]!
-  gameLength: Int
-  datePlayed: Date
-  teams: TeamGameIdFkeyInverseInput
-  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
-}
-
-"""The fields on `team` to look up the row to update."""
 input TeamOnLineupForLineupTeamIdFkeyUsingTeamGameIdRoleKeyUpdate {
   """
   An object where the defined keys will be set on the `team` being updated.
   """
   patch: updateTeamOnLineupForLineupTeamIdFkeyPatch!
-  gameId: Int!
+  gameId: UUID!
   role: TeamRole!
 }
 
@@ -7747,10 +7844,21 @@ input LineupOnLineupForLineupTeamIdFkeyNodeIdUpdate {
   patch: TeamPatch!
 }
 
+"""Represents an update to a `Team`. Fields that are set will be updated."""
+input TeamPatch {
+  id: UUID
+  gameId: UUID
+  role: TeamRole
+  name: String
+  winner: Boolean
+  game: TeamGameIdFkeyInput
+  lineups: LineupTeamIdFkeyInverseInput
+}
+
 """The `team` to be created by this mutation."""
 input LineupTeamIdFkeyTeamCreateInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   role: TeamRole!
   name: String
   winner: Boolean
@@ -7773,9 +7881,8 @@ input LineupSpotOnLineupSpotForLineupSpotLineupIdFkeyNodeIdUpdate {
 
 """The `lineup` to be created by this mutation."""
 input LineupSpotLineupIdFkeyLineupCreateInput {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -7789,7 +7896,7 @@ input LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotLineupIdBatt
   An object where the defined keys will be set on the `lineupSpot` being updated.
   """
   patch: updateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch!
-  lineupId: Int!
+  lineupId: UUID!
   battingOrder: Int!
 }
 
@@ -7799,7 +7906,7 @@ input LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyUsingLineupSpotLineupIdPosi
   An object where the defined keys will be set on the `lineupSpot` being updated.
   """
   patch: updateLineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyPatch!
-  lineupId: Int!
+  lineupId: UUID!
   position: FieldingPosition!
 }
 
@@ -7818,7 +7925,7 @@ input PlayerOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate {
 
 """The `lineupSpot` to be created by this mutation."""
 input LineupSpotPlayerIdFkeyLineupSpotCreateInput {
-  lineupId: Int
+  lineupId: UUID
   battingOrder: Int!
   position: FieldingPosition
   lineup: LineupSpotLineupIdFkeyInput
@@ -7864,6 +7971,138 @@ input GameStatePlayerAtBatFkeyPlayerCreateInput {
 }
 
 """The globally unique `ID` look up for the row to update."""
+input GameOnGameStateForGameStateGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `gameState` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `gameState` being updated.
+  """
+  patch: GameStatePatch!
+}
+
+"""The `gameState` to be created by this mutation."""
+input GameStateGameIdFkeyGameStateCreateInput {
+  id: UUID
+  playerAtBat: UUID
+  inning: Int!
+  halfInning: HalfInning!
+  outs: Int!
+  score: [Int]!
+  game: GameStateGameIdFkeyInput
+  player: GameStatePlayerAtBatFkeyInput
+  baseRunners: BaseRunnerGameStateIdFkeyInverseInput
+  lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
+  gameEventRecordsToGameStateBeforeIdUsingId: GameEventRecordGameStateBeforeFkInverseInput
+  gameEventRecordsToGameStateAfterIdUsingId: GameEventRecordGameStateAfterFkInverseInput
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnTeamForTeamGameIdFkeyUsingGameNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnTeamForTeamGameIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input TeamOnTeamForTeamGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: GamePatch!
+}
+
+"""The `game` to be created by this mutation."""
+input TeamGameIdFkeyGameCreateInput {
+  id: UUID
+  name: String
+  location: String
+  score: [Int]!
+  gameLength: Int
+  datePlayed: Date
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""The fields on `team` to look up the row to update."""
+input TeamOnTeamForTeamGameIdFkeyUsingTeamGameIdRoleKeyUpdate {
+  """
+  An object where the defined keys will be set on the `team` being updated.
+  """
+  patch: updateTeamOnTeamForTeamGameIdFkeyPatch!
+  gameId: UUID!
+  role: TeamRole!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameOnTeamForTeamGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `team` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `team` being updated.
+  """
+  patch: TeamPatch!
+}
+
+"""The `team` to be created by this mutation."""
+input TeamGameIdFkeyTeamCreateInput {
+  id: UUID
+  role: TeamRole!
+  name: String
+  winner: Boolean
+  game: TeamGameIdFkeyInput
+  lineups: LineupTeamIdFkeyInverseInput
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnGameStateForGameStateGameIdFkeyUsingGameNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameStateForGameStateGameIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameStateOnGameStateForGameStateGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: GamePatch!
+}
+
+"""The `game` to be created by this mutation."""
+input GameStateGameIdFkeyGameCreateInput {
+  id: UUID
+  name: String
+  location: String
+  score: [Int]!
+  gameLength: Int
+  datePlayed: Date
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
 input BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate {
   """
   The globally unique `ID` which identifies a single `gameState` to be connected.
@@ -7878,12 +8117,14 @@ input BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate {
 
 """The `gameState` to be created by this mutation."""
 input BaseRunnerGameStateIdFkeyGameStateCreateInput {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -7930,7 +8171,7 @@ input CreateBasepathMovementInput {
 
 """An input for mutations affecting `BasepathMovement`"""
 input BasepathMovementInput {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   runnerId: UUID
   endBase: BaseType
   wasSafe: Boolean!
@@ -7969,13 +8210,14 @@ input CreateGameInput {
 
 """An input for mutations affecting `Game`"""
 input GameInput {
-  id: Int
+  id: UUID
   name: String
   location: String
   score: [Int]!
   gameLength: Int
   datePlayed: Date
   teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
 }
 
@@ -8021,10 +8263,10 @@ input CreateGameEventInput {
 
 """An input for mutations affecting `GameEvent`"""
 input GameEventInput {
-  id: Int
-  plateAppearanceId: Int
-  stolenBaseAttemptId: Int
-  lineupChangeId: Int
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
@@ -8074,12 +8316,12 @@ input CreateGameEventRecordInput {
 
 """An input for mutations affecting `GameEventRecord`"""
 input GameEventRecordInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   eventIndex: Int!
-  gameStateBeforeId: Int
-  gameStateAfterId: Int
-  gameEventId: Int
+  gameStateBeforeId: UUID
+  gameStateAfterId: UUID
+  gameEventId: UUID
   game: GameEventRecordGameIdFkeyInput
   gameStateBefore: GameEventRecordGameStateBeforeFkInput
   gameStateAfter: GameEventRecordGameStateAfterFkInput
@@ -8103,6 +8345,9 @@ type CreateGameStatePayload {
   """
   query: Query
 
+  """Reads a single `Game` that is related to this `GameState`."""
+  game: Game
+
   """Reads a single `Player` that is related to this `GameState`."""
   playerByPlayerAtBat: Player
 }
@@ -8121,12 +8366,14 @@ input CreateGameStateInput {
 
 """An input for mutations affecting `GameState`"""
 input GameStateInput {
-  id: Int
+  id: UUID
+  gameId: UUID
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
   score: [Int]!
+  game: GameStateGameIdFkeyInput
   player: GameStatePlayerAtBatFkeyInput
   baseRunners: BaseRunnerGameStateIdFkeyInverseInput
   lineupForGameStates: LineupForGameStateGameStateIdFkeyInverseInput
@@ -8168,9 +8415,8 @@ input CreateLineupInput {
 
 """An input for mutations affecting `Lineup`"""
 input LineupInput {
-  id: Int
-  teamId: Int
-  originalClientId: Int
+  id: UUID
+  teamId: UUID
   team: LineupTeamIdFkeyInput
   lineupSpots: LineupSpotLineupIdFkeyInverseInput
   lineupChangesToLineupBeforeIdUsingId: LineupChangeLineupBeforeIdFkeyInverseInput
@@ -8215,9 +8461,9 @@ input CreateLineupChangeInput {
 
 """An input for mutations affecting `LineupChange`"""
 input LineupChangeInput {
-  id: Int
-  lineupBeforeId: Int
-  lineupAfterId: Int
+  id: UUID
+  lineupBeforeId: UUID
+  lineupAfterId: UUID
   lineup: LineupChangeLineupAfterIdFkeyInput
   gameEvents: GameEventLineupChangeIdFkeyInverseInput
 }
@@ -8261,8 +8507,8 @@ input CreateLineupForGameStateInput {
 
 """An input for mutations affecting `LineupForGameState`"""
 input LineupForGameStateInput {
-  gameStateId: Int
-  lineupId: Int
+  gameStateId: UUID
+  lineupId: UUID
   gameState: LineupForGameStateGameStateIdFkeyInput
   lineup: LineupForGameStateLineupIdFkeyInput
 }
@@ -8304,7 +8550,7 @@ input CreateLineupSpotInput {
 
 """An input for mutations affecting `LineupSpot`"""
 input LineupSpotInput {
-  lineupId: Int
+  lineupId: UUID
   playerId: UUID
   battingOrder: Int!
   position: FieldingPosition
@@ -8351,7 +8597,7 @@ input CreateOutOnPlayRunnerInput {
 
 """An input for mutations affecting `OutOnPlayRunner`"""
 input OutOnPlayRunnerInput {
-  plateAppearanceId: Int
+  plateAppearanceId: UUID
   runnerId: UUID
   plateAppearance: OutOnPlayRunnerPlateAppearanceIdFkeyInput
   player: OutOnPlayRunnerRunnerIdFkeyInput
@@ -8388,7 +8634,7 @@ input CreatePlateAppearanceInput {
 
 """An input for mutations affecting `PlateAppearance`"""
 input PlateAppearanceInput {
-  id: Int
+  id: UUID
   type: PlateAppearanceType!
   contact: ContactQuality
   fieldedBy: FieldingPosition
@@ -8481,7 +8727,7 @@ input CreateScoredRunnerInput {
 
 """An input for mutations affecting `ScoredRunner`"""
 input ScoredRunnerInput {
-  gameEventRecordId: Int
+  gameEventRecordId: UUID
   runnerId: UUID
   battedIn: Boolean!
   gameEventRecord: ScoredRunnerGameEventRecordIdFkeyInput
@@ -8522,7 +8768,7 @@ input CreateStolenBaseAttemptInput {
 
 """An input for mutations affecting `StolenBaseAttempt`"""
 input StolenBaseAttemptInput {
-  id: Int
+  id: UUID
   runnerId: UUID
   success: Boolean!
   player: StolenBaseAttemptRunnerIdFkeyInput
@@ -8563,8 +8809,8 @@ input CreateTeamInput {
 
 """An input for mutations affecting `Team`"""
 input TeamInput {
-  id: Int
-  gameId: Int
+  id: UUID
+  gameId: UUID
   role: TeamRole!
   name: String
   winner: Boolean
@@ -8626,7 +8872,7 @@ input UpdateBaseRunnerInput {
   An object where the defined keys will be set on the `BaseRunner` being updated.
   """
   patch: BaseRunnerPatch!
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
 }
 
@@ -8686,7 +8932,7 @@ input UpdateBasepathMovementInput {
   An object where the defined keys will be set on the `BasepathMovement` being updated.
   """
   patch: BasepathMovementPatch!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -8738,7 +8984,7 @@ input UpdateGameInput {
   An object where the defined keys will be set on the `Game` being updated.
   """
   patch: GamePatch!
-  id: Int!
+  id: UUID!
 }
 
 """All input for the `updateGameByName` mutation."""
@@ -8815,7 +9061,7 @@ input UpdateGameEventInput {
   An object where the defined keys will be set on the `GameEvent` being updated.
   """
   patch: GameEventPatch!
-  id: Int!
+  id: UUID!
 }
 
 """The output of our update `GameEventRecord` mutation."""
@@ -8878,7 +9124,7 @@ input UpdateGameEventRecordInput {
   An object where the defined keys will be set on the `GameEventRecord` being updated.
   """
   patch: GameEventRecordPatch!
-  id: Int!
+  id: UUID!
 }
 
 """
@@ -8895,7 +9141,7 @@ input UpdateGameEventRecordByGameIdAndEventIndexInput {
   An object where the defined keys will be set on the `GameEventRecord` being updated.
   """
   patch: GameEventRecordPatch!
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -8914,6 +9160,9 @@ type UpdateGameStatePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Game` that is related to this `GameState`."""
+  game: Game
 
   """Reads a single `Player` that is related to this `GameState`."""
   playerByPlayerAtBat: Player
@@ -8950,7 +9199,7 @@ input UpdateGameStateInput {
   An object where the defined keys will be set on the `GameState` being updated.
   """
   patch: GameStatePatch!
-  id: Int!
+  id: UUID!
 }
 
 """The output of our update `Lineup` mutation."""
@@ -9004,7 +9253,7 @@ input UpdateLineupInput {
   An object where the defined keys will be set on the `Lineup` being updated.
   """
   patch: LineupPatch!
-  id: Int!
+  id: UUID!
 }
 
 """The output of our update `LineupChange` mutation."""
@@ -9061,7 +9310,7 @@ input UpdateLineupChangeInput {
   An object where the defined keys will be set on the `LineupChange` being updated.
   """
   patch: LineupChangePatch!
-  id: Int!
+  id: UUID!
 }
 
 """The output of our update `LineupForGameState` mutation."""
@@ -9120,8 +9369,8 @@ input UpdateLineupForGameStateInput {
   An object where the defined keys will be set on the `LineupForGameState` being updated.
   """
   patch: LineupForGameStatePatch!
-  gameStateId: Int!
-  lineupId: Int!
+  gameStateId: UUID!
+  lineupId: UUID!
 }
 
 """The output of our update `LineupSpot` mutation."""
@@ -9178,7 +9427,7 @@ input UpdateLineupSpotInput {
   An object where the defined keys will be set on the `LineupSpot` being updated.
   """
   patch: LineupSpotPatch!
-  lineupId: Int!
+  lineupId: UUID!
   playerId: UUID!
 }
 
@@ -9196,7 +9445,7 @@ input UpdateLineupSpotByLineupIdAndBattingOrderInput {
   An object where the defined keys will be set on the `LineupSpot` being updated.
   """
   patch: LineupSpotPatch!
-  lineupId: Int!
+  lineupId: UUID!
   battingOrder: Int!
 }
 
@@ -9212,7 +9461,7 @@ input UpdateLineupSpotByLineupIdAndPositionInput {
   An object where the defined keys will be set on the `LineupSpot` being updated.
   """
   patch: LineupSpotPatch!
-  lineupId: Int!
+  lineupId: UUID!
   position: FieldingPosition!
 }
 
@@ -9272,7 +9521,7 @@ input UpdateOutOnPlayRunnerInput {
   An object where the defined keys will be set on the `OutOnPlayRunner` being updated.
   """
   patch: OutOnPlayRunnerPatch!
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -9324,7 +9573,7 @@ input UpdatePlateAppearanceInput {
   An object where the defined keys will be set on the `PlateAppearance` being updated.
   """
   patch: PlateAppearancePatch!
-  id: Int!
+  id: UUID!
 }
 
 """The output of our update `Player` mutation."""
@@ -9450,7 +9699,7 @@ input UpdateScoredRunnerInput {
   An object where the defined keys will be set on the `ScoredRunner` being updated.
   """
   patch: ScoredRunnerPatch!
-  gameEventRecordId: Int!
+  gameEventRecordId: UUID!
   runnerId: UUID!
 }
 
@@ -9505,7 +9754,7 @@ input UpdateStolenBaseAttemptInput {
   An object where the defined keys will be set on the `StolenBaseAttempt` being updated.
   """
   patch: StolenBaseAttemptPatch!
-  id: Int!
+  id: UUID!
 }
 
 """The output of our update `Team` mutation."""
@@ -9559,7 +9808,7 @@ input UpdateTeamInput {
   An object where the defined keys will be set on the `Team` being updated.
   """
   patch: TeamPatch!
-  id: Int!
+  id: UUID!
 }
 
 """All input for the `updateTeamByGameIdAndRole` mutation."""
@@ -9574,7 +9823,7 @@ input UpdateTeamByGameIdAndRoleInput {
   An object where the defined keys will be set on the `Team` being updated.
   """
   patch: TeamPatch!
-  gameId: Int!
+  gameId: UUID!
   role: TeamRole!
 }
 
@@ -9623,7 +9872,7 @@ input DeleteBaseRunnerInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  gameStateId: Int!
+  gameStateId: UUID!
   runnerId: UUID!
 }
 
@@ -9674,7 +9923,7 @@ input DeleteBasepathMovementInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -9717,7 +9966,7 @@ input DeleteGameInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """All input for the `deleteGameByName` mutation."""
@@ -9780,7 +10029,7 @@ input DeleteGameEventInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """The output of our delete `GameEventRecord` mutation."""
@@ -9834,7 +10083,7 @@ input DeleteGameEventRecordInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """
@@ -9846,7 +10095,7 @@ input DeleteGameEventRecordByGameIdAndEventIndexInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  gameId: Int!
+  gameId: UUID!
   eventIndex: Int!
 }
 
@@ -9866,6 +10115,9 @@ type DeleteGameStatePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Game` that is related to this `GameState`."""
+  game: Game
 
   """Reads a single `Player` that is related to this `GameState`."""
   playerByPlayerAtBat: Player
@@ -9892,7 +10144,7 @@ input DeleteGameStateInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """The output of our delete `Lineup` mutation."""
@@ -9937,7 +10189,7 @@ input DeleteLineupInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """The output of our delete `LineupChange` mutation."""
@@ -9985,7 +10237,7 @@ input DeleteLineupChangeInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """The output of our delete `LineupForGameState` mutation."""
@@ -10035,8 +10287,8 @@ input DeleteLineupForGameStateInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  gameStateId: Int!
-  lineupId: Int!
+  gameStateId: UUID!
+  lineupId: UUID!
 }
 
 """The output of our delete `LineupSpot` mutation."""
@@ -10084,7 +10336,7 @@ input DeleteLineupSpotInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  lineupId: Int!
+  lineupId: UUID!
   playerId: UUID!
 }
 
@@ -10097,7 +10349,7 @@ input DeleteLineupSpotByLineupIdAndBattingOrderInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  lineupId: Int!
+  lineupId: UUID!
   battingOrder: Int!
 }
 
@@ -10108,7 +10360,7 @@ input DeleteLineupSpotByLineupIdAndPositionInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  lineupId: Int!
+  lineupId: UUID!
   position: FieldingPosition!
 }
 
@@ -10159,7 +10411,7 @@ input DeleteOutOnPlayRunnerInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  plateAppearanceId: Int!
+  plateAppearanceId: UUID!
   runnerId: UUID!
 }
 
@@ -10202,7 +10454,7 @@ input DeletePlateAppearanceInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """The output of our delete `Player` mutation."""
@@ -10305,7 +10557,7 @@ input DeleteScoredRunnerInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  gameEventRecordId: Int!
+  gameEventRecordId: UUID!
   runnerId: UUID!
 }
 
@@ -10351,7 +10603,7 @@ input DeleteStolenBaseAttemptInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """The output of our delete `Team` mutation."""
@@ -10396,7 +10648,7 @@ input DeleteTeamInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  id: Int!
+  id: UUID!
 }
 
 """All input for the `deleteTeamByGameIdAndRole` mutation."""
@@ -10406,6 +10658,6 @@ input DeleteTeamByGameIdAndRoleInput {
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-  gameId: Int!
+  gameId: UUID!
   role: TeamRole!
 }

@@ -1,7 +1,0 @@
-mutation CreateEmptyGame($input: CreateGameInput!) {
-  createGame(input: $input) {
-    game {
-      ...NewLineups_Game
-    }
-  }
-}

@@ -12,7 +12,7 @@ import { Player } from 'state/players/types';
 import { HalfInningPlaysGroup, PlayDescription } from './types';
 import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
 
-const getPlayerAtPosition = (team: Team, position: FieldingPosition, lineupId: number) => {
+const getPlayerAtPosition = (team: Team, position: FieldingPosition, lineupId: string) => {
   const { lineupSpots } = team.lineups.find(lineup => lineup.id === lineupId)!;
   return lineupSpots.find(spot => spot.position === position)!.playerId;
 };

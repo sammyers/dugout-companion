@@ -1,7 +1,6 @@
 import {
   ContactQuality,
   FieldingPosition,
-  NewLineups_GameFragment,
   PlateAppearanceType,
   TeamRole,
   UnpackedGame_GameFragment,
@@ -49,14 +48,11 @@ export type AppGameState = SimplifyType<
     Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords'> & {
       status: GameStatus;
       upNextHalfInning?: string;
-      nextLineupId: number;
       editingLineups: boolean;
       lineupDrafts: Record<TeamRole, LineupSpot[]>;
       saved: boolean;
     }
 >;
-
-export type CreatedLineups = SimplifyType<NewLineups_GameFragment, 'originalClientId'>;
 
 export interface AddPlayerPayload {
   playerId: string;
