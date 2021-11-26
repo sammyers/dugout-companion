@@ -9,7 +9,6 @@ import {
   getCurrentLineup,
   getPlayerAtPositionFromTeams,
   getTeamWithRole,
-  runnersToMap,
   shouldTeamUseFourOutfielders,
 } from './utils';
 
@@ -21,7 +20,7 @@ import {
   TeamRole,
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
-import { BaseRunnerMap, GameState, GameStatus, LineupSpot } from './types';
+import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -30,19 +29,27 @@ export const getPast = (state: AppState) => state.game.past;
 export const getFuture = (state: AppState) => state.game.future;
 
 export const getTeams = createSelector(getPresent, partialSelectors.getTeams);
-export const getBatter = createSelector(getPresent, state => state.playerAtBat);
-export const getRunners = createSelector(getPresent, state => state.baseRunners);
-export const getRunnerMap = createSelector(getRunners, runnersToMap);
+export const getBatter = createSelector(getPresent, partialSelectors.getCurrentBatter);
+export const getRunners = createSelector(getPresent, partialSelectors.getRunners);
+export const getRunnerMap = createSelector(getPresent, partialSelectors.getRunnerMap);
 export const getGameStatus = createSelector(getPresent, state => state.status);
-export const getNumOuts = createSelector(getPresent, state => state.outs);
-export const getScore = createSelector(getPresent, state => state.score);
-export const getHalfInning = createSelector(getPresent, state => state.halfInning);
-export const getInning = createSelector(getPresent, state => state.inning);
-export const getCurrentBatter = createSelector(getPresent, state => state.playerAtBat);
+export const getNumOuts = createSelector(getPresent, partialSelectors.getNumOuts);
+export const getScore = createSelector(getPresent, partialSelectors.getScore);
+export const getHalfInning = createSelector(getPresent, partialSelectors.getHalfInning);
+export const getInning = createSelector(getPresent, partialSelectors.getInning);
+export const getCurrentBatter = createSelector(getPresent, partialSelectors.getCurrentBatter);
 export const getCurrentGameLength = createSelector(getPresent, state => state.gameLength);
 export const getGameHistory = createSelector(getPresent, state => state.gameEventRecords);
 export const isEditingLineups = createSelector(getPresent, partialSelectors.isEditingLineups);
 export const getLineupDrafts = createSelector(getPresent, partialSelectors.getLineupDrafts);
+export const getPrevGameStates = createSelector(getPresent, partialSelectors.getPrevGameStates);
+
+export const getGameStateGetter = createSelector(getPresent, state => (gameStateId: string) => {
+  if (state.gameState?.id === gameStateId) {
+    return state.gameState;
+  }
+  return state.prevGameStates.find(({ id }) => id === gameStateId)!;
+});
 
 export const isGameInProgress = createSelector(
   getGameStatus,
@@ -190,8 +197,12 @@ export const isUndoPossible = createSelector(getPast, past => past.length > 0);
 export const isRedoPossible = createSelector(getFuture, future => future.length > 0);
 
 export const getGameForMutation = createSelector(
-  getPresent,
-  ({ teams, score, gameLength, gameEventRecords }): GameInput => ({
+  getTeams,
+  getScore,
+  getCurrentGameLength,
+  getPrevGameStates,
+  getGameHistory,
+  (teams, score, gameLength, gameStates, gameEventRecords): GameInput => ({
     score,
     gameLength,
     teams: {
@@ -201,7 +212,7 @@ export const getGameForMutation = createSelector(
         winner,
         lineups: {
           create: lineups.map(({ id, lineupSpots }) => ({
-            originalClientId: id,
+            id,
             lineupSpots: {
               create: lineupSpots.map((spot, battingOrder) => ({ battingOrder, ...spot })),
             },
@@ -209,9 +220,21 @@ export const getGameForMutation = createSelector(
         },
       })),
     },
+    gameStates: {
+      create: gameStates.map((gameState, i) => ({
+        gameStateIndex: i,
+        ..._.omit(gameState, 'lineups'),
+        lineupForGameStates: {
+          create: gameState.lineups!.map(({ id }) => ({ lineupId: id })),
+        },
+        baseRunners: {
+          create: gameState.baseRunners,
+        },
+      })),
+    },
     gameEventRecords: {
       create: gameEventRecords.map(
-        ({ gameEvent, gameStateBefore, gameStateAfter, scoredRunners }, eventIndex) => {
+        ({ gameEvent, gameStateBeforeId, gameStateAfterId, scoredRunners }, eventIndex) => {
           let event;
           if (gameEvent.lineupChange) {
             event = {
@@ -240,23 +263,12 @@ export const getGameForMutation = createSelector(
               },
             };
           }
-          const makeGameStateMutation = (gameState: GameState) => ({
-            create: {
-              ..._.omit(gameState, 'lineups'),
-              lineupForGameStates: {
-                create: gameState.lineups!.map(({ id }) => ({ lineupId: id })),
-              },
-              baseRunners: {
-                create: gameState.baseRunners,
-              },
-            },
-          });
 
           return {
             eventIndex,
             gameEvent: { create: event },
-            gameStateBefore: makeGameStateMutation(gameStateBefore),
-            gameStateAfter: makeGameStateMutation(gameStateAfter),
+            gameStateBeforeId,
+            gameStateAfterId,
             scoredRunners: { create: scoredRunners },
           };
         }

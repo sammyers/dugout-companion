@@ -24,6 +24,7 @@ import {
   GameStatus,
   AppGameState,
   PlateAppearance,
+  GameState,
 } from './types';
 import { playerActions } from 'state/players/slice';
 import { getLineupToEdit } from './partialSelectors';
@@ -38,16 +39,10 @@ const makeInitialTeamState = (role: TeamRole): Team => ({
 const initialState: AppGameState = {
   status: GameStatus.NOT_STARTED,
   teams: [makeInitialTeamState(TeamRole.AWAY), makeInitialTeamState(TeamRole.HOME)],
-  inning: 1,
-  halfInning: HalfInning.TOP,
-  baseRunners: [],
-  outs: 0,
+  prevGameStates: [],
   gameEventRecords: [],
-  score: [0, 0],
   gameLength: 9,
-  playerAtBat: '',
   upNextHalfInning: '',
-  lineups: null,
   editingLineups: false,
   lineupDrafts: {
     [TeamRole.AWAY]: [],
@@ -145,7 +140,16 @@ const { actions: gameActions, reducer } = createSlice({
       }
     },
     startGame(state) {
-      state.playerAtBat = getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId;
+      state.gameState = {
+        id: uuid4(),
+        inning: 1,
+        halfInning: HalfInning.TOP,
+        baseRunners: [],
+        outs: 0,
+        score: [0, 0],
+        playerAtBat: getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId,
+        lineups: null,
+      };
       state.upNextHalfInning = getCurrentLineup(
         getTeamWithRole(state.teams, TeamRole.HOME)
       )[0].playerId;
@@ -184,7 +188,7 @@ const { actions: gameActions, reducer } = createSlice({
       state.gameLength -= 1;
     },
     extendGame(state) {
-      state.gameLength = Math.max(state.inning, state.gameLength) + 1;
+      state.gameLength = Math.max(state.gameState?.inning ?? 0, state.gameLength) + 1;
       state.status = GameStatus.IN_PROGRESS;
       cleanUpAfterPlateAppearance(state);
     },
@@ -216,17 +220,25 @@ const { actions: gameActions, reducer } = createSlice({
           });
         });
       });
-      state.gameEventRecords.forEach(event => {
-        [event.gameStateBefore, event.gameStateAfter].forEach(gameState => {
-          gameState.baseRunners.forEach(runner => {
-            if (runner.runnerId === payload.offlineId) {
-              runner.runnerId = payload.id;
-            }
-          });
-          if (gameState.playerAtBat === payload.offlineId) {
-            gameState.playerAtBat = payload.id;
+
+      const updateGameState = (gameState: GameState) => {
+        gameState.baseRunners.forEach(runner => {
+          if (runner.runnerId === payload.offlineId) {
+            runner.runnerId = payload.id;
           }
         });
+        if (gameState.playerAtBat === payload.offlineId) {
+          gameState.playerAtBat = payload.id;
+        }
+      };
+      state.prevGameStates.forEach(gameState => {
+        updateGameState(gameState);
+      });
+      if (state.gameState) {
+        updateGameState(state.gameState);
+      }
+
+      state.gameEventRecords.forEach(event => {
         event.scoredRunners.forEach(runner => {
           if (runner.runnerId === payload.offlineId) {
             runner.runnerId = payload.id;

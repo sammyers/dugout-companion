@@ -1,7 +1,7 @@
 import { ContactQuality, PlateAppearanceType } from '@sammyers/dc-shared';
 import _ from 'lodash';
 
-import { GameEventRecord } from 'state/game/types';
+import { GameEventRecord, GameState } from 'state/game/types';
 import { PlayerStats } from 'state/players/types';
 
 export const initialStats: PlayerStats = {
@@ -21,7 +21,10 @@ export const initialStats: PlayerStats = {
   leftOnBase: 0,
 };
 
-export const aggregateStats = (plays: GameEventRecord[]) => {
+export const aggregateStats = (
+  plays: GameEventRecord[],
+  gameStateGetter: (gameStateId: string) => GameState
+) => {
   const allStats: Record<string, PlayerStats> = {};
   const updatePlayer = (playerId: string, callback: (stats: PlayerStats) => void) => {
     if (!(playerId in allStats)) {
@@ -29,7 +32,7 @@ export const aggregateStats = (plays: GameEventRecord[]) => {
     }
     callback(allStats[playerId]);
   };
-  plays.forEach(({ gameStateBefore, gameEvent, scoredRunners }) => {
+  plays.forEach(({ gameStateBeforeId, gameEvent, scoredRunners }) => {
     scoredRunners.forEach(({ runnerId }) => {
       updatePlayer(runnerId, stats => void stats.runsScored++);
     });
@@ -43,6 +46,7 @@ export const aggregateStats = (plays: GameEventRecord[]) => {
         }
       });
     } else if (gameEvent.plateAppearance) {
+      const gameStateBefore = gameStateGetter(gameStateBeforeId);
       updatePlayer(gameStateBefore.playerAtBat, stats => {
         stats.runsBattedIn += _.filter(scoredRunners, { battedIn: true }).length;
         const { type, contact } = gameEvent.plateAppearance!;

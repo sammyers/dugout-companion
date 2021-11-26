@@ -73,6 +73,7 @@ export type BaseRunnerGameStateIdFkeyBaseRunnerCreateInput = {
 export type BaseRunnerGameStateIdFkeyGameStateCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -2255,6 +2256,7 @@ export type GameEventRecordGameStateAfterFkGameEventRecordCreateInput = {
 export type GameEventRecordGameStateAfterFkGameStateCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -2330,6 +2332,7 @@ export type GameEventRecordGameStateBeforeFkGameEventRecordCreateInput = {
 export type GameEventRecordGameStateBeforeFkGameStateCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -2766,6 +2769,7 @@ export type GameState = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['UUID'];
   gameId: Scalars['UUID'];
+  gameStateIndex: Scalars['Int'];
   playerAtBat: Scalars['UUID'];
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -2834,6 +2838,8 @@ export type GameStateCondition = {
   id?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `gameId` field. */
   gameId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `gameStateIndex` field. */
+  gameStateIndex?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `playerAtBat` field. */
   playerAtBat?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `inning` field. */
@@ -2862,6 +2868,7 @@ export type GameStateGameIdFkeyGameCreateInput = {
 /** The `gameState` to be created by this mutation. */
 export type GameStateGameIdFkeyGameStateCreateInput = {
   id?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -2933,6 +2940,7 @@ export type GameStateGameStatePkeyDelete = {
 export type GameStateInput = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -3052,6 +3060,7 @@ export type GameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyUsi
 export type GameStatePatch = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
@@ -3069,6 +3078,7 @@ export type GameStatePatch = {
 export type GameStatePlayerAtBatFkeyGameStateCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   inning: Scalars['Int'];
   halfInning: HalfInning;
   outs: Scalars['Int'];
@@ -3147,6 +3157,8 @@ export enum GameStatesOrderBy {
   ID_DESC = 'ID_DESC',
   GAME_ID_ASC = 'GAME_ID_ASC',
   GAME_ID_DESC = 'GAME_ID_DESC',
+  GAME_STATE_INDEX_ASC = 'GAME_STATE_INDEX_ASC',
+  GAME_STATE_INDEX_DESC = 'GAME_STATE_INDEX_DESC',
   PLAYER_AT_BAT_ASC = 'PLAYER_AT_BAT_ASC',
   PLAYER_AT_BAT_DESC = 'PLAYER_AT_BAT_DESC',
   INNING_ASC = 'INNING_ASC',
@@ -3471,6 +3483,7 @@ export type LineupForGameStateCondition = {
 export type LineupForGameStateGameStateIdFkeyGameStateCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex: Scalars['Int'];
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning: Scalars['Int'];
   halfInning: HalfInning;
@@ -7755,6 +7768,7 @@ export type UpdateGameOnTeamForTeamGameIdFkeyPatch = {
 export type UpdateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
@@ -7772,6 +7786,7 @@ export type UpdateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch = {
 export type UpdateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPatch = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
@@ -7789,6 +7804,7 @@ export type UpdateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPa
 export type UpdateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
@@ -7805,6 +7821,7 @@ export type UpdateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkP
 /** An object where the defined keys will be set on the `gameState` being updated. */
 export type UpdateGameStateOnGameStateForGameStateGameIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
@@ -7822,6 +7839,7 @@ export type UpdateGameStateOnGameStateForGameStateGameIdFkeyPatch = {
 export type UpdateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
   outs?: Maybe<Scalars['Int']>;
@@ -7838,6 +7856,7 @@ export type UpdateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch = {
 export type UpdateGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  gameStateIndex?: Maybe<Scalars['Int']>;
   playerAtBat?: Maybe<Scalars['UUID']>;
   inning?: Maybe<Scalars['Int']>;
   halfInning?: Maybe<HalfInning>;
@@ -8179,9 +8198,23 @@ export type GameEventRecord_GameStateFragment = (
 export type UnpackedGame_GameFragment = (
   { __typename?: 'Game' }
   & Pick<Game, 'datePlayed' | 'id' | 'gameLength' | 'location' | 'name' | 'score'>
-  & { gameEventRecords: Array<(
+  & { gameStates: Array<(
+    { __typename?: 'GameState' }
+    & Pick<GameState, 'id' | 'inning' | 'halfInning' | 'outs' | 'playerAtBat' | 'score'>
+    & { lineups: Maybe<Array<Maybe<(
+      { __typename?: 'Lineup' }
+      & Pick<Lineup, 'id'>
+      & { team: Maybe<(
+        { __typename?: 'Team' }
+        & Pick<Team, 'role'>
+      )> }
+    )>>>, baseRunners: Array<(
+      { __typename?: 'BaseRunner' }
+      & Pick<BaseRunner, 'runnerId' | 'base'>
+    )> }
+  )>, gameEventRecords: Array<(
     { __typename?: 'GameEventRecord' }
-    & Pick<GameEventRecord, 'eventIndex'>
+    & Pick<GameEventRecord, 'eventIndex' | 'gameStateBeforeId' | 'gameStateAfterId'>
     & { gameEvent: Maybe<(
       { __typename?: 'GameEvent' }
       & { lineupChange: Maybe<(
@@ -8204,12 +8237,6 @@ export type UnpackedGame_GameFragment = (
     )>, scoredRunners: Array<(
       { __typename?: 'ScoredRunner' }
       & Pick<ScoredRunner, 'runnerId' | 'battedIn'>
-    )>, gameStateBefore: Maybe<(
-      { __typename?: 'GameState' }
-      & GameEventRecord_GameStateFragment
-    )>, gameStateAfter: Maybe<(
-      { __typename?: 'GameState' }
-      & GameEventRecord_GameStateFragment
     )> }
   )>, teams: Array<(
     { __typename?: 'Team' }
@@ -8320,6 +8347,24 @@ export const UnpackedGame_GameFragmentDoc = gql`
   location
   name
   score
+  gameStates(orderBy: GAME_STATE_INDEX_ASC) {
+    id
+    inning
+    halfInning
+    outs
+    playerAtBat
+    score
+    lineups {
+      id
+      team {
+        role
+      }
+    }
+    baseRunners {
+      runnerId
+      base
+    }
+  }
   gameEventRecords(orderBy: EVENT_INDEX_ASC) {
     eventIndex
     gameEvent {
@@ -8350,12 +8395,8 @@ export const UnpackedGame_GameFragmentDoc = gql`
       runnerId
       battedIn
     }
-    gameStateBefore {
-      ...GameEventRecord_GameState
-    }
-    gameStateAfter {
-      ...GameEventRecord_GameState
-    }
+    gameStateBeforeId
+    gameStateAfterId
   }
   teams {
     name
@@ -8370,7 +8411,7 @@ export const UnpackedGame_GameFragmentDoc = gql`
     winner
   }
 }
-    ${GameEventRecord_GameStateFragmentDoc}`;
+    `;
 export const CreateGameDocument = gql`
     mutation CreateGame($input: CreateGameInput!) {
   createGame(input: $input) {

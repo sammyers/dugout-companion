@@ -132,11 +132,11 @@ export const getPlateAppearancePreview = createSelector(
   getPlateAppearanceResult,
   getPresent,
   (event, present) => {
-    const { gameEventRecords, baseRunners, outs } = createNextState(present, state =>
+    const { gameEventRecords, gameState } = createNextState(present, state =>
       applyPlateAppearance(state, event)
     );
     const { scoredRunners } = _.last(gameEventRecords)!;
-    return { runners: runnersToMap(baseRunners), scoredRunners, outs };
+    return { runners: runnersToMap(gameState!.baseRunners), scoredRunners, outs: gameState!.outs };
   }
 );
 

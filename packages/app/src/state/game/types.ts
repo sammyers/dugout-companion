@@ -13,6 +13,7 @@ export type Game = SimplifyType<
   'gameEvent' | 'gameStateBefore' | 'gameStateAfter' | 'team'
 >;
 export type GameEventRecord = Game['gameEventRecords'][number];
+export type GameState = Game['gameStates'][number];
 export type Team = Game['teams'][number];
 export type Lineup = Team['lineups'][number];
 export type LineupSpot = Lineup['lineupSpots'][number];
@@ -29,7 +30,6 @@ export type HitType =
   | PlateAppearanceType.HOMERUN;
 export type HitContactType = Exclude<ContactQuality, ContactQuality.NONE>;
 
-export type GameState = GameEventRecord['gameStateBefore'];
 export type BaseRunners = GameState['baseRunners'];
 export type BaseRunnerMap = Partial<
   Record<BaseRunners[number]['base'], BaseRunners[number]['runnerId']>
@@ -43,16 +43,15 @@ export enum GameStatus {
   FINISHED = 'FINISHED',
 }
 
-export type AppGameState = SimplifyType<
-  GameState &
-    Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords'> & {
-      status: GameStatus;
-      upNextHalfInning?: string;
-      editingLineups: boolean;
-      lineupDrafts: Record<TeamRole, LineupSpot[]>;
-      saved: boolean;
-    }
->;
+export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords'> & {
+  gameState?: GameState;
+  prevGameStates: GameState[];
+  status: GameStatus;
+  upNextHalfInning?: string;
+  editingLineups: boolean;
+  lineupDrafts: Record<TeamRole, LineupSpot[]>;
+  saved: boolean;
+};
 
 export interface AddPlayerPayload {
   playerId: string;

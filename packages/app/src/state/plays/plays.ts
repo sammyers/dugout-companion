@@ -9,7 +9,7 @@ import {
   FieldingPosition,
   PlateAppearanceType,
 } from '@sammyers/dc-shared';
-import { GameEventRecord, HitContactType, HitType } from 'state/game/types';
+import { GameEventRecord, GameState, HitContactType, HitType } from 'state/game/types';
 import { RawPlayDescription } from './types';
 
 const getPositionTitle = (position: FieldingPosition) =>
@@ -57,12 +57,14 @@ const formatBaseName = (base: BaseType | null) => {
 const makeOutPhrase = (runnerId: string, base: BaseType | null) =>
   `{${runnerId}} out at ${formatShortBaseName(base)}.`;
 
-export const getPlayDescription = ({
-  gameStateBefore,
-  gameStateAfter,
-  gameEvent: { plateAppearance, stolenBaseAttempt, lineupChange },
-  scoredRunners,
-}: GameEventRecord): RawPlayDescription => {
+export const getPlayDescription = (
+  {
+    gameEvent: { plateAppearance, stolenBaseAttempt, lineupChange },
+    scoredRunners,
+  }: GameEventRecord,
+  gameStateBefore: GameState,
+  gameStateAfter: GameState
+): RawPlayDescription => {
   const sentences: string[] = [];
   const playerIds: string[] = [];
   let position: FieldingPosition | undefined;

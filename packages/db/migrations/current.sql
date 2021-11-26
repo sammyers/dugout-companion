@@ -181,6 +181,7 @@ drop table if exists game_state cascade;
 create table game_state (
   id uuid primary key default gen_random_uuid (),
   game_id uuid references game (id) not null,
+  game_state_index int not null,
   player_at_bat uuid references player (id) not null,
   inning int not null,
   half_inning half_inning not null,

@@ -36,6 +36,7 @@ import {
   StolenBaseAttempt,
   GameState,
   GameStatus,
+  Team,
 } from './types';
 
 const replaceLineup = (state: AppGameState, role: TeamRole, newLineup: LineupSpot[]) => {
@@ -113,24 +114,30 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
 
 export const cleanUpAfterPlateAppearance = (state: AppGameState) => {
   const nextBatter = getOnDeckBatter(state);
-  if (state.outs === 3) {
-    state.playerAtBat = state.upNextHalfInning!;
+  const gameState = state.gameState!;
+  if (gameState.outs === 3) {
+    gameState.playerAtBat = state.upNextHalfInning!;
     state.upNextHalfInning = nextBatter;
-    state.baseRunners = [];
-    state.outs = 0;
-    if (state.halfInning === HalfInning.BOTTOM) {
-      state.inning++;
+    gameState.baseRunners = [];
+    gameState.outs = 0;
+    if (gameState.halfInning === HalfInning.BOTTOM) {
+      gameState.inning++;
     }
-    state.halfInning = state.halfInning === HalfInning.TOP ? HalfInning.BOTTOM : HalfInning.TOP;
+    gameState.halfInning =
+      gameState.halfInning === HalfInning.TOP ? HalfInning.BOTTOM : HalfInning.TOP;
   } else {
-    state.playerAtBat = nextBatter;
+    gameState.playerAtBat = nextBatter;
   }
 };
 
-const updateScore = (state: AppGameState, runs: number = 1) => {
-  const index = _.findIndex(state.teams, { role: getBattingTeamRole(state) });
-  state.score[index] += runs;
-};
+const getCurrentLineupsFromTeams = (teams: Team[]) =>
+  teams.map(({ role, lineups }) => {
+    const { id } = _.last(lineups)!;
+    return {
+      id,
+      team: { role },
+    };
+  });
 
 export const makeGameEvent = ({
   plateAppearance = null,
@@ -145,47 +152,57 @@ export const makeGameEvent = ({
 const recordAndApplyGameEvent = (
   state: AppGameState,
   callback: (
-    state: AppGameState,
-    recordRunnersScored: (runnersScored: string[], battedIn?: boolean) => void
+    gameState: GameState,
+    recordRunnersScored: (runnersScored: string[], battedIn?: boolean) => void,
+    teams: Team[]
   ) => GameEventContainer
 ) => {
-  const getRecordedGameState = ({
-    playerAtBat,
-    inning,
-    halfInning,
-    outs,
-    baseRunners,
-    score,
-  }: AppGameState): GameState => ({
-    playerAtBat,
-    inning,
-    halfInning,
-    outs,
-    baseRunners: [...baseRunners],
-    score: [...score],
-    lineups: state.teams.map(({ role, lineups }) => {
-      const { id } = _.last(lineups)!;
-      return {
-        id,
-        team: { role },
-      };
-    }),
-  });
-  const gameStateBefore = getRecordedGameState(state);
+  const gameStateToRecord: GameState = {
+    ...state.gameState!,
+    baseRunners: [...state.gameState!.baseRunners],
+    score: [...state.gameState!.score],
+    lineups: getCurrentLineupsFromTeams(state.teams),
+  };
+
+  state.prevGameStates.push(gameStateToRecord);
+  state.gameState!.id = uuid4();
 
   const scoredRunners: ScoredRunner[] = [];
   const recordRunnersScored = (runners: string[], battedIn = true) => {
+    const index = _.findIndex(state.teams, { role: getBattingTeamRole(state) });
+    state.gameState!.score[index] += runners.length;
     scoredRunners.push(...runners.map(runnerId => ({ runnerId, battedIn })));
   };
 
-  const gameEvent = callback(state, recordRunnersScored);
+  const gameEvent = callback(state.gameState!, recordRunnersScored, state.teams);
   state.gameEventRecords.push({
     eventIndex: state.gameEventRecords.length,
     gameEvent,
     scoredRunners,
-    gameStateBefore,
-    gameStateAfter: getRecordedGameState(state),
+    gameStateBeforeId: gameStateToRecord.id,
+    gameStateAfterId: state.gameState!.id,
   });
+
+  const { score, outs, halfInning, inning } = state.gameState!;
+  const [awayScore, homeScore] = score;
+  const homeLeadingAfterTop = outs === 3 && halfInning === HalfInning.TOP && awayScore < homeScore;
+  const awayLeadingAfterBottom =
+    outs === 3 && halfInning === HalfInning.BOTTOM && awayScore > homeScore;
+
+  if (
+    inning >= state.gameLength &&
+    (homeLeadingAfterTop ||
+      awayLeadingAfterBottom ||
+      (halfInning === HalfInning.BOTTOM && awayScore < homeScore))
+  ) {
+    state.prevGameStates.push({
+      ...state.gameState!,
+      lineups: getCurrentLineupsFromTeams(state.teams),
+    });
+    state.status = GameStatus.FINISHED;
+  } else {
+    cleanUpAfterPlateAppearance(state);
+  }
 };
 
 const isNotInLineupAnymore = (playerId: string, oldLineup: LineupSpot[], newLineup: LineupSpot[]) =>
@@ -209,20 +226,18 @@ export const applyMidGameLineupChange = (
   role: TeamRole,
   lineupSpots: LineupSpot[]
 ) => {
-  recordAndApplyGameEvent(state, state => {
-    const { teams } = state;
+  recordAndApplyGameEvent(state, (gameState, _recordRunnersScored, teams) => {
     const team = getTeamWithRole(teams, role);
     const lineupBeforeId = _.last(team.lineups)!.id;
     const lineupAfterId = uuid4();
     const newLineup = {
       id: lineupAfterId,
-      originalClientId: null,
       lineupSpots,
     };
     const oldLineup = getCurrentLineup(team);
-    if (isNotInLineupAnymore(state.playerAtBat, oldLineup, lineupSpots)) {
-      state.playerAtBat = getNextPlayerAfterLineupChange(
-        state.playerAtBat,
+    if (isNotInLineupAnymore(gameState.playerAtBat, oldLineup, lineupSpots)) {
+      gameState.playerAtBat = getNextPlayerAfterLineupChange(
+        gameState.playerAtBat,
         oldLineup,
         newLineup.lineupSpots
       );
@@ -252,9 +267,9 @@ export const applyStolenBaseAttempt = (
   state: AppGameState,
   stolenBaseAttempt: StolenBaseAttempt
 ) => {
-  recordAndApplyGameEvent(state, (state, recordRunnersScored) => {
+  recordAndApplyGameEvent(state, (gameState, recordRunnersScored) => {
     const startBase = getCurrentBaseForRunner(state, stolenBaseAttempt.runnerId);
-    const runners = runnersToMap(state.baseRunners);
+    const runners = runnersToMap(gameState.baseRunners);
     if (stolenBaseAttempt.success) {
       const endBase = getNewBase(startBase);
       delete runners[startBase];
@@ -262,14 +277,13 @@ export const applyStolenBaseAttempt = (
         runners[endBase] = stolenBaseAttempt.runnerId;
       } else {
         // runner scored
-        updateScore(state);
         recordRunnersScored([stolenBaseAttempt.runnerId], false);
       }
     } else {
       delete runners[startBase];
-      state.outs++;
+      gameState.outs++;
     }
-    state.baseRunners = runnersFromMap(runners);
+    gameState.baseRunners = runnersFromMap(runners);
     return makeGameEvent({ stolenBaseAttempt });
   });
 };
@@ -279,12 +293,10 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
     let runners = runnersToMap(state.baseRunners);
     switch (plateAppearance.type) {
       case PlateAppearanceType.HOMERUN:
-        updateScore(state, _.size(runners) + 1);
         recordRunnersScored([...(_.values(runners) as string[]), state.playerAtBat]);
         runners = {};
         break;
       case PlateAppearanceType.TRIPLE:
-        updateScore(state, _.size(runners));
         recordRunnersScored(_.values(runners) as string[]);
         runners = { [BaseType.THIRD]: state.playerAtBat };
         break;
@@ -297,14 +309,12 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
           state.playerAtBat!
         );
         runners = newBaseRunners;
-        updateScore(state, runnersScored.length);
         recordRunnersScored(runnersScored);
         break;
       case PlateAppearanceType.SACRIFICE_FLY:
         _.times(plateAppearance.runsScoredOnSacFly!, () => {
           const [base, runnerId] = getLeadRunner(runners)!;
           moveRunner(runners, base, null);
-          updateScore(state);
           recordRunnersScored([runnerId]);
         });
         state.outs++;
@@ -314,7 +324,6 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         const runnersScored = moveRunnersOnGroundBall(runners);
         runners[BaseType.FIRST] = state.playerAtBat;
         if (runnersScored.length && state.outs < 2) {
-          updateScore(state);
           recordRunnersScored(runnersScored);
         }
         state.outs++;
@@ -328,7 +337,6 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         if (plateAppearance.contact === ContactQuality.GROUNDER) {
           const runnersScored = moveRunnersOnGroundBall(runners);
           if (runnersScored.length && state.outs === 0) {
-            updateScore(state, runnersScored.length);
             recordRunnersScored(runnersScored, false);
           }
 
@@ -341,7 +349,6 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         if (plateAppearance.contact === ContactQuality.GROUNDER) {
           const runnersScored = moveRunnersOnGroundBall(runners);
           if (runnersScored.length && state.outs < 2) {
-            updateScore(state, runnersScored.length);
             recordRunnersScored(runnersScored);
           }
         }
@@ -355,7 +362,6 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         const startBase = getBaseForRunner(runners, runnerId);
         if (wasSafe) {
           if (moveRunner(runners, startBase, endBase)) {
-            updateScore(state);
             recordRunnersScored(
               [runnerId],
               plateAppearance.type !== PlateAppearanceType.DOUBLE_PLAY
@@ -369,23 +375,6 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
     );
 
     state.baseRunners = runnersFromMap(runners);
-
-    const [awayScore, homeScore] = state.score;
-    const homeLeadingAfterTop =
-      state.outs === 3 && state.halfInning === HalfInning.TOP && awayScore < homeScore;
-    const awayLeadingAfterBottom =
-      state.outs === 3 && state.halfInning === HalfInning.BOTTOM && awayScore > homeScore;
-
-    if (
-      state.inning >= state.gameLength &&
-      (homeLeadingAfterTop ||
-        awayLeadingAfterBottom ||
-        (state.halfInning === HalfInning.BOTTOM && awayScore < homeScore))
-    ) {
-      state.status = GameStatus.FINISHED;
-    } else {
-      cleanUpAfterPlateAppearance(state);
-    }
 
     return makeGameEvent({ plateAppearance });
   });

@@ -1,13 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { getFuture, getGameHistory, getTeams } from 'state/game/selectors';
+import { getFuture, getGameHistory, getGameStateGetter, getTeams } from 'state/game/selectors';
 import { getTeamWithRole } from 'state/game/utils';
 import { getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
 import { getPlayDescription } from './plays';
 
-import { GameEventRecord, Team } from 'state/game/types';
+import { GameEventRecord, GameState, Team } from 'state/game/types';
 import { Player } from 'state/players/types';
 import { HalfInningPlaysGroup, PlayDescription } from './types';
 import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
@@ -20,15 +20,22 @@ const getPlayerAtPosition = (team: Team, position: FieldingPosition, lineupId: s
 const makeInterpolatedPlayDescription = (
   play: GameEventRecord,
   playerGetter: (playerId: string) => Player,
+  gameStateGetter: (gameStateId: string) => GameState,
   teams: Team[]
 ): PlayDescription => {
-  const { description, playerIds, position, newNumOuts, newScore } = getPlayDescription(play);
+  const gameStateBefore = gameStateGetter(play.gameStateBeforeId);
+  const gameStateAfter = gameStateGetter(play.gameStateAfterId);
+  const { description, playerIds, position, newNumOuts, newScore } = getPlayDescription(
+    play,
+    gameStateBefore,
+    gameStateAfter
+  );
   let interpolatedDescription = description;
   if (position) {
     const teamRole =
-      play.gameStateBefore.halfInning === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME;
+      gameStateBefore.halfInning === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME;
     const team = getTeamWithRole(teams, teamRole);
-    const { id: lineupId } = play.gameStateBefore.lineups!.find(
+    const { id: lineupId } = gameStateBefore.lineups!.find(
       lineup => lineup.team.role === teamRole
     )!;
     interpolatedDescription = description.replace(
@@ -54,10 +61,12 @@ const makeInterpolatedPlayDescription = (
 export const getAllPlays = createSelector(
   getGameHistory,
   getPlayerGetter,
+  getGameStateGetter,
   getTeams,
-  (history, playerGetter, teams): HalfInningPlaysGroup[] => {
+  (history, playerGetter, gameStateGetter, teams): HalfInningPlaysGroup[] => {
     const groupedPlaysByInning = history.reduce((groupedPlays, play) => {
-      const { inning, halfInning } = play.gameStateBefore!;
+      const gameStateBefore = gameStateGetter(play.gameStateBeforeId);
+      const { inning, halfInning } = gameStateBefore;
       if (!groupedPlays.length) {
         groupedPlays.push({ inning, halfInning, plays: [play] });
       } else {
@@ -76,7 +85,7 @@ export const getAllPlays = createSelector(
       halfInning,
       plays: plays
         .filter(play => !play.gameEvent.lineupChange)
-        .map(play => makeInterpolatedPlayDescription(play, playerGetter, teams)),
+        .map(play => makeInterpolatedPlayDescription(play, playerGetter, gameStateGetter, teams)),
     }));
   }
 );
@@ -94,15 +103,26 @@ export const getScoringPlays = createSelector(getAllPlays, groups =>
 export const getLastPlay = createSelector(
   getGameHistory,
   getPlayerGetter,
+  getGameStateGetter,
   getTeams,
-  (history, playerGetter, teams) => {
+  (history, playerGetter, gameStateGetter, teams) => {
     const lastPlay = _.last(history);
-    return lastPlay && makeInterpolatedPlayDescription(lastPlay, playerGetter, teams);
+    return (
+      lastPlay && makeInterpolatedPlayDescription(lastPlay, playerGetter, gameStateGetter, teams)
+    );
   }
 );
 
-export const getNextPlay = createSelector(getFuture, getPlayerGetter, (future, playerGetter) => {
-  const nextState = _.first(future);
-  const nextPlay = _.last(nextState?.gameEventRecords);
-  return nextPlay && makeInterpolatedPlayDescription(nextPlay, playerGetter, nextState!.teams);
-});
+export const getNextPlay = createSelector(
+  getFuture,
+  getPlayerGetter,
+  getGameStateGetter,
+  (future, playerGetter, gameStateGetter) => {
+    const nextState = _.first(future);
+    const nextPlay = _.last(nextState?.gameEventRecords);
+    return (
+      nextPlay &&
+      makeInterpolatedPlayDescription(nextPlay, playerGetter, gameStateGetter, nextState!.teams)
+    );
+  }
+);

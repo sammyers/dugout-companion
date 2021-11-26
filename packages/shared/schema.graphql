@@ -470,6 +470,7 @@ type GameState implements Node {
   nodeId: ID!
   id: UUID!
   gameId: UUID!
+  gameStateIndex: Int!
   playerAtBat: UUID!
   inning: Int!
   halfInning: HalfInning!
@@ -1156,6 +1157,8 @@ enum GameStatesOrderBy {
   ID_DESC
   GAME_ID_ASC
   GAME_ID_DESC
+  GAME_STATE_INDEX_ASC
+  GAME_STATE_INDEX_DESC
   PLAYER_AT_BAT_ASC
   PLAYER_AT_BAT_DESC
   INNING_ASC
@@ -1180,6 +1183,9 @@ input GameStateCondition {
 
   """Checks for equality with the object’s `gameId` field."""
   gameId: UUID
+
+  """Checks for equality with the object’s `gameStateIndex` field."""
+  gameStateIndex: Int
 
   """Checks for equality with the object’s `playerAtBat` field."""
   playerAtBat: UUID
@@ -2569,6 +2575,7 @@ An object where the defined keys will be set on the `gameState` being updated.
 input updateGameStateOnBaseRunnerForBaseRunnerGameStateIdFkeyPatch {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
@@ -2914,6 +2921,7 @@ An object where the defined keys will be set on the `gameState` being updated.
 """
 input updateGameStateOnGameStateForGameStateGameIdFkeyPatch {
   id: UUID
+  gameStateIndex: Int
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
@@ -4371,6 +4379,7 @@ An object where the defined keys will be set on the `gameState` being updated.
 input updateGameStateOnGameStateForGameStatePlayerAtBatFkeyPatch {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int
   inning: Int
   halfInning: HalfInning
   outs: Int
@@ -5061,6 +5070,7 @@ An object where the defined keys will be set on the `gameState` being updated.
 input updateGameStateOnGameEventRecordForGameEventRecordGameStateBeforeFkPatch {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
@@ -5221,6 +5231,7 @@ An object where the defined keys will be set on the `gameState` being updated.
 input updateGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkeyPatch {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
@@ -5374,6 +5385,7 @@ An object where the defined keys will be set on the `gameState` being updated.
 input updateGameStateOnGameEventRecordForGameEventRecordGameStateAfterFkPatch {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
@@ -7036,6 +7048,7 @@ Represents an update to a `GameState`. Fields that are set will be updated.
 input GameStatePatch {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int
   playerAtBat: UUID
   inning: Int
   halfInning: HalfInning
@@ -7053,6 +7066,7 @@ input GameStatePatch {
 input GameEventRecordGameStateAfterFkGameStateCreateInput {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int!
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
@@ -7120,6 +7134,7 @@ input LineupForGameStateOnLineupForGameStateForLineupForGameStateGameStateIdFkey
 input LineupForGameStateGameStateIdFkeyGameStateCreateInput {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int!
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
@@ -7170,6 +7185,7 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameStateBeforeFkNodeIdU
 input GameEventRecordGameStateBeforeFkGameStateCreateInput {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int!
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
@@ -7403,6 +7419,7 @@ input PlayerOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate {
 input GameStatePlayerAtBatFkeyGameStateCreateInput {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int!
   inning: Int!
   halfInning: HalfInning!
   outs: Int!
@@ -7986,6 +8003,7 @@ input GameOnGameStateForGameStateGameIdFkeyNodeIdUpdate {
 """The `gameState` to be created by this mutation."""
 input GameStateGameIdFkeyGameStateCreateInput {
   id: UUID
+  gameStateIndex: Int!
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
@@ -8119,6 +8137,7 @@ input BaseRunnerOnBaseRunnerForBaseRunnerGameStateIdFkeyNodeIdUpdate {
 input BaseRunnerGameStateIdFkeyGameStateCreateInput {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int!
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!
@@ -8368,6 +8387,7 @@ input CreateGameStateInput {
 input GameStateInput {
   id: UUID
   gameId: UUID
+  gameStateIndex: Int!
   playerAtBat: UUID
   inning: Int!
   halfInning: HalfInning!

@@ -5,6 +5,24 @@ fragment UnpackedGame_Game on Game {
   location
   name
   score
+  gameStates(orderBy: GAME_STATE_INDEX_ASC) {
+    id
+    inning
+    halfInning
+    outs
+    playerAtBat
+    score
+    lineups {
+      id
+      team {
+        role
+      }
+    }
+    baseRunners {
+      runnerId
+      base
+    }
+  }
   gameEventRecords(orderBy: EVENT_INDEX_ASC) {
     eventIndex
     gameEvent {
@@ -35,12 +53,8 @@ fragment UnpackedGame_Game on Game {
       runnerId
       battedIn
     }
-    gameStateBefore {
-      ...GameEventRecord_GameState
-    }
-    gameStateAfter {
-      ...GameEventRecord_GameState
-    }
+    gameStateBeforeId
+    gameStateAfterId
   }
   teams {
     name

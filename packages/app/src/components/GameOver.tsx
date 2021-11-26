@@ -9,6 +9,7 @@ import {
   getGameStatus,
   getMaxGameLength,
   getScore,
+  wasGameSaved,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
@@ -22,6 +23,7 @@ const GameOver = () => {
   const [awayScore, homeScore] = useAppSelector(getScore);
   const gameLength = useAppSelector(getCurrentGameLength);
   const maxGameLength = useAppSelector(getMaxGameLength);
+  const saved = useAppSelector(wasGameSaved);
 
   const onClickExtendGame = useCallback(() => {
     dispatch(gameActions.extendGame());
@@ -57,6 +59,7 @@ const GameOver = () => {
           <Button
             color="light-1"
             plain={false}
+            disabled={saved}
             label="Play another inning"
             onClick={onClickExtendGame}
           />

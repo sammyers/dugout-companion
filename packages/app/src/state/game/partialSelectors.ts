@@ -10,17 +10,34 @@ import {
   runnersToMap,
 } from './utils';
 
-import { AppGameState } from './types';
+import { AppGameState, GameState } from './types';
 
+const initialGameState: GameState = {
+  id: '',
+  inning: 1,
+  halfInning: HalfInning.TOP,
+  baseRunners: [],
+  outs: 0,
+  score: [0, 0],
+  playerAtBat: '',
+  lineups: null,
+};
+
+export const getCurrentGameState = (state: AppGameState) => state.gameState ?? initialGameState;
 export const getTeams = (state: AppGameState) => state.teams;
-export const getRunners = (state: AppGameState) => state.baseRunners;
+export const getRunners = createSelector(getCurrentGameState, state => state.baseRunners);
 export const getRunnerMap = createSelector(getRunners, runnersToMap);
-export const getCurrentBatter = (state: AppGameState) => state.playerAtBat;
+export const getCurrentBatter = createSelector(getCurrentGameState, state => state.playerAtBat);
+export const getNumOuts = createSelector(getCurrentGameState, state => state.outs);
+export const getScore = createSelector(getCurrentGameState, state => state.score);
+export const getHalfInning = createSelector(getCurrentGameState, state => state.halfInning);
+export const getInning = createSelector(getCurrentGameState, state => state.inning);
+
+export const getPrevGameStates = (state: AppGameState) => state.prevGameStates;
 
 export const getCurrentBaseForRunner = (state: AppGameState, playerId: string) =>
   getBaseForRunner(getRunnerMap(state), playerId);
 
-export const getHalfInning = (state: AppGameState) => state.halfInning;
 export const getBattingTeamRole = createSelector(getHalfInning, half =>
   half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
 );
