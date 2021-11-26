@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Header, Nav, Button, Box, Drop } from 'grommet';
 import { SettingsOption } from 'grommet-icons';
-import { Route, useHistory } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
 const TopBar = () => {
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const gameInProgress = useAppSelector(isGameInProgress);
   const gameCanStart = useAppSelector(canStartGame);
@@ -22,8 +22,8 @@ const TopBar = () => {
 
   const startGame = useCallback(() => {
     dispatch(gameActions.startGame());
-    history.push('/field');
-  }, [dispatch, history]);
+    navigate('/field');
+  }, [dispatch, navigate]);
 
   const settingsButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -47,16 +47,21 @@ const TopBar = () => {
         {gameInProgress ? (
           <ScoreBug />
         ) : (
-          <Route path="/teams">
-            <Button
-              plain={false}
-              disabled={!gameCanStart}
-              onClick={startGame}
-              margin={{ right: 'small' }}
-            >
-              Start Game
-            </Button>
-          </Route>
+          <Routes>
+            <Route
+              path="/teams"
+              element={
+                <Button
+                  plain={false}
+                  disabled={!gameCanStart}
+                  onClick={startGame}
+                  margin={{ right: 'small' }}
+                >
+                  Start Game
+                </Button>
+              }
+            />
+          </Routes>
         )}
         <Button
           margin={{ left: 'small' }}

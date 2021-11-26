@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Grommet, Main, Box } from 'grommet';
-import { Switch, Route, Redirect, useLocation, useHistory } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { useGetAllPlayersQuery, useGetAllGamesQuery } from '@sammyers/dc-shared';
 
@@ -25,7 +25,7 @@ const App = () => {
   const dispatch = useAppDispatch();
 
   const { pathname } = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const gameOver = useAppSelector(isGameOver);
 
@@ -46,9 +46,9 @@ const App = () => {
 
   useEffect(() => {
     if (gameOver && pathname !== '/game-over') {
-      history.replace('/game-over');
+      navigate('/game-over', { replace: true });
     }
-  }, [pathname, gameOver, history]);
+  }, [pathname, gameOver, navigate]);
 
   const [online, setOnline] = useState(false);
   useEffect(() => {
@@ -71,26 +71,14 @@ const App = () => {
         <Box height="100%">
           {!gameOver && <TopBar />}
           <Main flex overflow={{ vertical: 'auto' }}>
-            <Switch>
-              <Route path="/game-over">
-                <GameOver />
-              </Route>
-              <Route path="/teams">
-                <Teams />
-              </Route>
-              <Route path="/field">
-                <Bases />
-              </Route>
-              <Route path="/box-score">
-                <BoxScore />
-              </Route>
-              <Route path="/plays">
-                <Plays />
-              </Route>
-              <Route path="/">
-                <Redirect to="/teams" />
-              </Route>
-            </Switch>
+            <Routes>
+              <Route path="/game-over" element={<GameOver />} />
+              <Route path="/teams" element={<Teams />} />
+              <Route path="/field" element={<Bases />} />
+              <Route path="/box-score" element={<BoxScore />} />
+              <Route path="/plays" element={<Plays />} />
+              <Route path="/" element={<Navigate to="/teams" />} />
+            </Routes>
           </Main>
         </Box>
       </networkStatusContext.Provider>

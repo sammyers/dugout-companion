@@ -1,6 +1,6 @@
 import { Box, Button, Heading, Main } from 'grommet';
 import React, { useCallback } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import SaveGameButton from './SaveGameButton';
 
@@ -36,10 +36,10 @@ const GameOver = () => {
   }, [dispatch]);
 
   if (gameStatus === GameStatus.IN_PROGRESS) {
-    return <Redirect to="/field" />;
+    return <Navigate to="/field" />;
   }
   if (gameStatus === GameStatus.NOT_STARTED) {
-    return <Redirect to="/teams" />;
+    return <Navigate to="/teams" />;
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { Text, Box, Heading, ThemeContext } from 'grommet';
 import _ from 'lodash';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import HalfInningPlays from './HalfInningPlays';
 
@@ -30,7 +30,7 @@ const Plays = () => {
   );
 
   if (!gameStarted) {
-    return <Redirect to="/teams" />;
+    return <Navigate to="/teams" />;
   }
 
   return (

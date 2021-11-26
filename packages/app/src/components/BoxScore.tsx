@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Box, Card, DataTable, Text } from 'grommet';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { TeamRole } from '@sammyers/dc-shared';
 
@@ -78,7 +78,7 @@ const BoxScore = () => {
   const [awayStats, homeStats] = useAppSelector(getBoxScore);
 
   if (!gameInProgress) {
-    return <Redirect to="/teams" />;
+    return <Navigate to="/teams" />;
   }
 
   return (

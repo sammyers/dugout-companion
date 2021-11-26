@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import { Grid, Box, Text, Button } from 'grommet';
 import { Blank, Redo, Undo } from 'grommet-icons';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { ActionCreators } from 'redux-undo';
 
 import { BaseType } from '@sammyers/dc-shared';
@@ -60,7 +60,7 @@ const Bases = () => {
   const boxRef = useRef<HTMLDivElement | null>(null);
 
   if (!gameInProgress) {
-    return <Redirect to="/teams" />;
+    return <Navigate to="/teams" />;
   }
 
   return (
