@@ -12,8 +12,9 @@ import {
   cleanUpAfterPlateAppearance,
   changePlayerPosition,
   applyMidGameLineupChange,
+  getCurrentLineupsFromTeams,
 } from './stateHelpers';
-import { getAvailablePositionsForTeam, getCurrentLineup, getTeamWithRole } from './utils';
+import { getAvailablePositionsForLineup, getCurrentLineup, getTeamWithRole } from './utils';
 
 import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
 import {
@@ -95,7 +96,7 @@ const { actions: gameActions, reducer } = createSlice({
 
         if (
           currentPlayerWithPosition ||
-          !getAvailablePositionsForTeam(destTeam).includes(position as FieldingPosition)
+          !getAvailablePositionsForLineup(newDestLineup).includes(position as FieldingPosition)
         ) {
           newDestLineup = changePlayerPosition(newDestLineup, playerId);
         }
@@ -148,7 +149,7 @@ const { actions: gameActions, reducer } = createSlice({
         outs: 0,
         score: [0, 0],
         playerAtBat: getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId,
-        lineups: null,
+        lineups: getCurrentLineupsFromTeams(state.teams),
       };
       state.upNextHalfInning = getCurrentLineup(
         getTeamWithRole(state.teams, TeamRole.HOME)

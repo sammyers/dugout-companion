@@ -5,11 +5,11 @@ import { getAllPlayersList, getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
 import * as partialSelectors from './partialSelectors';
 import {
-  getAvailablePositionsForTeam,
+  getAvailablePositionsForLineup,
   getCurrentLineup,
   getPlayerAtPositionFromTeams,
   getTeamWithRole,
-  shouldTeamUseFourOutfielders,
+  shouldLineupHaveFourOutfielders,
 } from './utils';
 
 import {
@@ -79,13 +79,11 @@ export const getBattingTeam = createSelector(getTeams, getBattingTeamRole, getTe
 export const getFieldingTeam = createSelector(getTeams, getFieldingTeamRole, getTeamWithRole);
 
 export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
-
-export const getAvailablePositions = (state: AppState, role: TeamRole) =>
-  getAvailablePositionsForTeam(getTeam(state, role));
+export const getFieldingLineup = createSelector(getFieldingTeam, getCurrentLineup);
 
 export const doesFieldingTeamHaveFourOutfielders = createSelector(
-  getFieldingTeam,
-  shouldTeamUseFourOutfielders
+  getFieldingLineup,
+  shouldLineupHaveFourOutfielders
 );
 
 export const getRunnerNames = createSelector(
@@ -116,6 +114,11 @@ export const getPlayerPosition = (state: AppState, playerId: string) => {
 export const getLineups = createSelector(getTeams, teams => teams.map(getCurrentLineup));
 export const getLineupToEdit = (state: AppState, teamRole: TeamRole) =>
   partialSelectors.getLineupToEdit(getPresent(state), teamRole);
+
+export const getAvailablePositions = (state: AppState, role: TeamRole) => {
+  const lineup = getLineupToEdit(state, role);
+  return getAvailablePositionsForLineup(lineup);
+};
 
 export const getPlayersNotInGame = createSelector(
   getAllPlayersList,

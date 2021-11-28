@@ -11,9 +11,10 @@ export const getCurrentLineup = (team: Team) => _.last(team.lineups)?.lineupSpot
 
 export const allPositions = _.keys(FieldingPosition) as FieldingPosition[];
 
-export const shouldTeamUseFourOutfielders = (team: Team) => getCurrentLineup(team).length > 9;
-export const getAvailablePositionsForTeam = (team: Team) => {
-  if (shouldTeamUseFourOutfielders(team)) {
+export const shouldLineupHaveFourOutfielders = (lineup: LineupSpot[], addingPlayer = false) =>
+  lineup.length > (addingPlayer ? 8 : 9);
+export const getAvailablePositionsForLineup = (lineup: LineupSpot[], addingPlayer = false) => {
+  if (shouldLineupHaveFourOutfielders(lineup, addingPlayer)) {
     return allPositions.filter(position => position !== FieldingPosition.CENTER_FIELD);
   }
   return allPositions.filter(

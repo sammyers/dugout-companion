@@ -14,9 +14,9 @@ import {
   moveRunnersOnGroundBall,
   getBaseNumber,
   getBaseForRunner,
-  allPositions,
   isPlayerInLineup,
   getCurrentLineup,
+  getAvailablePositionsForLineup,
 } from './utils';
 
 import {
@@ -44,16 +44,6 @@ const replaceLineup = (state: AppGameState, role: TeamRole, newLineup: LineupSpo
   _.last(team.lineups)!.lineupSpots = newLineup;
 };
 
-const shouldLineupHaveFourOutfielders = (lineup: LineupSpot[], addingPlayer = false) =>
-  lineup.length > (addingPlayer ? 8 : 9);
-const getAvailablePositionsForLineup = (lineup: LineupSpot[], addingPlayer = false) => {
-  if (shouldLineupHaveFourOutfielders(lineup, addingPlayer)) {
-    return allPositions.filter(position => position !== FieldingPosition.CENTER_FIELD);
-  }
-  return allPositions.filter(
-    position => ![FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(position)
-  );
-};
 export const getNextAvailablePosition = (lineup: LineupSpot[], addingPlayer = false) => {
   const takenPositions = _.map(lineup, 'position');
   const allPositions = getAvailablePositionsForLineup(lineup, addingPlayer);
@@ -78,16 +68,18 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
   );
   return _.map(lineup, ({ playerId, position }) => {
     if (fourOutfielders && position === FieldingPosition.CENTER_FIELD) {
+      const newPosition = _.find(
+        [
+          FieldingPosition.LEFT_CENTER,
+          FieldingPosition.RIGHT_CENTER,
+          getNextAvailablePosition(lineup),
+        ],
+        pos => !positions.has(pos)
+      )!;
+      positions.add(newPosition);
       return {
         playerId,
-        position: _.find(
-          [
-            FieldingPosition.LEFT_CENTER,
-            FieldingPosition.RIGHT_CENTER,
-            getNextAvailablePosition(lineup),
-          ],
-          pos => !positions.has(pos)
-        )!,
+        position: newPosition,
       };
     } else if (
       !fourOutfielders &&
@@ -95,12 +87,14 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
         position as FieldingPosition
       )
     ) {
+      const newPosition = _.find(
+        [FieldingPosition.CENTER_FIELD, getNextAvailablePosition(lineup)],
+        pos => !positions.has(pos)
+      )!;
+      positions.add(newPosition);
       return {
         playerId,
-        position: _.find(
-          [FieldingPosition.CENTER_FIELD, getNextAvailablePosition(lineup)],
-          pos => !positions.has(pos)
-        )!,
+        position: newPosition,
       };
     } else if (!position && positionsNotTaken.length) {
       return {
@@ -130,7 +124,7 @@ export const cleanUpAfterPlateAppearance = (state: AppGameState) => {
   }
 };
 
-const getCurrentLineupsFromTeams = (teams: Team[]) =>
+export const getCurrentLineupsFromTeams = (teams: Team[]) =>
   teams.map(({ role, lineups }) => {
     const { id } = _.last(lineups)!;
     return {
@@ -161,7 +155,7 @@ const recordAndApplyGameEvent = (
     ...state.gameState!,
     baseRunners: [...state.gameState!.baseRunners],
     score: [...state.gameState!.score],
-    lineups: getCurrentLineupsFromTeams(state.teams),
+    lineups: [...state.gameState!.lineups!],
   };
 
   state.prevGameStates.push(gameStateToRecord);
@@ -193,12 +187,9 @@ const recordAndApplyGameEvent = (
     inning >= state.gameLength &&
     (homeLeadingAfterTop ||
       awayLeadingAfterBottom ||
-      (halfInning === HalfInning.BOTTOM && awayScore < homeScore))
+      (halfInning === HalfInning.BOTTOM && homeScore > awayScore))
   ) {
-    state.prevGameStates.push({
-      ...state.gameState!,
-      lineups: getCurrentLineupsFromTeams(state.teams),
-    });
+    state.prevGameStates.push(state.gameState!);
     state.status = GameStatus.FINISHED;
   } else {
     cleanUpAfterPlateAppearance(state);
@@ -214,7 +205,6 @@ const getNextPlayerAfterLineupChange = (
   newLineup: LineupSpot[]
 ) => {
   const lineupIndex = oldLineup.findIndex(spot => spot.playerId === removedPlayer);
-  console.log(removedPlayer, lineupIndex, _.cloneDeep(oldLineup), _.cloneDeep(newLineup));
   if (lineupIndex > newLineup.length - 1) {
     return newLineup[0].playerId;
   }
@@ -251,6 +241,7 @@ export const applyMidGameLineupChange = (
     }
 
     team.lineups.push(newLineup);
+    gameState.lineups = getCurrentLineupsFromTeams(teams);
     return makeGameEvent({ lineupChange: { lineupBeforeId, lineupAfterId } });
   });
 };
