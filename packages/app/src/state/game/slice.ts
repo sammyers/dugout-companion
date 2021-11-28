@@ -5,6 +5,7 @@ import undoable from 'redux-undo';
 import { v4 as uuid4 } from 'uuid';
 
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
+import { getLineupToEdit } from './partialSelectors';
 import {
   updatePositions,
   getNextAvailablePosition,
@@ -26,10 +27,7 @@ import {
   GameStatus,
   AppGameState,
   PlateAppearance,
-  GameState,
 } from './types';
-import { playerActions } from 'state/players/slice';
-import { getLineupToEdit } from './partialSelectors';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
   name: '',
@@ -229,60 +227,6 @@ const { actions: gameActions, reducer } = createSlice({
       state.saved = true;
     },
   },
-  extraReducers: builder =>
-    builder.addCase(playerActions.syncPlayer, (state, { payload }) => {
-      state.teams.forEach(team => {
-        team.lineups.forEach(lineup => {
-          lineup.lineupSpots.forEach(spot => {
-            if (spot.playerId === payload.offlineId) {
-              spot.playerId = payload.id;
-            }
-          });
-        });
-      });
-
-      const updateGameState = (gameState: GameState) => {
-        gameState.baseRunners.forEach(runner => {
-          if (runner.runnerId === payload.offlineId) {
-            runner.runnerId = payload.id;
-          }
-        });
-        if (gameState.playerAtBat === payload.offlineId) {
-          gameState.playerAtBat = payload.id;
-        }
-      };
-      state.prevGameStates.forEach(gameState => {
-        updateGameState(gameState);
-      });
-      if (state.gameState) {
-        updateGameState(state.gameState);
-      }
-
-      state.gameEventRecords.forEach(event => {
-        event.scoredRunners.forEach(runner => {
-          if (runner.runnerId === payload.offlineId) {
-            runner.runnerId = payload.id;
-          }
-        });
-        const { plateAppearance, stolenBaseAttempt } = event.gameEvent;
-        if (plateAppearance) {
-          plateAppearance.outOnPlayRunners.forEach(runner => {
-            if (runner.runnerId === payload.offlineId) {
-              runner.runnerId = payload.id;
-            }
-          });
-          plateAppearance.basepathMovements.forEach(movement => {
-            if (movement.runnerId === payload.offlineId) {
-              movement.runnerId = payload.id;
-            }
-          });
-        } else if (stolenBaseAttempt) {
-          if (stolenBaseAttempt.runnerId === payload.offlineId) {
-            stolenBaseAttempt.runnerId = payload.id;
-          }
-        }
-      });
-    }),
 });
 
 export { gameActions };
@@ -313,10 +257,6 @@ export default undoable(reducer, {
   },
   limit: 10,
   syncFilter: true,
-  clearHistoryType: [
-    gameActions.resetGame.type,
-    gameActions.fullResetGame.type,
-    playerActions.syncPlayer.type,
-  ],
+  clearHistoryType: [gameActions.resetGame.type, gameActions.fullResetGame.type],
   neverSkipReducer: true,
 });

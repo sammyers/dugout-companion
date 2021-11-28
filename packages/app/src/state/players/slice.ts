@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
-import { v1 as uuidv1 } from 'uuid';
+import { v4 as uuid4 } from 'uuid';
 
 import { Player, NewPlayer } from './types';
 
@@ -22,11 +22,6 @@ const initialState: PlayerState = {
   unsynced: {},
 };
 
-interface SyncPlayerPayload {
-  offlineId: string;
-  id: string;
-}
-
 const { actions: playerActions, reducer } = createSlice({
   name: 'players',
   initialState,
@@ -40,9 +35,17 @@ const { actions: playerActions, reducer } = createSlice({
         }),
         {} as PlayerMap
       );
+      payload.forEach(({ id }) => {
+        if (id in state.unsynced) {
+          delete state.unsynced[id];
+        }
+      });
     },
     loadPlayer(state, { payload }: PayloadAction<Player>) {
       state.synced[payload.id] = payload;
+      if (payload.id in state.unsynced) {
+        delete state.unsynced[payload.id];
+      }
     },
     createPlayerOffline: {
       reducer(state, { payload }: PayloadAction<Player>) {
@@ -50,11 +53,11 @@ const { actions: playerActions, reducer } = createSlice({
           state.unsynced[payload.id] = payload;
         }
       },
-      prepare: (player: NewPlayer) => ({ payload: { ...player, id: uuidv1() } }),
+      prepare: (player: NewPlayer) => ({ payload: { ...player, id: uuid4() } }),
     },
-    syncPlayer(state, { payload }: PayloadAction<SyncPlayerPayload>) {
-      state.synced[payload.id] = { ...state.unsynced[payload.offlineId], id: payload.id };
-      delete state.unsynced[payload.offlineId];
+    syncPlayer(state, { payload }: PayloadAction<string>) {
+      state.synced[payload] = state.unsynced[payload];
+      delete state.unsynced[payload];
     },
   },
 });

@@ -8723,6 +8723,7 @@ export type CreateGameMutation = (
 );
 
 export type CreatePlayerMutationVariables = Exact<{
+  id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
 }>;
@@ -8901,8 +8902,10 @@ export type CreateGameMutationHookResult = ReturnType<typeof useCreateGameMutati
 export type CreateGameMutationResult = Apollo.MutationResult<CreateGameMutation>;
 export type CreateGameMutationOptions = Apollo.BaseMutationOptions<CreateGameMutation, CreateGameMutationVariables>;
 export const CreatePlayerDocument = gql`
-    mutation CreatePlayer($firstName: String!, $lastName: String) {
-  createPlayer(input: {player: {firstName: $firstName, lastName: $lastName}}) {
+    mutation CreatePlayer($id: UUID, $firstName: String!, $lastName: String) {
+  createPlayer(
+    input: {player: {id: $id, firstName: $firstName, lastName: $lastName}}
+  ) {
     player {
       id
       firstName
@@ -8926,6 +8929,7 @@ export type CreatePlayerMutationFn = Apollo.MutationFunction<CreatePlayerMutatio
  * @example
  * const [createPlayerMutation, { data, loading, error }] = useCreatePlayerMutation({
  *   variables: {
+ *      id: // value for 'id'
  *      firstName: // value for 'firstName'
  *      lastName: // value for 'lastName'
  *   },

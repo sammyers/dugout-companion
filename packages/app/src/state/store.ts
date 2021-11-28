@@ -9,6 +9,7 @@ import game from './game/slice';
 import history from './history/slice';
 import players from './players/slice';
 import prompts from './prompts/slice';
+import unsavedGames from './unsavedGames/slice';
 
 const reducer = persistCombineReducers(
   { key: 'root', storage },
@@ -17,6 +18,7 @@ const reducer = persistCombineReducers(
     history,
     players,
     prompts,
+    unsavedGames,
   }
 );
 

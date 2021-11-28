@@ -16,6 +16,8 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
 
 import { AppState } from 'state/store';
+import { getUnsavedGames } from 'state/unsavedGames/selectors';
+import { unsavedGameActions } from 'state/unsavedGames/slice';
 
 const SaveGameButton = () => {
   const dispatch = useAppDispatch();
@@ -35,17 +37,23 @@ const SaveGameButton = () => {
   const handleClick = useCallback(async () => {
     const unsyncedPlayers = getUnsyncedPlayers(getState());
     if (_.size(unsyncedPlayers)) {
-      for (let offlineId in unsyncedPlayers) {
-        const { firstName, lastName } = unsyncedPlayers[offlineId];
-        const { data } = await createPlayer({ variables: { firstName, lastName } });
+      for (let playerId in unsyncedPlayers) {
+        const { data } = await createPlayer({ variables: unsyncedPlayers[playerId] });
         if (data?.createPlayer?.player) {
-          dispatch(playerActions.syncPlayer({ offlineId, id: data.createPlayer.player.id }));
+          dispatch(playerActions.syncPlayer(data.createPlayer.player.id));
         }
       }
     }
+    const unsavedGames = getUnsavedGames(getState());
+    _.forEach(unsavedGames, async game => {
+      const { data } = await createGame({ variables: { input: { game } } });
+      if (data?.createGame?.game) {
+        dispatch(unsavedGameActions.clearUnsavedGame(data.createGame.game.id));
+      }
+    });
     const game = getGameForMutation(getState());
     const { data } = await createGame({ variables: { input: { game } } });
-    if (data && data.createGame && data.createGame.game) {
+    if (data?.createGame?.game) {
       dispatch(gameActions.setGameSaved());
     }
   }, [getState, createPlayer, createGame, dispatch]);
