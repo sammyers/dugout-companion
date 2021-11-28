@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { formatISO } from 'date-fns';
 import _ from 'lodash';
 import undoable from 'redux-undo';
 import { v4 as uuid4 } from 'uuid';
@@ -140,21 +141,32 @@ const { actions: gameActions, reducer } = createSlice({
         state.teams[1].role = TeamRole.HOME;
       }
     },
-    startGame(state) {
-      state.gameState = {
-        id: uuid4(),
-        inning: 1,
-        halfInning: HalfInning.TOP,
-        baseRunners: [],
-        outs: 0,
-        score: [0, 0],
-        playerAtBat: getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId,
-        lineups: getCurrentLineupsFromTeams(state.teams),
-      };
-      state.upNextHalfInning = getCurrentLineup(
-        getTeamWithRole(state.teams, TeamRole.HOME)
-      )[0].playerId;
-      state.status = GameStatus.IN_PROGRESS;
+    startGame: {
+      prepare: () => ({
+        payload: {
+          gameId: uuid4(),
+          stateId: uuid4(),
+          time: formatISO(new Date()),
+        },
+      }),
+      reducer(state, action: PayloadAction<{ gameId: string; stateId: string; time: string }>) {
+        state.gameId = action.payload.gameId;
+        state.timeStarted = action.payload.time;
+        state.gameState = {
+          id: action.payload.stateId,
+          inning: 1,
+          halfInning: HalfInning.TOP,
+          baseRunners: [],
+          outs: 0,
+          score: [0, 0],
+          playerAtBat: getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId,
+          lineups: getCurrentLineupsFromTeams(state.teams),
+        };
+        state.upNextHalfInning = getCurrentLineup(
+          getTeamWithRole(state.teams, TeamRole.HOME)
+        )[0].playerId;
+        state.status = GameStatus.IN_PROGRESS;
+      },
     },
     recordPlateAppearance(state, { payload }: PayloadAction<PlateAppearance>) {
       applyPlateAppearance(state, payload);
@@ -188,9 +200,16 @@ const { actions: gameActions, reducer } = createSlice({
     decrementGameLength(state) {
       state.gameLength -= 1;
     },
+    setTimeEnded(state, action: PayloadAction<string>) {
+      state.timeEnded = action.payload;
+    },
     extendGame(state) {
       state.gameLength = Math.max(state.gameState?.inning ?? 0, state.gameLength) + 1;
       state.status = GameStatus.IN_PROGRESS;
+      state.timeEnded = undefined;
+      state.teams.forEach(team => {
+        team.winner = null;
+      });
       cleanUpAfterPlateAppearance(state);
     },
     resetGame: state => ({

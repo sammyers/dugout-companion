@@ -191,6 +191,10 @@ const recordAndApplyGameEvent = (
   ) {
     state.prevGameStates.push(state.gameState!);
     state.status = GameStatus.FINISHED;
+    const winningScore = _.max(score)!;
+    state.teams.forEach((team, i) => {
+      team.winner = score[i] === winningScore;
+    });
   } else {
     cleanUpAfterPlateAppearance(state);
   }

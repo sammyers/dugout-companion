@@ -12,8 +12,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The day, does not include a time. */
-  Date: string;
   /**
    * A point in time as described by the [ISO
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
@@ -244,7 +242,9 @@ export type BaseRunnerRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -495,7 +495,9 @@ export type BasepathMovementRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -587,6 +589,31 @@ export type CreateBasepathMovementPayload = {
   runner: Maybe<Player>;
 };
 
+/** All input for the create `Field` mutation. */
+export type CreateFieldInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Field` to be created by this mutation. */
+  field: FieldInput;
+};
+
+/** The output of our create `Field` mutation. */
+export type CreateFieldPayload = {
+  __typename?: 'CreateFieldPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Field` that was created by this mutation. */
+  field: Maybe<Field>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the create `GameEvent` mutation. */
 export type CreateGameEventInput = {
   /**
@@ -674,6 +701,8 @@ export type CreateGamePayload = {
   game: Maybe<Game>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Field` that is related to this `Game`. */
+  field: Maybe<Field>;
 };
 
 /** All input for the create `GameState` mutation. */
@@ -982,7 +1011,6 @@ export type CreateTeamPayload = {
 };
 
 
-
 /** All input for the `deleteBaseRunnerByNodeId` mutation. */
 export type DeleteBaseRunnerByNodeIdInput = {
   /**
@@ -1063,6 +1091,42 @@ export type DeleteBasepathMovementPayload = {
   plateAppearance: Maybe<PlateAppearance>;
   /** Reads a single `Player` that is related to this `BasepathMovement`. */
   runner: Maybe<Player>;
+};
+
+/** All input for the `deleteFieldByNodeId` mutation. */
+export type DeleteFieldByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Field` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteField` mutation. */
+export type DeleteFieldInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `Field` mutation. */
+export type DeleteFieldPayload = {
+  __typename?: 'DeleteFieldPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Field` that was deleted by this mutation. */
+  field: Maybe<Field>;
+  deletedFieldNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
 };
 
 /** All input for the `deleteGameByName` mutation. */
@@ -1206,6 +1270,8 @@ export type DeleteGamePayload = {
   deletedGameNodeId: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Field` that is related to this `Game`. */
+  field: Maybe<Field>;
 };
 
 /** All input for the `deleteGameStateByNodeId` mutation. */
@@ -1682,6 +1748,88 @@ export type DeleteTeamPayload = {
   game: Maybe<Game>;
 };
 
+export type Field = Node & {
+  __typename?: 'Field';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['UUID'];
+  name: Scalars['String'];
+  notes: Maybe<Scalars['String']>;
+  /** Reads and enables pagination through a set of `Game`. */
+  games: Array<Game>;
+};
+
+
+export type FieldGamesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GamesOrderBy>>;
+  condition?: Maybe<GameCondition>;
+};
+
+/** A condition to be used against `Field` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type FieldCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `notes` field. */
+  notes?: Maybe<Scalars['String']>;
+};
+
+/** The fields on `field` to look up the row to connect. */
+export type FieldFieldPkeyConnect = {
+  id: Scalars['UUID'];
+};
+
+/** The fields on `field` to look up the row to delete. */
+export type FieldFieldPkeyDelete = {
+  id: Scalars['UUID'];
+};
+
+/** An input for mutations affecting `Field` */
+export type FieldInput = {
+  id?: Maybe<Scalars['UUID']>;
+  name: Scalars['String'];
+  notes?: Maybe<Scalars['String']>;
+  games?: Maybe<GameFieldIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type FieldNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `field` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type FieldNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `field` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FieldOnGameForGameFieldIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `game` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: GamePatch;
+};
+
+/** The fields on `field` to look up the row to update. */
+export type FieldOnGameForGameFieldIdFkeyUsingFieldPkeyUpdate = {
+  /** An object where the defined keys will be set on the `field` being updated. */
+  patch: UpdateFieldOnGameForGameFieldIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** Represents an update to a `Field`. Fields that are set will be updated. */
+export type FieldPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  notes?: Maybe<Scalars['String']>;
+  games?: Maybe<GameFieldIdFkeyInverseInput>;
+};
+
 export enum FieldingPosition {
   PITCHER = 'PITCHER',
   CATCHER = 'CATCHER',
@@ -1696,16 +1844,33 @@ export enum FieldingPosition {
   RIGHT_FIELD = 'RIGHT_FIELD'
 }
 
+/** Methods to use when ordering `Field`. */
+export enum FieldsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  NOTES_ASC = 'NOTES_ASC',
+  NOTES_DESC = 'NOTES_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
 export type Game = Node & {
   __typename?: 'Game';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['UUID'];
   name: Maybe<Scalars['String']>;
-  location: Maybe<Scalars['String']>;
+  fieldId: Maybe<Scalars['UUID']>;
   score: Array<Maybe<Scalars['Int']>>;
   gameLength: Scalars['Int'];
-  datePlayed: Maybe<Scalars['Date']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved: Scalars['Datetime'];
+  /** Reads a single `Field` that is related to this `Game`. */
+  field: Maybe<Field>;
   /** Reads and enables pagination through a set of `Team`. */
   teams: Array<Team>;
   /** Reads and enables pagination through a set of `GameState`. */
@@ -1744,14 +1909,18 @@ export type GameCondition = {
   id?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `location` field. */
-  location?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fieldId` field. */
+  fieldId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `score` field. */
   score?: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Checks for equality with the object’s `gameLength` field. */
   gameLength?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `datePlayed` field. */
-  datePlayed?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `timeStarted` field. */
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeEnded` field. */
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeSaved` field. */
+  timeSaved?: Maybe<Scalars['Datetime']>;
 };
 
 export type GameEvent = Node & {
@@ -2165,10 +2334,13 @@ export type GameEventRecordGameEventRecordPkeyDelete = {
 export type GameEventRecordGameIdFkeyGameCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score: Array<Maybe<Scalars['Int']>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -2639,6 +2811,73 @@ export enum GameEventsOrderBy {
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
 
+/** The `field` to be created by this mutation. */
+export type GameFieldIdFkeyFieldCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  name: Scalars['String'];
+  notes?: Maybe<Scalars['String']>;
+  games?: Maybe<GameFieldIdFkeyInverseInput>;
+};
+
+/** The `game` to be created by this mutation. */
+export type GameFieldIdFkeyGameCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `field` in the `GameInput` mutation. */
+export type GameFieldIdFkeyInput = {
+  /** The primary key(s) for `field` for the far side of the relationship. */
+  connectById?: Maybe<FieldFieldPkeyConnect>;
+  /** The primary key(s) for `field` for the far side of the relationship. */
+  connectByNodeId?: Maybe<FieldNodeIdConnect>;
+  /** The primary key(s) for `field` for the far side of the relationship. */
+  deleteById?: Maybe<FieldFieldPkeyDelete>;
+  /** The primary key(s) for `field` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<FieldNodeIdDelete>;
+  /** The primary key(s) and patch data for `field` for the far side of the relationship. */
+  updateById?: Maybe<FieldOnGameForGameFieldIdFkeyUsingFieldPkeyUpdate>;
+  /** The primary key(s) and patch data for `field` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameOnGameForGameFieldIdFkeyNodeIdUpdate>;
+  /** A `FieldInput` object that will be created and connected to this object. */
+  create?: Maybe<GameFieldIdFkeyFieldCreateInput>;
+};
+
+/** Input for the nested mutation of `game` in the `FieldInput` mutation. */
+export type GameFieldIdFkeyInverseInput = {
+  /** Flag indicating whether all other `game` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameGamePkeyConnect>>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByName?: Maybe<Array<GameGameNameKeyConnect>>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameNodeIdConnect>>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameGamePkeyDelete>>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByName?: Maybe<Array<GameGameNameKeyDelete>>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameNodeIdDelete>>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameOnGameForGameFieldIdFkeyUsingGamePkeyUpdate>>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByName?: Maybe<Array<GameOnGameForGameFieldIdFkeyUsingGameNameKeyUpdate>>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<FieldOnGameForGameFieldIdFkeyNodeIdUpdate>>;
+  /** A `GameInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameFieldIdFkeyGameCreateInput>>;
+};
+
 /** The fields on `game` to look up the row to connect. */
 export type GameGameNameKeyConnect = {
   name: Scalars['String'];
@@ -2663,10 +2902,13 @@ export type GameGamePkeyDelete = {
 export type GameInput = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score: Array<Maybe<Scalars['Int']>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -2703,6 +2945,28 @@ export type GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGameNameKeyUpd
 export type GameOnGameEventRecordForGameEventRecordGameIdFkeyUsingGamePkeyUpdate = {
   /** An object where the defined keys will be set on the `game` being updated. */
   patch: UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameOnGameForGameFieldIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `field` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `field` being updated. */
+  patch: FieldPatch;
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnGameForGameFieldIdFkeyUsingGameNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnGameForGameFieldIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnGameForGameFieldIdFkeyUsingGamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnGameForGameFieldIdFkeyPatch;
   id: Scalars['UUID'];
 };
 
@@ -2754,10 +3018,13 @@ export type GameOnTeamForTeamGameIdFkeyUsingGamePkeyUpdate = {
 export type GamePatch = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score?: Maybe<Array<Maybe<Scalars['Int']>>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -2856,10 +3123,13 @@ export type GameStateCondition = {
 export type GameStateGameIdFkeyGameCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score: Array<Maybe<Scalars['Int']>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -3140,7 +3410,9 @@ export type GameStatePlayerAtBatFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -3180,14 +3452,18 @@ export enum GamesOrderBy {
   ID_DESC = 'ID_DESC',
   NAME_ASC = 'NAME_ASC',
   NAME_DESC = 'NAME_DESC',
-  LOCATION_ASC = 'LOCATION_ASC',
-  LOCATION_DESC = 'LOCATION_DESC',
+  FIELD_ID_ASC = 'FIELD_ID_ASC',
+  FIELD_ID_DESC = 'FIELD_ID_DESC',
   SCORE_ASC = 'SCORE_ASC',
   SCORE_DESC = 'SCORE_DESC',
   GAME_LENGTH_ASC = 'GAME_LENGTH_ASC',
   GAME_LENGTH_DESC = 'GAME_LENGTH_DESC',
-  DATE_PLAYED_ASC = 'DATE_PLAYED_ASC',
-  DATE_PLAYED_DESC = 'DATE_PLAYED_DESC',
+  TIME_STARTED_ASC = 'TIME_STARTED_ASC',
+  TIME_STARTED_DESC = 'TIME_STARTED_DESC',
+  TIME_ENDED_ASC = 'TIME_ENDED_ASC',
+  TIME_ENDED_DESC = 'TIME_ENDED_DESC',
+  TIME_SAVED_ASC = 'TIME_SAVED_ASC',
+  TIME_SAVED_DESC = 'TIME_SAVED_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -4094,7 +4370,9 @@ export type LineupSpotPlayerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -4202,6 +4480,8 @@ export type Mutation = {
   createBaseRunner: Maybe<CreateBaseRunnerPayload>;
   /** Creates a single `BasepathMovement`. */
   createBasepathMovement: Maybe<CreateBasepathMovementPayload>;
+  /** Creates a single `Field`. */
+  createField: Maybe<CreateFieldPayload>;
   /** Creates a single `Game`. */
   createGame: Maybe<CreateGamePayload>;
   /** Creates a single `GameEvent`. */
@@ -4238,6 +4518,10 @@ export type Mutation = {
   updateBasepathMovementByNodeId: Maybe<UpdateBasepathMovementPayload>;
   /** Updates a single `BasepathMovement` using a unique key and a patch. */
   updateBasepathMovement: Maybe<UpdateBasepathMovementPayload>;
+  /** Updates a single `Field` using its globally unique id and a patch. */
+  updateFieldByNodeId: Maybe<UpdateFieldPayload>;
+  /** Updates a single `Field` using a unique key and a patch. */
+  updateField: Maybe<UpdateFieldPayload>;
   /** Updates a single `Game` using its globally unique id and a patch. */
   updateGameByNodeId: Maybe<UpdateGamePayload>;
   /** Updates a single `Game` using a unique key and a patch. */
@@ -4314,6 +4598,10 @@ export type Mutation = {
   deleteBasepathMovementByNodeId: Maybe<DeleteBasepathMovementPayload>;
   /** Deletes a single `BasepathMovement` using a unique key. */
   deleteBasepathMovement: Maybe<DeleteBasepathMovementPayload>;
+  /** Deletes a single `Field` using its globally unique id. */
+  deleteFieldByNodeId: Maybe<DeleteFieldPayload>;
+  /** Deletes a single `Field` using a unique key. */
+  deleteField: Maybe<DeleteFieldPayload>;
   /** Deletes a single `Game` using its globally unique id. */
   deleteGameByNodeId: Maybe<DeleteGamePayload>;
   /** Deletes a single `Game` using a unique key. */
@@ -4394,6 +4682,12 @@ export type MutationCreateBaseRunnerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateBasepathMovementArgs = {
   input: CreateBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateFieldArgs = {
+  input: CreateFieldInput;
 };
 
 
@@ -4502,6 +4796,18 @@ export type MutationUpdateBasepathMovementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateBasepathMovementArgs = {
   input: UpdateBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFieldByNodeIdArgs = {
+  input: UpdateFieldByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFieldArgs = {
+  input: UpdateFieldInput;
 };
 
 
@@ -4730,6 +5036,18 @@ export type MutationDeleteBasepathMovementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteBasepathMovementArgs = {
   input: DeleteBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFieldByNodeIdArgs = {
+  input: DeleteFieldByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFieldArgs = {
+  input: DeleteFieldInput;
 };
 
 
@@ -5150,7 +5468,9 @@ export type OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -5346,7 +5666,9 @@ export type Player = Node & {
   id: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Maybe<Scalars['String']>;
-  createdAt: Maybe<Scalars['Datetime']>;
+  nickname: Maybe<Scalars['String']>;
+  imageUrl: Maybe<Scalars['String']>;
+  timeCreated: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `LineupSpot`. */
   lineupSpots: Array<LineupSpot>;
   /** Reads and enables pagination through a set of `BasepathMovement`. */
@@ -5427,8 +5749,12 @@ export type PlayerCondition = {
   firstName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `lastName` field. */
   lastName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `createdAt` field. */
-  createdAt?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `nickname` field. */
+  nickname?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `imageUrl` field. */
+  imageUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
 };
 
 /** An input for mutations affecting `Player` */
@@ -5436,7 +5762,9 @@ export type PlayerInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -5624,7 +5952,9 @@ export type PlayerPatch = {
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -5665,8 +5995,12 @@ export enum PlayersOrderBy {
   FIRST_NAME_DESC = 'FIRST_NAME_DESC',
   LAST_NAME_ASC = 'LAST_NAME_ASC',
   LAST_NAME_DESC = 'LAST_NAME_DESC',
-  CREATED_AT_ASC = 'CREATED_AT_ASC',
-  CREATED_AT_DESC = 'CREATED_AT_DESC',
+  NICKNAME_ASC = 'NICKNAME_ASC',
+  NICKNAME_DESC = 'NICKNAME_DESC',
+  IMAGE_URL_ASC = 'IMAGE_URL_ASC',
+  IMAGE_URL_DESC = 'IMAGE_URL_DESC',
+  TIME_CREATED_ASC = 'TIME_CREATED_ASC',
+  TIME_CREATED_DESC = 'TIME_CREATED_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -5687,6 +6021,8 @@ export type Query = Node & {
   baseRunners: Maybe<Array<BaseRunner>>;
   /** Reads a set of `BasepathMovement`. */
   basepathMovements: Maybe<Array<BasepathMovement>>;
+  /** Reads a set of `Field`. */
+  fields: Maybe<Array<Field>>;
   /** Reads a set of `Game`. */
   games: Maybe<Array<Game>>;
   /** Reads a set of `GameEvent`. */
@@ -5717,6 +6053,7 @@ export type Query = Node & {
   teams: Maybe<Array<Team>>;
   baseRunner: Maybe<BaseRunner>;
   basepathMovement: Maybe<BasepathMovement>;
+  field: Maybe<Field>;
   game: Maybe<Game>;
   gameByName: Maybe<Game>;
   gameEvent: Maybe<GameEvent>;
@@ -5741,6 +6078,8 @@ export type Query = Node & {
   baseRunnerByNodeId: Maybe<BaseRunner>;
   /** Reads a single `BasepathMovement` using its globally unique `ID`. */
   basepathMovementByNodeId: Maybe<BasepathMovement>;
+  /** Reads a single `Field` using its globally unique `ID`. */
+  fieldByNodeId: Maybe<Field>;
   /** Reads a single `Game` using its globally unique `ID`. */
   gameByNodeId: Maybe<Game>;
   /** Reads a single `GameEvent` using its globally unique `ID`. */
@@ -5793,6 +6132,15 @@ export type QueryBasepathMovementsArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<BasepathMovementsOrderBy>>;
   condition?: Maybe<BasepathMovementCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFieldsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<FieldsOrderBy>>;
+  condition?: Maybe<FieldCondition>;
 };
 
 
@@ -5937,6 +6285,12 @@ export type QueryBasepathMovementArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryFieldArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryGameArgs = {
   id: Scalars['UUID'];
 };
@@ -6073,6 +6427,12 @@ export type QueryBaseRunnerByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryBasepathMovementByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFieldByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -6364,7 +6724,9 @@ export type ScoredRunnerRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -6540,7 +6902,9 @@ export type StolenBaseAttemptRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -6622,10 +6986,13 @@ export type TeamCondition = {
 export type TeamGameIdFkeyGameCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score: Array<Maybe<Scalars['Int']>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -6904,6 +7271,45 @@ export type UpdateBasepathMovementPayload = {
   runner: Maybe<Player>;
 };
 
+/** All input for the `updateFieldByNodeId` mutation. */
+export type UpdateFieldByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Field` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Field` being updated. */
+  patch: FieldPatch;
+};
+
+/** All input for the `updateField` mutation. */
+export type UpdateFieldInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Field` being updated. */
+  patch: FieldPatch;
+  id: Scalars['UUID'];
+};
+
+/** The output of our update `Field` mutation. */
+export type UpdateFieldPayload = {
+  __typename?: 'UpdateFieldPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Field` that was updated by this mutation. */
+  field: Maybe<Field>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `updateGameByName` mutation. */
 export type UpdateGameByNameInput = {
   /**
@@ -7058,6 +7464,8 @@ export type UpdateGamePayload = {
   game: Maybe<Game>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
+  /** Reads a single `Field` that is related to this `Game`. */
+  field: Maybe<Field>;
 };
 
 /** All input for the `updateGameStateByNodeId` mutation. */
@@ -7609,6 +8017,14 @@ export type UpdateBasepathMovementOnBasepathMovementForBasepathMovementRunnerIdF
   player?: Maybe<BasepathMovementRunnerIdFkeyInput>;
 };
 
+/** An object where the defined keys will be set on the `field` being updated. */
+export type UpdateFieldOnGameForGameFieldIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  notes?: Maybe<Scalars['String']>;
+  games?: Maybe<GameFieldIdFkeyInverseInput>;
+};
+
 /** An object where the defined keys will be set on the `gameEvent` being updated. */
 export type UpdateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
@@ -7729,10 +8145,28 @@ export type UpdateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdF
 export type UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score?: Maybe<Array<Maybe<Scalars['Int']>>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `game` being updated. */
+export type UpdateGameOnGameForGameFieldIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -7742,10 +8176,13 @@ export type UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
 export type UpdateGameOnGameStateForGameStateGameIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score?: Maybe<Array<Maybe<Scalars['Int']>>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -7755,10 +8192,13 @@ export type UpdateGameOnGameStateForGameStateGameIdFkeyPatch = {
 export type UpdateGameOnTeamForTeamGameIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
-  location?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
   score?: Maybe<Array<Maybe<Scalars['Int']>>>;
   gameLength?: Maybe<Scalars['Int']>;
-  datePlayed?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  field?: Maybe<GameFieldIdFkeyInput>;
   teams?: Maybe<TeamGameIdFkeyInverseInput>;
   gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
   gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
@@ -8025,7 +8465,9 @@ export type UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8040,7 +8482,9 @@ export type UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch =
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8055,7 +8499,9 @@ export type UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8070,7 +8516,9 @@ export type UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8085,7 +8533,9 @@ export type UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8100,7 +8550,9 @@ export type UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8115,7 +8567,9 @@ export type UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch
   id?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
-  createdAt?: Maybe<Scalars['Datetime']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
   basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
@@ -8197,7 +8651,7 @@ export type GameEventRecord_GameStateFragment = (
 
 export type UnpackedGame_GameFragment = (
   { __typename?: 'Game' }
-  & Pick<Game, 'datePlayed' | 'id' | 'gameLength' | 'location' | 'name' | 'score'>
+  & Pick<Game, 'id' | 'gameLength' | 'name' | 'score' | 'timeStarted' | 'timeEnded'>
   & { gameStates: Array<(
     { __typename?: 'GameState' }
     & Pick<GameState, 'id' | 'inning' | 'halfInning' | 'outs' | 'playerAtBat' | 'score'>
@@ -8341,12 +8795,12 @@ export const GameEventRecord_GameStateFragmentDoc = gql`
     `;
 export const UnpackedGame_GameFragmentDoc = gql`
     fragment UnpackedGame_Game on Game {
-  datePlayed
   id
   gameLength
-  location
   name
   score
+  timeStarted
+  timeEnded
   gameStates(orderBy: GAME_STATE_INDEX_ASC) {
     id
     inning

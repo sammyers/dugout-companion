@@ -199,13 +199,32 @@ export const wasGameSaved = createSelector(getPresent, game => game.saved);
 export const isUndoPossible = createSelector(getPast, past => past.length > 0);
 export const isRedoPossible = createSelector(getFuture, future => future.length > 0);
 
+export const getGameId = createSelector(getPresent, game => game.gameId);
+export const getTimeStarted = createSelector(getPresent, game => game.timeStarted);
+export const getTimeEnded = createSelector(getPresent, game => game.timeEnded);
+
 export const getGameForMutation = createSelector(
+  getGameId,
+  getTimeStarted,
+  getTimeEnded,
   getTeams,
   getScore,
   getCurrentGameLength,
   getPrevGameStates,
   getGameHistory,
-  (teams, score, gameLength, gameStates, gameEventRecords): GameInput => ({
+  (
+    id,
+    timeStarted,
+    timeEnded,
+    teams,
+    score,
+    gameLength,
+    gameStates,
+    gameEventRecords
+  ): GameInput => ({
+    id,
+    timeStarted: timeStarted!,
+    timeEnded: timeEnded!,
     score,
     gameLength,
     teams: {

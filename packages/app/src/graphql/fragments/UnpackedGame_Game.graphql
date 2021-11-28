@@ -1,10 +1,10 @@
 fragment UnpackedGame_Game on Game {
-  datePlayed
   id
   gameLength
-  location
   name
   score
+  timeStarted
+  timeEnded
   gameStates(orderBy: GAME_STATE_INDEX_ASC) {
     id
     inning

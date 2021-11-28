@@ -1,5 +1,6 @@
+import React, { useCallback, useEffect } from 'react';
+import { formatISO } from 'date-fns';
 import { Box, Button, Heading, Main } from 'grommet';
-import React, { useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import SaveGameButton from './SaveGameButton';
@@ -9,6 +10,7 @@ import {
   getGameStatus,
   getMaxGameLength,
   getScore,
+  getTimeEnded,
   wasGameSaved,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
@@ -20,10 +22,17 @@ const GameOver = () => {
   const dispatch = useAppDispatch();
 
   const gameStatus = useAppSelector(getGameStatus);
+  const timeEnded = useAppSelector(getTimeEnded);
   const [awayScore, homeScore] = useAppSelector(getScore);
   const gameLength = useAppSelector(getCurrentGameLength);
   const maxGameLength = useAppSelector(getMaxGameLength);
   const saved = useAppSelector(wasGameSaved);
+
+  useEffect(() => {
+    if (gameStatus === GameStatus.FINISHED && !timeEnded) {
+      dispatch(gameActions.setTimeEnded(formatISO(new Date())));
+    }
+  }, [gameStatus, timeEnded, dispatch]);
 
   const onClickExtendGame = useCallback(() => {
     dispatch(gameActions.extendGame());

@@ -44,6 +44,9 @@ export enum GameStatus {
 }
 
 export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords'> & {
+  gameId?: string;
+  timeStarted?: string;
+  timeEnded?: string;
   gameState?: GameState;
   prevGameStates: GameState[];
   status: GameStatus;

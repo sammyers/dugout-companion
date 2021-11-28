@@ -78,20 +78,32 @@ create table player (
   first_name text not null,
   last_name text,
   unique (first_name, last_name),
-  created_at timestamp default now()
+  nickname text,
+  image_url text,
+  time_created timestamp with time zone default now()
 );
-grant select, insert (id, first_name, last_name) on player to :DATABASE_VISITOR;
+grant select, insert on player to :DATABASE_VISITOR;
+
+drop table if exists field cascade;
+create table field (
+  id uuid primary key default gen_random_uuid (),
+  name text not null,
+  notes text
+);
+grant select, insert (name, notes) on field to :DATABASE_VISITOR;
 
 drop table if exists game cascade;
 create table game (
   id uuid primary key default gen_random_uuid (),
   name text unique,
-  location text,
+  field_id uuid references field (id),
   score int[] not null,
   game_length int not null default 9,
-  date_played date default now()
+  time_started timestamp with time zone not null,
+  time_ended timestamp with time zone not null,
+  time_saved timestamp with time zone not null default now()
 );
-grant select, insert (name, location, score, game_length, date_played) on game to :DATABASE_VISITOR;
+grant select, insert on game to :DATABASE_VISITOR;
 
 drop table if exists team cascade;
 create table team (

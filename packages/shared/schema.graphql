@@ -51,6 +51,23 @@ type Query implements Node {
     condition: BasepathMovementCondition
   ): [BasepathMovement!]
 
+  """Reads a set of `Field`."""
+  fields(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Field`."""
+    orderBy: [FieldsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: FieldCondition
+  ): [Field!]
+
   """Reads a set of `Game`."""
   games(
     """Only read the first `n` values of the set."""
@@ -290,6 +307,7 @@ type Query implements Node {
   ): [Team!]
   baseRunner(gameStateId: UUID!, runnerId: UUID!): BaseRunner
   basepathMovement(plateAppearanceId: UUID!, runnerId: UUID!): BasepathMovement
+  field(id: UUID!): Field
   game(id: UUID!): Game
   gameByName(name: String!): Game
   gameEvent(id: UUID!): GameEvent
@@ -326,6 +344,12 @@ type Query implements Node {
     """
     nodeId: ID!
   ): BasepathMovement
+
+  """Reads a single `Field` using its globally unique `ID`."""
+  fieldByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Field`."""
+    nodeId: ID!
+  ): Field
 
   """Reads a single `Game` using its globally unique `ID`."""
   gameByNodeId(
@@ -573,10 +597,15 @@ type Game implements Node {
   nodeId: ID!
   id: UUID!
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]!
   gameLength: Int!
-  datePlayed: Date
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime!
+
+  """Reads a single `Field` that is related to this `Game`."""
+  field: Field
 
   """Reads and enables pagination through a set of `Team`."""
   teams(
@@ -630,8 +659,90 @@ type Game implements Node {
   ): [GameEventRecord!]!
 }
 
-"""The day, does not include a time."""
-scalar Date
+"""
+A point in time as described by the [ISO
+8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
+"""
+scalar Datetime
+
+type Field implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  name: String!
+  notes: String
+
+  """Reads and enables pagination through a set of `Game`."""
+  games(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Game`."""
+    orderBy: [GamesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameCondition
+  ): [Game!]!
+}
+
+"""Methods to use when ordering `Game`."""
+enum GamesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  FIELD_ID_ASC
+  FIELD_ID_DESC
+  SCORE_ASC
+  SCORE_DESC
+  GAME_LENGTH_ASC
+  GAME_LENGTH_DESC
+  TIME_STARTED_ASC
+  TIME_STARTED_DESC
+  TIME_ENDED_ASC
+  TIME_ENDED_DESC
+  TIME_SAVED_ASC
+  TIME_SAVED_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Game` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input GameCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `fieldId` field."""
+  fieldId: UUID
+
+  """Checks for equality with the object’s `score` field."""
+  score: [Int]
+
+  """Checks for equality with the object’s `gameLength` field."""
+  gameLength: Int
+
+  """Checks for equality with the object’s `timeStarted` field."""
+  timeStarted: Datetime
+
+  """Checks for equality with the object’s `timeEnded` field."""
+  timeEnded: Datetime
+
+  """Checks for equality with the object’s `timeSaved` field."""
+  timeSaved: Datetime
+}
 
 type Team implements Node {
   """
@@ -789,7 +900,9 @@ type Player implements Node {
   id: UUID!
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
 
   """Reads and enables pagination through a set of `LineupSpot`."""
   lineupSpots(
@@ -910,12 +1023,6 @@ type Player implements Node {
     condition: ScoredRunnerCondition
   ): [ScoredRunner!]!
 }
-
-"""
-A point in time as described by the [ISO
-8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
-"""
-scalar Datetime
 
 """Methods to use when ordering `LineupSpot`."""
 enum LineupSpotsOrderBy {
@@ -1544,46 +1651,31 @@ input TeamCondition {
   winner: Boolean
 }
 
-"""Methods to use when ordering `Game`."""
-enum GamesOrderBy {
+"""Methods to use when ordering `Field`."""
+enum FieldsOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
   NAME_ASC
   NAME_DESC
-  LOCATION_ASC
-  LOCATION_DESC
-  SCORE_ASC
-  SCORE_DESC
-  GAME_LENGTH_ASC
-  GAME_LENGTH_DESC
-  DATE_PLAYED_ASC
-  DATE_PLAYED_DESC
+  NOTES_ASC
+  NOTES_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `Game` object types. All fields are tested for equality and combined with a logical ‘and.’
+A condition to be used against `Field` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
-input GameCondition {
+input FieldCondition {
   """Checks for equality with the object’s `id` field."""
   id: UUID
 
   """Checks for equality with the object’s `name` field."""
   name: String
 
-  """Checks for equality with the object’s `location` field."""
-  location: String
-
-  """Checks for equality with the object’s `score` field."""
-  score: [Int]
-
-  """Checks for equality with the object’s `gameLength` field."""
-  gameLength: Int
-
-  """Checks for equality with the object’s `datePlayed` field."""
-  datePlayed: Date
+  """Checks for equality with the object’s `notes` field."""
+  notes: String
 }
 
 """Methods to use when ordering `GameEvent`."""
@@ -1666,8 +1758,12 @@ enum PlayersOrderBy {
   FIRST_NAME_DESC
   LAST_NAME_ASC
   LAST_NAME_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
+  NICKNAME_ASC
+  NICKNAME_DESC
+  IMAGE_URL_ASC
+  IMAGE_URL_DESC
+  TIME_CREATED_ASC
+  TIME_CREATED_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -1685,8 +1781,14 @@ input PlayerCondition {
   """Checks for equality with the object’s `lastName` field."""
   lastName: String
 
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
+  """Checks for equality with the object’s `nickname` field."""
+  nickname: String
+
+  """Checks for equality with the object’s `imageUrl` field."""
+  imageUrl: String
+
+  """Checks for equality with the object’s `timeCreated` field."""
+  timeCreated: Datetime
 }
 
 """
@@ -1708,6 +1810,14 @@ type Mutation {
     """
     input: CreateBasepathMovementInput!
   ): CreateBasepathMovementPayload
+
+  """Creates a single `Field`."""
+  createField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateFieldInput!
+  ): CreateFieldPayload
 
   """Creates a single `Game`."""
   createGame(
@@ -1856,6 +1966,22 @@ type Mutation {
     """
     input: UpdateBasepathMovementInput!
   ): UpdateBasepathMovementPayload
+
+  """Updates a single `Field` using its globally unique id and a patch."""
+  updateFieldByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFieldByNodeIdInput!
+  ): UpdateFieldPayload
+
+  """Updates a single `Field` using a unique key and a patch."""
+  updateField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateFieldInput!
+  ): UpdateFieldPayload
 
   """Updates a single `Game` using its globally unique id and a patch."""
   updateGameByNodeId(
@@ -2176,6 +2302,22 @@ type Mutation {
     """
     input: DeleteBasepathMovementInput!
   ): DeleteBasepathMovementPayload
+
+  """Deletes a single `Field` using its globally unique id."""
+  deleteFieldByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFieldByNodeIdInput!
+  ): DeleteFieldPayload
+
+  """Deletes a single `Field` using a unique key."""
+  deleteField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteFieldInput!
+  ): DeleteFieldPayload
 
   """Deletes a single `Game` using its globally unique id."""
   deleteGameByNodeId(
@@ -2683,10 +2825,160 @@ An object where the defined keys will be set on the `game` being updated.
 input updateGameOnGameStateForGameStateGameIdFkeyPatch {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `field` in the `GameInput` mutation."""
+input GameFieldIdFkeyInput {
+  """The primary key(s) for `field` for the far side of the relationship."""
+  connectById: FieldFieldPkeyConnect
+
+  """The primary key(s) for `field` for the far side of the relationship."""
+  connectByNodeId: FieldNodeIdConnect
+
+  """The primary key(s) for `field` for the far side of the relationship."""
+  deleteById: FieldFieldPkeyDelete
+
+  """The primary key(s) for `field` for the far side of the relationship."""
+  deleteByNodeId: FieldNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `field` for the far side of the relationship.
+  """
+  updateById: FieldOnGameForGameFieldIdFkeyUsingFieldPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `field` for the far side of the relationship.
+  """
+  updateByNodeId: GameOnGameForGameFieldIdFkeyNodeIdUpdate
+
+  """
+  A `FieldInput` object that will be created and connected to this object.
+  """
+  create: GameFieldIdFkeyFieldCreateInput
+}
+
+"""The fields on `field` to look up the row to connect."""
+input FieldFieldPkeyConnect {
+  id: UUID!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input FieldNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `field` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `field` to look up the row to delete."""
+input FieldFieldPkeyDelete {
+  id: UUID!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input FieldNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `field` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `field` to look up the row to update."""
+input FieldOnGameForGameFieldIdFkeyUsingFieldPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `field` being updated.
+  """
+  patch: updateFieldOnGameForGameFieldIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `field` being updated.
+"""
+input updateFieldOnGameForGameFieldIdFkeyPatch {
+  id: UUID
+  name: String
+  notes: String
+  games: GameFieldIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `game` in the `FieldInput` mutation."""
+input GameFieldIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `game` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectById: [GameGamePkeyConnect!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByName: [GameGameNameKeyConnect!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByNodeId: [GameNodeIdConnect!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteById: [GameGamePkeyDelete!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByName: [GameGameNameKeyDelete!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByNodeId: [GameNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateById: [GameOnGameForGameFieldIdFkeyUsingGamePkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByName: [GameOnGameForGameFieldIdFkeyUsingGameNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByNodeId: [FieldOnGameForGameFieldIdFkeyNodeIdUpdate!]
+
+  """
+  A `GameInput` object that will be created and connected to this object.
+  """
+  create: [GameFieldIdFkeyGameCreateInput!]
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnGameForGameFieldIdFkeyUsingGamePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameForGameFieldIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `game` being updated.
+"""
+input updateGameOnGameForGameFieldIdFkeyPatch {
+  id: UUID
+  name: String
+  score: [Int]
+  gameLength: Int
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -2853,10 +3145,13 @@ An object where the defined keys will be set on the `game` being updated.
 input updateGameOnTeamForTeamGameIdFkeyPatch {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -3032,7 +3327,9 @@ input updatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -3544,7 +3841,9 @@ input updatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -3862,7 +4161,9 @@ input updatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -4150,7 +4451,9 @@ input updatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -4309,7 +4612,9 @@ input updatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -4544,7 +4849,9 @@ input updatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -4921,10 +5228,13 @@ An object where the defined keys will be set on the `game` being updated.
 input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -6310,7 +6620,9 @@ input updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -6350,7 +6662,9 @@ input PlayerPatch {
   id: UUID
   firstName: String
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -6365,7 +6679,9 @@ input ScoredRunnerRunnerIdFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7262,10 +7578,13 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
 input GamePatch {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -7275,10 +7594,13 @@ input GamePatch {
 input GameEventRecordGameIdFkeyGameCreateInput {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]!
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -7371,7 +7693,9 @@ input BaseRunnerRunnerIdFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7460,7 +7784,9 @@ input StolenBaseAttemptRunnerIdFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7519,7 +7845,9 @@ input OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7632,7 +7960,9 @@ input BasepathMovementRunnerIdFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7751,7 +8081,9 @@ input LineupSpotPlayerIdFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7977,7 +8309,9 @@ input GameStatePlayerAtBatFkeyPlayerCreateInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8043,10 +8377,13 @@ input TeamOnTeamForTeamGameIdFkeyNodeIdUpdate {
 input TeamGameIdFkeyGameCreateInput {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]!
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -8086,6 +8423,74 @@ input TeamGameIdFkeyTeamCreateInput {
 }
 
 """The fields on `game` to look up the row to update."""
+input GameOnGameForGameFieldIdFkeyUsingGameNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameForGameFieldIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input FieldOnGameForGameFieldIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: GamePatch!
+}
+
+"""The `game` to be created by this mutation."""
+input GameFieldIdFkeyGameCreateInput {
+  id: UUID
+  name: String
+  score: [Int]!
+  gameLength: Int
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameOnGameForGameFieldIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `field` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `field` being updated.
+  """
+  patch: FieldPatch!
+}
+
+"""
+Represents an update to a `Field`. Fields that are set will be updated.
+"""
+input FieldPatch {
+  id: UUID
+  name: String
+  notes: String
+  games: GameFieldIdFkeyInverseInput
+}
+
+"""The `field` to be created by this mutation."""
+input GameFieldIdFkeyFieldCreateInput {
+  id: UUID
+  name: String!
+  notes: String
+  games: GameFieldIdFkeyInverseInput
+}
+
+"""The fields on `game` to look up the row to update."""
 input GameOnGameStateForGameStateGameIdFkeyUsingGameNameKeyUpdate {
   """
   An object where the defined keys will be set on the `game` being updated.
@@ -8111,10 +8516,13 @@ input GameStateOnGameStateForGameStateGameIdFkeyNodeIdUpdate {
 input GameStateGameIdFkeyGameCreateInput {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]!
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -8198,6 +8606,43 @@ input BasepathMovementInput {
   player: BasepathMovementRunnerIdFkeyInput
 }
 
+"""The output of our create `Field` mutation."""
+type CreateFieldPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Field` that was created by this mutation."""
+  field: Field
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `Field` mutation."""
+input CreateFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Field` to be created by this mutation."""
+  field: FieldInput!
+}
+
+"""An input for mutations affecting `Field`"""
+input FieldInput {
+  id: UUID
+  name: String!
+  notes: String
+  games: GameFieldIdFkeyInverseInput
+}
+
 """The output of our create `Game` mutation."""
 type CreateGamePayload {
   """
@@ -8213,6 +8658,9 @@ type CreateGamePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Field` that is related to this `Game`."""
+  field: Field
 }
 
 """All input for the create `Game` mutation."""
@@ -8231,10 +8679,13 @@ input CreateGameInput {
 input GameInput {
   id: UUID
   name: String
-  location: String
+  fieldId: UUID
   score: [Int]!
   gameLength: Int
-  datePlayed: Date
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
@@ -8698,7 +9149,9 @@ input PlayerInput {
   id: UUID
   firstName: String!
   lastName: String
-  createdAt: Datetime
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8956,6 +9409,57 @@ input UpdateBasepathMovementInput {
   runnerId: UUID!
 }
 
+"""The output of our update `Field` mutation."""
+type UpdateFieldPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Field` that was updated by this mutation."""
+  field: Field
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateFieldByNodeId` mutation."""
+input UpdateFieldByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Field` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Field` being updated.
+  """
+  patch: FieldPatch!
+}
+
+"""All input for the `updateField` mutation."""
+input UpdateFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Field` being updated.
+  """
+  patch: FieldPatch!
+  id: UUID!
+}
+
 """The output of our update `Game` mutation."""
 type UpdateGamePayload {
   """
@@ -8971,6 +9475,9 @@ type UpdateGamePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Field` that is related to this `Game`."""
+  field: Field
 }
 
 """All input for the `updateGameByNodeId` mutation."""
@@ -9947,6 +10454,48 @@ input DeleteBasepathMovementInput {
   runnerId: UUID!
 }
 
+"""The output of our delete `Field` mutation."""
+type DeleteFieldPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Field` that was deleted by this mutation."""
+  field: Field
+  deletedFieldNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteFieldByNodeId` mutation."""
+input DeleteFieldByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Field` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteField` mutation."""
+input DeleteFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
 """The output of our delete `Game` mutation."""
 type DeleteGamePayload {
   """
@@ -9963,6 +10512,9 @@ type DeleteGamePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Field` that is related to this `Game`."""
+  field: Field
 }
 
 """All input for the `deleteGameByNodeId` mutation."""
