@@ -1,0 +1,9 @@
+query GetLatestGameSummary {
+  games(orderBy: TIME_STARTED_DESC, first: 1) {
+    id
+    timeStarted
+    timeEnded
+    score
+    gameLength
+  }
+}

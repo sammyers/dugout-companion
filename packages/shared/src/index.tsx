@@ -8775,6 +8775,119 @@ export type GetGameQuery = (
   )> }
 );
 
+export type GetAllGameSummariesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllGameSummariesQuery = (
+  { __typename?: 'Query' }
+  & { games: Maybe<Array<(
+    { __typename?: 'Game' }
+    & Pick<Game, 'id' | 'name' | 'timeStarted' | 'timeEnded' | 'score'>
+  )>> }
+);
+
+export type GetGameLogQueryVariables = Exact<{
+  id: Scalars['UUID'];
+}>;
+
+
+export type GetGameLogQuery = (
+  { __typename?: 'Query' }
+  & { game: Maybe<(
+    { __typename?: 'Game' }
+    & Pick<Game, 'id' | 'gameLength' | 'name' | 'score' | 'timeStarted' | 'timeEnded'>
+    & { gameStates: Array<(
+      { __typename?: 'GameState' }
+      & Pick<GameState, 'id' | 'inning' | 'halfInning' | 'outs' | 'score'>
+      & { playerByPlayerAtBat: Maybe<(
+        { __typename?: 'Player' }
+        & Pick<Player, 'id' | 'firstName' | 'lastName'>
+      )>, lineups: Maybe<Array<Maybe<(
+        { __typename?: 'Lineup' }
+        & Pick<Lineup, 'id'>
+        & { team: Maybe<(
+          { __typename?: 'Team' }
+          & Pick<Team, 'role'>
+        )> }
+      )>>>, baseRunners: Array<(
+        { __typename?: 'BaseRunner' }
+        & Pick<BaseRunner, 'base'>
+        & { runner: Maybe<(
+          { __typename?: 'Player' }
+          & Pick<Player, 'id' | 'firstName' | 'lastName'>
+        )> }
+      )> }
+    )>, gameEventRecords: Array<(
+      { __typename?: 'GameEventRecord' }
+      & Pick<GameEventRecord, 'eventIndex' | 'gameStateBeforeId' | 'gameStateAfterId'>
+      & { gameEvent: Maybe<(
+        { __typename?: 'GameEvent' }
+        & { lineupChange: Maybe<(
+          { __typename?: 'LineupChange' }
+          & Pick<LineupChange, 'lineupBeforeId' | 'lineupAfterId'>
+        )>, stolenBaseAttempt: Maybe<(
+          { __typename?: 'StolenBaseAttempt' }
+          & Pick<StolenBaseAttempt, 'success'>
+          & { runner: Maybe<(
+            { __typename?: 'Player' }
+            & Pick<Player, 'id' | 'firstName' | 'lastName'>
+          )> }
+        )>, plateAppearance: Maybe<(
+          { __typename?: 'PlateAppearance' }
+          & Pick<PlateAppearance, 'type' | 'contact' | 'fieldedBy' | 'runsScoredOnSacFly'>
+          & { outOnPlayRunners: Array<(
+            { __typename?: 'OutOnPlayRunner' }
+            & Pick<OutOnPlayRunner, 'runnerId'>
+          )>, basepathMovements: Array<(
+            { __typename?: 'BasepathMovement' }
+            & Pick<BasepathMovement, 'runnerId' | 'endBase' | 'wasSafe'>
+          )> }
+        )> }
+      )>, scoredRunners: Array<(
+        { __typename?: 'ScoredRunner' }
+        & Pick<ScoredRunner, 'battedIn'>
+        & { runner: Maybe<(
+          { __typename?: 'Player' }
+          & Pick<Player, 'id' | 'firstName' | 'lastName'>
+        )> }
+      )>, gameStateBefore: Maybe<(
+        { __typename?: 'GameState' }
+        & Pick<GameState, 'inning' | 'halfInning'>
+        & { playerByPlayerAtBat: Maybe<(
+          { __typename?: 'Player' }
+          & Pick<Player, 'id' | 'firstName' | 'lastName'>
+        )> }
+      )> }
+    )>, teams: Array<(
+      { __typename?: 'Team' }
+      & Pick<Team, 'name' | 'role' | 'winner'>
+      & { lineups: Array<(
+        { __typename?: 'Lineup' }
+        & Pick<Lineup, 'id'>
+        & { lineupSpots: Array<(
+          { __typename?: 'LineupSpot' }
+          & Pick<LineupSpot, 'position'>
+          & { player: Maybe<(
+            { __typename?: 'Player' }
+            & Pick<Player, 'id' | 'firstName' | 'lastName'>
+          )> }
+        )> }
+      )> }
+    )> }
+  )> }
+);
+
+export type GetLatestGameSummaryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLatestGameSummaryQuery = (
+  { __typename?: 'Query' }
+  & { games: Maybe<Array<(
+    { __typename?: 'Game' }
+    & Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score' | 'gameLength'>
+  )>> }
+);
+
 export const GameEventRecord_GameStateFragmentDoc = gql`
     fragment GameEventRecord_GameState on GameState {
   inning
@@ -9040,3 +9153,205 @@ export function useGetGameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetGameQueryHookResult = ReturnType<typeof useGetGameQuery>;
 export type GetGameLazyQueryHookResult = ReturnType<typeof useGetGameLazyQuery>;
 export type GetGameQueryResult = Apollo.QueryResult<GetGameQuery, GetGameQueryVariables>;
+export const GetAllGameSummariesDocument = gql`
+    query GetAllGameSummaries {
+  games(orderBy: TIME_STARTED_DESC) {
+    id
+    name
+    timeStarted
+    timeEnded
+    score
+  }
+}
+    `;
+
+/**
+ * __useGetAllGameSummariesQuery__
+ *
+ * To run a query within a React component, call `useGetAllGameSummariesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllGameSummariesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllGameSummariesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllGameSummariesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>) {
+        return Apollo.useQuery<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>(GetAllGameSummariesDocument, baseOptions);
+      }
+export function useGetAllGameSummariesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>(GetAllGameSummariesDocument, baseOptions);
+        }
+export type GetAllGameSummariesQueryHookResult = ReturnType<typeof useGetAllGameSummariesQuery>;
+export type GetAllGameSummariesLazyQueryHookResult = ReturnType<typeof useGetAllGameSummariesLazyQuery>;
+export type GetAllGameSummariesQueryResult = Apollo.QueryResult<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>;
+export const GetGameLogDocument = gql`
+    query GetGameLog($id: UUID!) {
+  game(id: $id) {
+    id
+    gameLength
+    name
+    score
+    timeStarted
+    timeEnded
+    gameStates(orderBy: GAME_STATE_INDEX_ASC) {
+      id
+      inning
+      halfInning
+      outs
+      playerByPlayerAtBat {
+        id
+        firstName
+        lastName
+      }
+      score
+      lineups {
+        id
+        team {
+          role
+        }
+      }
+      baseRunners {
+        runner {
+          id
+          firstName
+          lastName
+        }
+        base
+      }
+    }
+    gameEventRecords(orderBy: EVENT_INDEX_ASC) {
+      eventIndex
+      gameEvent {
+        lineupChange {
+          lineupBeforeId
+          lineupAfterId
+        }
+        stolenBaseAttempt {
+          runner {
+            id
+            firstName
+            lastName
+          }
+          success
+        }
+        plateAppearance {
+          type
+          contact
+          fieldedBy
+          outOnPlayRunners {
+            runnerId
+          }
+          basepathMovements {
+            runnerId
+            endBase
+            wasSafe
+          }
+          runsScoredOnSacFly
+        }
+      }
+      scoredRunners {
+        runner {
+          id
+          firstName
+          lastName
+        }
+        battedIn
+      }
+      gameStateBeforeId
+      gameStateBefore {
+        inning
+        halfInning
+        playerByPlayerAtBat {
+          id
+          firstName
+          lastName
+        }
+      }
+      gameStateAfterId
+    }
+    teams {
+      name
+      role
+      lineups {
+        id
+        lineupSpots(orderBy: BATTING_ORDER_ASC) {
+          player {
+            id
+            firstName
+            lastName
+          }
+          position
+        }
+      }
+      winner
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetGameLogQuery__
+ *
+ * To run a query within a React component, call `useGetGameLogQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGameLogQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGameLogQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetGameLogQuery(baseOptions: Apollo.QueryHookOptions<GetGameLogQuery, GetGameLogQueryVariables>) {
+        return Apollo.useQuery<GetGameLogQuery, GetGameLogQueryVariables>(GetGameLogDocument, baseOptions);
+      }
+export function useGetGameLogLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGameLogQuery, GetGameLogQueryVariables>) {
+          return Apollo.useLazyQuery<GetGameLogQuery, GetGameLogQueryVariables>(GetGameLogDocument, baseOptions);
+        }
+export type GetGameLogQueryHookResult = ReturnType<typeof useGetGameLogQuery>;
+export type GetGameLogLazyQueryHookResult = ReturnType<typeof useGetGameLogLazyQuery>;
+export type GetGameLogQueryResult = Apollo.QueryResult<GetGameLogQuery, GetGameLogQueryVariables>;
+export const GetLatestGameSummaryDocument = gql`
+    query GetLatestGameSummary {
+  games(orderBy: TIME_STARTED_DESC, first: 1) {
+    id
+    timeStarted
+    timeEnded
+    score
+    gameLength
+  }
+}
+    `;
+
+/**
+ * __useGetLatestGameSummaryQuery__
+ *
+ * To run a query within a React component, call `useGetLatestGameSummaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLatestGameSummaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLatestGameSummaryQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLatestGameSummaryQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>) {
+        return Apollo.useQuery<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>(GetLatestGameSummaryDocument, baseOptions);
+      }
+export function useGetLatestGameSummaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>) {
+          return Apollo.useLazyQuery<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>(GetLatestGameSummaryDocument, baseOptions);
+        }
+export type GetLatestGameSummaryQueryHookResult = ReturnType<typeof useGetLatestGameSummaryQuery>;
+export type GetLatestGameSummaryLazyQueryHookResult = ReturnType<typeof useGetLatestGameSummaryLazyQuery>;
+export type GetLatestGameSummaryQueryResult = Apollo.QueryResult<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>;

@@ -1,0 +1,102 @@
+query GetGameLog($id: UUID!) {
+  game(id: $id) {
+    id
+    gameLength
+    name
+    score
+    timeStarted
+    timeEnded
+    gameStates(orderBy: GAME_STATE_INDEX_ASC) {
+      id
+      inning
+      halfInning
+      outs
+      playerByPlayerAtBat {
+        id
+        firstName
+        lastName
+      }
+      score
+      lineups {
+        id
+        team {
+          role
+        }
+      }
+      baseRunners {
+        runner {
+          id
+          firstName
+          lastName
+        }
+        base
+      }
+    }
+    gameEventRecords(orderBy: EVENT_INDEX_ASC) {
+      eventIndex
+      gameEvent {
+        lineupChange {
+          lineupBeforeId
+          lineupAfterId
+        }
+        stolenBaseAttempt {
+          runner {
+            id
+            firstName
+            lastName
+          }
+          success
+        }
+        plateAppearance {
+          type
+          contact
+          fieldedBy
+          outOnPlayRunners {
+            runnerId
+          }
+          basepathMovements {
+            runnerId
+            endBase
+            wasSafe
+          }
+          runsScoredOnSacFly
+        }
+      }
+      scoredRunners {
+        runner {
+          id
+          firstName
+          lastName
+        }
+        battedIn
+      }
+      gameStateBeforeId
+      gameStateBefore {
+        inning
+        halfInning
+        playerByPlayerAtBat {
+          id
+          firstName
+          lastName
+        }
+      }
+      gameStateAfterId
+    }
+    teams {
+      name
+      role
+      lineups {
+        id
+        lineupSpots(orderBy: BATTING_ORDER_ASC) {
+          player {
+            id
+            firstName
+            lastName
+          }
+          position
+        }
+      }
+      winner
+    }
+  }
+}

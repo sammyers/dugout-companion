@@ -1,0 +1,9 @@
+query GetAllGameSummaries {
+  games(orderBy: TIME_STARTED_DESC) {
+    id
+    name
+    timeStarted
+    timeEnded
+    score
+  }
+}
