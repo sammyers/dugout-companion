@@ -58,6 +58,7 @@ const RunnerOptionGroup: FC<RunnerOptionGroupProps> = ({ runnerId, base, options
               }
             : {
                 label: 'Held',
+                color: 'neutral-3',
               })}
         />
       ))}

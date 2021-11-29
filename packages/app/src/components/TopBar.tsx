@@ -31,7 +31,7 @@ const TopBar = () => {
   const toggleSettings = useCallback(() => setShowSettings(show => !show), [setShowSettings]);
 
   return (
-    <Header background="brand">
+    <Header background="neutral-5">
       <Nav direction="row" pad="medium">
         <AnchorLink to="/teams">Teams</AnchorLink>
         {gameInProgress && <AnchorLink to="/box-score">Box Score</AnchorLink>}
@@ -41,7 +41,7 @@ const TopBar = () => {
       <Box direction="row" margin={{ right: 'small' }}>
         {gameInProgress && (
           <Box alignSelf="center" margin={{ right: 'medium' }}>
-            <BasesPreview bases={runners} color="light-1" />
+            <BasesPreview bases={runners} color="accent-4" />
           </Box>
         )}
         {gameInProgress ? (

@@ -3,15 +3,18 @@ import { Blank, IconProps } from 'grommet-icons';
 
 import { BaseType } from '@sammyers/dc-shared';
 import { BaseRunnerMap } from 'state/game/types';
+import theme from 'theme';
 
 interface Props {
   bases: BaseRunnerMap;
 }
 
 const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
+  const occupiedColor = theme.global!.colors!['accent-4'] as string;
+  console.log(occupiedColor);
   const { [BaseType.FIRST]: first, [BaseType.SECOND]: second, [BaseType.THIRD]: third } = bases;
   return (
-    <Blank size="large" {...props}>
+    <Blank size="large" {...props} fill={occupiedColor}>
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -41,7 +44,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
               <use
                 xlinkHref="#aqb5ZIsm9"
                 opacity="1"
-                fill="#000000"
+                fill={first ? occupiedColor : '#000000'}
                 fillOpacity={first ? '1' : '0'}
               />
               <g clipPath="url(#clipa6tqurtbA)">

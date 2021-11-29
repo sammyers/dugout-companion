@@ -13,7 +13,7 @@ import { PlateAppearanceType } from '@sammyers/dc-shared';
 
 const buttonGroups = [
   {
-    color: 'neutral-4',
+    color: 'status-critical',
     types: [
       PlateAppearanceType.OUT,
       PlateAppearanceType.FIELDERS_CHOICE,
@@ -21,7 +21,7 @@ const buttonGroups = [
     ],
   },
   {
-    color: 'neutral-3',
+    color: 'status-ok',
     types: [
       PlateAppearanceType.SINGLE,
       PlateAppearanceType.DOUBLE,
@@ -30,7 +30,7 @@ const buttonGroups = [
     ],
   },
   {
-    color: 'neutral-1',
+    color: 'neutral-3',
     types: [PlateAppearanceType.WALK, PlateAppearanceType.SACRIFICE_FLY],
   },
 ];
@@ -58,6 +58,7 @@ const EventReporter = () => {
               <Button
                 key={paType}
                 color={color}
+                primary
                 label={getPlateAppearanceLabel(paType)}
                 onClick={handleClickPlateAppearance(paType)}
                 margin="small"

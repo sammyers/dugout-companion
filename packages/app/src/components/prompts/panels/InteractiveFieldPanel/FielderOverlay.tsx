@@ -58,7 +58,7 @@ const FielderOverlay: FC<FielderOptions> = ({ options }) => {
             key={position}
             primary
             size="small"
-            color={selectedOption?.position === position ? 'brand' : 'white'}
+            color={selectedOption?.position === position ? 'neutral-5' : 'white'}
             label={getPositionAbbreviation(position)}
             style={{
               position: 'absolute',

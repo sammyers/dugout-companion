@@ -67,7 +67,7 @@ const Plays = () => {
                 justify="center"
                 align="center"
                 hoverIndicator={!(inning === selectedInning)}
-                background={inning === selectedInning ? 'brand' : undefined}
+                background={inning === selectedInning ? 'accent-3' : undefined}
                 onClick={selectInning(inning)}
               >
                 <Text>{inning}</Text>

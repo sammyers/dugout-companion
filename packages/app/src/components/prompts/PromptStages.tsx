@@ -83,7 +83,7 @@ const PromptStages = () => {
         direction="row"
         justify="between"
         align="center"
-        background="brand"
+        background="neutral-5"
         pad="small"
         round="4px"
       >

@@ -14,7 +14,7 @@ interface Props {
   selectedBase?: BaseType | null;
 }
 
-const brandColor = theme.global!.colors!.brand as string;
+const mainColor = theme.global!.colors!['neutral-5'] as string;
 const bases = [..._.values(BaseType), null];
 
 const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
@@ -53,7 +53,7 @@ const FieldGraphic: FC<Props> = ({ runnerMode, runners, selectedBase }) => {
           runnerMode: {
             translateY: -96,
             scale: 2,
-            stroke: brandColor,
+            stroke: mainColor,
           },
         }}
       >

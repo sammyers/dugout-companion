@@ -11,15 +11,15 @@ const PlayTypeTag: FC<{ type: PlateAppearanceType }> = ({ type }) => {
   let background = '';
   switch (type) {
     case PlateAppearanceType.WALK:
-      background = 'neutral-1';
+      background = 'neutral-3';
       break;
     case PlateAppearanceType.OUT:
     case PlateAppearanceType.FIELDERS_CHOICE:
     case PlateAppearanceType.DOUBLE_PLAY:
-      background = 'neutral-4';
+      background = 'status-critical';
       break;
     default:
-      background = 'neutral-3';
+      background = 'status-ok';
       break;
   }
   return (

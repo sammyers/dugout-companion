@@ -24,7 +24,11 @@ import { ReactComponent as HomeIcon } from 'graphics/home.svg';
 import PlayNotification from './PlayNotification';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (
-  <Blank size="large" color={occupied ? 'brand' : undefined} fillOpacity={occupied ? 1 : undefined}>
+  <Blank
+    size="large"
+    color={occupied ? 'accent-4' : undefined}
+    fillOpacity={occupied ? 1 : undefined}
+  >
     <BaseIcon />
   </Blank>
 );
@@ -107,7 +111,13 @@ const Bases = () => {
         </Grid>
         {boxRef.current && <PlayNotification target={boxRef.current} />}
       </Box>
-      <Box border={{ side: 'top' }} direction="row" justify="around" pad="medium">
+      <Box
+        border={{ side: 'top' }}
+        direction="row"
+        justify="around"
+        pad="medium"
+        background="neutral-5"
+      >
         <Box direction="row" gap="small">
           <Text>On Deck</Text>
           <Text weight="bold">{onDeck}</Text>

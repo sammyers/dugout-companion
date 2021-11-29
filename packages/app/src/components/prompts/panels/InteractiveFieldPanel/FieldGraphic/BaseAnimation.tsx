@@ -8,7 +8,7 @@ interface Props {
   color?: string;
 }
 
-const BaseAnimation: FC<Props> = ({ color = 'brand' }) => (
+const BaseAnimation: FC<Props> = ({ color = 'neutral-3' }) => (
   <animate
     attributeName="fill"
     values={`white; ${colors[color]}; white`}

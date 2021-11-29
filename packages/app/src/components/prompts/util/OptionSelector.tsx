@@ -106,7 +106,7 @@ const OptionSelector = <T extends any>({
             key={key}
             flex
             width={typeof label === 'string' && label.length < 4 ? 'xxsmall' : 'xsmall'}
-            background={selected ? 'brand' : undefined}
+            background={selected ? 'neutral-5' : undefined}
             hoverIndicator={!selected}
             pad="small"
             align="center"

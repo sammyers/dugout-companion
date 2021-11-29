@@ -91,7 +91,7 @@ const Teams = () => {
                 />,
               ]
             ) : (
-              <Button primary plain={false} icon={<Edit />} onClick={onEdit} />
+              <Button primary plain={false} color="accent-3" icon={<Edit />} onClick={onEdit} />
             )
           ) : (
             <Button plain={false} icon={<Transaction />} onClick={handleFlipTeams} />

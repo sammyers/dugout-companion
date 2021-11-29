@@ -18,7 +18,7 @@ interface Props {
   active?: boolean;
 }
 
-const brandColor = theme.global!.colors!.brand as string;
+const mainColor = theme.global!.colors!['neutral-3'] as string;
 
 const getAnimationColor = (outcome?: BasepathOutcome) => {
   if (outcome?.attemptedAdvance) {
@@ -51,13 +51,13 @@ const Base: FC<Props> = ({ base, runnerMode, occupied, active }) => {
       }}
     >
       <path
-        fill={base && occupied ? brandColor : 'white'}
+        fill={base && occupied ? mainColor : 'white'}
         d={
           base
             ? 'm 0,0 l 4.2499 4.2499 l -4.2499 4.2513 l -4.2513 -4.2513 l 4.2513 -4.2499 z'
             : 'M 0,0 l -2.872 2.872 l -2.828 -2.829 l 0 -2.871 l 5.7 0 l 0 2.828 z'
         }
-        style={{ stroke: runnerMode ? brandColor : 'black' }}
+        style={{ stroke: runnerMode ? mainColor : 'black' }}
         vectorEffect="non-scaling-stroke"
       >
         {active && <BaseAnimation color={getAnimationColor(selected)} />}

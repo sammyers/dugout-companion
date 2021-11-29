@@ -57,7 +57,7 @@ const PrimaryPromptNav = () => {
   if (currentStage === PromptUiStage.RUNNERS && showPreviousRunner) {
     secondary = (
       <Button
-        color="light-4"
+        color="neutral-3"
         size="small"
         label="Previous Runner"
         onClick={handleClickPreviousRunner}
