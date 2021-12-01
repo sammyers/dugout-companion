@@ -3,10 +3,10 @@ import { Header, Nav, Button, Box, Drop } from 'grommet';
 import { SettingsOption } from 'grommet-icons';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
+import { BasesPreview } from '@sammyers/dc-shared';
 import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
 import SettingsMenu from './SettingsMenu';
-import BasesPreview from './icons/BasesPreview';
 
 import { canStartGame, getRunnerNames, isGameInProgress } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
@@ -41,7 +41,7 @@ const TopBar = () => {
       <Box direction="row" margin={{ right: 'small' }}>
         {gameInProgress && (
           <Box alignSelf="center" margin={{ right: 'medium' }}>
-            <BasesPreview bases={runners} color="accent-4" />
+            <BasesPreview bases={runners} />
           </Box>
         )}
         {gameInProgress ? (

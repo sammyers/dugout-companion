@@ -4,9 +4,7 @@ import { StatusGood, WifiNone } from 'grommet-icons';
 import _ from 'lodash';
 import { useStore } from 'react-redux';
 
-import { useCreateGameMutation, useCreatePlayerMutation } from '@sammyers/dc-shared';
-
-import Spinner from './icons/Spinner';
+import { Spinner, useCreateGameMutation, useCreatePlayerMutation } from '@sammyers/dc-shared';
 
 import { getGameForMutation, wasGameSaved } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';

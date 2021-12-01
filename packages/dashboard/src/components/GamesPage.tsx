@@ -1,8 +1,9 @@
 import React from "react";
-import { Box, Button, List, Text } from "grommet";
-import { useGetAllGameSummariesQuery } from "@sammyers/dc-shared";
 import { format, parseISO } from "date-fns";
+import { Box, Button, List, Text } from "grommet";
 import { useNavigate } from "react-router";
+
+import { useGetAllGameSummariesQuery } from "@sammyers/dc-shared";
 
 const GamesPage = () => {
   const navigate = useNavigate();

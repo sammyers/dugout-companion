@@ -1,5 +1,6 @@
-import React, { FC, useCallback, useMemo, useState } from "react";
+import React, { FC, useCallback, useState } from "react";
 import { Box, Button, Collapsible, List, Text } from "grommet";
+import { FormDown, FormNext } from "grommet-icons";
 import _ from "lodash";
 import { useParams } from "react-router";
 
@@ -8,7 +9,6 @@ import {
   PlateAppearanceType,
   useGetGameLogQuery,
 } from "@sammyers/dc-shared";
-import { FormDown, FormNext } from "grommet-icons";
 
 const getPlateAppearanceLabel = (paType: PlateAppearanceType) =>
   ({

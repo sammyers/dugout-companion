@@ -1,20 +1,26 @@
 import React, { FC } from 'react';
-import { Blank, IconProps } from 'grommet-icons';
 
-import { BaseType } from '@sammyers/dc-shared';
-import { BaseRunnerMap } from 'state/game/types';
-import theme from 'theme';
+import { useColor } from '../hooks';
+
+import { BaseType } from '../gql';
 
 interface Props {
-  bases: BaseRunnerMap;
+  bases: Partial<Record<BaseType, string>>;
+  occupiedColor?: string;
+  unoccupiedColor?: string;
 }
 
-const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
-  const occupiedColor = theme.global!.colors!['accent-4'] as string;
-  console.log(occupiedColor);
+const BasesPreview: FC<Props> = ({ bases, occupiedColor, unoccupiedColor }) => {
+  const unoccupiedColorHex = useColor(unoccupiedColor ?? 'light-6');
+  const occupiedColorHex = useColor(occupiedColor ?? 'accent-4');
+
   const { [BaseType.FIRST]: first, [BaseType.SECOND]: second, [BaseType.THIRD]: third } = bases;
+
+  const getBaseColor = (baseOccupant: string | undefined) =>
+    baseOccupant ? occupiedColorHex : unoccupiedColorHex;
+
   return (
-    <Blank size="large" {...props} fill={occupiedColor}>
+    <svg style={{ width: '48px', height: '48px' }} viewBox="0 0 24 24">
       <svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -44,7 +50,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
               <use
                 xlinkHref="#aqb5ZIsm9"
                 opacity="1"
-                fill={first ? occupiedColor : '#000000'}
+                fill={getBaseColor(first)}
                 fillOpacity={first ? '1' : '0'}
               />
               <g clipPath="url(#clipa6tqurtbA)">
@@ -52,7 +58,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
                   xlinkHref="#aqb5ZIsm9"
                   opacity="1"
                   fillOpacity="0"
-                  stroke="#000000"
+                  stroke={getBaseColor(first)}
                   strokeWidth="2"
                   strokeOpacity="1"
                 />
@@ -62,7 +68,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
               <use
                 xlinkHref="#a1RZhYfL4q"
                 opacity="1"
-                fill="#000000"
+                fill={getBaseColor(second)}
                 fillOpacity={second ? '1' : '0'}
               />
               <g clipPath="url(#clipg3BqRYPvvE)">
@@ -70,7 +76,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
                   xlinkHref="#a1RZhYfL4q"
                   opacity="1"
                   fillOpacity="0"
-                  stroke="#000000"
+                  stroke={getBaseColor(second)}
                   strokeWidth="2"
                   strokeOpacity="1"
                 />
@@ -80,7 +86,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
               <use
                 xlinkHref="#bosriBPNJ"
                 opacity="1"
-                fill="#000000"
+                fill={getBaseColor(third)}
                 fillOpacity={third ? '1' : '0'}
               />
               <g clipPath="url(#cliph2h312r3G7)">
@@ -88,7 +94,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
                   xlinkHref="#bosriBPNJ"
                   opacity="1"
                   fillOpacity="0"
-                  stroke="#000000"
+                  stroke={getBaseColor(third)}
                   strokeWidth="2"
                   strokeOpacity="1"
                 />
@@ -97,7 +103,7 @@ const BasesPreview: FC<IconProps & Props> = ({ bases, ...props }) => {
           </g>
         </g>
       </svg>
-    </Blank>
+    </svg>
   );
 };
 
