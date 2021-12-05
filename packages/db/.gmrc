@@ -63,7 +63,11 @@
    */
   "placeholders": {
     ":DATABASE_VISITOR": "!ENV", // Uses process.env.DATABASE_VISITOR
-    ":DATABASE_AUTHENTICATOR": "!ENV"
+    ":DATABASE_AUTHENTICATOR": "!ENV",
+    ":LEGACY_DB_USER": "!ENV",
+    ":LEGACY_DB_PASS": "!ENV",
+    ":LEGACY_DB_NAME": "!ENV",
+    ":LEGACY_DB_HOST": "!ENV"
   },
 
   /*

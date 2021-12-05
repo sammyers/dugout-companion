@@ -1,0 +1,19 @@
+query GetBoxScore($gameId: UUID!) {
+  game(id: $gameId) {
+    boxScore {
+      playerId
+      plateAppearances
+      atBats
+      hits
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      runs
+      rbi
+    }
+  }
+}

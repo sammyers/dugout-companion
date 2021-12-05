@@ -1,0 +1,25 @@
+query GetAllPlayerStats($beforeDate: Datetime, $afterDate: Datetime) {
+  players {
+    id
+    fullName
+    traditionalStats(beforeDate: $beforeDate, afterDate: $afterDate) {
+      games
+      plateAppearances
+      atBats
+      hits
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      runs
+      rbi
+      battingAverage
+      onBasePct
+      sluggingPct
+      ops
+    }
+  }
+}

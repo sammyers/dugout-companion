@@ -1,0 +1,10 @@
+query GetLineScore($gameId: UUID!) {
+  game(id: $gameId) {
+    lineScore {
+      inning
+      halfInning
+      hits
+      runs
+    }
+  }
+}

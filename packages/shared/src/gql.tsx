@@ -432,6 +432,7 @@ export type BasepathMovementPlateAppearanceIdFkeyPlateAppearanceCreateInput = {
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -1877,6 +1878,10 @@ export type Game = Node & {
   gameStates: Array<GameState>;
   /** Reads and enables pagination through a set of `GameEventRecord`. */
   gameEventRecords: Array<GameEventRecord>;
+  /** Reads and enables pagination through a set of `TraditionalStatLine`. */
+  boxScore: Maybe<Array<Maybe<TraditionalStatLine>>>;
+  /** Reads and enables pagination through a set of `LineScoreCell`. */
+  lineScore: Maybe<Array<Maybe<LineScoreCell>>>;
 };
 
 
@@ -1901,6 +1906,18 @@ export type GameGameEventRecordsArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<GameEventRecordsOrderBy>>;
   condition?: Maybe<GameEventRecordCondition>;
+};
+
+
+export type GameBoxScoreArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
+export type GameLineScoreArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
 };
 
 /** A condition to be used against `Game` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -2184,6 +2201,7 @@ export type GameEventPlateAppearanceIdFkeyPlateAppearanceCreateInput = {
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -2199,6 +2217,7 @@ export type GameEventRecord = Node & {
   gameStateBeforeId: Scalars['UUID'];
   gameStateAfterId: Scalars['UUID'];
   gameEventId: Scalars['UUID'];
+  notes: Maybe<Scalars['String']>;
   /** Reads a single `Game` that is related to this `GameEventRecord`. */
   game: Maybe<Game>;
   /** Reads a single `GameState` that is related to this `GameEventRecord`. */
@@ -2236,6 +2255,8 @@ export type GameEventRecordCondition = {
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `gameEventId` field. */
   gameEventId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `notes` field. */
+  notes?: Maybe<Scalars['String']>;
 };
 
 /** The `gameEvent` to be created by this mutation. */
@@ -2257,6 +2278,7 @@ export type GameEventRecordGameEventIdFkeyGameEventRecordCreateInput = {
   eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -2353,6 +2375,7 @@ export type GameEventRecordGameIdFkeyGameEventRecordCreateInput = {
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -2417,6 +2440,7 @@ export type GameEventRecordGameStateAfterFkGameEventRecordCreateInput = {
   eventIndex: Scalars['Int'];
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -2493,6 +2517,7 @@ export type GameEventRecordGameStateBeforeFkGameEventRecordCreateInput = {
   eventIndex: Scalars['Int'];
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -2570,6 +2595,7 @@ export type GameEventRecordInput = {
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -2712,6 +2738,7 @@ export type GameEventRecordPatch = {
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -2734,6 +2761,8 @@ export enum GameEventRecordsOrderBy {
   GAME_STATE_AFTER_ID_DESC = 'GAME_STATE_AFTER_ID_DESC',
   GAME_EVENT_ID_ASC = 'GAME_EVENT_ID_ASC',
   GAME_EVENT_ID_DESC = 'GAME_EVENT_ID_DESC',
+  NOTES_ASC = 'NOTES_ASC',
+  NOTES_DESC = 'NOTES_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -3468,10 +3497,42 @@ export enum GamesOrderBy {
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
 
+/** The return type of our `getPlateAppearancesConnection` query. */
+export type GetPlateAppearancesRecord = {
+  __typename?: 'GetPlateAppearancesRecord';
+  gameId: Maybe<Scalars['UUID']>;
+  gameStartTime: Maybe<Scalars['Datetime']>;
+  playerId: Maybe<Scalars['UUID']>;
+  type: Maybe<PlateAppearanceType>;
+  contact: Maybe<ContactQuality>;
+  hitTo: Maybe<FieldingPosition>;
+  runsScored: Maybe<Scalars['Int']>;
+  inning: Maybe<Scalars['Int']>;
+  halfInning: Maybe<HalfInning>;
+  gameStateBeforeId: Maybe<Scalars['UUID']>;
+  gameEventRecordId: Maybe<Scalars['UUID']>;
+};
+
+/** The return type of our `getRunsScoredConnection` query. */
+export type GetRunsScoredRecord = {
+  __typename?: 'GetRunsScoredRecord';
+  batterId: Maybe<Scalars['UUID']>;
+  runnerId: Maybe<Scalars['UUID']>;
+  battedIn: Maybe<Scalars['Boolean']>;
+};
+
 export enum HalfInning {
   TOP = 'TOP',
   BOTTOM = 'BOTTOM'
 }
+
+export type LineScoreCell = {
+  __typename?: 'LineScoreCell';
+  inning: Maybe<Scalars['Int']>;
+  halfInning: Maybe<HalfInning>;
+  runs: Maybe<Scalars['Int']>;
+  hits: Maybe<Scalars['Int']>;
+};
 
 export type Lineup = Node & {
   __typename?: 'Lineup';
@@ -5407,6 +5468,7 @@ export type OutOnPlayRunnerPlateAppearanceIdFkeyPlateAppearanceCreateInput = {
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -5500,6 +5562,7 @@ export type PlateAppearance = Node & {
   contact: Maybe<ContactQuality>;
   fieldedBy: Maybe<FieldingPosition>;
   runsScoredOnSacFly: Maybe<Scalars['Int']>;
+  routinePlay: Scalars['Boolean'];
   /** Reads and enables pagination through a set of `BasepathMovement`. */
   basepathMovements: Array<BasepathMovement>;
   /** Reads and enables pagination through a set of `OutOnPlayRunner`. */
@@ -5537,6 +5600,8 @@ export type PlateAppearanceCondition = {
   fieldedBy?: Maybe<FieldingPosition>;
   /** Checks for equality with the object’s `runsScoredOnSacFly` field. */
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `routinePlay` field. */
+  routinePlay?: Maybe<Scalars['Boolean']>;
 };
 
 /** An input for mutations affecting `PlateAppearance` */
@@ -5546,6 +5611,7 @@ export type PlateAppearanceInput = {
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -5615,6 +5681,7 @@ export type PlateAppearancePatch = {
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -5655,6 +5722,8 @@ export enum PlateAppearancesOrderBy {
   FIELDED_BY_DESC = 'FIELDED_BY_DESC',
   RUNS_SCORED_ON_SAC_FLY_ASC = 'RUNS_SCORED_ON_SAC_FLY_ASC',
   RUNS_SCORED_ON_SAC_FLY_DESC = 'RUNS_SCORED_ON_SAC_FLY_DESC',
+  ROUTINE_PLAY_ASC = 'ROUTINE_PLAY_ASC',
+  ROUTINE_PLAY_DESC = 'ROUTINE_PLAY_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -5683,6 +5752,8 @@ export type Player = Node & {
   baseRunnersByRunnerId: Array<BaseRunner>;
   /** Reads and enables pagination through a set of `ScoredRunner`. */
   scoredRunnersByRunnerId: Array<ScoredRunner>;
+  fullName: Maybe<Scalars['String']>;
+  traditionalStats: Maybe<TraditionalStatLine>;
 };
 
 
@@ -5739,6 +5810,12 @@ export type PlayerScoredRunnersByRunnerIdArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<ScoredRunnersOrderBy>>;
   condition?: Maybe<ScoredRunnerCondition>;
+};
+
+
+export type PlayerTraditionalStatsArgs = {
+  beforeDate?: Maybe<Scalars['Datetime']>;
+  afterDate?: Maybe<Scalars['Datetime']>;
 };
 
 /** A condition to be used against `Player` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -6074,6 +6151,13 @@ export type Query = Node & {
   stolenBaseAttempt: Maybe<StolenBaseAttempt>;
   team: Maybe<Team>;
   teamByGameIdAndRole: Maybe<Team>;
+  getAvg: Maybe<Scalars['Float']>;
+  getObp: Maybe<Scalars['Float']>;
+  getOps: Maybe<Scalars['Float']>;
+  getPlateAppearances: Maybe<Array<Maybe<GetPlateAppearancesRecord>>>;
+  getRunsScored: Maybe<Array<Maybe<GetRunsScoredRecord>>>;
+  getSlg: Maybe<Scalars['Float']>;
+  getTb: Maybe<Scalars['Int']>;
   /** Reads a single `BaseRunner` using its globally unique `ID`. */
   baseRunnerByNodeId: Maybe<BaseRunner>;
   /** Reads a single `BasepathMovement` using its globally unique `ID`. */
@@ -6420,6 +6504,70 @@ export type QueryTeamByGameIdAndRoleArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryGetAvgArgs = {
+  hits?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetObpArgs = {
+  hits?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  plateAppearances?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetOpsArgs = {
+  hits?: Maybe<Scalars['Int']>;
+  totalBases?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+  plateAppearances?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetPlateAppearancesArgs = {
+  playerId?: Maybe<Scalars['UUID']>;
+  gameId?: Maybe<Scalars['UUID']>;
+  beforeDate?: Maybe<Scalars['Datetime']>;
+  afterDate?: Maybe<Scalars['Datetime']>;
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetRunsScoredArgs = {
+  gameId?: Maybe<Scalars['UUID']>;
+  batterId?: Maybe<Scalars['UUID']>;
+  runnerId?: Maybe<Scalars['UUID']>;
+  beforeDate?: Maybe<Scalars['Datetime']>;
+  afterDate?: Maybe<Scalars['Datetime']>;
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetSlgArgs = {
+  totalBases?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGetTbArgs = {
+  singles?: Maybe<Scalars['Int']>;
+  doubles?: Maybe<Scalars['Int']>;
+  triples?: Maybe<Scalars['Int']>;
+  homeruns?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryBaseRunnerByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -6554,6 +6702,7 @@ export type ScoredRunnerGameEventRecordIdFkeyGameEventRecordCreateInput = {
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -7181,6 +7330,29 @@ export enum TeamsOrderBy {
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
+
+export type TraditionalStatLine = {
+  __typename?: 'TraditionalStatLine';
+  playerId: Maybe<Scalars['UUID']>;
+  games: Maybe<Scalars['Int']>;
+  plateAppearances: Maybe<Scalars['Int']>;
+  atBats: Maybe<Scalars['Int']>;
+  hits: Maybe<Scalars['Int']>;
+  singles: Maybe<Scalars['Int']>;
+  doubles: Maybe<Scalars['Int']>;
+  triples: Maybe<Scalars['Int']>;
+  homeruns: Maybe<Scalars['Int']>;
+  walks: Maybe<Scalars['Int']>;
+  strikeouts: Maybe<Scalars['Int']>;
+  sacFlies: Maybe<Scalars['Int']>;
+  gidp: Maybe<Scalars['Int']>;
+  runs: Maybe<Scalars['Int']>;
+  rbi: Maybe<Scalars['Int']>;
+  battingAverage: Maybe<Scalars['Float']>;
+  onBasePct: Maybe<Scalars['Float']>;
+  sluggingPct: Maybe<Scalars['Float']>;
+  ops: Maybe<Scalars['Float']>;
+};
 
 
 /** All input for the `updateBaseRunnerByNodeId` mutation. */
@@ -8077,6 +8249,7 @@ export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameEventIdF
   eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -8091,6 +8264,7 @@ export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyPa
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -8105,6 +8279,7 @@ export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateAft
   eventIndex?: Maybe<Scalars['Int']>;
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -8119,6 +8294,7 @@ export type UpdateGameEventRecordOnGameEventRecordForGameEventRecordGameStateBef
   eventIndex?: Maybe<Scalars['Int']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -8134,6 +8310,7 @@ export type UpdateGameEventRecordOnScoredRunnerForScoredRunnerGameEventRecordIdF
   gameStateBeforeId?: Maybe<Scalars['UUID']>;
   gameStateAfterId?: Maybe<Scalars['UUID']>;
   gameEventId?: Maybe<Scalars['UUID']>;
+  notes?: Maybe<Scalars['String']>;
   game?: Maybe<GameEventRecordGameIdFkeyInput>;
   gameStateBefore?: Maybe<GameEventRecordGameStateBeforeFkInput>;
   gameStateAfter?: Maybe<GameEventRecordGameStateAfterFkInput>;
@@ -8431,6 +8608,7 @@ export type UpdatePlateAppearanceOnBasepathMovementForBasepathMovementPlateAppea
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -8443,6 +8621,7 @@ export type UpdatePlateAppearanceOnGameEventForGameEventPlateAppearanceIdFkeyPat
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -8455,6 +8634,7 @@ export type UpdatePlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppeara
   contact?: Maybe<ContactQuality>;
   fieldedBy?: Maybe<FieldingPosition>;
   runsScoredOnSacFly?: Maybe<Scalars['Int']>;
+  routinePlay?: Maybe<Scalars['Boolean']>;
   basepathMovements?: Maybe<BasepathMovementPlateAppearanceIdFkeyInverseInput>;
   outOnPlayRunners?: Maybe<OutOnPlayRunnerPlateAppearanceIdFkeyInverseInput>;
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
@@ -8786,6 +8966,40 @@ export type GetAllGameSummariesQuery = (
   )>> }
 );
 
+export type GetAllPlayerStatsQueryVariables = Exact<{
+  beforeDate?: Maybe<Scalars['Datetime']>;
+  afterDate?: Maybe<Scalars['Datetime']>;
+}>;
+
+
+export type GetAllPlayerStatsQuery = (
+  { __typename?: 'Query' }
+  & { players: Maybe<Array<(
+    { __typename?: 'Player' }
+    & Pick<Player, 'id' | 'fullName'>
+    & { traditionalStats: Maybe<(
+      { __typename?: 'TraditionalStatLine' }
+      & Pick<TraditionalStatLine, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
+    )> }
+  )>> }
+);
+
+export type GetBoxScoreQueryVariables = Exact<{
+  gameId: Scalars['UUID'];
+}>;
+
+
+export type GetBoxScoreQuery = (
+  { __typename?: 'Query' }
+  & { game: Maybe<(
+    { __typename?: 'Game' }
+    & { boxScore: Maybe<Array<Maybe<(
+      { __typename?: 'TraditionalStatLine' }
+      & Pick<TraditionalStatLine, 'playerId' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi'>
+    )>>> }
+  )> }
+);
+
 export type GetGameLogQueryVariables = Exact<{
   id: Scalars['UUID'];
 }>;
@@ -8886,6 +9100,22 @@ export type GetLatestGameSummaryQuery = (
     { __typename?: 'Game' }
     & Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score' | 'gameLength'>
   )>> }
+);
+
+export type GetLineScoreQueryVariables = Exact<{
+  gameId: Scalars['UUID'];
+}>;
+
+
+export type GetLineScoreQuery = (
+  { __typename?: 'Query' }
+  & { game: Maybe<(
+    { __typename?: 'Game' }
+    & { lineScore: Maybe<Array<Maybe<(
+      { __typename?: 'LineScoreCell' }
+      & Pick<LineScoreCell, 'inning' | 'halfInning' | 'hits' | 'runs'>
+    )>>> }
+  )> }
 );
 
 export const GameEventRecord_GameStateFragmentDoc = gql`
@@ -9189,6 +9419,107 @@ export function useGetAllGameSummariesLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetAllGameSummariesQueryHookResult = ReturnType<typeof useGetAllGameSummariesQuery>;
 export type GetAllGameSummariesLazyQueryHookResult = ReturnType<typeof useGetAllGameSummariesLazyQuery>;
 export type GetAllGameSummariesQueryResult = Apollo.QueryResult<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>;
+export const GetAllPlayerStatsDocument = gql`
+    query GetAllPlayerStats($beforeDate: Datetime, $afterDate: Datetime) {
+  players {
+    id
+    fullName
+    traditionalStats(beforeDate: $beforeDate, afterDate: $afterDate) {
+      games
+      plateAppearances
+      atBats
+      hits
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      runs
+      rbi
+      battingAverage
+      onBasePct
+      sluggingPct
+      ops
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllPlayerStatsQuery__
+ *
+ * To run a query within a React component, call `useGetAllPlayerStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllPlayerStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllPlayerStatsQuery({
+ *   variables: {
+ *      beforeDate: // value for 'beforeDate'
+ *      afterDate: // value for 'afterDate'
+ *   },
+ * });
+ */
+export function useGetAllPlayerStatsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
+        return Apollo.useQuery<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>(GetAllPlayerStatsDocument, baseOptions);
+      }
+export function useGetAllPlayerStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>(GetAllPlayerStatsDocument, baseOptions);
+        }
+export type GetAllPlayerStatsQueryHookResult = ReturnType<typeof useGetAllPlayerStatsQuery>;
+export type GetAllPlayerStatsLazyQueryHookResult = ReturnType<typeof useGetAllPlayerStatsLazyQuery>;
+export type GetAllPlayerStatsQueryResult = Apollo.QueryResult<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>;
+export const GetBoxScoreDocument = gql`
+    query GetBoxScore($gameId: UUID!) {
+  game(id: $gameId) {
+    boxScore {
+      playerId
+      plateAppearances
+      atBats
+      hits
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      runs
+      rbi
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBoxScoreQuery__
+ *
+ * To run a query within a React component, call `useGetBoxScoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoxScoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoxScoreQuery({
+ *   variables: {
+ *      gameId: // value for 'gameId'
+ *   },
+ * });
+ */
+export function useGetBoxScoreQuery(baseOptions: Apollo.QueryHookOptions<GetBoxScoreQuery, GetBoxScoreQueryVariables>) {
+        return Apollo.useQuery<GetBoxScoreQuery, GetBoxScoreQueryVariables>(GetBoxScoreDocument, baseOptions);
+      }
+export function useGetBoxScoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBoxScoreQuery, GetBoxScoreQueryVariables>) {
+          return Apollo.useLazyQuery<GetBoxScoreQuery, GetBoxScoreQueryVariables>(GetBoxScoreDocument, baseOptions);
+        }
+export type GetBoxScoreQueryHookResult = ReturnType<typeof useGetBoxScoreQuery>;
+export type GetBoxScoreLazyQueryHookResult = ReturnType<typeof useGetBoxScoreLazyQuery>;
+export type GetBoxScoreQueryResult = Apollo.QueryResult<GetBoxScoreQuery, GetBoxScoreQueryVariables>;
 export const GetGameLogDocument = gql`
     query GetGameLog($id: UUID!) {
   game(id: $id) {
@@ -9355,3 +9686,41 @@ export function useGetLatestGameSummaryLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLatestGameSummaryQueryHookResult = ReturnType<typeof useGetLatestGameSummaryQuery>;
 export type GetLatestGameSummaryLazyQueryHookResult = ReturnType<typeof useGetLatestGameSummaryLazyQuery>;
 export type GetLatestGameSummaryQueryResult = Apollo.QueryResult<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>;
+export const GetLineScoreDocument = gql`
+    query GetLineScore($gameId: UUID!) {
+  game(id: $gameId) {
+    lineScore {
+      inning
+      halfInning
+      hits
+      runs
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetLineScoreQuery__
+ *
+ * To run a query within a React component, call `useGetLineScoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLineScoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLineScoreQuery({
+ *   variables: {
+ *      gameId: // value for 'gameId'
+ *   },
+ * });
+ */
+export function useGetLineScoreQuery(baseOptions: Apollo.QueryHookOptions<GetLineScoreQuery, GetLineScoreQueryVariables>) {
+        return Apollo.useQuery<GetLineScoreQuery, GetLineScoreQueryVariables>(GetLineScoreDocument, baseOptions);
+      }
+export function useGetLineScoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLineScoreQuery, GetLineScoreQueryVariables>) {
+          return Apollo.useLazyQuery<GetLineScoreQuery, GetLineScoreQueryVariables>(GetLineScoreDocument, baseOptions);
+        }
+export type GetLineScoreQueryHookResult = ReturnType<typeof useGetLineScoreQuery>;
+export type GetLineScoreLazyQueryHookResult = ReturnType<typeof useGetLineScoreLazyQuery>;
+export type GetLineScoreQueryResult = Apollo.QueryResult<GetLineScoreQuery, GetLineScoreQueryVariables>;

@@ -1,19 +1,46 @@
 import React, { FC } from "react";
-import { Box, Button, Heading, Text } from "grommet";
 import { format, parseISO } from "date-fns";
+import {
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+  Text,
+} from "grommet";
+import _ from "lodash";
 
-import { Game, useGetLatestGameSummaryQuery } from "@sammyers/dc-shared";
+import {
+  Game,
+  useGetLatestGameSummaryQuery,
+  useGetLineScoreQuery,
+} from "@sammyers/dc-shared";
 import { useNavigate } from "react-router";
 
-const GameSummary: FC<Pick<Game, "timeStarted" | "timeEnded" | "score">> = ({
-  timeStarted,
-  timeEnded,
-  score,
-}) => {
+const INNING_WIDTH = "16px";
+const RUNS_WIDTH = "48px";
+const HITS_WIDTH = INNING_WIDTH;
+
+const GameSummary: FC<
+  Pick<Game, "id" | "timeStarted" | "timeEnded" | "score">
+> = ({ id, timeStarted, timeEnded, score }) => {
   const winningScore = Math.max(...(score as number[]));
 
+  const { data } = useGetLineScoreQuery({ variables: { gameId: id } });
+
+  const { TOP, BOTTOM } = _.groupBy(
+    _.orderBy(data?.game?.lineScore, "inning"),
+    "halfInning"
+  );
+
+  if (!TOP || !BOTTOM) {
+    return null;
+  }
+
   return (
-    <>
+    <Box>
       <Text color="accent-3">
         Latest Game: {format(parseISO(timeStarted), "MMMM d, h:mmaaa")}
         {" - "}
@@ -34,7 +61,54 @@ const GameSummary: FC<Pick<Game, "timeStarted" | "timeEnded" | "score">> = ({
           {score[1]} Home
         </Text>
       </Text>
-    </>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableCell scope="col"></TableCell>
+            {_.times(Math.max(TOP.length, BOTTOM.length), (n) => (
+              <TableCell key={n} scope="col" align="center" size={INNING_WIDTH}>
+                {n + 1}
+              </TableCell>
+            ))}
+            <TableCell scope="col" align="right" size={RUNS_WIDTH}>
+              <strong>R</strong>
+            </TableCell>
+            <TableCell scope="col" align="right" size={HITS_WIDTH}>
+              <strong>H</strong>
+            </TableCell>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {(
+            [
+              ["Away", TOP],
+              ["Home", BOTTOM],
+            ] as [string, typeof TOP][]
+          ).map(([name, innings]) => (
+            <TableRow key={name}>
+              <TableCell scope="row">
+                <strong>{name}</strong>
+              </TableCell>
+              {innings.map((inning) => (
+                <TableCell
+                  key={inning?.inning}
+                  align="center"
+                  size={INNING_WIDTH}
+                >
+                  {inning!.runs}
+                </TableCell>
+              ))}
+              <TableCell align="right" size={RUNS_WIDTH}>
+                <strong>{_.sumBy(innings, "runs")}</strong>
+              </TableCell>
+              <TableCell align="right" size={HITS_WIDTH}>
+                <strong>{_.sumBy(innings, "hits")}</strong>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </Box>
   );
 };
 
@@ -51,11 +125,27 @@ const GameWidget = () => {
       background="neutral-5"
       pad="small"
       align="center"
+      gap="small"
     >
       {game ? <GameSummary {...game} /> : <Text>No games yet</Text>}
-      <Button plain={false} color="accent-2" onClick={() => navigate("/games")}>
-        More Games
-      </Button>
+      <Box direction="row" gap="small">
+        {!!game && (
+          <Button
+            plain={false}
+            color="accent-2"
+            onClick={() => navigate(`/game/${game?.id}`)}
+          >
+            More Details
+          </Button>
+        )}
+        <Button
+          plain={false}
+          color="accent-2"
+          onClick={() => navigate("/games")}
+        >
+          More Games
+        </Button>
+      </Box>
     </Box>
   );
 };

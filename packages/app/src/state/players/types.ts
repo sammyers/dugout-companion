@@ -1,5 +1,4 @@
-import { GetAllPlayersQuery } from '@sammyers/dc-shared';
-import { SimplifyType } from 'utils/common';
+import { GetAllPlayersQuery, SimplifyType } from '@sammyers/dc-shared';
 
 export interface CountingStats {
   atBats: number;

@@ -9,7 +9,6 @@ const GamesPage = () => {
   const navigate = useNavigate();
 
   const { data } = useGetAllGameSummariesQuery();
-  console.log(data?.games);
 
   if (!data) {
     return null;

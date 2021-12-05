@@ -2,11 +2,10 @@ import {
   ContactQuality,
   FieldingPosition,
   PlateAppearanceType,
+  SimplifyType,
   TeamRole,
   UnpackedGame_GameFragment,
 } from '@sammyers/dc-shared';
-
-import { SimplifyType } from 'utils/common';
 
 export type Game = SimplifyType<
   UnpackedGame_GameFragment,

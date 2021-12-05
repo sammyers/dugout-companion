@@ -8,6 +8,7 @@ import {
   Text,
 } from "grommet";
 import GameWidget from "./GameWidget";
+import StatsWidget from "./StatsWidget";
 
 const columns: Record<string, GridColumnsType> = {
   small: ["auto"],
@@ -59,9 +60,7 @@ const Dashboard = () => {
         areas={areas[size as keyof typeof areas]}
       >
         <GameWidget />
-        <Box gridArea="stats" round="small" background="neutral-5" pad="small">
-          <Text>Stats</Text>
-        </Box>
+        <StatsWidget />
         <Box
           gridArea="leaderboard"
           round="small"
