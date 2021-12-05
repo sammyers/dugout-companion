@@ -136,6 +136,23 @@ type Query implements Node {
     condition: GameStateCondition
   ): [GameState!]
 
+  """Reads a set of `LegacyField`."""
+  legacyFields(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyField`."""
+    orderBy: [LegacyFieldsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyFieldCondition
+  ): [LegacyField!]
+
   """Reads a set of `LegacyGame`."""
   legacyGames(
     """Only read the first `n` values of the set."""
@@ -382,6 +399,10 @@ type Query implements Node {
   gameEventRecord(id: UUID!): GameEventRecord
   gameEventRecordByGameIdAndEventIndex(gameId: UUID!, eventIndex: Int!): GameEventRecord
   gameState(id: UUID!): GameState
+  legacyField(fieldId: Int!): LegacyField
+  legacyGame(gameId: Int!): LegacyGame
+  legacyPlayer(playerId: Int!): LegacyPlayer
+  legacyTeam(teamId: Int!): LegacyTeam
   lineup(id: UUID!): Lineup
   lineupChange(id: UUID!): LineupChange
   lineupForGameState(gameStateId: UUID!, lineupId: UUID!): LineupForGameState
@@ -474,6 +495,38 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `GameState`."""
     nodeId: ID!
   ): GameState
+
+  """Reads a single `LegacyField` using its globally unique `ID`."""
+  legacyFieldByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyField`.
+    """
+    nodeId: ID!
+  ): LegacyField
+
+  """Reads a single `LegacyGame` using its globally unique `ID`."""
+  legacyGameByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyGame`.
+    """
+    nodeId: ID!
+  ): LegacyGame
+
+  """Reads a single `LegacyPlayer` using its globally unique `ID`."""
+  legacyPlayerByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyPlayer`.
+    """
+    nodeId: ID!
+  ): LegacyPlayer
+
+  """Reads a single `LegacyTeam` using its globally unique `ID`."""
+  legacyTeamByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyTeam`.
+    """
+    nodeId: ID!
+  ): LegacyTeam
 
   """Reads a single `Lineup` using its globally unique `ID`."""
   lineupByNodeId(
@@ -1871,7 +1924,55 @@ input GameEventCondition {
   lineupChangeId: UUID
 }
 
-type LegacyGame {
+type LegacyField implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  fieldId: Int!
+  fieldName: String!
+  fieldAddress: String!
+  fieldNumber: String
+}
+
+"""Methods to use when ordering `LegacyField`."""
+enum LegacyFieldsOrderBy {
+  NATURAL
+  FIELD_ID_ASC
+  FIELD_ID_DESC
+  FIELD_NAME_ASC
+  FIELD_NAME_DESC
+  FIELD_ADDRESS_ASC
+  FIELD_ADDRESS_DESC
+  FIELD_NUMBER_ASC
+  FIELD_NUMBER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyField` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input LegacyFieldCondition {
+  """Checks for equality with the object’s `fieldId` field."""
+  fieldId: Int
+
+  """Checks for equality with the object’s `fieldName` field."""
+  fieldName: String
+
+  """Checks for equality with the object’s `fieldAddress` field."""
+  fieldAddress: String
+
+  """Checks for equality with the object’s `fieldNumber` field."""
+  fieldNumber: String
+}
+
+type LegacyGame implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
   gameId: Int!
   gameTitle: String!
   gameDate: Date!
@@ -1936,7 +2037,11 @@ type LegacyStatLine {
   legacyTeamBySbStatsTeam: LegacyTeam
 }
 
-type LegacyPlayer {
+type LegacyPlayer implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
   playerId: Int!
   playerName: String!
   playerImage: String
@@ -2046,7 +2151,11 @@ input LegacyStatLineCondition {
   sacFlies: Int
 }
 
-type LegacyTeam {
+type LegacyTeam implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
   teamId: Int!
   teamName: String!
 
@@ -2087,6 +2196,8 @@ enum LegacyGamesOrderBy {
   GAME_TEAM_ID_2_DESC
   SEASON_ASC
   SEASON_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 """
@@ -2130,6 +2241,8 @@ enum LegacyPlayersOrderBy {
   PLAYER_IMAGE_DESC
   MEMBER_ID_ASC
   MEMBER_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 """
@@ -2157,6 +2270,8 @@ enum LegacyTeamsOrderBy {
   TEAM_ID_DESC
   TEAM_NAME_ASC
   TEAM_NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 """
@@ -2337,6 +2452,14 @@ type Mutation {
     """
     input: CreateGameStateInput!
   ): CreateGameStatePayload
+
+  """Creates a single `LegacyField`."""
+  createLegacyField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLegacyFieldInput!
+  ): CreateLegacyFieldPayload
 
   """Creates a single `LegacyGame`."""
   createLegacyGame(
@@ -2583,6 +2706,78 @@ type Mutation {
     """
     input: UpdateGameStateInput!
   ): UpdateGameStatePayload
+
+  """
+  Updates a single `LegacyField` using its globally unique id and a patch.
+  """
+  updateLegacyFieldByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyFieldByNodeIdInput!
+  ): UpdateLegacyFieldPayload
+
+  """Updates a single `LegacyField` using a unique key and a patch."""
+  updateLegacyField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyFieldInput!
+  ): UpdateLegacyFieldPayload
+
+  """
+  Updates a single `LegacyGame` using its globally unique id and a patch.
+  """
+  updateLegacyGameByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyGameByNodeIdInput!
+  ): UpdateLegacyGamePayload
+
+  """Updates a single `LegacyGame` using a unique key and a patch."""
+  updateLegacyGame(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyGameInput!
+  ): UpdateLegacyGamePayload
+
+  """
+  Updates a single `LegacyPlayer` using its globally unique id and a patch.
+  """
+  updateLegacyPlayerByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyPlayerByNodeIdInput!
+  ): UpdateLegacyPlayerPayload
+
+  """Updates a single `LegacyPlayer` using a unique key and a patch."""
+  updateLegacyPlayer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyPlayerInput!
+  ): UpdateLegacyPlayerPayload
+
+  """
+  Updates a single `LegacyTeam` using its globally unique id and a patch.
+  """
+  updateLegacyTeamByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyTeamByNodeIdInput!
+  ): UpdateLegacyTeamPayload
+
+  """Updates a single `LegacyTeam` using a unique key and a patch."""
+  updateLegacyTeam(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyTeamInput!
+  ): UpdateLegacyTeamPayload
 
   """Updates a single `Lineup` using its globally unique id and a patch."""
   updateLineupByNodeId(
@@ -2917,6 +3112,70 @@ type Mutation {
     """
     input: DeleteGameStateInput!
   ): DeleteGameStatePayload
+
+  """Deletes a single `LegacyField` using its globally unique id."""
+  deleteLegacyFieldByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyFieldByNodeIdInput!
+  ): DeleteLegacyFieldPayload
+
+  """Deletes a single `LegacyField` using a unique key."""
+  deleteLegacyField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyFieldInput!
+  ): DeleteLegacyFieldPayload
+
+  """Deletes a single `LegacyGame` using its globally unique id."""
+  deleteLegacyGameByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyGameByNodeIdInput!
+  ): DeleteLegacyGamePayload
+
+  """Deletes a single `LegacyGame` using a unique key."""
+  deleteLegacyGame(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyGameInput!
+  ): DeleteLegacyGamePayload
+
+  """Deletes a single `LegacyPlayer` using its globally unique id."""
+  deleteLegacyPlayerByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyPlayerByNodeIdInput!
+  ): DeleteLegacyPlayerPayload
+
+  """Deletes a single `LegacyPlayer` using a unique key."""
+  deleteLegacyPlayer(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyPlayerInput!
+  ): DeleteLegacyPlayerPayload
+
+  """Deletes a single `LegacyTeam` using its globally unique id."""
+  deleteLegacyTeamByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyTeamByNodeIdInput!
+  ): DeleteLegacyTeamPayload
+
+  """Deletes a single `LegacyTeam` using a unique key."""
+  deleteLegacyTeam(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyTeamInput!
+  ): DeleteLegacyTeamPayload
 
   """Deletes a single `Lineup` using its globally unique id."""
   deleteLineupByNodeId(
@@ -9390,6 +9649,43 @@ input GameStateInput {
   gameEventRecordsToGameStateAfterIdUsingId: GameEventRecordGameStateAfterFkInverseInput
 }
 
+"""The output of our create `LegacyField` mutation."""
+type CreateLegacyFieldPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyField` that was created by this mutation."""
+  legacyField: LegacyField
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `LegacyField` mutation."""
+input CreateLegacyFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LegacyField` to be created by this mutation."""
+  legacyField: LegacyFieldInput!
+}
+
+"""An input for mutations affecting `LegacyField`"""
+input LegacyFieldInput {
+  fieldId: Int!
+  fieldName: String!
+  fieldAddress: String!
+  fieldNumber: String
+}
+
 """The output of our create `LegacyGame` mutation."""
 type CreateLegacyGamePayload {
   """
@@ -9468,14 +9764,81 @@ Input for the nested mutation of `legacyPlayer` in the `LegacyStatLineInput` mut
 """
 input FakePublicLegacyStatLineForeignKey0Input {
   """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyPlayerNodeIdConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyPlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByPlayerId: LegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0NodeIdUpdate
+
+  """
   A `LegacyPlayerInput` object that will be created and connected to this object.
   """
   create: FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput
 }
 
-"""The `legacyPlayer` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput {
-  playerName: String!
+"""The fields on `legacyPlayer` to look up the row to connect."""
+input LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect {
+  playerId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyPlayerNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyPlayer` to look up the row to delete."""
+input LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete {
+  playerId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyPlayerNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyPlayer` to look up the row to update."""
+input LegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: updateLegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0Patch!
+  playerId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyPlayer` being updated.
+"""
+input updateLegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0Patch {
+  playerName: String
   playerImage: String
   memberId: String
   legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
@@ -9517,9 +9880,116 @@ Input for the nested mutation of `legacyGame` in the `LegacyStatLineInput` mutat
 """
 input FakePublicLegacyStatLineForeignKey1Input {
   """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  connectByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyGameNodeIdConnect
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  deleteByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyGameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
+  """
+  updateByGameId: LegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1UsingFakePublicLegacyGamePrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1NodeIdUpdate
+
+  """
   A `LegacyGameInput` object that will be created and connected to this object.
   """
   create: FakePublicLegacyStatLineForeignKey1LegacyGameCreateInput
+}
+
+"""The fields on `legacyGame` to look up the row to connect."""
+input LegacyGameFakePublicLegacyGamePrimaryKeyConnect {
+  gameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyGameNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGame` to look up the row to delete."""
+input LegacyGameFakePublicLegacyGamePrimaryKeyDelete {
+  gameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyGameNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGame` to look up the row to update."""
+input LegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1UsingFakePublicLegacyGamePrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyGame` being updated.
+  """
+  patch: updateLegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1Patch!
+  gameId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyGame` being updated.
+"""
+input updateLegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1Patch {
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyGame` being updated.
+  """
+  patch: LegacyGamePatch!
+}
+
+"""
+Represents an update to a `LegacyGame`. Fields that are set will be updated.
+"""
+input LegacyGamePatch {
+  gameId: Int
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
 }
 
 """The `legacyGame` to be created by this mutation."""
@@ -9539,15 +10009,82 @@ Input for the nested mutation of `legacyTeam` in the `LegacyStatLineInput` mutat
 """
 input FakePublicLegacyStatLineForeignKey2Input {
   """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  connectByTeamId: LegacyTeamFakePublicLegacyTeamPrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyTeamNodeIdConnect
+
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  deleteByTeamId: LegacyTeamFakePublicLegacyTeamPrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyTeamNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyTeam` for the far side of the relationship.
+  """
+  updateByTeamId: LegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2UsingFakePublicLegacyTeamPrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyTeam` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2NodeIdUpdate
+
+  """
   A `LegacyTeamInput` object that will be created and connected to this object.
   """
   create: FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput
 }
 
-"""The `legacyTeam` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput {
+"""The fields on `legacyTeam` to look up the row to connect."""
+input LegacyTeamFakePublicLegacyTeamPrimaryKeyConnect {
   teamId: Int!
-  teamName: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyTeamNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyTeam` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyTeam` to look up the row to delete."""
+input LegacyTeamFakePublicLegacyTeamPrimaryKeyDelete {
+  teamId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyTeamNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyTeam` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyTeam` to look up the row to update."""
+input LegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2UsingFakePublicLegacyTeamPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyTeam` being updated.
+  """
+  patch: updateLegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2Patch!
+  teamId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyTeam` being updated.
+"""
+input updateLegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2Patch {
+  teamId: Int
+  teamName: String
   legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
 }
 
@@ -9580,6 +10117,67 @@ input FakePublicLegacyStatLineForeignKey2LegacyStatLineCreateInput {
   legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
   legacyGame: FakePublicLegacyStatLineForeignKey1Input
   legacyTeam: FakePublicLegacyStatLineForeignKey2Input
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyTeam` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyTeam` being updated.
+  """
+  patch: LegacyTeamPatch!
+}
+
+"""
+Represents an update to a `LegacyTeam`. Fields that are set will be updated.
+"""
+input LegacyTeamPatch {
+  teamId: Int
+  teamName: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
+}
+
+"""The `legacyTeam` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput {
+  teamId: Int!
+  teamName: String!
+  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: LegacyPlayerPatch!
+}
+
+"""
+Represents an update to a `LegacyPlayer`. Fields that are set will be updated.
+"""
+input LegacyPlayerPatch {
+  playerId: Int
+  playerName: String
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+}
+
+"""The `legacyPlayer` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput {
+  playerName: String!
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
 }
 
 """The output of our create `LegacyPlayer` mutation."""
@@ -10596,6 +11194,220 @@ input UpdateGameStateInput {
   id: UUID!
 }
 
+"""The output of our update `LegacyField` mutation."""
+type UpdateLegacyFieldPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyField` that was updated by this mutation."""
+  legacyField: LegacyField
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyFieldByNodeId` mutation."""
+input UpdateLegacyFieldByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyField` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyField` being updated.
+  """
+  patch: LegacyFieldPatch!
+}
+
+"""
+Represents an update to a `LegacyField`. Fields that are set will be updated.
+"""
+input LegacyFieldPatch {
+  fieldId: Int
+  fieldName: String
+  fieldAddress: String
+  fieldNumber: String
+}
+
+"""All input for the `updateLegacyField` mutation."""
+input UpdateLegacyFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyField` being updated.
+  """
+  patch: LegacyFieldPatch!
+  fieldId: Int!
+}
+
+"""The output of our update `LegacyGame` mutation."""
+type UpdateLegacyGamePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyGame` that was updated by this mutation."""
+  legacyGame: LegacyGame
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyGameByNodeId` mutation."""
+input UpdateLegacyGameByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyGame` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyGame` being updated.
+  """
+  patch: LegacyGamePatch!
+}
+
+"""All input for the `updateLegacyGame` mutation."""
+input UpdateLegacyGameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyGame` being updated.
+  """
+  patch: LegacyGamePatch!
+  gameId: Int!
+}
+
+"""The output of our update `LegacyPlayer` mutation."""
+type UpdateLegacyPlayerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyPlayer` that was updated by this mutation."""
+  legacyPlayer: LegacyPlayer
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyPlayerByNodeId` mutation."""
+input UpdateLegacyPlayerByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyPlayer` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyPlayer` being updated.
+  """
+  patch: LegacyPlayerPatch!
+}
+
+"""All input for the `updateLegacyPlayer` mutation."""
+input UpdateLegacyPlayerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyPlayer` being updated.
+  """
+  patch: LegacyPlayerPatch!
+  playerId: Int!
+}
+
+"""The output of our update `LegacyTeam` mutation."""
+type UpdateLegacyTeamPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyTeam` that was updated by this mutation."""
+  legacyTeam: LegacyTeam
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyTeamByNodeId` mutation."""
+input UpdateLegacyTeamByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyTeam` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyTeam` being updated.
+  """
+  patch: LegacyTeamPatch!
+}
+
+"""All input for the `updateLegacyTeam` mutation."""
+input UpdateLegacyTeamInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyTeam` being updated.
+  """
+  patch: LegacyTeamPatch!
+  teamId: Int!
+}
+
 """The output of our update `Lineup` mutation."""
 type UpdateLineupPayload {
   """
@@ -11584,6 +12396,174 @@ input DeleteGameStateInput {
   """
   clientMutationId: String
   id: UUID!
+}
+
+"""The output of our delete `LegacyField` mutation."""
+type DeleteLegacyFieldPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyField` that was deleted by this mutation."""
+  legacyField: LegacyField
+  deletedLegacyFieldNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyFieldByNodeId` mutation."""
+input DeleteLegacyFieldByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyField` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyField` mutation."""
+input DeleteLegacyFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  fieldId: Int!
+}
+
+"""The output of our delete `LegacyGame` mutation."""
+type DeleteLegacyGamePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyGame` that was deleted by this mutation."""
+  legacyGame: LegacyGame
+  deletedLegacyGameNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyGameByNodeId` mutation."""
+input DeleteLegacyGameByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyGame` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyGame` mutation."""
+input DeleteLegacyGameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  gameId: Int!
+}
+
+"""The output of our delete `LegacyPlayer` mutation."""
+type DeleteLegacyPlayerPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyPlayer` that was deleted by this mutation."""
+  legacyPlayer: LegacyPlayer
+  deletedLegacyPlayerNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyPlayerByNodeId` mutation."""
+input DeleteLegacyPlayerByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyPlayer` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyPlayer` mutation."""
+input DeleteLegacyPlayerInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  playerId: Int!
+}
+
+"""The output of our delete `LegacyTeam` mutation."""
+type DeleteLegacyTeamPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyTeam` that was deleted by this mutation."""
+  legacyTeam: LegacyTeam
+  deletedLegacyTeamNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyTeamByNodeId` mutation."""
+input DeleteLegacyTeamByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyTeam` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyTeam` mutation."""
+input DeleteLegacyTeamInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  teamId: Int!
 }
 
 """The output of our delete `Lineup` mutation."""

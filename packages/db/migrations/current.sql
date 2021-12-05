@@ -314,6 +314,18 @@ create foreign table legacy_player (
 )
 server legacy_stats_mysql options (dbname ':LEGACY_DB_NAME', table_name 'player');
 grant select on legacy_player to :DATABASE_VISITOR;
+comment on foreign table legacy_player is E'@primaryKey player_id';
+
+drop foreign table if exists legacy_field;
+create foreign table legacy_field (
+  field_id int not null,
+  field_name varchar(120) not null,
+  field_address varchar(260) not null,
+  field_number varchar(100)
+)
+server legacy_stats_mysql options (dbname ':LEGACY_DB_NAME', table_name 'field');
+grant select on legacy_field to :DATABASE_VISITOR;
+comment on foreign table legacy_field is E'@primaryKey field_id';
 
 drop foreign table if exists legacy_game;
 create foreign table legacy_game (
@@ -328,6 +340,7 @@ create foreign table legacy_game (
 )
 server legacy_stats_mysql options (dbname ':LEGACY_DB_NAME', table_name 'game');
 grant select on legacy_game to :DATABASE_VISITOR;
+comment on foreign table legacy_game is E'@primaryKey game_id';
 
 drop foreign table if exists legacy_team;
 create foreign table legacy_team (
@@ -336,6 +349,7 @@ create foreign table legacy_team (
 )
 server legacy_stats_mysql options (dbname ':LEGACY_DB_NAME', table_name 'team');
 grant select on legacy_team to :DATABASE_VISITOR;
+comment on foreign table legacy_team is E'@primaryKey team_id';
 
 drop foreign table if exists legacy_stat_line;
 create foreign table legacy_stat_line (
