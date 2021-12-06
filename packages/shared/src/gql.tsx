@@ -9110,6 +9110,7 @@ export type Team = Node & {
   captain: Maybe<Player>;
   /** Reads and enables pagination through a set of `Lineup`. */
   lineups: Array<Lineup>;
+  finalLineup: Maybe<Lineup>;
 };
 
 
@@ -11550,17 +11551,37 @@ export type GetBoxScoreQuery = (
   )> }
 );
 
-export type GetGameLogQueryVariables = Exact<{
+export type GetGameDetailsQueryVariables = Exact<{
   id: Scalars['UUID'];
 }>;
 
 
-export type GetGameLogQuery = (
+export type GetGameDetailsQuery = (
   { __typename?: 'Query' }
   & { game: Maybe<(
     { __typename?: 'Game' }
     & Pick<Game, 'id' | 'gameLength' | 'name' | 'score' | 'timeStarted' | 'timeEnded'>
-    & { gameStates: Array<(
+    & { lineScore: Maybe<Array<Maybe<(
+      { __typename?: 'LineScoreCell' }
+      & Pick<LineScoreCell, 'inning' | 'halfInning' | 'runs' | 'hits'>
+    )>>>, teams: Array<(
+      { __typename?: 'Team' }
+      & Pick<Team, 'name' | 'role' | 'winner'>
+      & { finalLineup: Maybe<(
+        { __typename?: 'Lineup' }
+        & { lineupSpots: Array<(
+          { __typename?: 'LineupSpot' }
+          & Pick<LineupSpot, 'position'>
+          & { player: Maybe<(
+            { __typename?: 'Player' }
+            & Pick<Player, 'id' | 'fullName'>
+          )> }
+        )> }
+      )> }
+    )>, boxScore: Maybe<Array<Maybe<(
+      { __typename?: 'TraditionalStatLine' }
+      & Pick<TraditionalStatLine, 'playerId' | 'plateAppearances' | 'atBats' | 'hits' | 'runs' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'rbi' | 'onBasePct' | 'ops'>
+    )>>>, gameStates: Array<(
       { __typename?: 'GameState' }
       & Pick<GameState, 'id' | 'inning' | 'halfInning' | 'outs' | 'score'>
       & { playerByPlayerAtBat: Maybe<(
@@ -11620,21 +11641,6 @@ export type GetGameLogQuery = (
         & { playerByPlayerAtBat: Maybe<(
           { __typename?: 'Player' }
           & Pick<Player, 'id' | 'firstName' | 'lastName'>
-        )> }
-      )> }
-    )>, teams: Array<(
-      { __typename?: 'Team' }
-      & Pick<Team, 'name' | 'role' | 'winner'>
-      & { lineups: Array<(
-        { __typename?: 'Lineup' }
-        & Pick<Lineup, 'id'>
-        & { lineupSpots: Array<(
-          { __typename?: 'LineupSpot' }
-          & Pick<LineupSpot, 'position'>
-          & { player: Maybe<(
-            { __typename?: 'Player' }
-            & Pick<Player, 'id' | 'firstName' | 'lastName'>
-          )> }
         )> }
       )> }
     )> }
@@ -12108,8 +12114,8 @@ export function useGetBoxScoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetBoxScoreQueryHookResult = ReturnType<typeof useGetBoxScoreQuery>;
 export type GetBoxScoreLazyQueryHookResult = ReturnType<typeof useGetBoxScoreLazyQuery>;
 export type GetBoxScoreQueryResult = Apollo.QueryResult<GetBoxScoreQuery, GetBoxScoreQueryVariables>;
-export const GetGameLogDocument = gql`
-    query GetGameLog($id: UUID!) {
+export const GetGameDetailsDocument = gql`
+    query GetGameDetails($id: UUID!) {
   game(id: $id) {
     id
     gameLength
@@ -12117,6 +12123,43 @@ export const GetGameLogDocument = gql`
     score
     timeStarted
     timeEnded
+    lineScore {
+      inning
+      halfInning
+      runs
+      hits
+    }
+    teams {
+      name
+      role
+      winner
+      finalLineup {
+        lineupSpots(orderBy: BATTING_ORDER_ASC) {
+          player {
+            id
+            fullName
+          }
+          position
+        }
+      }
+    }
+    boxScore {
+      playerId
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      rbi
+      onBasePct
+      ops
+    }
     gameStates(orderBy: GAME_STATE_INDEX_ASC) {
       id
       inning
@@ -12193,51 +12236,35 @@ export const GetGameLogDocument = gql`
       }
       gameStateAfterId
     }
-    teams {
-      name
-      role
-      lineups {
-        id
-        lineupSpots(orderBy: BATTING_ORDER_ASC) {
-          player {
-            id
-            firstName
-            lastName
-          }
-          position
-        }
-      }
-      winner
-    }
   }
 }
     `;
 
 /**
- * __useGetGameLogQuery__
+ * __useGetGameDetailsQuery__
  *
- * To run a query within a React component, call `useGetGameLogQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetGameLogQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetGameDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGameDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetGameLogQuery({
+ * const { data, loading, error } = useGetGameDetailsQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetGameLogQuery(baseOptions: Apollo.QueryHookOptions<GetGameLogQuery, GetGameLogQueryVariables>) {
-        return Apollo.useQuery<GetGameLogQuery, GetGameLogQueryVariables>(GetGameLogDocument, baseOptions);
+export function useGetGameDetailsQuery(baseOptions: Apollo.QueryHookOptions<GetGameDetailsQuery, GetGameDetailsQueryVariables>) {
+        return Apollo.useQuery<GetGameDetailsQuery, GetGameDetailsQueryVariables>(GetGameDetailsDocument, baseOptions);
       }
-export function useGetGameLogLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGameLogQuery, GetGameLogQueryVariables>) {
-          return Apollo.useLazyQuery<GetGameLogQuery, GetGameLogQueryVariables>(GetGameLogDocument, baseOptions);
+export function useGetGameDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGameDetailsQuery, GetGameDetailsQueryVariables>) {
+          return Apollo.useLazyQuery<GetGameDetailsQuery, GetGameDetailsQueryVariables>(GetGameDetailsDocument, baseOptions);
         }
-export type GetGameLogQueryHookResult = ReturnType<typeof useGetGameLogQuery>;
-export type GetGameLogLazyQueryHookResult = ReturnType<typeof useGetGameLogLazyQuery>;
-export type GetGameLogQueryResult = Apollo.QueryResult<GetGameLogQuery, GetGameLogQueryVariables>;
+export type GetGameDetailsQueryHookResult = ReturnType<typeof useGetGameDetailsQuery>;
+export type GetGameDetailsLazyQueryHookResult = ReturnType<typeof useGetGameDetailsLazyQuery>;
+export type GetGameDetailsQueryResult = Apollo.QueryResult<GetGameDetailsQuery, GetGameDetailsQueryVariables>;
 export const GetLatestGameSummaryDocument = gql`
     query GetLatestGameSummary {
   games(orderBy: TIME_STARTED_DESC, first: 1) {

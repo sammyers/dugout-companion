@@ -1,9 +1,7 @@
 import React, { FC } from 'react';
 import { Text, Box } from 'grommet';
 
-import { PlateAppearanceType } from '@sammyers/dc-shared';
-
-import { getPlateAppearanceLabel } from 'utils/labels';
+import { getPlateAppearanceLabel, PlateAppearanceType } from '@sammyers/dc-shared';
 
 import { PlayDescription } from 'state/plays/types';
 

@@ -1,4 +1,4 @@
-query GetGameLog($id: UUID!) {
+query GetGameDetails($id: UUID!) {
   game(id: $id) {
     id
     gameLength
@@ -6,6 +6,43 @@ query GetGameLog($id: UUID!) {
     score
     timeStarted
     timeEnded
+    lineScore {
+      inning
+      halfInning
+      runs
+      hits
+    }
+    teams {
+      name
+      role
+      winner
+      finalLineup {
+        lineupSpots(orderBy: BATTING_ORDER_ASC) {
+          player {
+            id
+            fullName
+          }
+          position
+        }
+      }
+    }
+    boxScore {
+      playerId
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      rbi
+      onBasePct
+      ops
+    }
     gameStates(orderBy: GAME_STATE_INDEX_ASC) {
       id
       inning
@@ -81,22 +118,6 @@ query GetGameLog($id: UUID!) {
         }
       }
       gameStateAfterId
-    }
-    teams {
-      name
-      role
-      lineups {
-        id
-        lineupSpots(orderBy: BATTING_ORDER_ASC) {
-          player {
-            id
-            firstName
-            lastName
-          }
-          position
-        }
-      }
-      winner
     }
   }
 }

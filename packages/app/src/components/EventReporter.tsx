@@ -7,9 +7,8 @@ import { getPlateAppearanceOptions } from 'state/game/selectors';
 import { getPlateAppearanceType } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import { getPlateAppearanceLabel } from 'utils/labels';
 
-import { PlateAppearanceType } from '@sammyers/dc-shared';
+import { getPlateAppearanceLabel, PlateAppearanceType } from '@sammyers/dc-shared';
 
 const buttonGroups = [
   {

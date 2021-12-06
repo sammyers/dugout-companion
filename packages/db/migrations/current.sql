@@ -241,7 +241,7 @@ create table lineup_for_game_state (
   primary key (game_state_id, lineup_id)
 );
 grant select, insert on lineup_for_game_state to :DATABASE_VISITOR;
-create function "game_state_lineups"(g game_state)
+create or replace function "game_state_lineups"(g game_state)
 returns setof lineup as $$
   select lineup.*
   from lineup
@@ -275,6 +275,17 @@ create table scored_runner (
   batted_in boolean not null
 );
 grant select, insert on scored_runner to :DATABASE_VISITOR;
+
+create or replace function team_final_lineup(t team)
+returns lineup as $$
+  select lineup.* from lineup
+    left join lineup_for_game_state on lineup.id = lineup_for_game_state.lineup_id
+  where game_state_id = (
+    select id from game_state where game_id = t.game_id
+    order by game_state_index desc limit 1
+  )
+  and team_id = t.id;
+$$ language sql stable;
 
 drop foreign table if exists legacy_player;
 create foreign table legacy_player (
@@ -625,35 +636,3 @@ returns int as $$
   and extract(year from game.time_started) = extract(year from now());
 $$ language sql stable;
 comment on function player_games_played_this_year(player) is E'sortable';
-
-insert into "group" (id, name) values ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'SF Meetup');
-
-insert into player (group_id, first_name, last_name, legacy_player_id) values
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Andrew', 'Silva', 407),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Austin', 'Mueller', 592),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Brendan', 'Wilson', 109),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Cameron', 'Walls', 521),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Carlos', 'Ortega', 402),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Chris', 'Hunter', 649),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Dale', 'Zelmon', 23),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Dan', 'Keating', 20),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Ephrain', 'Brantley', 403),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Erik', 'Johnson', 611),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Hector', 'Franco', 167),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'James', 'Lockwood', 30),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Jason', 'Tong', 429),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Jason', 'Newland', 536),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Jason', 'Zagorski', 608),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Jessie', 'Hinojosa', 573),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Leland', 'Bailey', 409),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Matthew', 'Chinn', 532),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Max', 'Bruk', 33),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Michael', 'Cross', 340),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Mike', 'Basta', 378),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Mike', 'Kambic', 606),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Santiago', 'Andujar', 309),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Sam', 'Myers', 566),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Stefani', 'Hartsell', 647),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Steven', 'Chan', 11),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Quincy', 'Zhao', 477),
-  ('1c279ba2-e4bb-4f66-98f7-059d83f4a207', 'Yuhki', 'Yamashita', 467);

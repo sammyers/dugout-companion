@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from 'grommet';
 import _ from 'lodash';
 
+import { FieldingPosition, getPositionAbbreviation } from '@sammyers/dc-shared';
+
 import { getSelectedFielderOption } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-import { getPositionAbbreviation } from 'utils/labels';
 
-import { FieldingPosition } from '@sammyers/dc-shared';
 import { FielderOptions } from 'state/prompts/types';
 
 const AnimatedButton = motion(Button);

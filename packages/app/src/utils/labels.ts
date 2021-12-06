@@ -1,9 +1,4 @@
-import {
-  BaseType,
-  ContactQuality,
-  FieldingPosition,
-  PlateAppearanceType,
-} from '@sammyers/dc-shared';
+import { BaseType, ContactQuality } from '@sammyers/dc-shared';
 import { HitContactType } from 'state/game/types';
 import { BasepathOutcome } from 'state/prompts/types';
 
@@ -15,34 +10,6 @@ export const formatShortBaseName = (base: BaseType | null) => {
     [BaseType.THIRD]: '3rd',
   }[base];
 };
-
-export const getPositionAbbreviation = (position: FieldingPosition) =>
-  ({
-    [FieldingPosition.PITCHER]: 'P',
-    [FieldingPosition.CATCHER]: 'C',
-    [FieldingPosition.FIRST_BASE]: '1B',
-    [FieldingPosition.SECOND_BASE]: '2B',
-    [FieldingPosition.THIRD_BASE]: '3B',
-    [FieldingPosition.SHORTSTOP]: 'SS',
-    [FieldingPosition.LEFT_FIELD]: 'LF',
-    [FieldingPosition.CENTER_FIELD]: 'CF',
-    [FieldingPosition.LEFT_CENTER]: 'LCF',
-    [FieldingPosition.RIGHT_CENTER]: 'RCF',
-    [FieldingPosition.RIGHT_FIELD]: 'RF',
-  }[position]);
-
-export const getPlateAppearanceLabel = (paType: PlateAppearanceType) =>
-  ({
-    [PlateAppearanceType.OUT]: 'Out',
-    [PlateAppearanceType.SINGLE]: 'Single',
-    [PlateAppearanceType.DOUBLE]: 'Double',
-    [PlateAppearanceType.TRIPLE]: 'Triple',
-    [PlateAppearanceType.HOMERUN]: 'Home Run',
-    [PlateAppearanceType.WALK]: 'Walk',
-    [PlateAppearanceType.SACRIFICE_FLY]: 'Sacrifice Fly',
-    [PlateAppearanceType.FIELDERS_CHOICE]: "Fielder's Choice",
-    [PlateAppearanceType.DOUBLE_PLAY]: 'Double Play',
-  }[paType]);
 
 export const getOutLabelFromContact = (contactType: ContactQuality) =>
   ({

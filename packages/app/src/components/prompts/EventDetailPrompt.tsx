@@ -1,6 +1,8 @@
 import React, { useEffect, ReactNode, useCallback } from 'react';
 import { Layer, Box, Button, Heading } from 'grommet';
 
+import { getPlateAppearanceLabel } from '@sammyers/dc-shared';
+
 import HitPrompt from './prompts/HitPrompt';
 import OutPrompt from './prompts/OutPrompt';
 import SacrificeFlyPrompt from './prompts/SacrificeFlyPrompt';
@@ -11,7 +13,6 @@ import { getBatterName } from 'state/game/selectors';
 import { getPrompt, getPlateAppearanceType } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
-import { getPlateAppearanceLabel } from 'utils/labels';
 
 const EventDetailPrompt = () => {
   const dispatch = useAppDispatch();

@@ -2,6 +2,7 @@ import {
   BaseType,
   ContactQuality,
   FieldingPosition,
+  getPositionAbbreviation,
   PlateAppearanceType,
 } from '@sammyers/dc-shared';
 import _ from 'lodash';
@@ -20,11 +21,7 @@ import {
   getNumBasesForPlateAppearance,
   getLeadRunner,
 } from 'state/game/utils';
-import {
-  getHitLabelFromContact,
-  getOutLabelFromContact,
-  getPositionAbbreviation,
-} from 'utils/labels';
+import { getHitLabelFromContact, getOutLabelFromContact } from 'utils/labels';
 
 import {
   PlateAppearanceDetailOptions,

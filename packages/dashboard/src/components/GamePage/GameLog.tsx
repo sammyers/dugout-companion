@@ -1,44 +1,19 @@
-import React, { FC, useCallback, useState } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import { Box, Button, Collapsible, List, Text } from "grommet";
 import { FormDown, FormNext } from "grommet-icons";
 import _ from "lodash";
-import { useParams } from "react-router";
 
 import {
-  GetGameLogQueryResult,
-  PlateAppearanceType,
-  useGetGameLogQuery,
+  GetGameDetailsQuery,
+  getPlateAppearanceLabel,
+  ordinalSuffix,
 } from "@sammyers/dc-shared";
 
-const getPlateAppearanceLabel = (paType: PlateAppearanceType) =>
-  ({
-    [PlateAppearanceType.OUT]: "Out",
-    [PlateAppearanceType.SINGLE]: "Single",
-    [PlateAppearanceType.DOUBLE]: "Double",
-    [PlateAppearanceType.TRIPLE]: "Triple",
-    [PlateAppearanceType.HOMERUN]: "Home Run",
-    [PlateAppearanceType.WALK]: "Walk",
-    [PlateAppearanceType.SACRIFICE_FLY]: "Sacrifice Fly",
-    [PlateAppearanceType.FIELDERS_CHOICE]: "Fielder's Choice",
-    [PlateAppearanceType.DOUBLE_PLAY]: "Double Play",
-  }[paType]);
-
-const ordinalSuffix = (n: number) =>
-  Math.floor(n / 10) === 1
-    ? "th"
-    : n % 10 === 1
-    ? "st"
-    : n % 10 === 2
-    ? "nd"
-    : n % 10 === 3
-    ? "rd"
-    : "th";
-
 type GameLogEvent = NonNullable<
-  NonNullable<GetGameLogQueryResult["data"]>["game"]
+  NonNullable<GetGameDetailsQuery>["game"]
 >["gameEventRecords"][number];
 type GameLogState = NonNullable<
-  NonNullable<GetGameLogQueryResult["data"]>["game"]
+  NonNullable<GetGameDetailsQuery>["game"]
 >["gameStates"][number];
 
 const HalfInningEventList: FC<{
@@ -68,13 +43,35 @@ const HalfInningEventList: FC<{
   );
 };
 
-const GamePage = () => {
-  const { id } = useParams();
-  const { data } = useGetGameLogQuery({ variables: { id: id! } });
+interface Props {
+  events: GameLogEvent[];
+  states: GameLogState[];
+}
 
-  const [visibileInnings, setVisibleInnings] = useState<
-    Record<string, boolean>
-  >({});
+const GameLog: FC<Props> = ({ events, states }) => {
+  const [visibleInnings, setVisibleInnings] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const gameStatesMap = useMemo(
+    () => Object.fromEntries(states.map((state) => [state.id, state])),
+    [states]
+  );
+
+  const gameEventsByInning = useMemo(
+    () =>
+      _.sortBy(
+        _.toPairs(
+          _.mapValues(
+            _.groupBy(events, (event) => event.gameStateBefore?.inning),
+            (events) =>
+              _.groupBy(events, (event) => event.gameStateBefore?.halfInning)
+          )
+        ),
+        0
+      ),
+    [events]
+  );
 
   const toggleInningVisible = useCallback(
     (inning: string) => {
@@ -86,32 +83,11 @@ const GamePage = () => {
     [setVisibleInnings]
   );
 
-  if (!data) {
-    return null;
-  }
-
-  const { gameLength, gameStates, gameEventRecords } = data.game!;
-
-  const gameStatesMap = Object.fromEntries(
-    gameStates.map((state) => [state.id, state])
-  );
-
-  const gameEventsByInning = _.sortBy(
-    _.toPairs(
-      _.mapValues(
-        _.groupBy(gameEventRecords, (event) => event.gameStateBefore?.inning),
-        (events) =>
-          _.groupBy(events, (event) => event.gameStateBefore?.halfInning)
-      )
-    ),
-    0
-  );
-
   return (
     <Box flex>
       {gameEventsByInning.map(
         ([inning, { TOP: topInningEvents, BOTTOM: bottomInningEvents }]) => {
-          const open = visibileInnings[inning];
+          const open = visibleInnings[inning];
           const inningOrdinal = `${inning}${ordinalSuffix(Number(inning))}`;
           return (
             <>
@@ -147,4 +123,4 @@ const GamePage = () => {
   );
 };
 
-export default GamePage;
+export default GameLog;

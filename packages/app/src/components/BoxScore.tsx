@@ -2,13 +2,12 @@ import React, { FC } from 'react';
 import { Box, Card, DataTable, Text } from 'grommet';
 import { Navigate } from 'react-router-dom';
 
-import { TeamRole } from '@sammyers/dc-shared';
+import { getPositionAbbreviation, TeamRole } from '@sammyers/dc-shared';
 
 import { isGameInProgress, getPlayerPosition } from 'state/game/selectors';
 import { getShortPlayerName } from 'state/players/selectors';
 import { getBoxScore } from 'state/stats/selectors';
 import { useAppSelector } from 'utils/hooks';
-import { getPositionAbbreviation } from 'utils/labels';
 
 import { BoxScoreRow } from 'state/stats/types';
 

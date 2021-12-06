@@ -1384,6 +1384,7 @@ type Team implements Node {
     """
     condition: LineupCondition
   ): [Lineup!]!
+  finalLineup: Lineup
 }
 
 enum TeamRole {

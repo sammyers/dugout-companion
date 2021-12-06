@@ -18,7 +18,7 @@ const columns: Record<string, GridColumnsType> = {
 };
 
 const rows: Record<string, GridSizeType[]> = {
-  small: ["small", "large", "medium"],
+  small: ["auto", "auto", "medium"],
   medium: ["auto", "auto"],
   large: ["auto", "auto"],
   xlarge: ["full"],
