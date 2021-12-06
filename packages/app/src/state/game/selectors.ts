@@ -21,6 +21,7 @@ import {
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
+import { getCurrentGroup } from 'state/groups/selectors';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -77,6 +78,8 @@ export const getTeam = (state: AppState, role: TeamRole) =>
   partialSelectors.getTeam(getPresent(state), role);
 export const getBattingTeam = createSelector(getTeams, getBattingTeamRole, getTeamWithRole);
 export const getFieldingTeam = createSelector(getTeams, getFieldingTeamRole, getTeamWithRole);
+
+export const getTeamName = (state: AppState, role: TeamRole) => getTeam(state, role).name;
 
 export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
 export const getFieldingLineup = createSelector(getFieldingTeam, getCurrentLineup);
@@ -199,12 +202,22 @@ export const wasGameSaved = createSelector(getPresent, game => game.saved);
 export const isUndoPossible = createSelector(getPast, past => past.length > 0);
 export const isRedoPossible = createSelector(getFuture, future => future.length > 0);
 
+export const getGameName = createSelector(getPresent, game => game.name);
 export const getGameId = createSelector(getPresent, game => game.gameId);
 export const getTimeStarted = createSelector(getPresent, game => game.timeStarted);
 export const getTimeEnded = createSelector(getPresent, game => game.timeEnded);
 
+export const getWinningTeamName = (state: AppState) => {
+  const [awayScore, homeScore] = getScore(state);
+  const role = awayScore > homeScore ? TeamRole.AWAY : TeamRole.HOME;
+  const name = getTeamName(state, role);
+  return name || `${_.capitalize(role)} Team`;
+};
+
 export const getGameForMutation = createSelector(
   getGameId,
+  getGameName,
+  getCurrentGroup,
   getTimeStarted,
   getTimeEnded,
   getTeams,
@@ -214,6 +227,8 @@ export const getGameForMutation = createSelector(
   getGameHistory,
   (
     id,
+    name,
+    groupId,
     timeStarted,
     timeEnded,
     teams,
@@ -223,6 +238,8 @@ export const getGameForMutation = createSelector(
     gameEventRecords
   ): GameInput => ({
     id,
+    name,
+    groupId,
     timeStarted: timeStarted!,
     timeEnded: timeEnded!,
     score,

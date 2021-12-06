@@ -11,6 +11,7 @@ const PlayTypeTag: FC<{ type: PlateAppearanceType }> = ({ type }) => {
   let background = '';
   switch (type) {
     case PlateAppearanceType.WALK:
+    case PlateAppearanceType.SACRIFICE_FLY:
       background = 'neutral-3';
       break;
     case PlateAppearanceType.OUT:

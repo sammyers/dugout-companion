@@ -42,7 +42,7 @@ export enum GameStatus {
   FINISHED = 'FINISHED',
 }
 
-export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords'> & {
+export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords' | 'name'> & {
   gameId?: string;
   timeStarted?: string;
   timeEnded?: string;

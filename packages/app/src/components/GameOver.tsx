@@ -1,25 +1,27 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { formatISO } from 'date-fns';
-import { Box, Button, CheckBox, Heading, Main, Notification } from 'grommet';
+import { Box, Button, CheckBox, Heading, Main, Notification, TextInput } from 'grommet';
 import { Navigate } from 'react-router-dom';
 
 import SaveGameButton from './SaveGameButton';
 
 import {
   getCurrentGameLength,
+  getGameName,
   getGameStatus,
   getMaxGameLength,
   getScore,
   getTimeEnded,
+  getWinningTeamName,
   wasGameSaved,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { getNumUnsavedGames } from 'state/unsavedGames/selectors';
 import { stashCurrentGameToSaveLater } from 'state/unsavedGames/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { useNetworkStatus } from 'utils/network';
 
 import { GameStatus } from 'state/game/types';
-import { useNetworkStatus } from 'utils/network';
 
 const GameOver = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +29,8 @@ const GameOver = () => {
   const online = useNetworkStatus();
 
   const gameStatus = useAppSelector(getGameStatus);
+  const winningTeamName = useAppSelector(getWinningTeamName);
+  const gameName = useAppSelector(getGameName);
   const timeEnded = useAppSelector(getTimeEnded);
   const [awayScore, homeScore] = useAppSelector(getScore);
   const gameLength = useAppSelector(getCurrentGameLength);
@@ -41,6 +45,12 @@ const GameOver = () => {
   }, [gameStatus, timeEnded, dispatch]);
 
   const [keepTeams, setKeepTeams] = useState(true);
+
+  const handleChangeName = useCallback(
+    ({ currentTarget }: ChangeEvent<HTMLInputElement>) =>
+      dispatch(gameActions.changeGameName(currentTarget.value)),
+    [dispatch]
+  );
 
   const onClickExtendGame = useCallback(() => {
     dispatch(gameActions.extendGame());
@@ -68,7 +78,7 @@ const GameOver = () => {
     <Main flex background="brand" justify="center" align="center">
       <Box align="center">
         <Heading level={2} margin={{ bottom: 'small' }}>
-          {awayScore > homeScore ? 'Away' : 'Home'} team wins!
+          {winningTeamName} wins!
         </Heading>
         <Heading margin={{ bottom: 'large' }}>
           {awayScore} - {homeScore}
@@ -76,6 +86,13 @@ const GameOver = () => {
       </Box>
       <Box gap="medium" style={{ maxWidth: '35%' }}>
         <Box gap="xsmall">
+          {!saved && (
+            <TextInput
+              value={gameName!}
+              onChange={handleChangeName}
+              placeholder="Title this game"
+            />
+          )}
           <SaveGameButton />
           {online && numUnsavedGames > 0 && (
             <Notification

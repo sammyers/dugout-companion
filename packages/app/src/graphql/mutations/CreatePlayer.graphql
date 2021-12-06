@@ -1,9 +1,12 @@
-mutation CreatePlayer($id: UUID, $firstName: String!, $lastName: String) {
-  createPlayer(input: { player: { id: $id, firstName: $firstName, lastName: $lastName } }) {
+mutation CreatePlayer($id: UUID, $firstName: String!, $lastName: String, $groupId: UUID!) {
+  createPlayer(
+    input: { player: { id: $id, firstName: $firstName, lastName: $lastName, groupId: $groupId } }
+  ) {
     player {
       id
       firstName
       lastName
+      groupId
     }
   }
 }

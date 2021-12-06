@@ -1,5 +1,5 @@
-query GetAllGames {
-  games {
+query GetAllGames($groupId: UUID!) {
+  games(condition: { groupId: $groupId }) {
     ...UnpackedGame_Game
   }
 }

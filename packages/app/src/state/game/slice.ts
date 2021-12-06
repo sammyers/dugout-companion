@@ -37,6 +37,7 @@ const makeInitialTeamState = (role: TeamRole): Team => ({
 });
 
 const initialState: AppGameState = {
+  name: '',
   status: GameStatus.NOT_STARTED,
   teams: [makeInitialTeamState(TeamRole.AWAY), makeInitialTeamState(TeamRole.HOME)],
   prevGameStates: [],
@@ -69,6 +70,9 @@ const { actions: gameActions, reducer } = createSlice({
         const newLineup = updatePositions([...lineup, newSpot]);
         changeLineup(state, teamRole, newLineup);
       }
+    },
+    changeTeamName(state, { payload }: PayloadAction<{ role: TeamRole; name: string }>) {
+      state.teams.find(({ role }) => role === payload.role)!.name = payload.name;
     },
     movePlayer(state, { payload }: PayloadAction<MovePlayerPayload>) {
       if (payload.fromTeam === payload.toTeam) {
@@ -198,8 +202,11 @@ const { actions: gameActions, reducer } = createSlice({
     decrementGameLength(state) {
       state.gameLength -= 1;
     },
-    setTimeEnded(state, action: PayloadAction<string>) {
-      state.timeEnded = action.payload;
+    changeGameName(state, { payload }: PayloadAction<string>) {
+      state.name = payload;
+    },
+    setTimeEnded(state, { payload }: PayloadAction<string>) {
+      state.timeEnded = payload;
     },
     extendGame(state) {
       state.gameLength = Math.max(state.gameState?.inning ?? 0, state.gameLength) + 1;

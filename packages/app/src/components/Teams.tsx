@@ -14,7 +14,7 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 const ButtonContainer: FC = ({ children }) => (
   <Box
     style={{ position: 'absolute', top: 0 }}
-    margin={{ horizontal: 'auto', vertical: 'small' }}
+    margin={{ horizontal: 'auto', vertical: 'medium' }}
     direction="row"
     gap="xsmall"
   >
@@ -70,6 +70,7 @@ const Teams = () => {
         basis="auto"
         style={{ position: 'relative' }}
       >
+        <Lineup teamRole={TeamRole.AWAY} editable={editable} />
         <ButtonContainer>
           {gameInProgress ? (
             editable ? (
@@ -97,7 +98,6 @@ const Teams = () => {
             <Button plain={false} icon={<Transaction />} onClick={handleFlipTeams} />
           )}
         </ButtonContainer>
-        <Lineup teamRole={TeamRole.AWAY} editable={editable} />
         <Lineup teamRole={TeamRole.HOME} editable={editable} />
       </Box>
     </DragDropContext>

@@ -6,16 +6,16 @@ import { useStore } from 'react-redux';
 
 import { Spinner, useCreateGameMutation, useCreatePlayerMutation } from '@sammyers/dc-shared';
 
-import { getGameForMutation, wasGameSaved } from 'state/game/selectors';
+import { getGameForMutation, getGameName, wasGameSaved } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { getUnsyncedPlayers } from 'state/players/selectors';
 import { playerActions } from 'state/players/slice';
+import { getUnsavedGames } from 'state/unsavedGames/selectors';
+import { unsavedGameActions } from 'state/unsavedGames/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
 
 import { AppState } from 'state/store';
-import { getUnsavedGames } from 'state/unsavedGames/selectors';
-import { unsavedGameActions } from 'state/unsavedGames/slice';
 
 const SaveGameButton = () => {
   const dispatch = useAppDispatch();
@@ -26,6 +26,7 @@ const SaveGameButton = () => {
 
   const [success, setSuccess] = useState(false);
   const saved = useAppSelector(wasGameSaved);
+  const gameName = useAppSelector(getGameName);
 
   const [createGame, { loading: createGameLoading }] = useCreateGameMutation({
     onCompleted: () => setSuccess(true),
@@ -61,7 +62,7 @@ const SaveGameButton = () => {
       color="light-2"
       plain={false}
       primary={success || saved}
-      disabled={!online || success || saved}
+      disabled={!online || success || saved || !gameName}
       icon={
         success || saved ? (
           <StatusGood />

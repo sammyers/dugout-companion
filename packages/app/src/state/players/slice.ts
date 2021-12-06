@@ -4,13 +4,13 @@ import { v4 as uuid4 } from 'uuid';
 
 import { Player, NewPlayer } from './types';
 
-const doesPlayerExist = (newPlayer: NewPlayer, players: Record<string, Player>) =>
+type PlayerMap = Record<string, Player>;
+
+const doesPlayerExist = (newPlayer: NewPlayer, players: PlayerMap) =>
   _.some(
     players,
     player => player.firstName === newPlayer.firstName && player.lastName === newPlayer.lastName
   );
-
-type PlayerMap = Record<string, Player>;
 
 export interface PlayerState {
   synced: PlayerMap;
@@ -33,7 +33,7 @@ const { actions: playerActions, reducer } = createSlice({
           ...all,
           [player.id]: player,
         }),
-        {} as PlayerMap
+        {} as Record<string, Player>
       );
       payload.forEach(({ id }) => {
         if (id in state.unsynced) {

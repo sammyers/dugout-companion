@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, ChangeEvent } from 'react';
-import { Box, Text, TextInput, TextInputProps, Heading } from 'grommet';
+import { Box, Text, TextInput, TextInputProps } from 'grommet';
 import _ from 'lodash';
 import { Droppable } from 'react-beautiful-dnd';
 
@@ -7,8 +7,9 @@ import { TeamRole, useCreatePlayerMutation } from '@sammyers/dc-shared';
 
 import LineupPlayer from './LineupPlayer';
 
-import { getLineupToEdit, getPlayersNotInGame } from 'state/game/selectors';
+import { getLineupToEdit, getPlayersNotInGame, getTeamName } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
+import { getCurrentGroup } from 'state/groups/selectors';
 import { playerActions } from 'state/players/slice';
 import { formatName, getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
@@ -26,6 +27,8 @@ const Lineup = ({ teamRole, editable }: Props) => {
 
   const players = useAppSelector(state => getLineupToEdit(state, teamRole));
   const availablePlayers = useAppSelector(getPlayersNotInGame);
+  const groupId = useAppSelector(getCurrentGroup)!;
+  const teamName = useAppSelector(state => getTeamName(state, teamRole));
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -62,6 +65,12 @@ const Lineup = ({ teamRole, editable }: Props) => {
     return existingSuggestions;
   }, [availablePlayers, searchValue]);
 
+  const handleNameChange = useCallback(
+    ({ currentTarget }: ChangeEvent<HTMLInputElement>) =>
+      dispatch(gameActions.changeTeamName({ role: teamRole, name: currentTarget.value })),
+    [dispatch, teamRole]
+  );
+
   const handleSearchChange = useCallback(
     ({ currentTarget }: ChangeEvent<HTMLInputElement>) => setSearchValue(currentTarget.value),
     [setSearchValue]
@@ -74,14 +83,16 @@ const Lineup = ({ teamRole, editable }: Props) => {
         if (playerId === NEW_PLAYER_ID) {
           const nameParts = getNameParts(searchValue);
           if (online) {
-            const { data } = await createPlayer({ variables: nameParts });
+            const { data } = await createPlayer({ variables: { ...nameParts, groupId } });
             const player = data?.createPlayer?.player;
             if (player) {
               dispatch(playerActions.loadPlayer(player));
               playerId = player.id;
             }
           } else {
-            const { payload } = dispatch(playerActions.createPlayerOffline(nameParts));
+            const { payload } = dispatch(
+              playerActions.createPlayerOffline({ ...nameParts, groupId })
+            );
             playerId = payload.id;
           }
         }
@@ -89,14 +100,18 @@ const Lineup = ({ teamRole, editable }: Props) => {
         setSearchValue('');
       }
     },
-    [online, teamRole, dispatch, searchValue, setSearchValue, createPlayer]
+    [groupId, online, teamRole, dispatch, searchValue, setSearchValue, createPlayer]
   );
 
   return (
     <Box flex>
-      <Heading level={4} textAlign="center" margin={{ top: 'none' }}>
-        {teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
-      </Heading>
+      <Box alignSelf="center" margin={{ bottom: 'medium' }} width="medium">
+        <TextInput
+          value={teamName!}
+          onChange={handleNameChange}
+          placeholder={teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
+        />
+      </Box>
       {editable && (
         <TextInput
           placeholder="Add Player"

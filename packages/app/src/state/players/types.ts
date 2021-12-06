@@ -29,4 +29,4 @@ export type PlayerStats = CountingStats & Partial<RateStats>;
 
 export type Player = NonNullable<SimplifyType<GetAllPlayersQuery>['players']>[number];
 
-export type NewPlayer = Pick<Player, 'firstName' | 'lastName'>;
+export type NewPlayer = Omit<Player, 'id'>;

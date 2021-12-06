@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Grommet, Main, Box } from 'grommet';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import { useGetAllPlayersQuery, useGetAllGamesQuery } from '@sammyers/dc-shared';
+import {
+  useGetAllPlayersQuery,
+  useGetAllGamesQuery,
+  useGetAllGroupsQuery,
+} from '@sammyers/dc-shared';
 
 import GameOver from './GameOver';
 import TopBar from './TopBar';
@@ -20,6 +24,8 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { Game } from 'state/game/types';
 import { Player } from 'state/players/types';
 import { networkStatusContext } from 'utils/network';
+import { groupActions } from 'state/groups/slice';
+import { getCurrentGroup } from 'state/groups/selectors';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -29,8 +35,23 @@ const App = () => {
 
   const gameOver = useAppSelector(isGameOver);
 
-  const { data: playerData } = useGetAllPlayersQuery();
-  const { data: gameData } = useGetAllGamesQuery();
+  const { data: groupData } = useGetAllGroupsQuery();
+
+  useEffect(() => {
+    if (groupData?.groups) {
+      dispatch(groupActions.loadGroups(groupData.groups));
+    }
+  }, [groupData, dispatch]);
+  const groupId = useAppSelector(getCurrentGroup);
+
+  const { data: playerData } = useGetAllPlayersQuery({
+    skip: !groupId,
+    variables: groupId ? { groupId } : undefined,
+  });
+  const { data: gameData } = useGetAllGamesQuery({
+    skip: !groupId,
+    variables: groupId ? { groupId } : undefined,
+  });
 
   useEffect(() => {
     if (playerData) {

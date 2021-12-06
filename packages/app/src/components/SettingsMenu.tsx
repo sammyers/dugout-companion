@@ -10,6 +10,7 @@ import {
   isGameInExtraInnings,
   isGameInProgress,
 } from 'state/game/selectors';
+import { getCurrentGroupName } from 'state/groups/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
@@ -55,6 +56,7 @@ const SettingsMenu = () => {
   const currentGameLength = useAppSelector(getCurrentGameLength);
   const inProgress = useAppSelector(isGameInProgress);
   const inExtraInnings = useAppSelector(isGameInExtraInnings);
+  const groupName = useAppSelector(getCurrentGroupName);
 
   const handleChangeGameLength = useCallback(
     ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -67,13 +69,17 @@ const SettingsMenu = () => {
     () => dispatch(gameActions.decrementGameLength()),
     [dispatch]
   );
-  const handleClickAddGameLength = useCallback(() => dispatch(gameActions.incrementGameLength()), [
-    dispatch,
-  ]);
+  const handleClickAddGameLength = useCallback(
+    () => dispatch(gameActions.incrementGameLength()),
+    [dispatch]
+  );
 
   return (
-    <Box pad={{ vertical: 'medium', horizontal: 'small' }} gap="medium">
+    <Box pad={{ bottom: 'medium', horizontal: 'small', top: 'small' }} gap="medium">
       <Box>
+        <Heading level={4} alignSelf="center" margin={{ top: 'xsmall', bottom: 'medium' }}>
+          Current Group: {groupName}
+        </Heading>
         <Heading level={5} margin="none" alignSelf="center">
           Game Length
         </Heading>

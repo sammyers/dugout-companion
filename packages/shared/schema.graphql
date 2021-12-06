@@ -136,6 +136,23 @@ type Query implements Node {
     condition: GameStateCondition
   ): [GameState!]
 
+  """Reads a set of `Group`."""
+  groups(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Group`."""
+    orderBy: [GroupsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GroupCondition
+  ): [Group!]
+
   """Reads a set of `LegacyField`."""
   legacyFields(
     """Only read the first `n` values of the set."""
@@ -399,6 +416,8 @@ type Query implements Node {
   gameEventRecord(id: UUID!): GameEventRecord
   gameEventRecordByGameIdAndEventIndex(gameId: UUID!, eventIndex: Int!): GameEventRecord
   gameState(id: UUID!): GameState
+  group(id: UUID!): Group
+  groupByName(name: String!): Group
   legacyField(fieldId: Int!): LegacyField
   legacyGame(gameId: Int!): LegacyGame
   legacyPlayer(playerId: Int!): LegacyPlayer
@@ -495,6 +514,12 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `GameState`."""
     nodeId: ID!
   ): GameState
+
+  """Reads a single `Group` using its globally unique `ID`."""
+  groupByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Group`."""
+    nodeId: ID!
+  ): Group
 
   """Reads a single `LegacyField` using its globally unique `ID`."""
   legacyFieldByNodeId(
@@ -747,6 +772,7 @@ type Game implements Node {
   """
   nodeId: ID!
   id: UUID!
+  groupId: UUID!
   name: String
   fieldId: UUID
   score: [Int]!
@@ -754,6 +780,9 @@ type Game implements Node {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime!
+
+  """Reads a single `Group` that is related to this `Game`."""
+  group: Group
 
   """Reads a single `Field` that is related to this `Game`."""
   field: Field
@@ -834,7 +863,7 @@ A point in time as described by the [ISO
 """
 scalar Datetime
 
-type Field implements Node {
+type Group implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
@@ -842,6 +871,23 @@ type Field implements Node {
   id: UUID!
   name: String!
   notes: String
+
+  """Reads and enables pagination through a set of `Player`."""
+  players(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Player`."""
+    orderBy: [PlayersOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PlayerCondition
+  ): [Player!]!
 
   """Reads and enables pagination through a set of `Game`."""
   games(
@@ -861,56 +907,447 @@ type Field implements Node {
   ): [Game!]!
 }
 
-"""Methods to use when ordering `Game`."""
-enum GamesOrderBy {
+type Player implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  groupId: UUID!
+  legacyPlayerId: Int
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+
+  """Reads a single `Group` that is related to this `Player`."""
+  group: Group
+
+  """Reads a single `LegacyPlayer` that is related to this `Player`."""
+  legacyPlayer: LegacyPlayer
+
+  """Reads and enables pagination through a set of `Team`."""
+  teamsByCaptainId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Team`."""
+    orderBy: [TeamsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: TeamCondition
+  ): [Team!]!
+
+  """Reads and enables pagination through a set of `LineupSpot`."""
+  lineupSpots(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LineupSpot`."""
+    orderBy: [LineupSpotsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LineupSpotCondition
+  ): [LineupSpot!]!
+
+  """Reads and enables pagination through a set of `BasepathMovement`."""
+  basepathMovementsByRunnerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `BasepathMovement`."""
+    orderBy: [BasepathMovementsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BasepathMovementCondition
+  ): [BasepathMovement!]!
+
+  """Reads and enables pagination through a set of `OutOnPlayRunner`."""
+  outOnPlayRunnersByRunnerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `OutOnPlayRunner`."""
+    orderBy: [OutOnPlayRunnersOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: OutOnPlayRunnerCondition
+  ): [OutOnPlayRunner!]!
+
+  """Reads and enables pagination through a set of `StolenBaseAttempt`."""
+  stolenBaseAttemptsByRunnerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `StolenBaseAttempt`."""
+    orderBy: [StolenBaseAttemptsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: StolenBaseAttemptCondition
+  ): [StolenBaseAttempt!]!
+
+  """Reads and enables pagination through a set of `GameState`."""
+  gameStatesByPlayerAtBat(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameState`."""
+    orderBy: [GameStatesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameStateCondition
+  ): [GameState!]!
+
+  """Reads and enables pagination through a set of `BaseRunner`."""
+  baseRunnersByRunnerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `BaseRunner`."""
+    orderBy: [BaseRunnersOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: BaseRunnerCondition
+  ): [BaseRunner!]!
+
+  """Reads and enables pagination through a set of `ScoredRunner`."""
+  scoredRunnersByRunnerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `ScoredRunner`."""
+    orderBy: [ScoredRunnersOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ScoredRunnerCondition
+  ): [ScoredRunner!]!
+  fullName: String
+  gamesPlayed(beforeDate: Datetime, afterDate: Datetime): Int
+
+  """sortable"""
+  gamesPlayedThisYear: Int
+  traditionalStats(beforeDate: Datetime, afterDate: Datetime): TraditionalStatLine
+}
+
+type LegacyPlayer implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  playerId: Int!
+  playerName: String!
+  playerImage: String
+  memberId: String
+
+  """Reads and enables pagination through a set of `LegacyStatLine`."""
+  legacyStatLinesByPlayerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyStatLine`."""
+    orderBy: [LegacyStatLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyStatLineCondition
+  ): [LegacyStatLine!]!
+
+  """Reads and enables pagination through a set of `Player`."""
+  players(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Player`."""
+    orderBy: [PlayersOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: PlayerCondition
+  ): [Player!]!
+}
+
+type LegacyStatLine {
+  sbStatsId: Int!
+  playerId: Int!
+  gameId: Int!
+  sbStatsTeam: Int!
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+
+  """
+  Reads a single `LegacyPlayer` that is related to this `LegacyStatLine`.
+  """
+  player: LegacyPlayer
+
+  """Reads a single `LegacyGame` that is related to this `LegacyStatLine`."""
+  game: LegacyGame
+
+  """Reads a single `LegacyTeam` that is related to this `LegacyStatLine`."""
+  legacyTeamBySbStatsTeam: LegacyTeam
+}
+
+type LegacyGame implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  gameId: Int!
+  gameTitle: String!
+  gameDate: Date!
+  gameStartTime: Time!
+  gameEndTime: Time!
+  gameTeamId1: Int!
+  gameTeamId2: Int!
+  season: Int!
+
+  """Reads and enables pagination through a set of `LegacyStatLine`."""
+  legacyStatLinesByGameId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyStatLine`."""
+    orderBy: [LegacyStatLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyStatLineCondition
+  ): [LegacyStatLine!]!
+}
+
+"""The day, does not include a time."""
+scalar Date
+
+"""
+The exact time of day, does not include the date. May or may not have a timezone offset.
+"""
+scalar Time
+
+"""Methods to use when ordering `LegacyStatLine`."""
+enum LegacyStatLinesOrderBy {
+  NATURAL
+  SB_STATS_ID_ASC
+  SB_STATS_ID_DESC
+  PLAYER_ID_ASC
+  PLAYER_ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  SB_STATS_TEAM_ASC
+  SB_STATS_TEAM_DESC
+  AT_BATS_ASC
+  AT_BATS_DESC
+  RUNS_ASC
+  RUNS_DESC
+  HITS_ASC
+  HITS_DESC
+  SINGLES_ASC
+  SINGLES_DESC
+  DOUBLES_ASC
+  DOUBLES_DESC
+  TRIPLES_ASC
+  TRIPLES_DESC
+  HOMERUNS_ASC
+  HOMERUNS_DESC
+  RBI_ASC
+  RBI_DESC
+  WALKS_ASC
+  WALKS_DESC
+  STRIKEOUTS_ASC
+  STRIKEOUTS_DESC
+  SAC_FLIES_ASC
+  SAC_FLIES_DESC
+}
+
+"""
+A condition to be used against `LegacyStatLine` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input LegacyStatLineCondition {
+  """Checks for equality with the object’s `sbStatsId` field."""
+  sbStatsId: Int
+
+  """Checks for equality with the object’s `playerId` field."""
+  playerId: Int
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: Int
+
+  """Checks for equality with the object’s `sbStatsTeam` field."""
+  sbStatsTeam: Int
+
+  """Checks for equality with the object’s `atBats` field."""
+  atBats: Int
+
+  """Checks for equality with the object’s `runs` field."""
+  runs: Int
+
+  """Checks for equality with the object’s `hits` field."""
+  hits: Int
+
+  """Checks for equality with the object’s `singles` field."""
+  singles: Int
+
+  """Checks for equality with the object’s `doubles` field."""
+  doubles: Int
+
+  """Checks for equality with the object’s `triples` field."""
+  triples: Int
+
+  """Checks for equality with the object’s `homeruns` field."""
+  homeruns: Int
+
+  """Checks for equality with the object’s `rbi` field."""
+  rbi: Int
+
+  """Checks for equality with the object’s `walks` field."""
+  walks: Int
+
+  """Checks for equality with the object’s `strikeouts` field."""
+  strikeouts: Int
+
+  """Checks for equality with the object’s `sacFlies` field."""
+  sacFlies: Int
+}
+
+type LegacyTeam implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  teamId: Int!
+  teamName: String!
+
+  """Reads and enables pagination through a set of `LegacyStatLine`."""
+  legacyStatLinesBySbStatsTeam(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyStatLine`."""
+    orderBy: [LegacyStatLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyStatLineCondition
+  ): [LegacyStatLine!]!
+}
+
+"""Methods to use when ordering `Player`."""
+enum PlayersOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  NAME_ASC
-  NAME_DESC
-  FIELD_ID_ASC
-  FIELD_ID_DESC
-  SCORE_ASC
-  SCORE_DESC
-  GAME_LENGTH_ASC
-  GAME_LENGTH_DESC
-  TIME_STARTED_ASC
-  TIME_STARTED_DESC
-  TIME_ENDED_ASC
-  TIME_ENDED_DESC
-  TIME_SAVED_ASC
-  TIME_SAVED_DESC
+  GROUP_ID_ASC
+  GROUP_ID_DESC
+  LEGACY_PLAYER_ID_ASC
+  LEGACY_PLAYER_ID_DESC
+  FIRST_NAME_ASC
+  FIRST_NAME_DESC
+  LAST_NAME_ASC
+  LAST_NAME_DESC
+  NICKNAME_ASC
+  NICKNAME_DESC
+  IMAGE_URL_ASC
+  IMAGE_URL_DESC
+  TIME_CREATED_ASC
+  TIME_CREATED_DESC
+  FULL_NAME_ASC
+  FULL_NAME_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `Game` object types. All fields are tested for equality and combined with a logical ‘and.’
+A condition to be used against `Player` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
-input GameCondition {
+input PlayerCondition {
   """Checks for equality with the object’s `id` field."""
   id: UUID
 
-  """Checks for equality with the object’s `name` field."""
-  name: String
+  """Checks for equality with the object’s `groupId` field."""
+  groupId: UUID
 
-  """Checks for equality with the object’s `fieldId` field."""
-  fieldId: UUID
+  """Checks for equality with the object’s `legacyPlayerId` field."""
+  legacyPlayerId: Int
 
-  """Checks for equality with the object’s `score` field."""
-  score: [Int]
+  """Checks for equality with the object’s `firstName` field."""
+  firstName: String
 
-  """Checks for equality with the object’s `gameLength` field."""
-  gameLength: Int
+  """Checks for equality with the object’s `lastName` field."""
+  lastName: String
 
-  """Checks for equality with the object’s `timeStarted` field."""
-  timeStarted: Datetime
+  """Checks for equality with the object’s `nickname` field."""
+  nickname: String
 
-  """Checks for equality with the object’s `timeEnded` field."""
-  timeEnded: Datetime
+  """Checks for equality with the object’s `imageUrl` field."""
+  imageUrl: String
 
-  """Checks for equality with the object’s `timeSaved` field."""
-  timeSaved: Datetime
+  """Checks for equality with the object’s `timeCreated` field."""
+  timeCreated: Datetime
 }
 
 type Team implements Node {
@@ -922,10 +1359,14 @@ type Team implements Node {
   gameId: UUID!
   role: TeamRole!
   name: String
+  captainId: UUID
   winner: Boolean
 
   """Reads a single `Game` that is related to this `Team`."""
   game: Game
+
+  """Reads a single `Player` that is related to this `Team`."""
+  captain: Player
 
   """Reads and enables pagination through a set of `Lineup`."""
   lineups(
@@ -1061,146 +1502,6 @@ enum FieldingPosition {
   RIGHT_FIELD
 }
 
-type Player implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: UUID!
-  firstName: String!
-  lastName: String
-  nickname: String
-  imageUrl: String
-  timeCreated: Datetime
-
-  """Reads and enables pagination through a set of `LineupSpot`."""
-  lineupSpots(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LineupSpot`."""
-    orderBy: [LineupSpotsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LineupSpotCondition
-  ): [LineupSpot!]!
-
-  """Reads and enables pagination through a set of `BasepathMovement`."""
-  basepathMovementsByRunnerId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `BasepathMovement`."""
-    orderBy: [BasepathMovementsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BasepathMovementCondition
-  ): [BasepathMovement!]!
-
-  """Reads and enables pagination through a set of `OutOnPlayRunner`."""
-  outOnPlayRunnersByRunnerId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `OutOnPlayRunner`."""
-    orderBy: [OutOnPlayRunnersOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: OutOnPlayRunnerCondition
-  ): [OutOnPlayRunner!]!
-
-  """Reads and enables pagination through a set of `StolenBaseAttempt`."""
-  stolenBaseAttemptsByRunnerId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `StolenBaseAttempt`."""
-    orderBy: [StolenBaseAttemptsOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: StolenBaseAttemptCondition
-  ): [StolenBaseAttempt!]!
-
-  """Reads and enables pagination through a set of `GameState`."""
-  gameStatesByPlayerAtBat(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `GameState`."""
-    orderBy: [GameStatesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: GameStateCondition
-  ): [GameState!]!
-
-  """Reads and enables pagination through a set of `BaseRunner`."""
-  baseRunnersByRunnerId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `BaseRunner`."""
-    orderBy: [BaseRunnersOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: BaseRunnerCondition
-  ): [BaseRunner!]!
-
-  """Reads and enables pagination through a set of `ScoredRunner`."""
-  scoredRunnersByRunnerId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `ScoredRunner`."""
-    orderBy: [ScoredRunnersOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ScoredRunnerCondition
-  ): [ScoredRunner!]!
-  fullName: String
-
-  """sortable"""
-  gamesPlayed(beforeDate: Datetime, afterDate: Datetime): Int
-
-  """sortable"""
-  gamesPlayedThisYear: Int
-  traditionalStats(beforeDate: Datetime, afterDate: Datetime): TraditionalStatLine
-}
-
 """Methods to use when ordering `LineupSpot`."""
 enum LineupSpotsOrderBy {
   NATURAL
@@ -1232,6 +1533,154 @@ input LineupSpotCondition {
 
   """Checks for equality with the object’s `position` field."""
   position: FieldingPosition
+}
+
+type LineupChange implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  lineupBeforeId: UUID!
+  lineupAfterId: UUID!
+
+  """Reads a single `Lineup` that is related to this `LineupChange`."""
+  lineupBefore: Lineup
+
+  """Reads a single `Lineup` that is related to this `LineupChange`."""
+  lineupAfter: Lineup
+}
+
+"""Methods to use when ordering `LineupChange`."""
+enum LineupChangesOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  LINEUP_BEFORE_ID_ASC
+  LINEUP_BEFORE_ID_DESC
+  LINEUP_AFTER_ID_ASC
+  LINEUP_AFTER_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LineupChange` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input LineupChangeCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `lineupBeforeId` field."""
+  lineupBeforeId: UUID
+
+  """Checks for equality with the object’s `lineupAfterId` field."""
+  lineupAfterId: UUID
+}
+
+type LineupForGameState implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  gameStateId: UUID!
+  lineupId: UUID!
+
+  """
+  Reads a single `GameState` that is related to this `LineupForGameState`.
+  """
+  gameState: GameState
+
+  """Reads a single `Lineup` that is related to this `LineupForGameState`."""
+  lineup: Lineup
+}
+
+"""Methods to use when ordering `LineupForGameState`."""
+enum LineupForGameStatesOrderBy {
+  NATURAL
+  GAME_STATE_ID_ASC
+  GAME_STATE_ID_DESC
+  LINEUP_ID_ASC
+  LINEUP_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LineupForGameState` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input LineupForGameStateCondition {
+  """Checks for equality with the object’s `gameStateId` field."""
+  gameStateId: UUID
+
+  """Checks for equality with the object’s `lineupId` field."""
+  lineupId: UUID
+}
+
+"""Methods to use when ordering `Lineup`."""
+enum LineupsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  TEAM_ID_ASC
+  TEAM_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Lineup` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input LineupCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `teamId` field."""
+  teamId: UUID
+}
+
+"""Methods to use when ordering `Team`."""
+enum TeamsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  ROLE_ASC
+  ROLE_DESC
+  NAME_ASC
+  NAME_DESC
+  CAPTAIN_ID_ASC
+  CAPTAIN_ID_DESC
+  WINNER_ASC
+  WINNER_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Team` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input TeamCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: UUID
+
+  """Checks for equality with the object’s `role` field."""
+  role: TeamRole
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `captainId` field."""
+  captainId: UUID
+
+  """Checks for equality with the object’s `winner` field."""
+  winner: Boolean
 }
 
 type BasepathMovement implements Node {
@@ -1616,22 +2065,6 @@ type GameEvent implements Node {
   ): [GameEventRecord!]!
 }
 
-type LineupChange implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: UUID!
-  lineupBeforeId: UUID!
-  lineupAfterId: UUID!
-
-  """Reads a single `Lineup` that is related to this `LineupChange`."""
-  lineupBefore: Lineup
-
-  """Reads a single `Lineup` that is related to this `LineupChange`."""
-  lineupAfter: Lineup
-}
-
 """Methods to use when ordering `GameEventRecord`."""
 enum GameEventRecordsOrderBy {
   NATURAL
@@ -1730,131 +2163,88 @@ type TraditionalStatLine {
   ops: Float
 }
 
-"""Methods to use when ordering `LineupChange`."""
-enum LineupChangesOrderBy {
+"""Methods to use when ordering `Game`."""
+enum GamesOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  LINEUP_BEFORE_ID_ASC
-  LINEUP_BEFORE_ID_DESC
-  LINEUP_AFTER_ID_ASC
-  LINEUP_AFTER_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `LineupChange` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LineupChangeCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: UUID
-
-  """Checks for equality with the object’s `lineupBeforeId` field."""
-  lineupBeforeId: UUID
-
-  """Checks for equality with the object’s `lineupAfterId` field."""
-  lineupAfterId: UUID
-}
-
-type LineupForGameState implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  gameStateId: UUID!
-  lineupId: UUID!
-
-  """
-  Reads a single `GameState` that is related to this `LineupForGameState`.
-  """
-  gameState: GameState
-
-  """Reads a single `Lineup` that is related to this `LineupForGameState`."""
-  lineup: Lineup
-}
-
-"""Methods to use when ordering `LineupForGameState`."""
-enum LineupForGameStatesOrderBy {
-  NATURAL
-  GAME_STATE_ID_ASC
-  GAME_STATE_ID_DESC
-  LINEUP_ID_ASC
-  LINEUP_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `LineupForGameState` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LineupForGameStateCondition {
-  """Checks for equality with the object’s `gameStateId` field."""
-  gameStateId: UUID
-
-  """Checks for equality with the object’s `lineupId` field."""
-  lineupId: UUID
-}
-
-"""Methods to use when ordering `Lineup`."""
-enum LineupsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  TEAM_ID_ASC
-  TEAM_ID_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `Lineup` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input LineupCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: UUID
-
-  """Checks for equality with the object’s `teamId` field."""
-  teamId: UUID
-}
-
-"""Methods to use when ordering `Team`."""
-enum TeamsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  GAME_ID_ASC
-  GAME_ID_DESC
-  ROLE_ASC
-  ROLE_DESC
+  GROUP_ID_ASC
+  GROUP_ID_DESC
   NAME_ASC
   NAME_DESC
-  WINNER_ASC
-  WINNER_DESC
+  FIELD_ID_ASC
+  FIELD_ID_DESC
+  SCORE_ASC
+  SCORE_DESC
+  GAME_LENGTH_ASC
+  GAME_LENGTH_DESC
+  TIME_STARTED_ASC
+  TIME_STARTED_DESC
+  TIME_ENDED_ASC
+  TIME_ENDED_DESC
+  TIME_SAVED_ASC
+  TIME_SAVED_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
 
 """
-A condition to be used against `Team` object types. All fields are tested for equality and combined with a logical ‘and.’
+A condition to be used against `Game` object types. All fields are tested for equality and combined with a logical ‘and.’
 """
-input TeamCondition {
+input GameCondition {
   """Checks for equality with the object’s `id` field."""
   id: UUID
 
-  """Checks for equality with the object’s `gameId` field."""
-  gameId: UUID
-
-  """Checks for equality with the object’s `role` field."""
-  role: TeamRole
+  """Checks for equality with the object’s `groupId` field."""
+  groupId: UUID
 
   """Checks for equality with the object’s `name` field."""
   name: String
 
-  """Checks for equality with the object’s `winner` field."""
-  winner: Boolean
+  """Checks for equality with the object’s `fieldId` field."""
+  fieldId: UUID
+
+  """Checks for equality with the object’s `score` field."""
+  score: [Int]
+
+  """Checks for equality with the object’s `gameLength` field."""
+  gameLength: Int
+
+  """Checks for equality with the object’s `timeStarted` field."""
+  timeStarted: Datetime
+
+  """Checks for equality with the object’s `timeEnded` field."""
+  timeEnded: Datetime
+
+  """Checks for equality with the object’s `timeSaved` field."""
+  timeSaved: Datetime
+}
+
+type Field implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  name: String!
+  notes: String
+
+  """Reads and enables pagination through a set of `Game`."""
+  games(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `Game`."""
+    orderBy: [GamesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameCondition
+  ): [Game!]!
 }
 
 type LineScoreCell {
@@ -1924,6 +2314,33 @@ input GameEventCondition {
   lineupChangeId: UUID
 }
 
+"""Methods to use when ordering `Group`."""
+enum GroupsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  NOTES_ASC
+  NOTES_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `Group` object types. All fields are tested for equality and combined with a logical ‘and.’
+"""
+input GroupCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `notes` field."""
+  notes: String
+}
+
 type LegacyField implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -1966,215 +2383,6 @@ input LegacyFieldCondition {
 
   """Checks for equality with the object’s `fieldNumber` field."""
   fieldNumber: String
-}
-
-type LegacyGame implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  gameId: Int!
-  gameTitle: String!
-  gameDate: Date!
-  gameStartTime: Time!
-  gameEndTime: Time!
-  gameTeamId1: Int!
-  gameTeamId2: Int!
-  season: Int!
-
-  """Reads and enables pagination through a set of `LegacyStatLine`."""
-  legacyStatLinesByGameId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LegacyStatLine`."""
-    orderBy: [LegacyStatLinesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LegacyStatLineCondition
-  ): [LegacyStatLine!]!
-}
-
-"""The day, does not include a time."""
-scalar Date
-
-"""
-The exact time of day, does not include the date. May or may not have a timezone offset.
-"""
-scalar Time
-
-type LegacyStatLine {
-  sbStatsId: Int!
-  playerId: Int!
-  gameId: Int!
-  sbStatsTeam: Int!
-  atBats: Int!
-  runs: Int!
-  hits: Int!
-  singles: Int!
-  doubles: Int!
-  triples: Int!
-  homeruns: Int!
-  rbi: Int!
-  walks: Int!
-  strikeouts: Int!
-  sacFlies: Int!
-
-  """
-  Reads a single `LegacyPlayer` that is related to this `LegacyStatLine`.
-  """
-  player: LegacyPlayer
-
-  """Reads a single `LegacyGame` that is related to this `LegacyStatLine`."""
-  game: LegacyGame
-
-  """Reads a single `LegacyTeam` that is related to this `LegacyStatLine`."""
-  legacyTeamBySbStatsTeam: LegacyTeam
-}
-
-type LegacyPlayer implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  playerId: Int!
-  playerName: String!
-  playerImage: String
-  memberId: String
-
-  """Reads and enables pagination through a set of `LegacyStatLine`."""
-  legacyStatLinesByPlayerId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LegacyStatLine`."""
-    orderBy: [LegacyStatLinesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LegacyStatLineCondition
-  ): [LegacyStatLine!]!
-}
-
-"""Methods to use when ordering `LegacyStatLine`."""
-enum LegacyStatLinesOrderBy {
-  NATURAL
-  SB_STATS_ID_ASC
-  SB_STATS_ID_DESC
-  PLAYER_ID_ASC
-  PLAYER_ID_DESC
-  GAME_ID_ASC
-  GAME_ID_DESC
-  SB_STATS_TEAM_ASC
-  SB_STATS_TEAM_DESC
-  AT_BATS_ASC
-  AT_BATS_DESC
-  RUNS_ASC
-  RUNS_DESC
-  HITS_ASC
-  HITS_DESC
-  SINGLES_ASC
-  SINGLES_DESC
-  DOUBLES_ASC
-  DOUBLES_DESC
-  TRIPLES_ASC
-  TRIPLES_DESC
-  HOMERUNS_ASC
-  HOMERUNS_DESC
-  RBI_ASC
-  RBI_DESC
-  WALKS_ASC
-  WALKS_DESC
-  STRIKEOUTS_ASC
-  STRIKEOUTS_DESC
-  SAC_FLIES_ASC
-  SAC_FLIES_DESC
-}
-
-"""
-A condition to be used against `LegacyStatLine` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input LegacyStatLineCondition {
-  """Checks for equality with the object’s `sbStatsId` field."""
-  sbStatsId: Int
-
-  """Checks for equality with the object’s `playerId` field."""
-  playerId: Int
-
-  """Checks for equality with the object’s `gameId` field."""
-  gameId: Int
-
-  """Checks for equality with the object’s `sbStatsTeam` field."""
-  sbStatsTeam: Int
-
-  """Checks for equality with the object’s `atBats` field."""
-  atBats: Int
-
-  """Checks for equality with the object’s `runs` field."""
-  runs: Int
-
-  """Checks for equality with the object’s `hits` field."""
-  hits: Int
-
-  """Checks for equality with the object’s `singles` field."""
-  singles: Int
-
-  """Checks for equality with the object’s `doubles` field."""
-  doubles: Int
-
-  """Checks for equality with the object’s `triples` field."""
-  triples: Int
-
-  """Checks for equality with the object’s `homeruns` field."""
-  homeruns: Int
-
-  """Checks for equality with the object’s `rbi` field."""
-  rbi: Int
-
-  """Checks for equality with the object’s `walks` field."""
-  walks: Int
-
-  """Checks for equality with the object’s `strikeouts` field."""
-  strikeouts: Int
-
-  """Checks for equality with the object’s `sacFlies` field."""
-  sacFlies: Int
-}
-
-type LegacyTeam implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  teamId: Int!
-  teamName: String!
-
-  """Reads and enables pagination through a set of `LegacyStatLine`."""
-  legacyStatLinesBySbStatsTeam(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `LegacyStatLine`."""
-    orderBy: [LegacyStatLinesOrderBy!]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: LegacyStatLineCondition
-  ): [LegacyStatLine!]!
 }
 
 """Methods to use when ordering `LegacyGame`."""
@@ -2329,48 +2537,6 @@ input PlateAppearanceCondition {
   routinePlay: Boolean
 }
 
-"""Methods to use when ordering `Player`."""
-enum PlayersOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  FIRST_NAME_ASC
-  FIRST_NAME_DESC
-  LAST_NAME_ASC
-  LAST_NAME_DESC
-  NICKNAME_ASC
-  NICKNAME_DESC
-  IMAGE_URL_ASC
-  IMAGE_URL_DESC
-  TIME_CREATED_ASC
-  TIME_CREATED_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""
-A condition to be used against `Player` object types. All fields are tested for equality and combined with a logical ‘and.’
-"""
-input PlayerCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: UUID
-
-  """Checks for equality with the object’s `firstName` field."""
-  firstName: String
-
-  """Checks for equality with the object’s `lastName` field."""
-  lastName: String
-
-  """Checks for equality with the object’s `nickname` field."""
-  nickname: String
-
-  """Checks for equality with the object’s `imageUrl` field."""
-  imageUrl: String
-
-  """Checks for equality with the object’s `timeCreated` field."""
-  timeCreated: Datetime
-}
-
 """The return type of our `getPlateAppearancesConnection` query."""
 type GetPlateAppearancesRecord {
   gameId: UUID
@@ -2452,6 +2618,14 @@ type Mutation {
     """
     input: CreateGameStateInput!
   ): CreateGameStatePayload
+
+  """Creates a single `Group`."""
+  createGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateGroupInput!
+  ): CreateGroupPayload
 
   """Creates a single `LegacyField`."""
   createLegacyField(
@@ -2706,6 +2880,30 @@ type Mutation {
     """
     input: UpdateGameStateInput!
   ): UpdateGameStatePayload
+
+  """Updates a single `Group` using its globally unique id and a patch."""
+  updateGroupByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGroupByNodeIdInput!
+  ): UpdateGroupPayload
+
+  """Updates a single `Group` using a unique key and a patch."""
+  updateGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGroupInput!
+  ): UpdateGroupPayload
+
+  """Updates a single `Group` using a unique key and a patch."""
+  updateGroupByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGroupByNameInput!
+  ): UpdateGroupPayload
 
   """
   Updates a single `LegacyField` using its globally unique id and a patch.
@@ -3112,6 +3310,30 @@ type Mutation {
     """
     input: DeleteGameStateInput!
   ): DeleteGameStatePayload
+
+  """Deletes a single `Group` using its globally unique id."""
+  deleteGroupByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGroupByNodeIdInput!
+  ): DeleteGroupPayload
+
+  """Deletes a single `Group` using a unique key."""
+  deleteGroup(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGroupInput!
+  ): DeleteGroupPayload
+
+  """Deletes a single `Group` using a unique key."""
+  deleteGroupByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGroupByNameInput!
+  ): DeleteGroupPayload
 
   """Deletes a single `LegacyField` using its globally unique id."""
   deleteLegacyFieldByNodeId(
@@ -3602,6 +3824,7 @@ An object where the defined keys will be set on the `game` being updated.
 """
 input updateGameOnGameStateForGameStateGameIdFkeyPatch {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]
@@ -3609,6 +3832,359 @@ input updateGameOnGameStateForGameStateGameIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `group` in the `GameInput` mutation."""
+input GameGroupIdFkeyInput {
+  """The primary key(s) for `group` for the far side of the relationship."""
+  connectById: GroupGroupPkeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  connectByName: GroupGroupNameKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  connectByNodeId: GroupNodeIdConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteById: GroupGroupPkeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByNodeId: GroupNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateById: GroupOnGameForGameGroupIdFkeyUsingGroupPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByName: GroupOnGameForGameGroupIdFkeyUsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByNodeId: GameOnGameForGameGroupIdFkeyNodeIdUpdate
+
+  """
+  A `GroupInput` object that will be created and connected to this object.
+  """
+  create: GameGroupIdFkeyGroupCreateInput
+}
+
+"""The fields on `group` to look up the row to connect."""
+input GroupGroupPkeyConnect {
+  id: UUID!
+}
+
+"""The fields on `group` to look up the row to connect."""
+input GroupGroupNameKeyConnect {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input GroupNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `group` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `group` to look up the row to delete."""
+input GroupGroupPkeyDelete {
+  id: UUID!
+}
+
+"""The fields on `group` to look up the row to delete."""
+input GroupGroupNameKeyDelete {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input GroupNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `group` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnGameForGameGroupIdFkeyUsingGroupPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnGameForGameGroupIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `group` being updated.
+"""
+input updateGroupOnGameForGameGroupIdFkeyPatch {
+  id: UUID
+  name: String
+  notes: String
+  players: PlayerGroupIdFkeyInverseInput
+  games: GameGroupIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `player` in the `GroupInput` mutation.
+"""
+input PlayerGroupIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `player` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectById: [PlayerPlayerPkeyConnect!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyConnect!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByNodeId: [PlayerNodeIdConnect!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteById: [PlayerPlayerPkeyDelete!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyDelete!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByNodeId: [PlayerNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateById: [PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByFirstNameAndLastName: [PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerFirstNameLastNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByNodeId: [GroupOnPlayerForPlayerGroupIdFkeyNodeIdUpdate!]
+
+  """
+  A `PlayerInput` object that will be created and connected to this object.
+  """
+  create: [PlayerGroupIdFkeyPlayerCreateInput!]
+}
+
+"""The fields on `player` to look up the row to connect."""
+input PlayerPlayerPkeyConnect {
+  id: UUID!
+}
+
+"""The fields on `player` to look up the row to connect."""
+input PlayerPlayerFirstNameLastNameKeyConnect {
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input PlayerNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `player` to look up the row to delete."""
+input PlayerPlayerPkeyDelete {
+  id: UUID!
+}
+
+"""The fields on `player` to look up the row to delete."""
+input PlayerPlayerFirstNameLastNameKeyDelete {
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input PlayerNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `player` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnPlayerForPlayerGroupIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `player` being updated.
+"""
+input updatePlayerOnPlayerForPlayerGroupIdFkeyPatch {
+  id: UUID
+  legacyPlayerId: Int
+  firstName: String
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `group` in the `PlayerInput` mutation.
+"""
+input PlayerGroupIdFkeyInput {
+  """The primary key(s) for `group` for the far side of the relationship."""
+  connectById: GroupGroupPkeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  connectByName: GroupGroupNameKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  connectByNodeId: GroupNodeIdConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteById: GroupGroupPkeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByNodeId: GroupNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateById: GroupOnPlayerForPlayerGroupIdFkeyUsingGroupPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByName: GroupOnPlayerForPlayerGroupIdFkeyUsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByNodeId: PlayerOnPlayerForPlayerGroupIdFkeyNodeIdUpdate
+
+  """
+  A `GroupInput` object that will be created and connected to this object.
+  """
+  create: PlayerGroupIdFkeyGroupCreateInput
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnPlayerForPlayerGroupIdFkeyUsingGroupPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnPlayerForPlayerGroupIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `group` being updated.
+"""
+input updateGroupOnPlayerForPlayerGroupIdFkeyPatch {
+  id: UUID
+  name: String
+  notes: String
+  players: PlayerGroupIdFkeyInverseInput
+  games: GameGroupIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `game` in the `GroupInput` mutation."""
+input GameGroupIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `game` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectById: [GameGamePkeyConnect!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByName: [GameGameNameKeyConnect!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByNodeId: [GameNodeIdConnect!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteById: [GameGamePkeyDelete!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByName: [GameGameNameKeyDelete!]
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByNodeId: [GameNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateById: [GameOnGameForGameGroupIdFkeyUsingGamePkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByName: [GameOnGameForGameGroupIdFkeyUsingGameNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByNodeId: [GroupOnGameForGameGroupIdFkeyNodeIdUpdate!]
+
+  """
+  A `GameInput` object that will be created and connected to this object.
+  """
+  create: [GameGroupIdFkeyGameCreateInput!]
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnGameForGameGroupIdFkeyUsingGamePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameForGameGroupIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `game` being updated.
+"""
+input updateGameOnGameForGameGroupIdFkeyPatch {
+  id: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]
+  gameLength: Int
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -3750,12 +4326,14 @@ An object where the defined keys will be set on the `game` being updated.
 """
 input updateGameOnGameForGameFieldIdFkeyPatch {
   id: UUID
+  groupId: UUID
   name: String
   score: [Int]
   gameLength: Int
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -3862,8 +4440,10 @@ input updateTeamOnTeamForTeamGameIdFkeyPatch {
   id: UUID
   role: TeamRole
   name: String
+  captainId: UUID
   winner: Boolean
   game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
@@ -3922,6 +4502,7 @@ An object where the defined keys will be set on the `game` being updated.
 """
 input updateGameOnTeamForTeamGameIdFkeyPatch {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]
@@ -3929,6 +4510,7 @@ input updateGameOnTeamForTeamGameIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -4051,44 +4633,6 @@ input GameStatePlayerAtBatFkeyInput {
   create: GameStatePlayerAtBatFkeyPlayerCreateInput
 }
 
-"""The fields on `player` to look up the row to connect."""
-input PlayerPlayerPkeyConnect {
-  id: UUID!
-}
-
-"""The fields on `player` to look up the row to connect."""
-input PlayerPlayerFirstNameLastNameKeyConnect {
-  firstName: String!
-  lastName: String!
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input PlayerNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `player` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `player` to look up the row to delete."""
-input PlayerPlayerPkeyDelete {
-  id: UUID!
-}
-
-"""The fields on `player` to look up the row to delete."""
-input PlayerPlayerFirstNameLastNameKeyDelete {
-  firstName: String!
-  lastName: String!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input PlayerNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `player` to be deleted.
-  """
-  nodeId: ID!
-}
-
 """The fields on `player` to look up the row to update."""
 input PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerPkeyUpdate {
   """
@@ -4103,11 +4647,417 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyPlayer` in the `PlayerInput` mutation.
+"""
+input FakePublicPlayerForeignKey0Input {
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyPlayerNodeIdConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyPlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByPlayerId: LegacyPlayerOnPlayerForFakePublicPlayerForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByNodeId: PlayerOnPlayerForFakePublicPlayerForeignKey0NodeIdUpdate
+
+  """
+  A `LegacyPlayerInput` object that will be created and connected to this object.
+  """
+  create: FakePublicPlayerForeignKey0LegacyPlayerCreateInput
+}
+
+"""The fields on `legacyPlayer` to look up the row to connect."""
+input LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect {
+  playerId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyPlayerNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyPlayer` to look up the row to delete."""
+input LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete {
+  playerId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyPlayerNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyPlayer` to look up the row to update."""
+input LegacyPlayerOnPlayerForFakePublicPlayerForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: updateLegacyPlayerOnPlayerForFakePublicPlayerForeignKey0Patch!
+  playerId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyPlayer` being updated.
+"""
+input updateLegacyPlayerOnPlayerForFakePublicPlayerForeignKey0Patch {
+  playerId: Int
+  playerName: String
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyStatLine` in the `LegacyPlayerInput` mutation.
+"""
+input FakePublicLegacyStatLineForeignKey0InverseInput {
+  """
+  A `LegacyStatLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicLegacyStatLineForeignKey0LegacyStatLineCreateInput!]
+}
+
+"""The `legacyStatLine` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey0LegacyStatLineCreateInput {
+  sbStatsId: Int!
+  gameId: Int
+  sbStatsTeam: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
+  legacyGame: FakePublicLegacyStatLineForeignKey1Input
+  legacyTeam: FakePublicLegacyStatLineForeignKey2Input
+}
+
+"""
+Input for the nested mutation of `legacyPlayer` in the `LegacyStatLineInput` mutation.
+"""
+input FakePublicLegacyStatLineForeignKey0Input {
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyPlayerNodeIdConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyPlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByPlayerId: LegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0NodeIdUpdate
+
+  """
+  A `LegacyPlayerInput` object that will be created and connected to this object.
+  """
+  create: FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput
+}
+
+"""The fields on `legacyPlayer` to look up the row to update."""
+input LegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: updateLegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0Patch!
+  playerId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyPlayer` being updated.
+"""
+input updateLegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0Patch {
+  playerName: String
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `player` in the `LegacyPlayerInput` mutation.
+"""
+input FakePublicPlayerForeignKey0InverseInput {
+  """
+  Flag indicating whether all other `player` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectById: [PlayerPlayerPkeyConnect!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyConnect!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByNodeId: [PlayerNodeIdConnect!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteById: [PlayerPlayerPkeyDelete!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyDelete!]
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByNodeId: [PlayerNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateById: [PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByFirstNameAndLastName: [PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerFirstNameLastNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyPlayerOnPlayerForFakePublicPlayerForeignKey0NodeIdUpdate!]
+
+  """
+  A `PlayerInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicPlayerForeignKey0PlayerCreateInput!]
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `player` being updated.
+"""
+input updatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch {
+  id: UUID
+  groupId: UUID
+  firstName: String
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `team` in the `PlayerInput` mutation."""
+input TeamCaptainIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `team` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  connectById: [TeamTeamPkeyConnect!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  connectByGameIdAndRole: [TeamTeamGameIdRoleKeyConnect!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  connectByNodeId: [TeamNodeIdConnect!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  deleteById: [TeamTeamPkeyDelete!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  deleteByGameIdAndRole: [TeamTeamGameIdRoleKeyDelete!]
+
+  """The primary key(s) for `team` for the far side of the relationship."""
+  deleteByNodeId: [TeamNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `team` for the far side of the relationship.
+  """
+  updateById: [TeamOnTeamForTeamCaptainIdFkeyUsingTeamPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `team` for the far side of the relationship.
+  """
+  updateByGameIdAndRole: [TeamOnTeamForTeamCaptainIdFkeyUsingTeamGameIdRoleKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `team` for the far side of the relationship.
+  """
+  updateByNodeId: [PlayerOnTeamForTeamCaptainIdFkeyNodeIdUpdate!]
+
+  """
+  A `TeamInput` object that will be created and connected to this object.
+  """
+  create: [TeamCaptainIdFkeyTeamCreateInput!]
+}
+
+"""The fields on `team` to look up the row to update."""
+input TeamOnTeamForTeamCaptainIdFkeyUsingTeamPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `team` being updated.
+  """
+  patch: updateTeamOnTeamForTeamCaptainIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `team` being updated.
+"""
+input updateTeamOnTeamForTeamCaptainIdFkeyPatch {
+  id: UUID
+  gameId: UUID
+  role: TeamRole
+  name: String
+  winner: Boolean
+  game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
+  lineups: LineupTeamIdFkeyInverseInput
+}
+
+"""Input for the nested mutation of `player` in the `TeamInput` mutation."""
+input TeamCaptainIdFkeyInput {
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectById: PlayerPlayerPkeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByNodeId: PlayerNodeIdConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteById: PlayerPlayerPkeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByNodeId: PlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateById: PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByFirstNameAndLastName: PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByNodeId: TeamOnTeamForTeamCaptainIdFkeyNodeIdUpdate
+
+  """
+  A `PlayerInput` object that will be created and connected to this object.
+  """
+  create: TeamCaptainIdFkeyPlayerCreateInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnTeamForTeamCaptainIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `player` being updated.
+"""
+input updatePlayerOnTeamForTeamCaptainIdFkeyPatch {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -4403,8 +5353,10 @@ input updateTeamOnLineupForLineupTeamIdFkeyPatch {
   gameId: UUID
   role: TeamRole
   name: String
+  captainId: UUID
   winner: Boolean
   game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
@@ -4617,11 +5569,16 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -4938,11 +5895,16 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -5229,11 +6191,16 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -5390,11 +6357,16 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -5627,11 +6599,16 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -6008,6 +6985,7 @@ An object where the defined keys will be set on the `game` being updated.
 """
 input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]
@@ -6015,6 +6993,7 @@ input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -7404,11 +8383,16 @@ An object where the defined keys will be set on the `player` being updated.
 """
 input updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7446,11 +8430,16 @@ Represents an update to a `Player`. Fields that are set will be updated.
 """
 input PlayerPatch {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -7463,11 +8452,16 @@ input PlayerPatch {
 """The `player` to be created by this mutation."""
 input ScoredRunnerRunnerIdFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8370,6 +9364,7 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
 """Represents an update to a `Game`. Fields that are set will be updated."""
 input GamePatch {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]
@@ -8377,6 +9372,7 @@ input GamePatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -8386,6 +9382,7 @@ input GamePatch {
 """The `game` to be created by this mutation."""
 input GameEventRecordGameIdFkeyGameCreateInput {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]!
@@ -8393,6 +9390,7 @@ input GameEventRecordGameIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -8485,11 +9483,16 @@ input BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate {
 """The `player` to be created by this mutation."""
 input BaseRunnerRunnerIdFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8576,11 +9579,16 @@ input StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeId
 """The `player` to be created by this mutation."""
 input StolenBaseAttemptRunnerIdFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8637,11 +9645,16 @@ input OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate
 """The `player` to be created by this mutation."""
 input OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8753,11 +9766,16 @@ input BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpd
 """The `player` to be created by this mutation."""
 input BasepathMovementRunnerIdFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8875,11 +9893,16 @@ input LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate {
 """The `player` to be created by this mutation."""
 input LineupSpotPlayerIdFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -8995,8 +10018,10 @@ input TeamPatch {
   gameId: UUID
   role: TeamRole
   name: String
+  captainId: UUID
   winner: Boolean
   game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
@@ -9006,8 +10031,10 @@ input LineupTeamIdFkeyTeamCreateInput {
   gameId: UUID
   role: TeamRole!
   name: String
+  captainId: UUID
   winner: Boolean
   game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
@@ -9078,6 +10105,491 @@ input LineupSpotPlayerIdFkeyLineupSpotCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
+input PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnTeamForTeamCaptainIdFkeyPatch!
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input TeamOnTeamForTeamCaptainIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: PlayerPatch!
+}
+
+"""The `player` to be created by this mutation."""
+input TeamCaptainIdFkeyPlayerCreateInput {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+}
+
+"""The fields on `team` to look up the row to update."""
+input TeamOnTeamForTeamCaptainIdFkeyUsingTeamGameIdRoleKeyUpdate {
+  """
+  An object where the defined keys will be set on the `team` being updated.
+  """
+  patch: updateTeamOnTeamForTeamCaptainIdFkeyPatch!
+  gameId: UUID!
+  role: TeamRole!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input PlayerOnTeamForTeamCaptainIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `team` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `team` being updated.
+  """
+  patch: TeamPatch!
+}
+
+"""The `team` to be created by this mutation."""
+input TeamCaptainIdFkeyTeamCreateInput {
+  id: UUID
+  gameId: UUID
+  role: TeamRole!
+  name: String
+  winner: Boolean
+  game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
+  lineups: LineupTeamIdFkeyInverseInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch!
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyPlayerOnPlayerForFakePublicPlayerForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: PlayerPatch!
+}
+
+"""The `player` to be created by this mutation."""
+input FakePublicPlayerForeignKey0PlayerCreateInput {
+  id: UUID
+  groupId: UUID
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: LegacyPlayerPatch!
+}
+
+"""
+Represents an update to a `LegacyPlayer`. Fields that are set will be updated.
+"""
+input LegacyPlayerPatch {
+  playerId: Int
+  playerName: String
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+}
+
+"""The `legacyPlayer` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput {
+  playerName: String!
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyGame` in the `LegacyStatLineInput` mutation.
+"""
+input FakePublicLegacyStatLineForeignKey1Input {
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  connectByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyGameNodeIdConnect
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  deleteByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyGameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
+  """
+  updateByGameId: LegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1UsingFakePublicLegacyGamePrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1NodeIdUpdate
+
+  """
+  A `LegacyGameInput` object that will be created and connected to this object.
+  """
+  create: FakePublicLegacyStatLineForeignKey1LegacyGameCreateInput
+}
+
+"""The fields on `legacyGame` to look up the row to connect."""
+input LegacyGameFakePublicLegacyGamePrimaryKeyConnect {
+  gameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyGameNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGame` to look up the row to delete."""
+input LegacyGameFakePublicLegacyGamePrimaryKeyDelete {
+  gameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyGameNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGame` to look up the row to update."""
+input LegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1UsingFakePublicLegacyGamePrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyGame` being updated.
+  """
+  patch: updateLegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1Patch!
+  gameId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyGame` being updated.
+"""
+input updateLegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1Patch {
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyStatLine` in the `LegacyGameInput` mutation.
+"""
+input FakePublicLegacyStatLineForeignKey1InverseInput {
+  """
+  A `LegacyStatLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicLegacyStatLineForeignKey1LegacyStatLineCreateInput!]
+}
+
+"""The `legacyStatLine` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey1LegacyStatLineCreateInput {
+  sbStatsId: Int!
+  playerId: Int
+  sbStatsTeam: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
+  legacyGame: FakePublicLegacyStatLineForeignKey1Input
+  legacyTeam: FakePublicLegacyStatLineForeignKey2Input
+}
+
+"""
+Input for the nested mutation of `legacyTeam` in the `LegacyStatLineInput` mutation.
+"""
+input FakePublicLegacyStatLineForeignKey2Input {
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  connectByTeamId: LegacyTeamFakePublicLegacyTeamPrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyTeamNodeIdConnect
+
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  deleteByTeamId: LegacyTeamFakePublicLegacyTeamPrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyTeam` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyTeamNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyTeam` for the far side of the relationship.
+  """
+  updateByTeamId: LegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2UsingFakePublicLegacyTeamPrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyTeam` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2NodeIdUpdate
+
+  """
+  A `LegacyTeamInput` object that will be created and connected to this object.
+  """
+  create: FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput
+}
+
+"""The fields on `legacyTeam` to look up the row to connect."""
+input LegacyTeamFakePublicLegacyTeamPrimaryKeyConnect {
+  teamId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyTeamNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyTeam` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyTeam` to look up the row to delete."""
+input LegacyTeamFakePublicLegacyTeamPrimaryKeyDelete {
+  teamId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyTeamNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyTeam` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyTeam` to look up the row to update."""
+input LegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2UsingFakePublicLegacyTeamPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyTeam` being updated.
+  """
+  patch: updateLegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2Patch!
+  teamId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyTeam` being updated.
+"""
+input updateLegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2Patch {
+  teamId: Int
+  teamName: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyStatLine` in the `LegacyTeamInput` mutation.
+"""
+input FakePublicLegacyStatLineForeignKey2InverseInput {
+  """
+  A `LegacyStatLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicLegacyStatLineForeignKey2LegacyStatLineCreateInput!]
+}
+
+"""The `legacyStatLine` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey2LegacyStatLineCreateInput {
+  sbStatsId: Int!
+  playerId: Int
+  gameId: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
+  legacyGame: FakePublicLegacyStatLineForeignKey1Input
+  legacyTeam: FakePublicLegacyStatLineForeignKey2Input
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyTeam` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyTeam` being updated.
+  """
+  patch: LegacyTeamPatch!
+}
+
+"""
+Represents an update to a `LegacyTeam`. Fields that are set will be updated.
+"""
+input LegacyTeamPatch {
+  teamId: Int
+  teamName: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
+}
+
+"""The `legacyTeam` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput {
+  teamId: Int!
+  teamName: String!
+  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyGame` being updated.
+  """
+  patch: LegacyGamePatch!
+}
+
+"""
+Represents an update to a `LegacyGame`. Fields that are set will be updated.
+"""
+input LegacyGamePatch {
+  gameId: Int
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
+}
+
+"""The `legacyGame` to be created by this mutation."""
+input FakePublicLegacyStatLineForeignKey1LegacyGameCreateInput {
+  gameTitle: String!
+  gameDate: Date!
+  gameStartTime: Time!
+  gameEndTime: Time!
+  gameTeamId1: Int!
+  gameTeamId2: Int!
+  season: Int!
+  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input PlayerOnPlayerForFakePublicPlayerForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: LegacyPlayerPatch!
+}
+
+"""The `legacyPlayer` to be created by this mutation."""
+input FakePublicPlayerForeignKey0LegacyPlayerCreateInput {
+  playerId: Int!
+  playerName: String!
+  playerImage: String
+  memberId: String
+  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+}
+
+"""The fields on `player` to look up the row to update."""
 input PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerFirstNameLastNameKeyUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
@@ -9103,11 +10615,16 @@ input GameStateOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate {
 """The `player` to be created by this mutation."""
 input GameStatePlayerAtBatFkeyPlayerCreateInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -9172,6 +10689,7 @@ input TeamOnTeamForTeamGameIdFkeyNodeIdUpdate {
 """The `game` to be created by this mutation."""
 input TeamGameIdFkeyGameCreateInput {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]!
@@ -9179,6 +10697,7 @@ input TeamGameIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -9213,8 +10732,10 @@ input TeamGameIdFkeyTeamCreateInput {
   id: UUID
   role: TeamRole!
   name: String
+  captainId: UUID
   winner: Boolean
   game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
@@ -9243,12 +10764,14 @@ input FieldOnGameForGameFieldIdFkeyNodeIdUpdate {
 """The `game` to be created by this mutation."""
 input GameFieldIdFkeyGameCreateInput {
   id: UUID
+  groupId: UUID
   name: String
   score: [Int]!
   gameLength: Int
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -9287,6 +10810,162 @@ input GameFieldIdFkeyFieldCreateInput {
 }
 
 """The fields on `game` to look up the row to update."""
+input GameOnGameForGameGroupIdFkeyUsingGameNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameForGameGroupIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GroupOnGameForGameGroupIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: GamePatch!
+}
+
+"""The `game` to be created by this mutation."""
+input GameGroupIdFkeyGameCreateInput {
+  id: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]!
+  gameLength: Int
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnPlayerForPlayerGroupIdFkeyUsingGroupNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnPlayerForPlayerGroupIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input PlayerOnPlayerForPlayerGroupIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `group` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: GroupPatch!
+}
+
+"""
+Represents an update to a `Group`. Fields that are set will be updated.
+"""
+input GroupPatch {
+  id: UUID
+  name: String
+  notes: String
+  players: PlayerGroupIdFkeyInverseInput
+  games: GameGroupIdFkeyInverseInput
+}
+
+"""The `group` to be created by this mutation."""
+input PlayerGroupIdFkeyGroupCreateInput {
+  id: UUID
+  name: String!
+  notes: String
+  players: PlayerGroupIdFkeyInverseInput
+  games: GameGroupIdFkeyInverseInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnPlayerForPlayerGroupIdFkeyPatch!
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GroupOnPlayerForPlayerGroupIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: PlayerPatch!
+}
+
+"""The `player` to be created by this mutation."""
+input PlayerGroupIdFkeyPlayerCreateInput {
+  id: UUID
+  legacyPlayerId: Int
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnGameForGameGroupIdFkeyUsingGroupNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnGameForGameGroupIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameOnGameForGameGroupIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `group` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: GroupPatch!
+}
+
+"""The `group` to be created by this mutation."""
+input GameGroupIdFkeyGroupCreateInput {
+  id: UUID
+  name: String!
+  notes: String
+  players: PlayerGroupIdFkeyInverseInput
+  games: GameGroupIdFkeyInverseInput
+}
+
+"""The fields on `game` to look up the row to update."""
 input GameOnGameStateForGameStateGameIdFkeyUsingGameNameKeyUpdate {
   """
   An object where the defined keys will be set on the `game` being updated.
@@ -9311,6 +10990,7 @@ input GameStateOnGameStateForGameStateGameIdFkeyNodeIdUpdate {
 """The `game` to be created by this mutation."""
 input GameStateGameIdFkeyGameCreateInput {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]!
@@ -9318,6 +10998,7 @@ input GameStateGameIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -9455,6 +11136,9 @@ type CreateGamePayload {
   """
   query: Query
 
+  """Reads a single `Group` that is related to this `Game`."""
+  group: Group
+
   """Reads a single `Field` that is related to this `Game`."""
   field: Field
 }
@@ -9474,6 +11158,7 @@ input CreateGameInput {
 """An input for mutations affecting `Game`"""
 input GameInput {
   id: UUID
+  groupId: UUID
   name: String
   fieldId: UUID
   score: [Int]!
@@ -9481,6 +11166,7 @@ input GameInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
@@ -9649,6 +11335,44 @@ input GameStateInput {
   gameEventRecordsToGameStateAfterIdUsingId: GameEventRecordGameStateAfterFkInverseInput
 }
 
+"""The output of our create `Group` mutation."""
+type CreateGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Group` that was created by this mutation."""
+  group: Group
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `Group` mutation."""
+input CreateGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `Group` to be created by this mutation."""
+  group: GroupInput!
+}
+
+"""An input for mutations affecting `Group`"""
+input GroupInput {
+  id: UUID
+  name: String!
+  notes: String
+  players: PlayerGroupIdFkeyInverseInput
+  games: GameGroupIdFkeyInverseInput
+}
+
 """The output of our create `LegacyField` mutation."""
 type CreateLegacyFieldPayload {
   """
@@ -9728,458 +11452,6 @@ input LegacyGameInput {
   legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
 }
 
-"""
-Input for the nested mutation of `legacyStatLine` in the `LegacyGameInput` mutation.
-"""
-input FakePublicLegacyStatLineForeignKey1InverseInput {
-  """
-  A `LegacyStatLineInput` object that will be created and connected to this object.
-  """
-  create: [FakePublicLegacyStatLineForeignKey1LegacyStatLineCreateInput!]
-}
-
-"""The `legacyStatLine` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey1LegacyStatLineCreateInput {
-  sbStatsId: Int!
-  playerId: Int
-  sbStatsTeam: Int
-  atBats: Int!
-  runs: Int!
-  hits: Int!
-  singles: Int!
-  doubles: Int!
-  triples: Int!
-  homeruns: Int!
-  rbi: Int!
-  walks: Int!
-  strikeouts: Int!
-  sacFlies: Int!
-  legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
-  legacyGame: FakePublicLegacyStatLineForeignKey1Input
-  legacyTeam: FakePublicLegacyStatLineForeignKey2Input
-}
-
-"""
-Input for the nested mutation of `legacyPlayer` in the `LegacyStatLineInput` mutation.
-"""
-input FakePublicLegacyStatLineForeignKey0Input {
-  """
-  The primary key(s) for `legacyPlayer` for the far side of the relationship.
-  """
-  connectByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect
-
-  """
-  The primary key(s) for `legacyPlayer` for the far side of the relationship.
-  """
-  connectByNodeId: LegacyPlayerNodeIdConnect
-
-  """
-  The primary key(s) for `legacyPlayer` for the far side of the relationship.
-  """
-  deleteByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete
-
-  """
-  The primary key(s) for `legacyPlayer` for the far side of the relationship.
-  """
-  deleteByNodeId: LegacyPlayerNodeIdDelete
-
-  """
-  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
-  """
-  updateByPlayerId: LegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate
-
-  """
-  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
-  """
-  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0NodeIdUpdate
-
-  """
-  A `LegacyPlayerInput` object that will be created and connected to this object.
-  """
-  create: FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput
-}
-
-"""The fields on `legacyPlayer` to look up the row to connect."""
-input LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect {
-  playerId: Int!
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input LegacyPlayerNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `legacyPlayer` to look up the row to delete."""
-input LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete {
-  playerId: Int!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input LegacyPlayerNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `legacyPlayer` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `legacyPlayer` to look up the row to update."""
-input LegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0UsingFakePublicLegacyPlayerPrimaryKeyUpdate {
-  """
-  An object where the defined keys will be set on the `legacyPlayer` being updated.
-  """
-  patch: updateLegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0Patch!
-  playerId: Int!
-}
-
-"""
-An object where the defined keys will be set on the `legacyPlayer` being updated.
-"""
-input updateLegacyPlayerOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0Patch {
-  playerName: String
-  playerImage: String
-  memberId: String
-  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
-}
-
-"""
-Input for the nested mutation of `legacyStatLine` in the `LegacyPlayerInput` mutation.
-"""
-input FakePublicLegacyStatLineForeignKey0InverseInput {
-  """
-  A `LegacyStatLineInput` object that will be created and connected to this object.
-  """
-  create: [FakePublicLegacyStatLineForeignKey0LegacyStatLineCreateInput!]
-}
-
-"""The `legacyStatLine` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey0LegacyStatLineCreateInput {
-  sbStatsId: Int!
-  gameId: Int
-  sbStatsTeam: Int
-  atBats: Int!
-  runs: Int!
-  hits: Int!
-  singles: Int!
-  doubles: Int!
-  triples: Int!
-  homeruns: Int!
-  rbi: Int!
-  walks: Int!
-  strikeouts: Int!
-  sacFlies: Int!
-  legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
-  legacyGame: FakePublicLegacyStatLineForeignKey1Input
-  legacyTeam: FakePublicLegacyStatLineForeignKey2Input
-}
-
-"""
-Input for the nested mutation of `legacyGame` in the `LegacyStatLineInput` mutation.
-"""
-input FakePublicLegacyStatLineForeignKey1Input {
-  """
-  The primary key(s) for `legacyGame` for the far side of the relationship.
-  """
-  connectByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyConnect
-
-  """
-  The primary key(s) for `legacyGame` for the far side of the relationship.
-  """
-  connectByNodeId: LegacyGameNodeIdConnect
-
-  """
-  The primary key(s) for `legacyGame` for the far side of the relationship.
-  """
-  deleteByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyDelete
-
-  """
-  The primary key(s) for `legacyGame` for the far side of the relationship.
-  """
-  deleteByNodeId: LegacyGameNodeIdDelete
-
-  """
-  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
-  """
-  updateByGameId: LegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1UsingFakePublicLegacyGamePrimaryKeyUpdate
-
-  """
-  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
-  """
-  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1NodeIdUpdate
-
-  """
-  A `LegacyGameInput` object that will be created and connected to this object.
-  """
-  create: FakePublicLegacyStatLineForeignKey1LegacyGameCreateInput
-}
-
-"""The fields on `legacyGame` to look up the row to connect."""
-input LegacyGameFakePublicLegacyGamePrimaryKeyConnect {
-  gameId: Int!
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input LegacyGameNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `legacyGame` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `legacyGame` to look up the row to delete."""
-input LegacyGameFakePublicLegacyGamePrimaryKeyDelete {
-  gameId: Int!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input LegacyGameNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `legacyGame` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `legacyGame` to look up the row to update."""
-input LegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1UsingFakePublicLegacyGamePrimaryKeyUpdate {
-  """
-  An object where the defined keys will be set on the `legacyGame` being updated.
-  """
-  patch: updateLegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1Patch!
-  gameId: Int!
-}
-
-"""
-An object where the defined keys will be set on the `legacyGame` being updated.
-"""
-input updateLegacyGameOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1Patch {
-  gameTitle: String
-  gameDate: Date
-  gameStartTime: Time
-  gameEndTime: Time
-  gameTeamId1: Int
-  gameTeamId2: Int
-  season: Int
-  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey1NodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `legacyGame` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `legacyGame` being updated.
-  """
-  patch: LegacyGamePatch!
-}
-
-"""
-Represents an update to a `LegacyGame`. Fields that are set will be updated.
-"""
-input LegacyGamePatch {
-  gameId: Int
-  gameTitle: String
-  gameDate: Date
-  gameStartTime: Time
-  gameEndTime: Time
-  gameTeamId1: Int
-  gameTeamId2: Int
-  season: Int
-  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
-}
-
-"""The `legacyGame` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey1LegacyGameCreateInput {
-  gameTitle: String!
-  gameDate: Date!
-  gameStartTime: Time!
-  gameEndTime: Time!
-  gameTeamId1: Int!
-  gameTeamId2: Int!
-  season: Int!
-  legacyStatLines: FakePublicLegacyStatLineForeignKey1InverseInput
-}
-
-"""
-Input for the nested mutation of `legacyTeam` in the `LegacyStatLineInput` mutation.
-"""
-input FakePublicLegacyStatLineForeignKey2Input {
-  """
-  The primary key(s) for `legacyTeam` for the far side of the relationship.
-  """
-  connectByTeamId: LegacyTeamFakePublicLegacyTeamPrimaryKeyConnect
-
-  """
-  The primary key(s) for `legacyTeam` for the far side of the relationship.
-  """
-  connectByNodeId: LegacyTeamNodeIdConnect
-
-  """
-  The primary key(s) for `legacyTeam` for the far side of the relationship.
-  """
-  deleteByTeamId: LegacyTeamFakePublicLegacyTeamPrimaryKeyDelete
-
-  """
-  The primary key(s) for `legacyTeam` for the far side of the relationship.
-  """
-  deleteByNodeId: LegacyTeamNodeIdDelete
-
-  """
-  The primary key(s) and patch data for `legacyTeam` for the far side of the relationship.
-  """
-  updateByTeamId: LegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2UsingFakePublicLegacyTeamPrimaryKeyUpdate
-
-  """
-  The primary key(s) and patch data for `legacyTeam` for the far side of the relationship.
-  """
-  updateByNodeId: LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2NodeIdUpdate
-
-  """
-  A `LegacyTeamInput` object that will be created and connected to this object.
-  """
-  create: FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput
-}
-
-"""The fields on `legacyTeam` to look up the row to connect."""
-input LegacyTeamFakePublicLegacyTeamPrimaryKeyConnect {
-  teamId: Int!
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input LegacyTeamNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `legacyTeam` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `legacyTeam` to look up the row to delete."""
-input LegacyTeamFakePublicLegacyTeamPrimaryKeyDelete {
-  teamId: Int!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input LegacyTeamNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `legacyTeam` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The fields on `legacyTeam` to look up the row to update."""
-input LegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2UsingFakePublicLegacyTeamPrimaryKeyUpdate {
-  """
-  An object where the defined keys will be set on the `legacyTeam` being updated.
-  """
-  patch: updateLegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2Patch!
-  teamId: Int!
-}
-
-"""
-An object where the defined keys will be set on the `legacyTeam` being updated.
-"""
-input updateLegacyTeamOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2Patch {
-  teamId: Int
-  teamName: String
-  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
-}
-
-"""
-Input for the nested mutation of `legacyStatLine` in the `LegacyTeamInput` mutation.
-"""
-input FakePublicLegacyStatLineForeignKey2InverseInput {
-  """
-  A `LegacyStatLineInput` object that will be created and connected to this object.
-  """
-  create: [FakePublicLegacyStatLineForeignKey2LegacyStatLineCreateInput!]
-}
-
-"""The `legacyStatLine` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey2LegacyStatLineCreateInput {
-  sbStatsId: Int!
-  playerId: Int
-  gameId: Int
-  atBats: Int!
-  runs: Int!
-  hits: Int!
-  singles: Int!
-  doubles: Int!
-  triples: Int!
-  homeruns: Int!
-  rbi: Int!
-  walks: Int!
-  strikeouts: Int!
-  sacFlies: Int!
-  legacyPlayer: FakePublicLegacyStatLineForeignKey0Input
-  legacyGame: FakePublicLegacyStatLineForeignKey1Input
-  legacyTeam: FakePublicLegacyStatLineForeignKey2Input
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey2NodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `legacyTeam` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `legacyTeam` being updated.
-  """
-  patch: LegacyTeamPatch!
-}
-
-"""
-Represents an update to a `LegacyTeam`. Fields that are set will be updated.
-"""
-input LegacyTeamPatch {
-  teamId: Int
-  teamName: String
-  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
-}
-
-"""The `legacyTeam` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey2LegacyTeamCreateInput {
-  teamId: Int!
-  teamName: String!
-  legacyStatLines: FakePublicLegacyStatLineForeignKey2InverseInput
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input LegacyStatLineOnLegacyStatLineForFakePublicLegacyStatLineForeignKey0NodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `legacyPlayer` being updated.
-  """
-  patch: LegacyPlayerPatch!
-}
-
-"""
-Represents an update to a `LegacyPlayer`. Fields that are set will be updated.
-"""
-input LegacyPlayerPatch {
-  playerId: Int
-  playerName: String
-  playerImage: String
-  memberId: String
-  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
-}
-
-"""The `legacyPlayer` to be created by this mutation."""
-input FakePublicLegacyStatLineForeignKey0LegacyPlayerCreateInput {
-  playerName: String!
-  playerImage: String
-  memberId: String
-  legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
-}
-
 """The output of our create `LegacyPlayer` mutation."""
 type CreateLegacyPlayerPayload {
   """
@@ -10216,6 +11488,7 @@ input LegacyPlayerInput {
   playerImage: String
   memberId: String
   legacyStatLines: FakePublicLegacyStatLineForeignKey0InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
 }
 
 """The output of our create `LegacyStatLine` mutation."""
@@ -10595,6 +11868,12 @@ type CreatePlayerPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Group` that is related to this `Player`."""
+  group: Group
+
+  """Reads a single `LegacyPlayer` that is related to this `Player`."""
+  legacyPlayer: LegacyPlayer
 }
 
 """All input for the create `Player` mutation."""
@@ -10612,11 +11891,16 @@ input CreatePlayerInput {
 """An input for mutations affecting `Player`"""
 input PlayerInput {
   id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
   firstName: String!
   lastName: String
   nickname: String
   imageUrl: String
   timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
   lineupSpots: LineupSpotPlayerIdFkeyInverseInput
   basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
   outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
@@ -10731,6 +12015,9 @@ type CreateTeamPayload {
 
   """Reads a single `Game` that is related to this `Team`."""
   game: Game
+
+  """Reads a single `Player` that is related to this `Team`."""
+  captain: Player
 }
 
 """All input for the create `Team` mutation."""
@@ -10751,8 +12038,10 @@ input TeamInput {
   gameId: UUID
   role: TeamRole!
   name: String
+  captainId: UUID
   winner: Boolean
   game: TeamGameIdFkeyInput
+  player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
@@ -10940,6 +12229,9 @@ type UpdateGamePayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Group` that is related to this `Game`."""
+  group: Group
 
   """Reads a single `Field` that is related to this `Game`."""
   field: Field
@@ -11192,6 +12484,72 @@ input UpdateGameStateInput {
   """
   patch: GameStatePatch!
   id: UUID!
+}
+
+"""The output of our update `Group` mutation."""
+type UpdateGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Group` that was updated by this mutation."""
+  group: Group
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateGroupByNodeId` mutation."""
+input UpdateGroupByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Group` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `Group` being updated.
+  """
+  patch: GroupPatch!
+}
+
+"""All input for the `updateGroup` mutation."""
+input UpdateGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Group` being updated.
+  """
+  patch: GroupPatch!
+  id: UUID!
+}
+
+"""All input for the `updateGroupByName` mutation."""
+input UpdateGroupByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Group` being updated.
+  """
+  patch: GroupPatch!
+  name: String!
 }
 
 """The output of our update `LegacyField` mutation."""
@@ -11797,6 +13155,12 @@ type UpdatePlayerPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Group` that is related to this `Player`."""
+  group: Group
+
+  """Reads a single `LegacyPlayer` that is related to this `Player`."""
+  legacyPlayer: LegacyPlayer
 }
 
 """All input for the `updatePlayerByNodeId` mutation."""
@@ -11981,6 +13345,9 @@ type UpdateTeamPayload {
 
   """Reads a single `Game` that is related to this `Team`."""
   game: Game
+
+  """Reads a single `Player` that is related to this `Team`."""
+  captain: Player
 }
 
 """All input for the `updateTeamByNodeId` mutation."""
@@ -12192,6 +13559,9 @@ type DeleteGamePayload {
   """
   query: Query
 
+  """Reads a single `Group` that is related to this `Game`."""
+  group: Group
+
   """Reads a single `Field` that is related to this `Game`."""
   field: Field
 }
@@ -12396,6 +13766,58 @@ input DeleteGameStateInput {
   """
   clientMutationId: String
   id: UUID!
+}
+
+"""The output of our delete `Group` mutation."""
+type DeleteGroupPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `Group` that was deleted by this mutation."""
+  group: Group
+  deletedGroupNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteGroupByNodeId` mutation."""
+input DeleteGroupByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `Group` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteGroup` mutation."""
+input DeleteGroupInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
+"""All input for the `deleteGroupByName` mutation."""
+input DeleteGroupByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  name: String!
 }
 
 """The output of our delete `LegacyField` mutation."""
@@ -12892,6 +14314,12 @@ type DeletePlayerPayload {
   Our root query field type. Allows us to run any query from our mutation payload.
   """
   query: Query
+
+  """Reads a single `Group` that is related to this `Player`."""
+  group: Group
+
+  """Reads a single `LegacyPlayer` that is related to this `Player`."""
+  legacyPlayer: LegacyPlayer
 }
 
 """All input for the `deletePlayerByNodeId` mutation."""
@@ -13044,6 +14472,9 @@ type DeleteTeamPayload {
 
   """Reads a single `Game` that is related to this `Team`."""
   game: Game
+
+  """Reads a single `Player` that is related to this `Team`."""
+  captain: Player
 }
 
 """All input for the `deleteTeamByNodeId` mutation."""

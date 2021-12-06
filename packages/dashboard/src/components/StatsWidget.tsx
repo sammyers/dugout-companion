@@ -23,8 +23,8 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
     header: "G",
   },
   {
-    property: "plateAppearances",
-    header: "PA",
+    property: "atBats",
+    header: "AB",
   },
   {
     property: "hits",
@@ -33,6 +33,18 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
   {
     property: "doubles",
     header: "2B",
+  },
+  {
+    property: "triples",
+    header: "3B",
+  },
+  {
+    property: "homeruns",
+    header: "HR",
+  },
+  {
+    property: "walks",
+    header: "BB",
   },
   {
     property: "onBasePct",
