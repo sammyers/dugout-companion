@@ -3,7 +3,7 @@ import { format, parseISO } from 'date-fns';
 import { Box, Button, Text } from 'grommet';
 import _ from 'lodash';
 
-import { Game, useGetLatestGameSummaryQuery, useGetLineScoreQuery } from '@sammyers/dc-shared';
+import { Game, useGetLatestGameSummaryQuery, useGetGameSummaryQuery } from '@sammyers/dc-shared';
 import { useNavigate } from 'react-router';
 import LineScore from './LineScore';
 
@@ -15,25 +15,25 @@ const GameSummary: FC<Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score'>> 
 }) => {
   const winningScore = Math.max(...(score as number[]));
 
-  const { data } = useGetLineScoreQuery({ variables: { gameId: id } });
+  const { data } = useGetGameSummaryQuery({ variables: { gameId: id } });
 
   return (
-    <Box>
+    <Box alignSelf="stretch" align="center">
       <Text color="accent-3">
         Latest Game: {format(parseISO(timeStarted), 'MMMM d, h:mmaaa')}
         {' - '}
         {format(parseISO(timeEnded), 'h:mmaaa')}
       </Text>
-      <Text margin="medium" weight="bold">
+      <Text margin="small" weight="bold">
         <Text size="large" color={score[0] === winningScore ? 'status-ok' : 'status-critical'}>
           Away {score[0]}
         </Text>
-        {' - '}
+        <Text size="large">{' - '}</Text>
         <Text size="large" color={score[1] === winningScore ? 'status-ok' : 'status-critical'}>
           {score[1]} Home
         </Text>
       </Text>
-      {data?.game?.lineScore && <LineScore cells={data.game.lineScore} />}
+      {data?.game && <LineScore cells={data.game.lineScore!} teams={data.game.teams} />}
     </Box>
   );
 };
@@ -49,7 +49,7 @@ const GameWidget = () => {
       gridArea="game"
       round="small"
       background="neutral-5"
-      pad="small"
+      pad={{ vertical: 'medium', horizontal: 'small' }}
       align="center"
       gap="small"
     >

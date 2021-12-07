@@ -1,73 +1,68 @@
-import React from "react";
-import { Box, ColumnConfig, DataTable } from "grommet";
+import React from 'react';
+import { Box, ColumnConfig, DataTable } from 'grommet';
 import {
   GetAllPlayerStatsQuery,
   SimplifyType,
   useGetAllPlayerStatsQuery,
-} from "@sammyers/dc-shared";
+} from '@sammyers/dc-shared';
+import { getYear } from 'date-fns';
 
-type PlayerStatResult = NonNullable<
-  SimplifyType<GetAllPlayerStatsQuery["players"]>
->[number];
-type PlayerStatRow = SimplifyType<
-  Omit<PlayerStatResult, "traditionalStats"> &
-    PlayerStatResult["traditionalStats"]
->;
+type PlayerStatResult = NonNullable<SimplifyType<GetAllPlayerStatsQuery['seasonStats']>>[number];
+type PlayerStatRow = SimplifyType<Omit<PlayerStatResult, 'player'> & PlayerStatResult['player']>;
 const columns: ColumnConfig<PlayerStatRow>[] = [
   {
-    property: "fullName",
-    header: "Player",
+    property: 'fullName',
+    header: 'Player',
   },
   {
-    property: "games",
-    header: "G",
+    property: 'games',
+    header: 'G',
   },
   {
-    property: "atBats",
-    header: "AB",
+    property: 'atBats',
+    header: 'AB',
   },
   {
-    property: "hits",
-    header: "H",
+    property: 'hits',
+    header: 'H',
   },
   {
-    property: "doubles",
-    header: "2B",
+    property: 'xbh',
+    header: 'XBH',
   },
   {
-    property: "triples",
-    header: "3B",
+    property: 'walks',
+    header: 'BB',
   },
   {
-    property: "homeruns",
-    header: "HR",
+    property: 'sacFlies',
+    header: 'SAC',
   },
   {
-    property: "walks",
-    header: "BB",
+    property: 'onBasePct',
+    header: 'OBP',
+    render: row => row.onBasePct!.toFixed(3),
   },
   {
-    property: "onBasePct",
-    header: "OBP",
-    render: (row) => row.onBasePct!.toFixed(3),
-  },
-  {
-    property: "ops",
-    header: "OPS",
-    render: (row) => row.ops!.toFixed(3),
+    property: 'ops',
+    header: 'OPS',
+    render: row => row.ops!.toFixed(3),
   },
 ];
 
+// TODO: filter columns for xsmall and xxsmall screens
+
 const StatsWidget = () => {
-  const { data } = useGetAllPlayerStatsQuery();
+  const currentYear = getYear(new Date());
+  const { data } = useGetAllPlayerStatsQuery({ variables: { season: currentYear } });
 
   if (!data) {
     return null;
   }
 
-  const rows = data.players!.map(({ traditionalStats, ...player }) => ({
-    ...player,
-    ...traditionalStats!,
+  const rows = data.seasonStats!.map(({ player, ...stats }) => ({
+    ...player!,
+    ...stats,
   }));
 
   return (
@@ -79,7 +74,14 @@ const StatsWidget = () => {
       align="center"
       gap="small"
     >
-      <DataTable sortable columns={columns} data={rows}></DataTable>
+      <DataTable
+        fill
+        sortable
+        columns={columns}
+        data={rows}
+        pad="xsmall"
+        background={{ body: ['neutral-5', 'neutral-6'] }}
+      />
     </Box>
   );
 };

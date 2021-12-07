@@ -12,6 +12,12 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /**
+   * A signed eight-byte integer. The upper big integer values are greater than the
+   * max value for a JavaScript number. Therefore all big integers will be output as
+   * strings and not numbers.
+   */
+  BigInt: any;
   /** The day, does not include a time. */
   Date: string;
   /**
@@ -261,6 +267,7 @@ export type BaseRunnerRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** Methods to use when ordering `BaseRunner`. */
@@ -520,6 +527,7 @@ export type BasepathMovementRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** Methods to use when ordering `BasepathMovement`. */
@@ -536,6 +544,7 @@ export enum BasepathMovementsOrderBy {
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
+
 
 export enum ContactQuality {
   NONE = 'NONE',
@@ -2362,6 +2371,85 @@ export type FakePublicPlayerForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
+};
+
+/** Input for the nested mutation of `player` in the `SeasonStatInput` mutation. */
+export type FakePublicSeasonStatsForeignKey0Input = {
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerFirstNameLastNameKeyDelete>;
+  /** The primary key(s) for `player` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateById?: Maybe<PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerPkeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByFirstNameAndLastName?: Maybe<PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate>;
+  /** The primary key(s) and patch data for `player` for the far side of the relationship. */
+  updateByNodeId?: Maybe<SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey0NodeIdUpdate>;
+  /** A `PlayerInput` object that will be created and connected to this object. */
+  create?: Maybe<FakePublicSeasonStatsForeignKey0PlayerCreateInput>;
+};
+
+/** Input for the nested mutation of `seasonStat` in the `PlayerInput` mutation. */
+export type FakePublicSeasonStatsForeignKey0InverseInput = {
+  /** A `SeasonStatInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput>>;
+};
+
+/** The `player` to be created by this mutation. */
+export type FakePublicSeasonStatsForeignKey0PlayerCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  legacyPlayerId?: Maybe<Scalars['Int']>;
+  firstName: Scalars['String'];
+  lastName?: Maybe<Scalars['String']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  group?: Maybe<PlayerGroupIdFkeyInput>;
+  legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
+  teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
+};
+
+/** The `seasonStat` to be created by this mutation. */
+export type FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput = {
+  season?: Maybe<Scalars['Int']>;
+  games?: Maybe<Scalars['BigInt']>;
+  plateAppearances?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+  hits?: Maybe<Scalars['Int']>;
+  singles?: Maybe<Scalars['Int']>;
+  doubles?: Maybe<Scalars['Int']>;
+  triples?: Maybe<Scalars['Int']>;
+  homeruns?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  strikeouts?: Maybe<Scalars['BigInt']>;
+  sacFlies?: Maybe<Scalars['BigInt']>;
+  gidp?: Maybe<Scalars['BigInt']>;
+  runs?: Maybe<Scalars['BigInt']>;
+  rbi?: Maybe<Scalars['BigInt']>;
+  xbh?: Maybe<Scalars['Int']>;
+  battingAverage?: Maybe<Scalars['Float']>;
+  onBasePct?: Maybe<Scalars['Float']>;
+  sluggingPct?: Maybe<Scalars['Float']>;
+  ops?: Maybe<Scalars['Float']>;
+  player?: Maybe<FakePublicSeasonStatsForeignKey0Input>;
 };
 
 export type Field = Node & {
@@ -4182,6 +4270,7 @@ export type GameStatePlayerAtBatFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** Methods to use when ordering `GameState`. */
@@ -5858,6 +5947,7 @@ export type LineupSpotPlayerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** Methods to use when ordering `LineupSpot`. */
@@ -7188,6 +7278,7 @@ export type OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** Methods to use when ordering `OutOnPlayRunner`. */
@@ -7408,6 +7499,8 @@ export type Player = Node & {
   baseRunnersByRunnerId: Array<BaseRunner>;
   /** Reads and enables pagination through a set of `ScoredRunner`. */
   scoredRunnersByRunnerId: Array<ScoredRunner>;
+  /** Reads and enables pagination through a set of `SeasonStat`. */
+  seasonStats: Array<SeasonStat>;
   fullName: Maybe<Scalars['String']>;
   gamesPlayed: Maybe<Scalars['Int']>;
   /** sortable */
@@ -7477,6 +7570,14 @@ export type PlayerScoredRunnersByRunnerIdArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<ScoredRunnersOrderBy>>;
   condition?: Maybe<ScoredRunnerCondition>;
+};
+
+
+export type PlayerSeasonStatsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<SeasonStatsOrderBy>>;
+  condition?: Maybe<SeasonStatCondition>;
 };
 
 
@@ -7589,6 +7690,7 @@ export type PlayerGroupIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An input for mutations affecting `Player` */
@@ -7611,6 +7713,7 @@ export type PlayerInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -7809,6 +7912,21 @@ export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerPkeyUpdate
   id: Scalars['UUID'];
 };
 
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch;
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+};
+
+/** The fields on `player` to look up the row to update. */
+export type PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerPkeyUpdate = {
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch;
+  id: Scalars['UUID'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `stolenBaseAttempt` to be connected. */
@@ -7875,6 +7993,7 @@ export type PlayerPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** The fields on `player` to look up the row to connect. */
@@ -7978,6 +8097,8 @@ export type Query = Node & {
   players: Maybe<Array<Player>>;
   /** Reads a set of `ScoredRunner`. */
   scoredRunners: Maybe<Array<ScoredRunner>>;
+  /** Reads a set of `SeasonStat`. */
+  seasonStats: Maybe<Array<SeasonStat>>;
   /** Reads a set of `StolenBaseAttempt`. */
   stolenBaseAttempts: Maybe<Array<StolenBaseAttempt>>;
   /** Reads a set of `Team`. */
@@ -8261,6 +8382,15 @@ export type QueryScoredRunnersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySeasonStatsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<SeasonStatsOrderBy>>;
+  condition?: Maybe<SeasonStatCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryStolenBaseAttemptsArgs = {
   first?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -8492,6 +8622,7 @@ export type QueryGetOpsArgs = {
 export type QueryGetPlateAppearancesArgs = {
   playerId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  season?: Maybe<Scalars['Int']>;
   beforeDate?: Maybe<Scalars['Datetime']>;
   afterDate?: Maybe<Scalars['Datetime']>;
   first?: Maybe<Scalars['Int']>;
@@ -8878,6 +9009,7 @@ export type ScoredRunnerRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** The `scoredRunner` to be created by this mutation. */
@@ -8911,6 +9043,137 @@ export enum ScoredRunnersOrderBy {
   BATTED_IN_DESC = 'BATTED_IN_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type SeasonStat = {
+  __typename?: 'SeasonStat';
+  playerId: Maybe<Scalars['UUID']>;
+  season: Maybe<Scalars['Int']>;
+  games: Maybe<Scalars['BigInt']>;
+  plateAppearances: Maybe<Scalars['Int']>;
+  atBats: Maybe<Scalars['Int']>;
+  hits: Maybe<Scalars['Int']>;
+  singles: Maybe<Scalars['Int']>;
+  doubles: Maybe<Scalars['Int']>;
+  triples: Maybe<Scalars['Int']>;
+  homeruns: Maybe<Scalars['Int']>;
+  walks: Maybe<Scalars['Int']>;
+  strikeouts: Maybe<Scalars['BigInt']>;
+  sacFlies: Maybe<Scalars['BigInt']>;
+  gidp: Maybe<Scalars['BigInt']>;
+  runs: Maybe<Scalars['BigInt']>;
+  rbi: Maybe<Scalars['BigInt']>;
+  xbh: Maybe<Scalars['Int']>;
+  battingAverage: Maybe<Scalars['Float']>;
+  onBasePct: Maybe<Scalars['Float']>;
+  sluggingPct: Maybe<Scalars['Float']>;
+  ops: Maybe<Scalars['Float']>;
+  /** Reads a single `Player` that is related to this `SeasonStat`. */
+  player: Maybe<Player>;
+};
+
+/**
+ * A condition to be used against `SeasonStat` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type SeasonStatCondition = {
+  /** Checks for equality with the object’s `playerId` field. */
+  playerId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `season` field. */
+  season?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `games` field. */
+  games?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `plateAppearances` field. */
+  plateAppearances?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `atBats` field. */
+  atBats?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `hits` field. */
+  hits?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `singles` field. */
+  singles?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `doubles` field. */
+  doubles?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `triples` field. */
+  triples?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `homeruns` field. */
+  homeruns?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `walks` field. */
+  walks?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `strikeouts` field. */
+  strikeouts?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `sacFlies` field. */
+  sacFlies?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `gidp` field. */
+  gidp?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `runs` field. */
+  runs?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `rbi` field. */
+  rbi?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `xbh` field. */
+  xbh?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `battingAverage` field. */
+  battingAverage?: Maybe<Scalars['Float']>;
+  /** Checks for equality with the object’s `onBasePct` field. */
+  onBasePct?: Maybe<Scalars['Float']>;
+  /** Checks for equality with the object’s `sluggingPct` field. */
+  sluggingPct?: Maybe<Scalars['Float']>;
+  /** Checks for equality with the object’s `ops` field. */
+  ops?: Maybe<Scalars['Float']>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey0NodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** Methods to use when ordering `SeasonStat`. */
+export enum SeasonStatsOrderBy {
+  NATURAL = 'NATURAL',
+  PLAYER_ID_ASC = 'PLAYER_ID_ASC',
+  PLAYER_ID_DESC = 'PLAYER_ID_DESC',
+  SEASON_ASC = 'SEASON_ASC',
+  SEASON_DESC = 'SEASON_DESC',
+  GAMES_ASC = 'GAMES_ASC',
+  GAMES_DESC = 'GAMES_DESC',
+  PLATE_APPEARANCES_ASC = 'PLATE_APPEARANCES_ASC',
+  PLATE_APPEARANCES_DESC = 'PLATE_APPEARANCES_DESC',
+  AT_BATS_ASC = 'AT_BATS_ASC',
+  AT_BATS_DESC = 'AT_BATS_DESC',
+  HITS_ASC = 'HITS_ASC',
+  HITS_DESC = 'HITS_DESC',
+  SINGLES_ASC = 'SINGLES_ASC',
+  SINGLES_DESC = 'SINGLES_DESC',
+  DOUBLES_ASC = 'DOUBLES_ASC',
+  DOUBLES_DESC = 'DOUBLES_DESC',
+  TRIPLES_ASC = 'TRIPLES_ASC',
+  TRIPLES_DESC = 'TRIPLES_DESC',
+  HOMERUNS_ASC = 'HOMERUNS_ASC',
+  HOMERUNS_DESC = 'HOMERUNS_DESC',
+  WALKS_ASC = 'WALKS_ASC',
+  WALKS_DESC = 'WALKS_DESC',
+  STRIKEOUTS_ASC = 'STRIKEOUTS_ASC',
+  STRIKEOUTS_DESC = 'STRIKEOUTS_DESC',
+  SAC_FLIES_ASC = 'SAC_FLIES_ASC',
+  SAC_FLIES_DESC = 'SAC_FLIES_DESC',
+  GIDP_ASC = 'GIDP_ASC',
+  GIDP_DESC = 'GIDP_DESC',
+  RUNS_ASC = 'RUNS_ASC',
+  RUNS_DESC = 'RUNS_DESC',
+  RBI_ASC = 'RBI_ASC',
+  RBI_DESC = 'RBI_DESC',
+  XBH_ASC = 'XBH_ASC',
+  XBH_DESC = 'XBH_DESC',
+  BATTING_AVERAGE_ASC = 'BATTING_AVERAGE_ASC',
+  BATTING_AVERAGE_DESC = 'BATTING_AVERAGE_DESC',
+  ON_BASE_PCT_ASC = 'ON_BASE_PCT_ASC',
+  ON_BASE_PCT_DESC = 'ON_BASE_PCT_DESC',
+  SLUGGING_PCT_ASC = 'SLUGGING_PCT_ASC',
+  SLUGGING_PCT_DESC = 'SLUGGING_PCT_DESC',
+  OPS_ASC = 'OPS_ASC',
+  OPS_DESC = 'OPS_DESC'
 }
 
 export type StolenBaseAttempt = Node & {
@@ -9061,6 +9324,7 @@ export type StolenBaseAttemptRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** The `stolenBaseAttempt` to be created by this mutation. */
@@ -9191,6 +9455,7 @@ export type TeamCaptainIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** The `team` to be created by this mutation. */
@@ -9472,6 +9737,7 @@ export type TraditionalStatLine = {
   gidp: Maybe<Scalars['Int']>;
   runs: Maybe<Scalars['Int']>;
   rbi: Maybe<Scalars['Int']>;
+  xbh: Maybe<Scalars['Int']>;
   battingAverage: Maybe<Scalars['Float']>;
   onBasePct: Maybe<Scalars['Float']>;
   sluggingPct: Maybe<Scalars['Float']>;
@@ -11080,6 +11346,7 @@ export type UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11102,6 +11369,7 @@ export type UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch =
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11124,6 +11392,7 @@ export type UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11146,6 +11415,7 @@ export type UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11168,6 +11438,7 @@ export type UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11189,6 +11460,7 @@ export type UpdatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11210,6 +11482,7 @@ export type UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11232,6 +11505,30 @@ export type UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
+};
+
+/** An object where the defined keys will be set on the `player` being updated. */
+export type UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch = {
+  id?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  legacyPlayerId?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  nickname?: Maybe<Scalars['String']>;
+  imageUrl?: Maybe<Scalars['String']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  group?: Maybe<PlayerGroupIdFkeyInput>;
+  legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
+  teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
+  lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementRunnerIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerRunnerIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptRunnerIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11254,6 +11551,7 @@ export type UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
@@ -11276,6 +11574,7 @@ export type UpdatePlayerOnTeamForTeamCaptainIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  seasonStats?: Maybe<FakePublicSeasonStatsForeignKey0InverseInput>;
 };
 
 /** An object where the defined keys will be set on the `scoredRunner` being updated. */
@@ -11518,19 +11817,18 @@ export type GetAllGameSummariesQuery = (
 );
 
 export type GetAllPlayerStatsQueryVariables = Exact<{
-  beforeDate?: Maybe<Scalars['Datetime']>;
-  afterDate?: Maybe<Scalars['Datetime']>;
+  season: Scalars['Int'];
 }>;
 
 
 export type GetAllPlayerStatsQuery = (
   { __typename?: 'Query' }
-  & { players: Maybe<Array<(
-    { __typename?: 'Player' }
-    & Pick<Player, 'id' | 'fullName'>
-    & { traditionalStats: Maybe<(
-      { __typename?: 'TraditionalStatLine' }
-      & Pick<TraditionalStatLine, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
+  & { seasonStats: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & Pick<SeasonStat, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'xbh' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
     )> }
   )>> }
 );
@@ -11647,6 +11945,38 @@ export type GetGameDetailsQuery = (
   )> }
 );
 
+export type GetGameSummaryQueryVariables = Exact<{
+  gameId: Scalars['UUID'];
+}>;
+
+
+export type GetGameSummaryQuery = (
+  { __typename?: 'Query' }
+  & { game: Maybe<(
+    { __typename?: 'Game' }
+    & { lineScore: Maybe<Array<Maybe<(
+      { __typename?: 'LineScoreCell' }
+      & Pick<LineScoreCell, 'inning' | 'halfInning' | 'hits' | 'runs'>
+    )>>>, teams: Array<(
+      { __typename?: 'Team' }
+      & Pick<Team, 'name' | 'role' | 'winner'>
+    )> }
+  )> }
+);
+
+export type GetGameTitleQueryVariables = Exact<{
+  gameId: Scalars['UUID'];
+}>;
+
+
+export type GetGameTitleQuery = (
+  { __typename?: 'Query' }
+  & { game: Maybe<(
+    { __typename?: 'Game' }
+    & Pick<Game, 'name' | 'timeStarted'>
+  )> }
+);
+
 export type GetLatestGameSummaryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -11656,22 +11986,6 @@ export type GetLatestGameSummaryQuery = (
     { __typename?: 'Game' }
     & Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score' | 'gameLength'>
   )>> }
-);
-
-export type GetLineScoreQueryVariables = Exact<{
-  gameId: Scalars['UUID'];
-}>;
-
-
-export type GetLineScoreQuery = (
-  { __typename?: 'Query' }
-  & { game: Maybe<(
-    { __typename?: 'Game' }
-    & { lineScore: Maybe<Array<Maybe<(
-      { __typename?: 'LineScoreCell' }
-      & Pick<LineScoreCell, 'inning' | 'halfInning' | 'hits' | 'runs'>
-    )>>> }
-  )> }
 );
 
 export const GameEventRecord_GameStateFragmentDoc = gql`
@@ -12014,29 +12328,30 @@ export type GetAllGameSummariesQueryHookResult = ReturnType<typeof useGetAllGame
 export type GetAllGameSummariesLazyQueryHookResult = ReturnType<typeof useGetAllGameSummariesLazyQuery>;
 export type GetAllGameSummariesQueryResult = Apollo.QueryResult<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>;
 export const GetAllPlayerStatsDocument = gql`
-    query GetAllPlayerStats($beforeDate: Datetime, $afterDate: Datetime) {
-  players {
-    id
-    fullName
-    traditionalStats(beforeDate: $beforeDate, afterDate: $afterDate) {
-      games
-      plateAppearances
-      atBats
-      hits
-      doubles
-      triples
-      homeruns
-      walks
-      strikeouts
-      sacFlies
-      gidp
-      runs
-      rbi
-      battingAverage
-      onBasePct
-      sluggingPct
-      ops
+    query GetAllPlayerStats($season: Int!) {
+  seasonStats(condition: {season: $season}) {
+    player {
+      id
+      fullName
     }
+    games
+    plateAppearances
+    atBats
+    hits
+    doubles
+    triples
+    homeruns
+    xbh
+    walks
+    strikeouts
+    sacFlies
+    gidp
+    runs
+    rbi
+    battingAverage
+    onBasePct
+    sluggingPct
+    ops
   }
 }
     `;
@@ -12053,12 +12368,11 @@ export const GetAllPlayerStatsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllPlayerStatsQuery({
  *   variables: {
- *      beforeDate: // value for 'beforeDate'
- *      afterDate: // value for 'afterDate'
+ *      season: // value for 'season'
  *   },
  * });
  */
-export function useGetAllPlayerStatsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
+export function useGetAllPlayerStatsQuery(baseOptions: Apollo.QueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
         return Apollo.useQuery<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>(GetAllPlayerStatsDocument, baseOptions);
       }
 export function useGetAllPlayerStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
@@ -12265,6 +12579,83 @@ export function useGetGameDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetGameDetailsQueryHookResult = ReturnType<typeof useGetGameDetailsQuery>;
 export type GetGameDetailsLazyQueryHookResult = ReturnType<typeof useGetGameDetailsLazyQuery>;
 export type GetGameDetailsQueryResult = Apollo.QueryResult<GetGameDetailsQuery, GetGameDetailsQueryVariables>;
+export const GetGameSummaryDocument = gql`
+    query GetGameSummary($gameId: UUID!) {
+  game(id: $gameId) {
+    lineScore {
+      inning
+      halfInning
+      hits
+      runs
+    }
+    teams {
+      name
+      role
+      winner
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetGameSummaryQuery__
+ *
+ * To run a query within a React component, call `useGetGameSummaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGameSummaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGameSummaryQuery({
+ *   variables: {
+ *      gameId: // value for 'gameId'
+ *   },
+ * });
+ */
+export function useGetGameSummaryQuery(baseOptions: Apollo.QueryHookOptions<GetGameSummaryQuery, GetGameSummaryQueryVariables>) {
+        return Apollo.useQuery<GetGameSummaryQuery, GetGameSummaryQueryVariables>(GetGameSummaryDocument, baseOptions);
+      }
+export function useGetGameSummaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGameSummaryQuery, GetGameSummaryQueryVariables>) {
+          return Apollo.useLazyQuery<GetGameSummaryQuery, GetGameSummaryQueryVariables>(GetGameSummaryDocument, baseOptions);
+        }
+export type GetGameSummaryQueryHookResult = ReturnType<typeof useGetGameSummaryQuery>;
+export type GetGameSummaryLazyQueryHookResult = ReturnType<typeof useGetGameSummaryLazyQuery>;
+export type GetGameSummaryQueryResult = Apollo.QueryResult<GetGameSummaryQuery, GetGameSummaryQueryVariables>;
+export const GetGameTitleDocument = gql`
+    query GetGameTitle($gameId: UUID!) {
+  game(id: $gameId) {
+    name
+    timeStarted
+  }
+}
+    `;
+
+/**
+ * __useGetGameTitleQuery__
+ *
+ * To run a query within a React component, call `useGetGameTitleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGameTitleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGameTitleQuery({
+ *   variables: {
+ *      gameId: // value for 'gameId'
+ *   },
+ * });
+ */
+export function useGetGameTitleQuery(baseOptions: Apollo.QueryHookOptions<GetGameTitleQuery, GetGameTitleQueryVariables>) {
+        return Apollo.useQuery<GetGameTitleQuery, GetGameTitleQueryVariables>(GetGameTitleDocument, baseOptions);
+      }
+export function useGetGameTitleLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGameTitleQuery, GetGameTitleQueryVariables>) {
+          return Apollo.useLazyQuery<GetGameTitleQuery, GetGameTitleQueryVariables>(GetGameTitleDocument, baseOptions);
+        }
+export type GetGameTitleQueryHookResult = ReturnType<typeof useGetGameTitleQuery>;
+export type GetGameTitleLazyQueryHookResult = ReturnType<typeof useGetGameTitleLazyQuery>;
+export type GetGameTitleQueryResult = Apollo.QueryResult<GetGameTitleQuery, GetGameTitleQueryVariables>;
 export const GetLatestGameSummaryDocument = gql`
     query GetLatestGameSummary {
   games(orderBy: TIME_STARTED_DESC, first: 1) {
@@ -12301,41 +12692,3 @@ export function useGetLatestGameSummaryLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLatestGameSummaryQueryHookResult = ReturnType<typeof useGetLatestGameSummaryQuery>;
 export type GetLatestGameSummaryLazyQueryHookResult = ReturnType<typeof useGetLatestGameSummaryLazyQuery>;
 export type GetLatestGameSummaryQueryResult = Apollo.QueryResult<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>;
-export const GetLineScoreDocument = gql`
-    query GetLineScore($gameId: UUID!) {
-  game(id: $gameId) {
-    lineScore {
-      inning
-      halfInning
-      hits
-      runs
-    }
-  }
-}
-    `;
-
-/**
- * __useGetLineScoreQuery__
- *
- * To run a query within a React component, call `useGetLineScoreQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetLineScoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetLineScoreQuery({
- *   variables: {
- *      gameId: // value for 'gameId'
- *   },
- * });
- */
-export function useGetLineScoreQuery(baseOptions: Apollo.QueryHookOptions<GetLineScoreQuery, GetLineScoreQueryVariables>) {
-        return Apollo.useQuery<GetLineScoreQuery, GetLineScoreQueryVariables>(GetLineScoreDocument, baseOptions);
-      }
-export function useGetLineScoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLineScoreQuery, GetLineScoreQueryVariables>) {
-          return Apollo.useLazyQuery<GetLineScoreQuery, GetLineScoreQueryVariables>(GetLineScoreDocument, baseOptions);
-        }
-export type GetLineScoreQueryHookResult = ReturnType<typeof useGetLineScoreQuery>;
-export type GetLineScoreLazyQueryHookResult = ReturnType<typeof useGetLineScoreLazyQuery>;
-export type GetLineScoreQueryResult = Apollo.QueryResult<GetLineScoreQuery, GetLineScoreQueryVariables>;

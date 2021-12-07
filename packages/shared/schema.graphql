@@ -374,6 +374,23 @@ type Query implements Node {
     condition: ScoredRunnerCondition
   ): [ScoredRunner!]
 
+  """Reads a set of `SeasonStat`."""
+  seasonStats(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `SeasonStat`."""
+    orderBy: [SeasonStatsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SeasonStatCondition
+  ): [SeasonStat!]
+
   """Reads a set of `StolenBaseAttempt`."""
   stolenBaseAttempts(
     """Only read the first `n` values of the set."""
@@ -442,6 +459,7 @@ type Query implements Node {
   getPlateAppearances(
     playerId: UUID
     gameId: UUID
+    season: Int
     beforeDate: Datetime
     afterDate: Datetime
 
@@ -1062,6 +1080,23 @@ type Player implements Node {
     """
     condition: ScoredRunnerCondition
   ): [ScoredRunner!]!
+
+  """Reads and enables pagination through a set of `SeasonStat`."""
+  seasonStats(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `SeasonStat`."""
+    orderBy: [SeasonStatsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SeasonStatCondition
+  ): [SeasonStat!]!
   fullName: String
   gamesPlayed(beforeDate: Datetime, afterDate: Datetime): Int
 
@@ -2142,6 +2177,156 @@ input ScoredRunnerCondition {
   battedIn: Boolean
 }
 
+type SeasonStat {
+  playerId: UUID
+  season: Int
+  games: BigInt
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: BigInt
+  sacFlies: BigInt
+  gidp: BigInt
+  runs: BigInt
+  rbi: BigInt
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+
+  """Reads a single `Player` that is related to this `SeasonStat`."""
+  player: Player
+}
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
+
+"""Methods to use when ordering `SeasonStat`."""
+enum SeasonStatsOrderBy {
+  NATURAL
+  PLAYER_ID_ASC
+  PLAYER_ID_DESC
+  SEASON_ASC
+  SEASON_DESC
+  GAMES_ASC
+  GAMES_DESC
+  PLATE_APPEARANCES_ASC
+  PLATE_APPEARANCES_DESC
+  AT_BATS_ASC
+  AT_BATS_DESC
+  HITS_ASC
+  HITS_DESC
+  SINGLES_ASC
+  SINGLES_DESC
+  DOUBLES_ASC
+  DOUBLES_DESC
+  TRIPLES_ASC
+  TRIPLES_DESC
+  HOMERUNS_ASC
+  HOMERUNS_DESC
+  WALKS_ASC
+  WALKS_DESC
+  STRIKEOUTS_ASC
+  STRIKEOUTS_DESC
+  SAC_FLIES_ASC
+  SAC_FLIES_DESC
+  GIDP_ASC
+  GIDP_DESC
+  RUNS_ASC
+  RUNS_DESC
+  RBI_ASC
+  RBI_DESC
+  XBH_ASC
+  XBH_DESC
+  BATTING_AVERAGE_ASC
+  BATTING_AVERAGE_DESC
+  ON_BASE_PCT_ASC
+  ON_BASE_PCT_DESC
+  SLUGGING_PCT_ASC
+  SLUGGING_PCT_DESC
+  OPS_ASC
+  OPS_DESC
+}
+
+"""
+A condition to be used against `SeasonStat` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input SeasonStatCondition {
+  """Checks for equality with the object’s `playerId` field."""
+  playerId: UUID
+
+  """Checks for equality with the object’s `season` field."""
+  season: Int
+
+  """Checks for equality with the object’s `games` field."""
+  games: BigInt
+
+  """Checks for equality with the object’s `plateAppearances` field."""
+  plateAppearances: Int
+
+  """Checks for equality with the object’s `atBats` field."""
+  atBats: Int
+
+  """Checks for equality with the object’s `hits` field."""
+  hits: Int
+
+  """Checks for equality with the object’s `singles` field."""
+  singles: Int
+
+  """Checks for equality with the object’s `doubles` field."""
+  doubles: Int
+
+  """Checks for equality with the object’s `triples` field."""
+  triples: Int
+
+  """Checks for equality with the object’s `homeruns` field."""
+  homeruns: Int
+
+  """Checks for equality with the object’s `walks` field."""
+  walks: Int
+
+  """Checks for equality with the object’s `strikeouts` field."""
+  strikeouts: BigInt
+
+  """Checks for equality with the object’s `sacFlies` field."""
+  sacFlies: BigInt
+
+  """Checks for equality with the object’s `gidp` field."""
+  gidp: BigInt
+
+  """Checks for equality with the object’s `runs` field."""
+  runs: BigInt
+
+  """Checks for equality with the object’s `rbi` field."""
+  rbi: BigInt
+
+  """Checks for equality with the object’s `xbh` field."""
+  xbh: Int
+
+  """Checks for equality with the object’s `battingAverage` field."""
+  battingAverage: Float
+
+  """Checks for equality with the object’s `onBasePct` field."""
+  onBasePct: Float
+
+  """Checks for equality with the object’s `sluggingPct` field."""
+  sluggingPct: Float
+
+  """Checks for equality with the object’s `ops` field."""
+  ops: Float
+}
+
 type TraditionalStatLine {
   playerId: UUID
   games: Int
@@ -2158,6 +2343,7 @@ type TraditionalStatLine {
   gidp: Int
   runs: Int
   rbi: Int
+  xbh: Int
   battingAverage: Float
   onBasePct: Float
   sluggingPct: Float
@@ -4053,6 +4239,7 @@ input updatePlayerOnPlayerForPlayerGroupIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -4665,6 +4852,7 @@ input updatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -4923,6 +5111,7 @@ input updatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """Input for the nested mutation of `team` in the `PlayerInput` mutation."""
@@ -5066,6 +5255,7 @@ input updatePlayerOnTeamForTeamCaptainIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -5587,6 +5777,7 @@ input updatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -5913,6 +6104,7 @@ input updatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -6209,6 +6401,7 @@ input updatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -6375,6 +6568,7 @@ input updatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -6617,6 +6811,7 @@ input updatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """
@@ -8401,20 +8596,133 @@ input updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `seasonStat` in the `PlayerInput` mutation.
+"""
+input FakePublicSeasonStatsForeignKey0InverseInput {
+  """
+  A `SeasonStatInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput!]
+}
+
+"""The `seasonStat` to be created by this mutation."""
+input FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput {
+  season: Int
+  games: BigInt
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: BigInt
+  sacFlies: BigInt
+  gidp: BigInt
+  runs: BigInt
+  rbi: BigInt
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicSeasonStatsForeignKey0Input
+}
+
+"""
+Input for the nested mutation of `player` in the `SeasonStatInput` mutation.
+"""
+input FakePublicSeasonStatsForeignKey0Input {
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectById: PlayerPlayerPkeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByNodeId: PlayerNodeIdConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteById: PlayerPlayerPkeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByNodeId: PlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateById: PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByFirstNameAndLastName: PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByNodeId: SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey0NodeIdUpdate
+
+  """
+  A `PlayerInput` object that will be created and connected to this object.
+  """
+  create: FakePublicSeasonStatsForeignKey0PlayerCreateInput
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerPkeyUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
-  patch: updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch!
+  patch: updatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `player` being updated.
+"""
+input updatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch!
   firstName: String!
   lastName: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
-input ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate {
+input SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey0NodeIdUpdate {
   """
   The globally unique `ID` which identifies a single `player` to be connected.
   """
@@ -8448,6 +8756,53 @@ input PlayerPatch {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+}
+
+"""The `player` to be created by this mutation."""
+input FakePublicSeasonStatsForeignKey0PlayerCreateInput {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch!
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: PlayerPatch!
 }
 
 """The `player` to be created by this mutation."""
@@ -8470,6 +8825,7 @@ input ScoredRunnerRunnerIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -9501,6 +9857,7 @@ input BaseRunnerRunnerIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -9597,6 +9954,7 @@ input StolenBaseAttemptRunnerIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -9663,6 +10021,7 @@ input OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -9784,6 +10143,7 @@ input BasepathMovementRunnerIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -9911,6 +10271,7 @@ input LineupSpotPlayerIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The fields on `lineupSpot` to look up the row to update."""
@@ -10148,6 +10509,7 @@ input TeamCaptainIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The fields on `team` to look up the row to update."""
@@ -10227,6 +10589,7 @@ input FakePublicPlayerForeignKey0PlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -10633,6 +10996,7 @@ input GameStatePlayerAtBatFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -10933,6 +11297,7 @@ input PlayerGroupIdFkeyPlayerCreateInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The fields on `group` to look up the row to update."""
@@ -11909,6 +12274,7 @@ input PlayerInput {
   gameStates: GameStatePlayerAtBatFkeyInverseInput
   baseRunners: BaseRunnerRunnerIdFkeyInverseInput
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
 }
 
 """The output of our create `ScoredRunner` mutation."""

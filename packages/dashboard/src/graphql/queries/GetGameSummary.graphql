@@ -1,10 +1,15 @@
-query GetLineScore($gameId: UUID!) {
+query GetGameSummary($gameId: UUID!) {
   game(id: $gameId) {
     lineScore {
       inning
       halfInning
       hits
       runs
+    }
+    teams {
+      name
+      role
+      winner
     }
   }
 }

@@ -1,57 +1,56 @@
 import React, { FC } from 'react';
-import { Box, Table, TableBody, TableCell, TableHeader, TableRow } from 'grommet';
+import { Table, TableBody, TableCell, TableHeader, TableRow, Text } from 'grommet';
 import _ from 'lodash';
 
-import { GetLineScoreQuery } from '@sammyers/dc-shared';
+import { GetGameSummaryQuery } from '@sammyers/dc-shared';
 
-type LineScoreCell = NonNullable<NonNullable<GetLineScoreQuery['game']>['lineScore']>[number];
+type LineScoreCell = NonNullable<NonNullable<GetGameSummaryQuery['game']>['lineScore']>[number];
 
-const INNING_WIDTH = '16px';
-const RUNS_WIDTH = '48px';
-const HITS_WIDTH = INNING_WIDTH;
+const RUNS_WIDTH = '40px';
+const HITS_WIDTH = '16px';
 
-const LineScore: FC<{ cells: LineScoreCell[] }> = ({ cells }) => {
+interface Props {
+  cells: LineScoreCell[];
+  teams: NonNullable<GetGameSummaryQuery['game']>['teams'];
+}
+
+const LineScore: FC<Props> = ({ cells, teams }) => {
   const { TOP, BOTTOM } = _.groupBy(_.orderBy(cells, 'inning'), 'halfInning');
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableCell scope="col"></TableCell>
+          <TableCell scope="col" pad="xsmall"></TableCell>
           {_.times(Math.max(TOP.length, BOTTOM.length), n => (
-            <TableCell key={n} scope="col" align="center" size={INNING_WIDTH}>
-              {n + 1}
+            <TableCell key={n} scope="col" align="center" pad="xsmall">
+              <Text>{n + 1}</Text>
             </TableCell>
           ))}
-          <TableCell scope="col" align="right" size={RUNS_WIDTH}>
-            <strong>R</strong>
+          <TableCell pad="xsmall" scope="col" align="right" size={RUNS_WIDTH}>
+            <Text weight="bold">R</Text>
           </TableCell>
-          <TableCell scope="col" align="right" size={HITS_WIDTH}>
-            <strong>H</strong>
+          <TableCell pad="xsmall" scope="col" align="right" size={HITS_WIDTH}>
+            <Text weight="bold">H</Text>
           </TableCell>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {(
-          [
-            ['Away', TOP],
-            ['Home', BOTTOM],
-          ] as [string, typeof TOP][]
-        ).map(([name, innings]) => (
-          <TableRow key={name}>
-            <TableCell scope="row">
-              <strong>{name}</strong>
+        {_.zip(_.sortBy(teams, 'role'), [TOP, BOTTOM]).map(([team, innings]) => (
+          <TableRow key={team?.name}>
+            <TableCell pad="xsmall" scope="row">
+              <Text weight="bold">{team?.name}</Text>
             </TableCell>
-            {innings.map(inning => (
-              <TableCell key={inning?.inning} align="center" size={INNING_WIDTH}>
-                {inning!.runs}
+            {innings!.map(inning => (
+              <TableCell pad="xsmall" key={inning?.inning} align="center">
+                <Text>{inning!.runs}</Text>
               </TableCell>
             ))}
-            <TableCell align="right" size={RUNS_WIDTH}>
-              <strong>{_.sumBy(innings, 'runs')}</strong>
+            <TableCell pad="xsmall" align="right" size={RUNS_WIDTH}>
+              <Text weight="bold">{_.sumBy(innings, 'runs')}</Text>
             </TableCell>
-            <TableCell align="right" size={HITS_WIDTH}>
-              <strong>{_.sumBy(innings, 'hits')}</strong>
+            <TableCell pad="xsmall" align="right" size={HITS_WIDTH}>
+              <Text weight="bold">{_.sumBy(innings, 'hits')}</Text>
             </TableCell>
           </TableRow>
         ))}

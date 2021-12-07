@@ -246,7 +246,7 @@ export const getGameForMutation = createSelector(
     gameLength,
     teams: {
       create: teams.map(({ name, role, winner, lineups }) => ({
-        name,
+        name: name || `${_.capitalize(role)} Team`,
         role,
         winner,
         lineups: {
