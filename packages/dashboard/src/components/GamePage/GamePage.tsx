@@ -1,17 +1,18 @@
 import React, { useMemo } from 'react';
+import { format, parseISO } from 'date-fns';
 import { Box, Grid } from 'grommet';
 import _ from 'lodash';
 import { useParams } from 'react-router';
 
 import { useGetGameDetailsQuery, useGetGameTitleQuery } from '@sammyers/dc-shared';
+
 // import GameLog from './GameLog';
 import BoxScore from './BoxScore';
 import LineScore from '../LineScore';
-import { format, parseISO } from 'date-fns';
 
 const GamePage = () => {
   const { id } = useParams();
-  const { data } = useGetGameDetailsQuery({ variables: { id: id! } });
+  const { data } = useGetGameDetailsQuery({ variables: { gameId: id! } });
 
   if (!data) {
     return null;

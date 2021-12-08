@@ -212,6 +212,7 @@ create view season_stats as select
     ) as ops
   from (
     select
+      (select group_id from player where id = player_id),
       player_id,
       extract(year from game_start_time)::int as season,
       count(distinct game_id) as games,

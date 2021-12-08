@@ -1,5 +1,5 @@
-query GetAllGameSummaries {
-  games(orderBy: TIME_STARTED_DESC) {
+query GetAllGameSummaries($groupId: UUID!) {
+  games(condition: { groupId: $groupId }, orderBy: TIME_STARTED_DESC) {
     id
     name
     timeStarted

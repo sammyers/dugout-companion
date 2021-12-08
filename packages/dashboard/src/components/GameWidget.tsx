@@ -2,10 +2,13 @@ import React, { FC } from 'react';
 import { format, parseISO } from 'date-fns';
 import { Box, Button, Text } from 'grommet';
 import _ from 'lodash';
+import { useNavigate } from 'react-router';
 
 import { Game, useGetLatestGameSummaryQuery, useGetGameSummaryQuery } from '@sammyers/dc-shared';
-import { useNavigate } from 'react-router';
+
 import LineScore from './LineScore';
+
+import { useCurrentGroupId } from './context';
 
 const GameSummary: FC<Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score'>> = ({
   id,
@@ -39,7 +42,12 @@ const GameSummary: FC<Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score'>> 
 };
 
 const GameWidget = () => {
-  const { data } = useGetLatestGameSummaryQuery();
+  const groupId = useCurrentGroupId();
+
+  const { data } = useGetLatestGameSummaryQuery({
+    skip: !groupId,
+    variables: groupId ? { groupId } : undefined,
+  });
   const game = data?.games?.[0];
 
   const navigate = useNavigate();
@@ -53,17 +61,21 @@ const GameWidget = () => {
       align="center"
       gap="small"
     >
-      {game ? <GameSummary {...game} /> : <Text>No games yet</Text>}
-      <Box direction="row" gap="small">
-        {!!game && (
-          <Button plain={false} color="accent-2" onClick={() => navigate(`/game/${game?.id}`)}>
-            More Details
-          </Button>
-        )}
-        <Button plain={false} color="accent-2" onClick={() => navigate('/games')}>
-          More Games
-        </Button>
-      </Box>
+      {game ? (
+        <>
+          <GameSummary {...game} />
+          <Box direction="row" gap="small">
+            <Button plain={false} color="accent-2" onClick={() => navigate(`/game/${game?.id}`)}>
+              More Details
+            </Button>
+            <Button plain={false} color="accent-2" onClick={() => navigate('/games')}>
+              More Games
+            </Button>
+          </Box>
+        </>
+      ) : (
+        <Text>No games yet</Text>
+      )}
     </Box>
   );
 };

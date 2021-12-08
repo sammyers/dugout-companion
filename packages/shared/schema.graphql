@@ -2178,6 +2178,7 @@ input ScoredRunnerCondition {
 }
 
 type SeasonStat {
+  groupId: UUID
   playerId: UUID
   season: Int
   games: BigInt
@@ -2214,6 +2215,8 @@ scalar BigInt
 """Methods to use when ordering `SeasonStat`."""
 enum SeasonStatsOrderBy {
   NATURAL
+  GROUP_ID_ASC
+  GROUP_ID_DESC
   PLAYER_ID_ASC
   PLAYER_ID_DESC
   SEASON_ASC
@@ -2263,6 +2266,9 @@ A condition to be used against `SeasonStat` object types. All fields are tested
 for equality and combined with a logical ‘and.’
 """
 input SeasonStatCondition {
+  """Checks for equality with the object’s `groupId` field."""
+  groupId: UUID
+
   """Checks for equality with the object’s `playerId` field."""
   playerId: UUID
 
@@ -8611,6 +8617,7 @@ input FakePublicSeasonStatsForeignKey0InverseInput {
 
 """The `seasonStat` to be created by this mutation."""
 input FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput {
+  groupId: UUID
   season: Int
   games: BigInt
   plateAppearances: Int

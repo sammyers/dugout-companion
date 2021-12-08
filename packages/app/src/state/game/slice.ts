@@ -28,6 +28,7 @@ import {
   AppGameState,
   PlateAppearance,
 } from './types';
+import { groupActions } from 'state/groups/slice';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
   name: '',
@@ -234,6 +235,17 @@ const { actions: gameActions, reducer } = createSlice({
       state.saved = true;
     },
   },
+  extraReducers: builder =>
+    builder.addCase(groupActions.setCurrentGroup, state => {
+      state.teams.forEach(team => {
+        team.lineups = [
+          {
+            id: uuid4(),
+            lineupSpots: [],
+          },
+        ];
+      });
+    }),
 });
 
 export { gameActions };

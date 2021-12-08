@@ -17,15 +17,15 @@ import Plays from './plays/Plays';
 
 import theme from 'theme';
 import { isGameOver } from 'state/game/selectors';
+import { getCurrentGroup } from 'state/groups/selectors';
+import { groupActions } from 'state/groups/slice';
 import { playerActions } from 'state/players/slice';
 import { historyActions } from 'state/history/slice';
-import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { useAppDispatch, useAppSelector, useSyncAllPlayers } from 'utils/hooks';
+import { networkStatusContext } from 'utils/network';
 
 import { Game } from 'state/game/types';
 import { Player } from 'state/players/types';
-import { networkStatusContext } from 'utils/network';
-import { groupActions } from 'state/groups/slice';
-import { getCurrentGroup } from 'state/groups/selectors';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -71,10 +71,15 @@ const App = () => {
     }
   }, [pathname, gameOver, navigate]);
 
+  const syncAllPlayers = useSyncAllPlayers();
+
   const [online, setOnline] = useState(false);
   useEffect(() => {
     const handleNetworkChange = () => {
       setOnline(navigator.onLine);
+      if (navigator.onLine) {
+        syncAllPlayers();
+      }
     };
     handleNetworkChange();
     window.addEventListener('online', handleNetworkChange);
@@ -84,7 +89,7 @@ const App = () => {
       window.removeEventListener('online', handleNetworkChange);
       window.removeEventListener('offline', handleNetworkChange);
     };
-  }, [setOnline]);
+  }, [setOnline, syncAllPlayers]);
 
   return (
     <Grommet full theme={theme}>

@@ -1,11 +1,14 @@
 import React from 'react';
+import { getYear } from 'date-fns';
 import { Box, ColumnConfig, DataTable } from 'grommet';
+
 import {
   GetAllPlayerStatsQuery,
   SimplifyType,
   useGetAllPlayerStatsQuery,
 } from '@sammyers/dc-shared';
-import { getYear } from 'date-fns';
+
+import { useCurrentGroupId } from './context';
 
 type PlayerStatResult = NonNullable<SimplifyType<GetAllPlayerStatsQuery['seasonStats']>>[number];
 type PlayerStatRow = SimplifyType<Omit<PlayerStatResult, 'player'> & PlayerStatResult['player']>;
@@ -54,7 +57,11 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
 
 const StatsWidget = () => {
   const currentYear = getYear(new Date());
-  const { data } = useGetAllPlayerStatsQuery({ variables: { season: currentYear } });
+  const groupId = useCurrentGroupId();
+  const { data } = useGetAllPlayerStatsQuery({
+    skip: !groupId,
+    variables: groupId ? { groupId, season: currentYear } : undefined,
+  });
 
   if (!data) {
     return null;

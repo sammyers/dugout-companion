@@ -1,5 +1,5 @@
-query GetGameDetails($id: UUID!) {
-  game(id: $id) {
+query GetGameDetails($gameId: UUID!) {
+  game(id: $gameId) {
     id
     gameLength
     name

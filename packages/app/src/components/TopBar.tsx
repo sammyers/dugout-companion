@@ -1,9 +1,10 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Header, Nav, Button, Box, Drop } from 'grommet';
+import React, { useCallback } from 'react';
+import { Header, Nav, Button, Box, DropButton } from 'grommet';
 import { SettingsOption } from 'grommet-icons';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
 import { BasesPreview } from '@sammyers/dc-shared';
+
 import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
 import SettingsMenu from './SettingsMenu';
@@ -24,11 +25,6 @@ const TopBar = () => {
     dispatch(gameActions.startGame());
     navigate('/field');
   }, [dispatch, navigate]);
-
-  const settingsButtonRef = useRef<HTMLButtonElement & HTMLAnchorElement>(null);
-  const [showSettings, setShowSettings] = useState(false);
-
-  const toggleSettings = useCallback(() => setShowSettings(show => !show), [setShowSettings]);
 
   return (
     <Header background="neutral-5">
@@ -63,20 +59,16 @@ const TopBar = () => {
             />
           </Routes>
         )}
-        <Button
+        <DropButton
           margin={{ left: 'small' }}
           icon={<SettingsOption />}
           plain={false}
           alignSelf="center"
           color="light-1"
-          ref={settingsButtonRef}
-          onClick={toggleSettings}
+          dropAlign={{ top: 'bottom', right: 'right' }}
+          dropProps={{ margin: { top: 'xsmall' }, round: 'xsmall' }}
+          dropContent={<SettingsMenu />}
         />
-        {showSettings && settingsButtonRef.current && (
-          <Drop target={settingsButtonRef.current} align={{ top: 'bottom', right: 'right' }}>
-            <SettingsMenu />
-          </Drop>
-        )}
       </Box>
     </Header>
   );

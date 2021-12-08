@@ -1,5 +1,5 @@
-query GetAllPlayerStats($season: Int!) {
-  seasonStats(condition: { season: $season }) {
+query GetAllPlayerStats($groupId: UUID!, $season: Int!) {
+  seasonStats(condition: { groupId: $groupId, season: $season }) {
     player {
       id
       fullName

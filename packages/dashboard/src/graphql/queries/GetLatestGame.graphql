@@ -1,5 +1,5 @@
-query GetLatestGameSummary {
-  games(orderBy: TIME_STARTED_DESC, first: 1) {
+query GetLatestGameSummary($groupId: UUID!) {
+  games(orderBy: TIME_STARTED_DESC, first: 1, condition: { groupId: $groupId }) {
     id
     timeStarted
     timeEnded

@@ -2429,6 +2429,7 @@ export type FakePublicSeasonStatsForeignKey0PlayerCreateInput = {
 
 /** The `seasonStat` to be created by this mutation. */
 export type FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput = {
+  groupId?: Maybe<Scalars['UUID']>;
   season?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['BigInt']>;
   plateAppearances?: Maybe<Scalars['Int']>;
@@ -9047,6 +9048,7 @@ export enum ScoredRunnersOrderBy {
 
 export type SeasonStat = {
   __typename?: 'SeasonStat';
+  groupId: Maybe<Scalars['UUID']>;
   playerId: Maybe<Scalars['UUID']>;
   season: Maybe<Scalars['Int']>;
   games: Maybe<Scalars['BigInt']>;
@@ -9077,6 +9079,8 @@ export type SeasonStat = {
  * for equality and combined with a logical ‘and.’
  */
 export type SeasonStatCondition = {
+  /** Checks for equality with the object’s `groupId` field. */
+  groupId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `playerId` field. */
   playerId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `season` field. */
@@ -9132,6 +9136,8 @@ export type SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey0NodeIdUpdat
 /** Methods to use when ordering `SeasonStat`. */
 export enum SeasonStatsOrderBy {
   NATURAL = 'NATURAL',
+  GROUP_ID_ASC = 'GROUP_ID_ASC',
+  GROUP_ID_DESC = 'GROUP_ID_DESC',
   PLAYER_ID_ASC = 'PLAYER_ID_ASC',
   PLAYER_ID_DESC = 'PLAYER_ID_DESC',
   SEASON_ASC = 'SEASON_ASC',
@@ -11805,7 +11811,9 @@ export type GetGameQuery = (
   )> }
 );
 
-export type GetAllGameSummariesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetAllGameSummariesQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
 
 
 export type GetAllGameSummariesQuery = (
@@ -11817,6 +11825,7 @@ export type GetAllGameSummariesQuery = (
 );
 
 export type GetAllPlayerStatsQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
   season: Scalars['Int'];
 }>;
 
@@ -11850,7 +11859,7 @@ export type GetBoxScoreQuery = (
 );
 
 export type GetGameDetailsQueryVariables = Exact<{
-  id: Scalars['UUID'];
+  gameId: Scalars['UUID'];
 }>;
 
 
@@ -11977,7 +11986,9 @@ export type GetGameTitleQuery = (
   )> }
 );
 
-export type GetLatestGameSummaryQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetLatestGameSummaryQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
 
 
 export type GetLatestGameSummaryQuery = (
@@ -12292,8 +12303,8 @@ export type GetGameQueryHookResult = ReturnType<typeof useGetGameQuery>;
 export type GetGameLazyQueryHookResult = ReturnType<typeof useGetGameLazyQuery>;
 export type GetGameQueryResult = Apollo.QueryResult<GetGameQuery, GetGameQueryVariables>;
 export const GetAllGameSummariesDocument = gql`
-    query GetAllGameSummaries {
-  games(orderBy: TIME_STARTED_DESC) {
+    query GetAllGameSummaries($groupId: UUID!) {
+  games(condition: {groupId: $groupId}, orderBy: TIME_STARTED_DESC) {
     id
     name
     timeStarted
@@ -12315,10 +12326,11 @@ export const GetAllGameSummariesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllGameSummariesQuery({
  *   variables: {
+ *      groupId: // value for 'groupId'
  *   },
  * });
  */
-export function useGetAllGameSummariesQuery(baseOptions?: Apollo.QueryHookOptions<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>) {
+export function useGetAllGameSummariesQuery(baseOptions: Apollo.QueryHookOptions<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>) {
         return Apollo.useQuery<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>(GetAllGameSummariesDocument, baseOptions);
       }
 export function useGetAllGameSummariesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>) {
@@ -12328,8 +12340,8 @@ export type GetAllGameSummariesQueryHookResult = ReturnType<typeof useGetAllGame
 export type GetAllGameSummariesLazyQueryHookResult = ReturnType<typeof useGetAllGameSummariesLazyQuery>;
 export type GetAllGameSummariesQueryResult = Apollo.QueryResult<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>;
 export const GetAllPlayerStatsDocument = gql`
-    query GetAllPlayerStats($season: Int!) {
-  seasonStats(condition: {season: $season}) {
+    query GetAllPlayerStats($groupId: UUID!, $season: Int!) {
+  seasonStats(condition: {groupId: $groupId, season: $season}) {
     player {
       id
       fullName
@@ -12368,6 +12380,7 @@ export const GetAllPlayerStatsDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllPlayerStatsQuery({
  *   variables: {
+ *      groupId: // value for 'groupId'
  *      season: // value for 'season'
  *   },
  * });
@@ -12429,8 +12442,8 @@ export type GetBoxScoreQueryHookResult = ReturnType<typeof useGetBoxScoreQuery>;
 export type GetBoxScoreLazyQueryHookResult = ReturnType<typeof useGetBoxScoreLazyQuery>;
 export type GetBoxScoreQueryResult = Apollo.QueryResult<GetBoxScoreQuery, GetBoxScoreQueryVariables>;
 export const GetGameDetailsDocument = gql`
-    query GetGameDetails($id: UUID!) {
-  game(id: $id) {
+    query GetGameDetails($gameId: UUID!) {
+  game(id: $gameId) {
     id
     gameLength
     name
@@ -12566,7 +12579,7 @@ export const GetGameDetailsDocument = gql`
  * @example
  * const { data, loading, error } = useGetGameDetailsQuery({
  *   variables: {
- *      id: // value for 'id'
+ *      gameId: // value for 'gameId'
  *   },
  * });
  */
@@ -12657,8 +12670,8 @@ export type GetGameTitleQueryHookResult = ReturnType<typeof useGetGameTitleQuery
 export type GetGameTitleLazyQueryHookResult = ReturnType<typeof useGetGameTitleLazyQuery>;
 export type GetGameTitleQueryResult = Apollo.QueryResult<GetGameTitleQuery, GetGameTitleQueryVariables>;
 export const GetLatestGameSummaryDocument = gql`
-    query GetLatestGameSummary {
-  games(orderBy: TIME_STARTED_DESC, first: 1) {
+    query GetLatestGameSummary($groupId: UUID!) {
+  games(orderBy: TIME_STARTED_DESC, first: 1, condition: {groupId: $groupId}) {
     id
     timeStarted
     timeEnded
@@ -12680,10 +12693,11 @@ export const GetLatestGameSummaryDocument = gql`
  * @example
  * const { data, loading, error } = useGetLatestGameSummaryQuery({
  *   variables: {
+ *      groupId: // value for 'groupId'
  *   },
  * });
  */
-export function useGetLatestGameSummaryQuery(baseOptions?: Apollo.QueryHookOptions<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>) {
+export function useGetLatestGameSummaryQuery(baseOptions: Apollo.QueryHookOptions<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>) {
         return Apollo.useQuery<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>(GetLatestGameSummaryDocument, baseOptions);
       }
 export function useGetLatestGameSummaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>) {

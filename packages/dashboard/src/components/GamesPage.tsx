@@ -5,10 +5,16 @@ import { useNavigate } from 'react-router';
 
 import { useGetAllGameSummariesQuery } from '@sammyers/dc-shared';
 
+import { useCurrentGroupId } from './context';
+
 const GamesPage = () => {
   const navigate = useNavigate();
+  const groupId = useCurrentGroupId();
 
-  const { data } = useGetAllGameSummariesQuery();
+  const { data } = useGetAllGameSummariesQuery({
+    skip: !groupId,
+    variables: groupId ? { groupId } : undefined,
+  });
 
   if (!data) {
     return null;

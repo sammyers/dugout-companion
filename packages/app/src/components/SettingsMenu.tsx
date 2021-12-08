@@ -1,5 +1,5 @@
 import React, { useCallback, ChangeEvent } from 'react';
-import { Box, Button, DropButton, Heading, RangeInput, Text } from 'grommet';
+import { Box, Button, DropButton, Heading, RangeInput, Select, Text } from 'grommet';
 import { Add, Erase, PowerReset, Subtract } from 'grommet-icons';
 import { PURGE } from 'redux-persist';
 
@@ -10,9 +10,31 @@ import {
   isGameInExtraInnings,
   isGameInProgress,
 } from 'state/game/selectors';
-import { getCurrentGroupName } from 'state/groups/selectors';
+import { getAllGroups, getCurrentGroup } from 'state/groups/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { groupActions } from 'state/groups/slice';
+
+const GroupSelector = () => {
+  const dispatch = useAppDispatch();
+  const currentGroupId = useAppSelector(getCurrentGroup);
+  const groups = useAppSelector(getAllGroups);
+
+  return (
+    <Select
+      margin="small"
+      options={groups}
+      labelKey="name"
+      valueKey={{ key: 'id', reduce: true }}
+      value={currentGroupId}
+      onChange={({ value }) => {
+        if (value !== currentGroupId) {
+          dispatch(groupActions.setCurrentGroup(value));
+        }
+      }}
+    />
+  );
+};
 
 const ResetConfirm = () => {
   const dispatch = useAppDispatch();
@@ -56,7 +78,6 @@ const SettingsMenu = () => {
   const currentGameLength = useAppSelector(getCurrentGameLength);
   const inProgress = useAppSelector(isGameInProgress);
   const inExtraInnings = useAppSelector(isGameInExtraInnings);
-  const groupName = useAppSelector(getCurrentGroupName);
 
   const handleChangeGameLength = useCallback(
     ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -77,9 +98,14 @@ const SettingsMenu = () => {
   return (
     <Box pad={{ bottom: 'medium', horizontal: 'small', top: 'small' }} gap="medium">
       <Box>
-        <Heading level={4} alignSelf="center" margin={{ top: 'xsmall', bottom: 'medium' }}>
-          Current Group: {groupName}
-        </Heading>
+        {!inProgress && (
+          <>
+            <Heading level={5} alignSelf="center" margin="none">
+              Current Group
+            </Heading>
+            <GroupSelector />
+          </>
+        )}
         <Heading level={5} margin="none" alignSelf="center">
           Game Length
         </Heading>

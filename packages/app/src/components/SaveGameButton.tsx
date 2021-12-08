@@ -4,15 +4,13 @@ import { StatusGood, WifiNone } from 'grommet-icons';
 import _ from 'lodash';
 import { useStore } from 'react-redux';
 
-import { Spinner, useCreateGameMutation, useCreatePlayerMutation } from '@sammyers/dc-shared';
+import { Spinner, useCreateGameMutation } from '@sammyers/dc-shared';
 
 import { getGameForMutation, getGameName, wasGameSaved } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { getUnsyncedPlayers } from 'state/players/selectors';
-import { playerActions } from 'state/players/slice';
 import { getUnsavedGames } from 'state/unsavedGames/selectors';
 import { unsavedGameActions } from 'state/unsavedGames/slice';
-import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { useAppDispatch, useAppSelector, useSyncAllPlayers } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
 
 import { AppState } from 'state/store';
@@ -31,18 +29,10 @@ const SaveGameButton = () => {
   const [createGame, { loading: createGameLoading }] = useCreateGameMutation({
     onCompleted: () => setSuccess(true),
   });
-  const [createPlayer] = useCreatePlayerMutation();
+  const syncAllPlayers = useSyncAllPlayers();
 
   const handleClick = useCallback(async () => {
-    const unsyncedPlayers = getUnsyncedPlayers(getState());
-    if (_.size(unsyncedPlayers)) {
-      for (let playerId in unsyncedPlayers) {
-        const { data } = await createPlayer({ variables: unsyncedPlayers[playerId] });
-        if (data?.createPlayer?.player) {
-          dispatch(playerActions.syncPlayer(data.createPlayer.player.id));
-        }
-      }
-    }
+    await syncAllPlayers();
     const unsavedGames = getUnsavedGames(getState());
     _.forEach(unsavedGames, async game => {
       const { data } = await createGame({ variables: { input: { game } } });
@@ -55,7 +45,7 @@ const SaveGameButton = () => {
     if (data?.createGame?.game) {
       dispatch(gameActions.setGameSaved());
     }
-  }, [getState, createPlayer, createGame, dispatch]);
+  }, [getState, syncAllPlayers, createGame, dispatch]);
 
   return (
     <Button
