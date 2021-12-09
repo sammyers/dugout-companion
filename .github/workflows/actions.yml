@@ -25,6 +25,8 @@ jobs:
         run: yarn dashboard build
       - name: Create env file
         run: echo ${{ secrets.ENV_FILE }} | base64 --decode > prod.env
+      - name: Make init folder
+        run: mkdir ./packages/db/init
       - name: Compile migration files
         run: yarn db compile
       - name: Login to Docker Hub
