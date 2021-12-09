@@ -1,5 +1,35 @@
 version: "3.3"
 services:
+  nginx-proxy:
+    container_name: nginx-proxy
+    restart: always
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - network
+  acme-companion:
+    container_name: nginx-proxy-acme
+    image: nginxproxy/acme-companion
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - network
+    environment:
+      - DEFAULT_EMAIL=sammyers.dev@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy
   db:
     restart: always
     image: sam4core/dc-db
@@ -35,11 +65,35 @@ services:
       - server
     networks:
       - network
-    ports:
-      - 80:80
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=dugoutcompanion.app,www.dugoutcompanion.app
+      - LETSENCRYPT_HOST=dugoutcompanion.app,www.dugoutcompanion.app
+
+  dashboard:
+    restart: always
+    image: sam4core/dc-dashboard
+    build:
+      context: ./packages/dashboard
+    depends_on:
+      - server
+    networks:
+      - network
+    expose:
+      - "80"
+    environment:
+      - VIRTUAL_HOST=stats.dugoutcompanion.app
+      - LETSENCRYPT_HOST=stats.dugoutcompanion.app
 
 networks:
   network:
 
 volumes:
   db:
+  conf:
+  vhost:
+  html:
+  dhparam:
+  certs:
+  acme:
