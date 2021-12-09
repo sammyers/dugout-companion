@@ -1,0 +1,38 @@
+name: Container Build
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Build-And-Push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - name: Set up node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'yarn'
+      - run: yarn
+      - name: Build shared package
+        run: yarn shared build
+      - name: Build GQL server
+        run: yarn server build
+      - name: Build tablet app
+        run: yarn app build
+      - name: Build stats dashboard
+        run: yarn dashboard build
+      - name: Create env file
+        run: echo ${{ secrets.ENV_FILE }} | base64 --decode > prod.env
+      - name: Compile migration files
+        run: yarn db compile
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build containers
+        run: docker-compose build
+      - name: Push containers
+        run: docker-compose push
