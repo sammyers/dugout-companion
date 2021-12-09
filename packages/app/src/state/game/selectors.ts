@@ -21,7 +21,7 @@ import {
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
-import { getCurrentGroup } from 'state/groups/selectors';
+import { getCurrentGroup, getCurrentGroupName } from 'state/groups/selectors';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -182,11 +182,13 @@ export const getMinGameLength = createSelector(
   getInning,
   getHalfInning,
   getScore,
-  (inning, halfInning, [awayScore, homeScore]) => {
+  getCurrentGroupName,
+  (inning, halfInning, [awayScore, homeScore], groupName) => {
+    const defaultMin = groupName === 'Testing' ? 2 : 7;
     if (halfInning === HalfInning.BOTTOM && homeScore > awayScore) {
-      return Math.max(7, inning + 1);
+      return Math.max(defaultMin, inning + 1);
     }
-    return Math.max(7, inning);
+    return Math.max(defaultMin, inning);
   }
 );
 export const getMaxGameLength = () => 12;

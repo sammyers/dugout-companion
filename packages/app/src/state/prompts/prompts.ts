@@ -174,7 +174,19 @@ const getRunnerOptionsRecursive = (
       ? _.findIndex(options, ({ endBase }) => endBase === expectedBases[runnerId])
       : 0;
 
-  if (options.length < 2) return;
+  if (options.length < 2) {
+    if (!nextRunner) {
+      return;
+    }
+    return getRunnerOptionsRecursive(
+      runners,
+      outs,
+      nextRunner[0],
+      currentBase,
+      expectedBases,
+      allowScoring
+    );
+  }
   if (!nextRunner) return { runnerId, options, defaultOption };
 
   const [nextBase] = nextRunner;
@@ -259,7 +271,10 @@ export const getPlateAppearanceDetailPrompt = (
           if (outs === 2) {
             return { fielderOptions };
           }
-          const expectedBases = getExpectedBases(newRunners);
+          const expectedBases = getExpectedBases(
+            newRunners,
+            contactType === ContactQuality.GROUNDER ? 1 : 0
+          );
           if (contactType === ContactQuality.GROUNDER) {
             moveRunnersOnGroundBall(newRunners);
           }
