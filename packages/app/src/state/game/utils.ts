@@ -1,6 +1,12 @@
 import _ from 'lodash';
 
-import { BaseType, FieldingPosition, PlateAppearanceType, TeamRole } from '@sammyers/dc-shared';
+import {
+  BaseType,
+  FieldingPosition,
+  HalfInning,
+  PlateAppearanceType,
+  TeamRole,
+} from '@sammyers/dc-shared';
 
 import { BaseRunners, Team, BaseRunnerMap, LineupSpot } from './types';
 
@@ -200,4 +206,10 @@ export const getNextBatter = (batterId: string | undefined, lineup: LineupSpot[]
     return lineup[0].playerId;
   }
   return lineup[lineupIndex + 1].playerId;
+};
+
+export const previousHalfInning = (halfInning: HalfInning, inning: number) => {
+  const prevHalfInning = halfInning === HalfInning.TOP ? HalfInning.BOTTOM : HalfInning.TOP;
+  const prevInning = halfInning === HalfInning.TOP ? inning - 1 : inning;
+  return [prevHalfInning, prevInning] as [HalfInning, number];
 };

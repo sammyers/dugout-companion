@@ -34,6 +34,7 @@ export const getHalfInning = createSelector(getCurrentGameState, state => state.
 export const getInning = createSelector(getCurrentGameState, state => state.inning);
 
 export const getPrevGameStates = (state: AppGameState) => state.prevGameStates;
+export const getEventRecords = (state: AppGameState) => state.gameEventRecords;
 
 export const getCurrentBaseForRunner = (state: AppGameState, playerId: string) =>
   getBaseForRunner(getRunnerMap(state), playerId);

@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { formatISO } from 'date-fns';
-import _ from 'lodash';
+import _, { slice } from 'lodash';
 import undoable from 'redux-undo';
 import { v4 as uuid4 } from 'uuid';
 
+import { groupActions } from 'state/groups/slice';
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
-import { getLineupToEdit } from './partialSelectors';
+import { getBattingTeamRole, getLineupToEdit } from './partialSelectors';
 import {
   updatePositions,
   getNextAvailablePosition,
@@ -15,8 +16,14 @@ import {
   changePlayerPosition,
   applyMidGameLineupChange,
   getCurrentLineupsFromTeams,
+  makeGameEvent,
 } from './stateHelpers';
-import { getAvailablePositionsForLineup, getCurrentLineup, getTeamWithRole } from './utils';
+import {
+  getAvailablePositionsForLineup,
+  getCurrentLineup,
+  previousHalfInning,
+  getTeamWithRole,
+} from './utils';
 
 import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
 import {
@@ -28,7 +35,6 @@ import {
   AppGameState,
   PlateAppearance,
 } from './types';
-import { groupActions } from 'state/groups/slice';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
   name: '',
@@ -194,6 +200,98 @@ const { actions: gameActions, reducer } = createSlice({
       });
       state.lineupDrafts = initialState.lineupDrafts;
     },
+    changePositionsRetroactive(
+      state,
+      { payload }: PayloadAction<Record<FieldingPosition, string>>
+    ) {
+      const [prevHalfInning, prevInning] = previousHalfInning(
+        state.gameState!.halfInning,
+        state.gameState!.inning
+      );
+      const firstIndex = _.findIndex(state.prevGameStates, {
+        inning: prevInning,
+        halfInning: prevHalfInning,
+      });
+      const previousFieldingTeam = getBattingTeamRole(state);
+      const teamLineups = _.find(state.teams, { role: previousFieldingTeam })!.lineups;
+      const firstStateOfHalfInning = state.prevGameStates[firstIndex];
+      const eventIndex = _.findIndex(state.gameEventRecords, {
+        gameStateBeforeId: firstStateOfHalfInning.id,
+      });
+      const firstEventOfHalfInning = state.gameEventRecords[eventIndex];
+
+      if (firstEventOfHalfInning.gameEvent.lineupChange) {
+        const { lineupAfterId } = firstEventOfHalfInning.gameEvent.lineupChange;
+        // Check if the first event was already a lineup change, we've probably already done this
+        const lineupToSwap = _.find(teamLineups, { id: lineupAfterId });
+        if (lineupToSwap) {
+          lineupToSwap.lineupSpots = lineupToSwap.lineupSpots.map(({ position }) => ({
+            position,
+            playerId: payload[position!],
+          }));
+          return;
+        }
+      }
+
+      const { id: originalLineupId } = firstStateOfHalfInning.lineups!.find(
+        lineup => lineup.team.role === previousFieldingTeam
+      )!;
+      const originalLineup = _.find(teamLineups, { id: originalLineupId })!;
+      const newLineup = {
+        id: uuid4(),
+        lineupSpots: originalLineup.lineupSpots.map(({ position }) => ({
+          position,
+          playerId: payload[position!],
+        })),
+      };
+      teamLineups.push(newLineup);
+      state.gameState!.lineups = getCurrentLineupsFromTeams(state.teams);
+
+      const newLineupReference = { id: newLineup.id, team: { role: previousFieldingTeam } };
+      // New state to fill in the gap created by the lineup change
+      const newState = {
+        ...firstStateOfHalfInning,
+        id: uuid4(),
+        lineups: firstStateOfHalfInning.lineups!.map(lineup =>
+          lineup.team.role === previousFieldingTeam ? newLineupReference : lineup
+        ),
+      };
+
+      // Create new lineup change event and insert into the appropriate place in the history
+      const lineupChangeEvent = makeGameEvent({
+        lineupChange: { lineupBeforeId: originalLineup.id, lineupAfterId: newLineup.id },
+      });
+      state.gameEventRecords = [
+        ..._.slice(state.gameEventRecords, 0, eventIndex),
+        {
+          eventIndex,
+          gameEvent: lineupChangeEvent,
+          scoredRunners: [],
+          gameStateBeforeId: firstStateOfHalfInning.id,
+          gameStateAfterId: newState.id,
+        },
+        {
+          ...firstEventOfHalfInning,
+          eventIndex: eventIndex + 1,
+          gameStateBeforeId: newState.id,
+        },
+        ...slice(state.gameEventRecords, eventIndex + 1).map(eventRecord => ({
+          ...eventRecord,
+          eventIndex: eventRecord.eventIndex + 1,
+        })),
+      ];
+
+      state.prevGameStates = [
+        ..._.slice(state.prevGameStates, 0, firstIndex + 1),
+        newState,
+        ..._.slice(state.prevGameStates, firstIndex + 1).map(state => ({
+          ...state,
+          lineups: state.lineups!.map(lineup =>
+            lineup.team.role === previousFieldingTeam ? newLineupReference : lineup
+          ),
+        })),
+      ];
+    },
     changeGameLength(state, { payload }: PayloadAction<number>) {
       state.gameLength = payload;
     },
@@ -276,6 +374,10 @@ export default undoable(reducer, {
   },
   limit: 10,
   syncFilter: true,
-  clearHistoryType: [gameActions.resetGame.type, gameActions.fullResetGame.type],
+  clearHistoryType: [
+    gameActions.resetGame.type,
+    gameActions.fullResetGame.type,
+    gameActions.changePositionsRetroactive.type,
+  ],
   neverSkipReducer: true,
 });

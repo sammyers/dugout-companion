@@ -8,6 +8,7 @@ import {
   getAvailablePositionsForLineup,
   getCurrentLineup,
   getPlayerAtPositionFromTeams,
+  previousHalfInning,
   getTeamWithRole,
   shouldLineupHaveFourOutfielders,
 } from './utils';
@@ -83,6 +84,15 @@ export const getTeamName = (state: AppState, role: TeamRole) => getTeam(state, r
 
 export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
 export const getFieldingLineup = createSelector(getFieldingTeam, getCurrentLineup);
+
+export const getFieldersForPreviousHalfInning = createSelector(
+  getBattingLineup,
+  lineup =>
+    _.fromPairs(lineup.map(({ playerId, position }) => [position!, playerId])) as Record<
+      FieldingPosition,
+      string
+    >
+);
 
 export const doesFieldingTeamHaveFourOutfielders = createSelector(
   getFieldingLineup,
@@ -215,6 +225,43 @@ export const getWinningTeamName = (state: AppState) => {
   const name = getTeamName(state, role);
   return name || `${_.capitalize(role)} Team`;
 };
+
+export const isRetroactiveFielderChangePossible = createSelector(
+  getHalfInning,
+  getInning,
+  getGameHistory,
+  getPrevGameStates,
+  getBattingTeam,
+  (halfInning, inning, events, gameStates, battingTeam) => {
+    if (halfInning === HalfInning.TOP && inning === 1) {
+      return false;
+    }
+    // Check if any lineup changes have happened since then
+    const [prevHalfInning, prevInning] = previousHalfInning(halfInning, inning);
+    const firstGameStateInPrevHalfInning = _.find(gameStates, {
+      inning: prevInning,
+      halfInning: prevHalfInning,
+    });
+    const firstEventIndexInPrevHalfInning = _.findIndex(events, {
+      gameStateBeforeId: firstGameStateInPrevHalfInning?.id,
+    });
+    if (
+      _.some(
+        _.slice(events, firstEventIndexInPrevHalfInning + 1),
+        event =>
+          event.gameEvent.lineupChange &&
+          _.some(battingTeam.lineups, { id: event.gameEvent.lineupChange.lineupBeforeId })
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
+);
+
+export const getOppositeHalfInning = createSelector(getHalfInning, halfInning =>
+  halfInning === HalfInning.BOTTOM ? HalfInning.TOP : HalfInning.BOTTOM
+);
 
 export const getGameForMutation = createSelector(
   getGameId,
