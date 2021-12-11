@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 
 import { getPositionAbbreviation, TeamRole } from '@sammyers/dc-shared';
 
-import { isGameInProgress, getPlayerPosition } from 'state/game/selectors';
+import { isGameInProgress, getPlayerPosition, isGameOver } from 'state/game/selectors';
 import { getShortPlayerName } from 'state/players/selectors';
 import { getBoxScore } from 'state/stats/selectors';
 import { useAppSelector } from 'utils/hooks';
@@ -74,9 +74,10 @@ const TeamBoxScore: FC<TeamBoxScoreProps> = ({ rows, team }) => {
 
 const BoxScore = () => {
   const gameInProgress = useAppSelector(isGameInProgress);
+  const gameOver = useAppSelector(isGameOver);
   const [awayStats, homeStats] = useAppSelector(getBoxScore);
 
-  if (!gameInProgress) {
+  if (!(gameOver || gameInProgress)) {
     return <Navigate to="/teams" />;
   }
 

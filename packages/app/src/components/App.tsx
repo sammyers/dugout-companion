@@ -66,7 +66,7 @@ const App = () => {
   }, [gameData, dispatch]);
 
   useEffect(() => {
-    if (gameOver && pathname !== '/game-over') {
+    if (gameOver && !['/game-over', '/box-score'].includes(pathname)) {
       navigate('/game-over', { replace: true });
     }
   }, [pathname, gameOver, navigate]);
@@ -95,7 +95,7 @@ const App = () => {
     <Grommet full theme={theme}>
       <networkStatusContext.Provider value={online}>
         <Box height="100%">
-          {!gameOver && <TopBar />}
+          <TopBar />
           <Main flex overflow={{ vertical: 'auto' }}>
             <Routes>
               <Route path="/game-over" element={<GameOver />} />

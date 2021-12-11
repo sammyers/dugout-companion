@@ -9,7 +9,7 @@ import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
 import SettingsMenu from './SettingsMenu';
 
-import { canStartGame, getRunnerNames, isGameInProgress } from 'state/game/selectors';
+import { canStartGame, getRunnerNames, isGameInProgress, isGameOver } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
@@ -19,6 +19,7 @@ const TopBar = () => {
 
   const gameInProgress = useAppSelector(isGameInProgress);
   const gameCanStart = useAppSelector(canStartGame);
+  const gameOver = useAppSelector(isGameOver);
   const runners = useAppSelector(getRunnerNames);
 
   const startGame = useCallback(() => {
@@ -29,10 +30,11 @@ const TopBar = () => {
   return (
     <Header background="neutral-5">
       <Nav direction="row" pad="medium">
-        <AnchorLink to="/teams">Teams</AnchorLink>
-        {gameInProgress && <AnchorLink to="/box-score">Box Score</AnchorLink>}
+        {!gameOver && <AnchorLink to="/teams">Teams</AnchorLink>}
+        {(gameInProgress || gameOver) && <AnchorLink to="/box-score">Box Score</AnchorLink>}
         {gameInProgress && <AnchorLink to="/plays">Plays</AnchorLink>}
         {gameInProgress && <AnchorLink to="/field">Scorekeeper</AnchorLink>}
+        {gameOver && <AnchorLink to="/game-over">Save Game</AnchorLink>}
       </Nav>
       <Box direction="row" margin={{ right: 'small' }}>
         {gameInProgress && (
@@ -59,16 +61,18 @@ const TopBar = () => {
             />
           </Routes>
         )}
-        <DropButton
-          margin={{ left: 'small' }}
-          icon={<SettingsOption />}
-          plain={false}
-          alignSelf="center"
-          color="light-1"
-          dropAlign={{ top: 'bottom', right: 'right' }}
-          dropProps={{ margin: { top: 'xsmall' }, round: 'xsmall' }}
-          dropContent={<SettingsMenu />}
-        />
+        {!gameOver && (
+          <DropButton
+            margin={{ left: 'small' }}
+            icon={<SettingsOption />}
+            plain={false}
+            alignSelf="center"
+            color="light-1"
+            dropAlign={{ top: 'bottom', right: 'right' }}
+            dropProps={{ margin: { top: 'xsmall' }, round: 'xsmall' }}
+            dropContent={<SettingsMenu />}
+          />
+        )}
       </Box>
     </Header>
   );

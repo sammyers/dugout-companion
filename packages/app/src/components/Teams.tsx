@@ -10,6 +10,7 @@ import Lineup from './Lineup';
 import { isGameInProgress, isLineupEditable } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import ShuffleIcon from './prompts/util/ShuffleIcon';
 
 const ButtonContainer: FC = ({ children }) => (
   <Box
@@ -59,6 +60,10 @@ const Teams = () => {
     dispatch(gameActions.flipTeams());
   }, [dispatch]);
 
+  const handleShuffleTeams = useCallback(() => {
+    dispatch(gameActions.shuffleTeams());
+  }, [dispatch]);
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Box
@@ -95,7 +100,10 @@ const Teams = () => {
               <Button primary plain={false} color="accent-3" icon={<Edit />} onClick={onEdit} />
             )
           ) : (
-            <Button plain={false} icon={<Transaction />} onClick={handleFlipTeams} />
+            [
+              <Button plain={false} icon={<Transaction />} onClick={handleFlipTeams} />,
+              <Button plain={false} icon={<ShuffleIcon />} onClick={handleShuffleTeams} />,
+            ]
           )}
         </ButtonContainer>
         <Lineup teamRole={TeamRole.HOME} editable={editable} />

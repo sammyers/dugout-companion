@@ -62,9 +62,9 @@ export const changePlayerPosition = (
 
 export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
   const fourOutfielders = lineup.length > 9;
-  const positions = new Set(_.map(lineup, 'position'));
+  const takenPositions = _.countBy(lineup, 'position');
   const positionsNotTaken = getAvailablePositionsForLineup(lineup).filter(
-    position => !positions.has(position)
+    position => !takenPositions[position]
   );
   return _.map(lineup, ({ playerId, position }) => {
     if (fourOutfielders && position === FieldingPosition.CENTER_FIELD) {
@@ -74,9 +74,11 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
           FieldingPosition.RIGHT_CENTER,
           getNextAvailablePosition(lineup),
         ],
-        pos => !positions.has(pos)
+        pos => !(pos! in takenPositions)
       )!;
-      positions.add(newPosition);
+      if (newPosition) {
+        takenPositions[newPosition] = 1;
+      }
       return {
         playerId,
         position: newPosition,
@@ -89,17 +91,29 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
     ) {
       const newPosition = _.find(
         [FieldingPosition.CENTER_FIELD, getNextAvailablePosition(lineup)],
-        pos => !positions.has(pos)
+        pos => !(pos! in takenPositions)
       )!;
-      positions.add(newPosition);
+      if (newPosition) {
+        takenPositions[newPosition] = 1;
+      }
       return {
         playerId,
         position: newPosition,
       };
+    } else if (_.get(takenPositions, position!, 0) > 1) {
+      takenPositions[position!] -= 1;
+      if (!positionsNotTaken.length) {
+        return { playerId, position: null };
+      }
+      const newPosition = positionsNotTaken.pop()!;
+      takenPositions[newPosition] = 1;
+      return { playerId, position: newPosition };
     } else if (!position && positionsNotTaken.length) {
+      const newPosition = positionsNotTaken.pop()!;
+      takenPositions[newPosition] = 1;
       return {
         playerId,
-        position: positionsNotTaken.pop()!,
+        position: newPosition,
       };
     }
     return { playerId, position };

@@ -150,6 +150,15 @@ const { actions: gameActions, reducer } = createSlice({
         state.teams[1].role = TeamRole.HOME;
       }
     },
+    shuffleTeams(state) {
+      if (state.status === GameStatus.NOT_STARTED) {
+        const allPlayers = _.flatten(_.map(state.teams, team => team.lineups[0].lineupSpots));
+        const shuffled = _.shuffle(allPlayers);
+        const awayTeamSize = Math.ceil(shuffled.length / 2);
+        state.teams[0].lineups[0].lineupSpots = updatePositions(_.slice(shuffled, 0, awayTeamSize));
+        state.teams[1].lineups[0].lineupSpots = updatePositions(_.slice(shuffled, awayTeamSize));
+      }
+    },
     startGame: {
       prepare: () => ({
         payload: {
