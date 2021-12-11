@@ -7,7 +7,12 @@ import { TeamRole, useCreatePlayerMutation } from '@sammyers/dc-shared';
 
 import LineupPlayer from './LineupPlayer';
 
-import { getLineupToEdit, getPlayersNotInGame, getTeamName } from 'state/game/selectors';
+import {
+  getCurrentBatter,
+  getLineupToEdit,
+  getPlayersNotInGame,
+  getTeamName,
+} from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { getCurrentGroup } from 'state/groups/selectors';
 import { playerActions } from 'state/players/slice';
@@ -29,6 +34,7 @@ const Lineup = ({ teamRole, editable }: Props) => {
   const availablePlayers = useAppSelector(getPlayersNotInGame);
   const groupId = useAppSelector(getCurrentGroup)!;
   const teamName = useAppSelector(state => getTeamName(state, teamRole));
+  const playerAtBat = useAppSelector(getCurrentBatter);
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -143,6 +149,7 @@ const Lineup = ({ teamRole, editable }: Props) => {
                   index={index}
                   team={teamRole}
                   editable={editable}
+                  atBat={playerAtBat === playerId}
                 />
               ))}
               {placeholder}

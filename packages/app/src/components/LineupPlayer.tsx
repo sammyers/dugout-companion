@@ -1,5 +1,5 @@
 import React, { useCallback, FC, useMemo } from 'react';
-import { Box, Text, Button, Select, ThemeContext } from 'grommet';
+import { Box, Text, Button, Select, ThemeContext, Stack } from 'grommet';
 import { Close } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
@@ -16,9 +16,10 @@ interface Props extends LineupSpot {
   team: TeamRole;
   index: number;
   editable: boolean;
+  atBat: boolean;
 }
 
-const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
+const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat }) => {
   const dispatch = useAppDispatch();
 
   const name = useAppSelector(state => getPlayerName(state, playerId));
@@ -59,7 +60,25 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable }) => {
           align="center"
           justify="between"
         >
-          <Text margin={editable ? { right: 'auto' } : undefined}>{name}</Text>
+          <Stack anchor="top-left" margin={editable ? { right: 'auto' } : undefined}>
+            <Box
+              round="xsmall"
+              pad="small"
+              background={!editable && atBat ? 'accent-4' : 'initial'}
+            >
+              <Text>{name}</Text>
+            </Box>
+            {!editable && atBat && (
+              <Box
+                pad="xsmall"
+                background="neutral-2"
+                round
+                style={{ transform: 'translate(-30%, -50%)' }}
+              >
+                <Text size="xsmall">Batting</Text>
+              </Box>
+            )}
+          </Stack>
           {editable ? (
             <>
               <ThemeContext.Extend value={{ global: { size: { xsmall: '108px' } } }}>

@@ -132,7 +132,16 @@ const Bases = () => {
             <Base occupied={!!thirdBaseRunner} />
             <Text textAlign="center">{thirdBaseRunner}</Text>
           </Box>
-          <Box gridArea="home-plate" justify="end" align="center">
+          <Box
+            gridArea="home-plate"
+            justify="end"
+            align="center"
+            background="neutral-2"
+            round="small"
+            pad={{ horizontal: 'small' }}
+            margin={{ bottom: 'xsmall' }}
+            style={{ justifySelf: 'center' }}
+          >
             <Text weight="bold" size="xlarge">
               {batter}
             </Text>

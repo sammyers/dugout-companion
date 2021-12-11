@@ -42,9 +42,10 @@ interface TeamBoxScoreProps {
 
 const TeamBoxScore: FC<TeamBoxScoreProps> = ({ rows, team }) => {
   return (
-    <Card pad="small" background="light-1" margin="small">
+    <Card pad="small" background="neutral-5" margin="small">
       <DataTable<BoxScoreRow>
         margin="small"
+        background={{ body: ['neutral-5', 'neutral-6'] }}
         columns={[
           {
             property: 'playerId',
@@ -82,7 +83,16 @@ const BoxScore = () => {
   }
 
   return (
-    <Box flex direction="row" wrap justify="around" align="center">
+    <Box
+      flex
+      direction="row"
+      wrap
+      justify="around"
+      align="center"
+      pad="small"
+      height="fit-content"
+      overflow="auto"
+    >
       <TeamBoxScore rows={awayStats} team={TeamRole.AWAY} />
       <TeamBoxScore rows={homeStats} team={TeamRole.HOME} />
     </Box>

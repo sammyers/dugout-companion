@@ -13,6 +13,7 @@ const theme: ThemeType = {
       'neutral-3': '#0F6C95',
       'neutral-4': '#9C3848',
       'neutral-5': '#293241',
+      'neutral-6': '#475671', // lighter shade of neutral-5
       'status-critical': '#FF4040',
       'status-critical-light': '#ffcccc',
       'status-ok': '#00C781',
