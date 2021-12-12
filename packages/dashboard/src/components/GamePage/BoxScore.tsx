@@ -85,12 +85,12 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
       {
         property: 'onBasePct',
         header: 'OBP',
-        render: row => row.onBasePct!.toFixed(3),
+        render: row => row.onBasePct?.toFixed(3) ?? '',
       },
       {
         property: 'ops',
         header: 'OPS',
-        render: row => row.ops!.toFixed(3),
+        render: row => row.ops?.toFixed(3) ?? '',
       },
     ],
     [size]
@@ -114,6 +114,8 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
       })) as PlayerBoxScoreRow[],
     }));
   }, [teams, boxScoreLines]);
+
+  console.log(teamBoxScores);
 
   return (
     <Box direction="row" justify="stretch" wrap>
