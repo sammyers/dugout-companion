@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Table, TableBody, TableCell, TableHeader, TableRow, Text } from 'grommet';
 import _ from 'lodash';
 
-import { GetGameSummaryQuery } from '@sammyers/dc-shared';
+import { GetGameSummaryQuery, TeamRole } from '@sammyers/dc-shared';
 
 type LineScoreCell = NonNullable<NonNullable<GetGameSummaryQuery['game']>['lineScore']>[number];
 
@@ -16,6 +16,7 @@ interface Props {
 
 const LineScore: FC<Props> = ({ cells, teams }) => {
   const { TOP, BOTTOM } = _.groupBy(_.orderBy(cells, 'inning'), 'halfInning');
+  const gameLength = Math.max(TOP.length, BOTTOM.length);
 
   return (
     <Table>
@@ -46,6 +47,11 @@ const LineScore: FC<Props> = ({ cells, teams }) => {
                 <Text>{inning!.runs}</Text>
               </TableCell>
             ))}
+            {team?.role === TeamRole.HOME && innings!.length < gameLength && (
+              <TableCell pad="xsmall" key={innings?.length} align="center">
+                <Text>X</Text>
+              </TableCell>
+            )}
             <TableCell pad="xsmall" align="right" size={RUNS_WIDTH}>
               <Text weight="bold">{_.sumBy(innings, 'runs')}</Text>
             </TableCell>
