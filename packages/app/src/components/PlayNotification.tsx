@@ -13,7 +13,7 @@ const PlayNotification: FC<{ target: HTMLElement }> = ({ target }) => {
   const timeoutId = useRef(-1);
 
   useEffect(() => {
-    if (lastPlay) {
+    if (lastPlay?.description) {
       setShowNotification(true);
       clearTimeout(timeoutId.current);
       timeoutId.current = window.setTimeout(() => {

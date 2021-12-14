@@ -9,6 +9,7 @@ import LineupPlayer from './LineupPlayer';
 
 import {
   getCurrentBatter,
+  getFirstBatterNextInning,
   getLineupToEdit,
   getPlayersNotInGame,
   getTeamName,
@@ -35,6 +36,7 @@ const Lineup = ({ teamRole, editable }: Props) => {
   const groupId = useAppSelector(getCurrentGroup)!;
   const teamName = useAppSelector(state => getTeamName(state, teamRole));
   const playerAtBat = useAppSelector(getCurrentBatter);
+  const batterUpNextInning = useAppSelector(getFirstBatterNextInning);
 
   const [searchValue, setSearchValue] = useState('');
 
@@ -150,6 +152,7 @@ const Lineup = ({ teamRole, editable }: Props) => {
                   team={teamRole}
                   editable={editable}
                   atBat={playerAtBat === playerId}
+                  upNextInning={batterUpNextInning === playerId}
                 />
               ))}
               {placeholder}

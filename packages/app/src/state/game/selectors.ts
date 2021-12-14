@@ -9,7 +9,6 @@ import {
   getCurrentLineup,
   getPlayerAtPositionFromTeams,
   previousHalfInning,
-  getTeamWithRole,
   shouldLineupHaveFourOutfielders,
 } from './utils';
 
@@ -46,6 +45,8 @@ export const isEditingLineups = createSelector(getPresent, partialSelectors.isEd
 export const getLineupDrafts = createSelector(getPresent, partialSelectors.getLineupDrafts);
 export const getPrevGameStates = createSelector(getPresent, partialSelectors.getPrevGameStates);
 
+export const getFirstBatterNextInning = createSelector(getPresent, state => state.upNextHalfInning);
+
 export const getGameStateGetter = createSelector(getPresent, state => (gameStateId: string) => {
   if (state.gameState?.id === gameStateId) {
     return state.gameState;
@@ -68,31 +69,17 @@ export const isLineupEditable = createSelector(
 export const getDraftLineup = (state: AppState, role: TeamRole) =>
   partialSelectors.getDraftLineup(getPresent(state), role);
 
-export const getBattingTeamRole = createSelector(getHalfInning, half =>
-  half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
-);
-export const getFieldingTeamRole = createSelector(getHalfInning, half =>
-  half === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME
-);
+export const getBattingTeamRole = createSelector(getPresent, partialSelectors.getBattingTeamRole);
+export const getFieldingTeamRole = createSelector(getPresent, partialSelectors.getFieldingTeamRole);
+export const getBattingTeam = createSelector(getPresent, partialSelectors.getBattingTeam);
+export const getFieldingTeam = createSelector(getPresent, partialSelectors.getFieldingTeam);
+export const getBattingLineup = createSelector(getPresent, partialSelectors.getBattingLineup);
+export const getFieldingLineup = createSelector(getPresent, partialSelectors.getFieldingLineup);
 
 export const getTeam = (state: AppState, role: TeamRole) =>
   partialSelectors.getTeam(getPresent(state), role);
-export const getBattingTeam = createSelector(getTeams, getBattingTeamRole, getTeamWithRole);
-export const getFieldingTeam = createSelector(getTeams, getFieldingTeamRole, getTeamWithRole);
 
 export const getTeamName = (state: AppState, role: TeamRole) => getTeam(state, role).name;
-
-export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
-export const getFieldingLineup = createSelector(getFieldingTeam, getCurrentLineup);
-
-export const getFieldersForPreviousHalfInning = createSelector(
-  getBattingLineup,
-  lineup =>
-    _.fromPairs(lineup.map(({ playerId, position }) => [position!, playerId])) as Record<
-      FieldingPosition,
-      string
-    >
-);
 
 export const doesFieldingTeamHaveFourOutfielders = createSelector(
   getFieldingLineup,
@@ -259,8 +246,20 @@ export const isRetroactiveFielderChangePossible = createSelector(
   }
 );
 
-export const getOppositeHalfInning = createSelector(getHalfInning, halfInning =>
-  halfInning === HalfInning.BOTTOM ? HalfInning.TOP : HalfInning.BOTTOM
+export const getPreviousHalfInning = createSelector(
+  getHalfInning,
+  getInning,
+  (halfInning, inning): [HalfInning, number] | undefined => {
+    if (inning === 1 && halfInning === HalfInning.TOP) {
+      return;
+    }
+    const oppositeHalfInning =
+      halfInning === HalfInning.BOTTOM ? HalfInning.TOP : HalfInning.BOTTOM;
+    if (halfInning === HalfInning.BOTTOM) {
+      return [oppositeHalfInning, inning];
+    }
+    return [oppositeHalfInning, inning - 1];
+  }
 );
 
 export const getGameForMutation = createSelector(

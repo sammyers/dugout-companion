@@ -4,6 +4,7 @@ import {
   BaseType,
   FieldingPosition,
   HalfInning,
+  Maybe,
   PlateAppearanceType,
   TeamRole,
 } from '@sammyers/dc-shared';
@@ -213,3 +214,8 @@ export const previousHalfInning = (halfInning: HalfInning, inning: number) => {
   const prevInning = halfInning === HalfInning.TOP ? inning - 1 : inning;
   return [prevHalfInning, prevInning] as [HalfInning, number];
 };
+
+export const getLineupWithNewPositions = (
+  lineup: LineupSpot[],
+  positions: Record<string, Maybe<FieldingPosition>>
+) => lineup.map(({ playerId }) => ({ playerId, position: positions[playerId] }));

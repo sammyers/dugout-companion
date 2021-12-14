@@ -6,13 +6,18 @@ import { v4 as uuid4 } from 'uuid';
 
 import { groupActions } from 'state/groups/slice';
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
-import { getBattingTeamRole, getLineupToEdit } from './partialSelectors';
+import {
+  getBattingTeamRole,
+  getFieldingLineup,
+  getFieldingTeamRole,
+  getLineupToEdit,
+} from './partialSelectors';
 import {
   updatePositions,
   getNextAvailablePosition,
   changeLineup,
   applyPlateAppearance,
-  cleanUpAfterPlateAppearance,
+  cleanUpAfterGameEvent,
   changePlayerPosition,
   applyMidGameLineupChange,
   getCurrentLineupsFromTeams,
@@ -23,9 +28,10 @@ import {
   getCurrentLineup,
   previousHalfInning,
   getTeamWithRole,
+  getLineupWithNewPositions,
 } from './utils';
 
-import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
+import { FieldingPosition, HalfInning, Maybe, TeamRole } from '@sammyers/dc-shared';
 import {
   Team,
   AddPlayerPayload,
@@ -209,9 +215,17 @@ const { actions: gameActions, reducer } = createSlice({
       });
       state.lineupDrafts = initialState.lineupDrafts;
     },
+    changePositionsCurrent(
+      state,
+      { payload }: PayloadAction<Record<string, Maybe<FieldingPosition>>>
+    ) {
+      const currentLineup = getFieldingLineup(state);
+      const newLineup = getLineupWithNewPositions(currentLineup, payload);
+      applyMidGameLineupChange(state, getFieldingTeamRole(state), newLineup);
+    },
     changePositionsRetroactive(
       state,
-      { payload }: PayloadAction<Record<FieldingPosition, string>>
+      { payload }: PayloadAction<Record<string, Maybe<FieldingPosition>>>
     ) {
       const [prevHalfInning, prevInning] = previousHalfInning(
         state.gameState!.halfInning,
@@ -234,10 +248,7 @@ const { actions: gameActions, reducer } = createSlice({
         // Check if the first event was already a lineup change, we've probably already done this
         const lineupToSwap = _.find(teamLineups, { id: lineupAfterId });
         if (lineupToSwap) {
-          lineupToSwap.lineupSpots = lineupToSwap.lineupSpots.map(({ position }) => ({
-            position,
-            playerId: payload[position!],
-          }));
+          lineupToSwap.lineupSpots = getLineupWithNewPositions(lineupToSwap.lineupSpots, payload);
           return;
         }
       }
@@ -248,10 +259,7 @@ const { actions: gameActions, reducer } = createSlice({
       const originalLineup = _.find(teamLineups, { id: originalLineupId })!;
       const newLineup = {
         id: uuid4(),
-        lineupSpots: originalLineup.lineupSpots.map(({ position }) => ({
-          position,
-          playerId: payload[position!],
-        })),
+        lineupSpots: getLineupWithNewPositions(originalLineup.lineupSpots, payload),
       };
       teamLineups.push(newLineup);
       state.gameState!.lineups = getCurrentLineupsFromTeams(state.teams);
@@ -323,7 +331,7 @@ const { actions: gameActions, reducer } = createSlice({
       state.teams.forEach(team => {
         team.winner = null;
       });
-      cleanUpAfterPlateAppearance(state);
+      cleanUpAfterGameEvent(state);
     },
     resetGame: state => ({
       ...initialState,

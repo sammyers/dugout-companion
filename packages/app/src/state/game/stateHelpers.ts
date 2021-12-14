@@ -120,12 +120,17 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
   });
 };
 
-export const cleanUpAfterPlateAppearance = (state: AppGameState) => {
-  const nextBatter = getOnDeckBatter(state);
+export const cleanUpAfterGameEvent = (state: AppGameState, advanceLineup = true) => {
   const gameState = state.gameState!;
+  const currentBatter = gameState.playerAtBat;
+  const nextBatter = getOnDeckBatter(state);
   if (gameState.outs === 3) {
     gameState.playerAtBat = state.upNextHalfInning!;
-    state.upNextHalfInning = nextBatter;
+    if (advanceLineup) {
+      state.upNextHalfInning = nextBatter;
+    } else {
+      state.upNextHalfInning = currentBatter;
+    }
     gameState.baseRunners = [];
     gameState.outs = 0;
     if (gameState.halfInning === HalfInning.BOTTOM) {
@@ -133,7 +138,7 @@ export const cleanUpAfterPlateAppearance = (state: AppGameState) => {
     }
     gameState.halfInning =
       gameState.halfInning === HalfInning.TOP ? HalfInning.BOTTOM : HalfInning.TOP;
-  } else {
+  } else if (advanceLineup) {
     gameState.playerAtBat = nextBatter;
   }
 };
@@ -210,7 +215,7 @@ const recordAndApplyGameEvent = (
       team.winner = score[i] === winningScore;
     });
   } else {
-    cleanUpAfterPlateAppearance(state);
+    cleanUpAfterGameEvent(state, !!gameEvent.plateAppearance);
   }
 };
 

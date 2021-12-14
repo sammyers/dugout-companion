@@ -42,8 +42,13 @@ export const getCurrentBaseForRunner = (state: AppGameState, playerId: string) =
 export const getBattingTeamRole = createSelector(getHalfInning, half =>
   half === HalfInning.BOTTOM ? TeamRole.HOME : TeamRole.AWAY
 );
+export const getFieldingTeamRole = createSelector(getHalfInning, half =>
+  half === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME
+);
 export const getBattingTeam = createSelector(getTeams, getBattingTeamRole, getTeamWithRole);
+export const getFieldingTeam = createSelector(getTeams, getFieldingTeamRole, getTeamWithRole);
 export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
+export const getFieldingLineup = createSelector(getFieldingTeam, getCurrentLineup);
 
 export const getOnDeckBatter = createSelector(getCurrentBatter, getBattingLineup, getNextBatter);
 

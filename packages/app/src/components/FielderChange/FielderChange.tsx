@@ -3,13 +3,13 @@ import React, {
   CSSProperties,
   FC,
   forwardRef,
-  RefObject,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
-import { Box, Button, Layer, Stack, Text } from 'grommet';
+import { Box, Button, Layer, Notification, Stack, Text } from 'grommet';
 import _ from 'lodash';
 import { HTML5toTouch } from 'rdndmb-html5-to-touch';
 import { useDrag, useDrop } from 'react-dnd';
@@ -17,16 +17,28 @@ import { DndProvider, usePreview } from 'react-dnd-multi-backend';
 
 import FieldGraphic from '../prompts/panels/InteractiveFieldPanel/FieldGraphic';
 
+import {
+  FieldingPosition,
+  getPositionAbbreviation,
+  Maybe,
+  ordinalSuffix,
+} from '@sammyers/dc-shared';
+import { gameActions } from 'state/game/slice';
+import {
+  getBattingLineup,
+  getFieldingLineup,
+  getPreviousHalfInning,
+  isRetroactiveFielderChangePossible,
+} from 'state/game/selectors';
+import { getAvailablePositionsForLineup } from 'state/game/utils';
 import { getShortPlayerName } from 'state/players/selectors';
-import { useAppSelector } from 'utils/hooks';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { FieldingPosition } from '@sammyers/dc-shared';
-
-type FielderMap = Record<FieldingPosition, string>;
+type FielderMap = Record<string, Maybe<FieldingPosition>>;
 
 interface FielderContext {
   fielders: FielderMap;
-  moveFielder: (playerId: string, position: FieldingPosition) => void;
+  moveFielder: (playerId: string, position: FieldingPosition | null, playerToSwap?: string) => void;
 }
 
 const fielderContext = createContext<FielderContext>({
@@ -106,6 +118,8 @@ const Position: FC<{ position: FieldingPosition }> = ({ position }) => {
     }),
   }));
 
+  const playerId = _.findKey(fielders, pos => pos === position);
+
   const positionStyle = positions[position];
 
   return (
@@ -117,7 +131,38 @@ const Position: FC<{ position: FieldingPosition }> = ({ position }) => {
         transform: `translateX(${positionStyle.left ? '-' : ''}50%)`,
       }}
     >
-      <Fielder key={fielders[position]} playerId={fielders[position]} isOver={isOver} />
+      {playerId ? (
+        <Fielder key={playerId} playerId={playerId} isOver={isOver} />
+      ) : (
+        <Box
+          pad={{ horizontal: 'medium', vertical: 'small' }}
+          round="medium"
+          border={{ color: 'dark-1', size: '3px' }}
+          background={isOver ? 'accent-3' : 'neutral-4'}
+        >
+          {getPositionAbbreviation(position)}
+        </Box>
+      )}
+    </Box>
+  );
+};
+
+const BenchSpot: FC<{ playerId: string }> = ({ playerId }) => {
+  const { moveFielder } = useContext(fielderContext);
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: FIELDER_DROP_TYPE,
+    drop: (item: { id: string; name: string }) => {
+      moveFielder(item.id, null, playerId);
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
+
+  return (
+    <Box ref={drop}>
+      <Fielder key={playerId} playerId={playerId} isOver={isOver} />
     </Box>
   );
 };
@@ -127,46 +172,75 @@ const DragPreview = () => {
   if (!preview.display) {
     return null;
   }
-  const { item, style, ref } = preview;
+  const { item, style } = preview;
 
-  return (
-    <PlayerBubble
-      name={item.name}
-      ref={ref as RefObject<HTMLDivElement>}
-      style={{ ...style, zIndex: 25 }}
-    />
-  );
+  return <PlayerBubble name={item.name} style={{ ...style, zIndex: 25 }} />;
 };
 
 interface Props {
   open: boolean;
-  fielders: FielderMap;
   onClose: () => void;
-  onSave: (fielders: FielderMap) => void;
 }
 
-const FielderChange: FC<Props> = ({ open, fielders, onClose, onSave }) => {
+const FielderChange: FC<Props> = ({ open, onClose }) => {
+  const dispatch = useAppDispatch();
+
+  const canChangeFieldersRetroactively = useAppSelector(isRetroactiveFielderChangePossible);
+  const previousHalfInning = useAppSelector(getPreviousHalfInning);
+  const [selectedHalfInning, setSelectedHalfInning] = useState<'current' | 'previous'>('current');
+
+  const battingLineup = useAppSelector(getBattingLineup);
+  const fieldingLineup = useAppSelector(getFieldingLineup);
+
+  const lineupToEdit = useMemo(
+    () => (selectedHalfInning === 'previous' ? battingLineup : fieldingLineup),
+    [selectedHalfInning, battingLineup, fieldingLineup]
+  );
+  const originalFielders = useMemo(
+    () => _.fromPairs(lineupToEdit.map(({ playerId, position }) => [playerId, position])),
+    [lineupToEdit]
+  );
+
   const [editedFielders, setEditedFielders] = useState<FielderMap>({} as FielderMap);
+
+  const playersWithoutPositions = useMemo(
+    () => _.keys(_.pickBy(editedFielders, position => !position)),
+    [editedFielders]
+  );
 
   // Initialize fielder state
   useEffect(() => {
-    setEditedFielders(fielders);
-  }, [open, fielders]);
+    setEditedFielders(originalFielders);
+  }, [open, originalFielders]);
 
   const moveFielder: FielderContext['moveFielder'] = useCallback(
-    (playerId, position) => {
+    (playerId, position, playerToSwap) => {
       setEditedFielders(fielders => {
-        const playerToSwap = fielders[position];
-        const oldPosition = _.findKey(fielders, p => p === playerId) as FieldingPosition;
-        return {
-          ...fielders,
-          [position]: playerId,
-          [oldPosition]: playerToSwap,
-        };
+        if (!playerToSwap) {
+          playerToSwap = _.findKey(fielders, pos => pos === position);
+        }
+        const oldPosition = fielders[playerId];
+        if (position !== oldPosition) {
+          return {
+            ...fielders,
+            [playerId]: position,
+            ...(playerToSwap ? { [playerToSwap]: oldPosition } : undefined),
+          };
+        }
+        return fielders;
       });
     },
     [setEditedFielders]
   );
+
+  const handleSave = useCallback(() => {
+    if (selectedHalfInning === 'current') {
+      dispatch(gameActions.changePositionsCurrent(editedFielders));
+    } else {
+      dispatch(gameActions.changePositionsRetroactive(editedFielders));
+    }
+    onClose();
+  }, [selectedHalfInning, dispatch, editedFielders, onClose]);
 
   if (!open) {
     return null;
@@ -174,23 +248,64 @@ const FielderChange: FC<Props> = ({ open, fielders, onClose, onSave }) => {
 
   return (
     <Layer full modal margin="medium" onClickOutside={onClose}>
-      <Box flex pad={{ vertical: 'medium', horizontal: 'large' }} align="center" gap="medium">
-        <Text textAlign="center">
-          Drag players (from the current batting team) to retroactively update their fielding
-          positions for the previous half inning.
-        </Text>
-        <Box flex style={{ aspectRatio: '10/7' }}>
+      <Box flex pad={{ vertical: 'medium', horizontal: 'large' }} align="center" gap="small">
+        <Text weight="bold">Drag players to update their positions.</Text>
+        {canChangeFieldersRetroactively && (
+          <Box gap="small">
+            <Box direction="row" gap="small" alignSelf="center">
+              <Button
+                plain={false}
+                size="large"
+                primary={selectedHalfInning === 'current'}
+                onClick={() => setSelectedHalfInning('current')}
+              >
+                Current Half-Inning
+              </Button>
+              <Button
+                plain={false}
+                size="large"
+                primary={selectedHalfInning === 'previous'}
+                onClick={() => setSelectedHalfInning('previous')}
+              >
+                Previous Half-Inning
+              </Button>
+            </Box>
+            {selectedHalfInning === 'previous' && (
+              <Notification
+                status="warning"
+                title={`This will retroactively update fielding positions in the ${_.lowerCase(
+                  previousHalfInning![0]
+                )} of the ${previousHalfInning![1]}${ordinalSuffix(
+                  previousHalfInning![1]
+                )} for the current batting team.`}
+              />
+            )}
+          </Box>
+        )}
+        <Box flex style={{ aspectRatio: '10/7', position: 'relative' }}>
           <fielderContext.Provider value={{ fielders: editedFielders, moveFielder }}>
             <DndProvider options={HTML5toTouch}>
               <DragPreview />
               <Stack>
                 <FieldGraphic runnerMode={false} />
                 <Box style={{ position: 'absolute', top: 0, bottom: 0 }} fill>
-                  {_.keys(fielders).map(position => (
+                  {getAvailablePositionsForLineup(lineupToEdit).map(position => (
                     <Position key={position} position={position as FieldingPosition} />
                   ))}
                 </Box>
               </Stack>
+              {!!playersWithoutPositions.length && (
+                <Box style={{ position: 'absolute', bottom: 0, left: 0 }} gap="xsmall">
+                  <Text weight="bold" textAlign="center">
+                    Bench
+                  </Text>
+                  <Box gap="small" align="center">
+                    {playersWithoutPositions.map(playerId => (
+                      <BenchSpot key={playerId} playerId={playerId} />
+                    ))}
+                  </Box>
+                </Box>
+              )}
             </DndProvider>
           </fielderContext.Provider>
         </Box>
@@ -201,8 +316,8 @@ const FielderChange: FC<Props> = ({ open, fielders, onClose, onSave }) => {
           <Button
             plain={false}
             primary
-            onClick={() => onSave(editedFielders)}
-            disabled={_.isEqual(fielders, editedFielders)}
+            onClick={handleSave}
+            disabled={_.isEqual(originalFielders, editedFielders)}
           >
             Save Changes
           </Button>

@@ -1,7 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Grid, Box, Text, Button } from 'grommet';
 import { Blank, Edit, Redo, Undo } from 'grommet-icons';
-import _ from 'lodash';
 import { Navigate } from 'react-router-dom';
 import { ActionCreators } from 'redux-undo';
 
@@ -19,11 +18,7 @@ import {
   isGameInProgress,
   isUndoPossible,
   isRedoPossible,
-  isRetroactiveFielderChangePossible,
-  getFieldersForPreviousHalfInning,
-  getOppositeHalfInning,
 } from 'state/game/selectors';
-import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
 import { ReactComponent as BaseIcon } from 'graphics/base.svg';
@@ -69,9 +64,6 @@ const Bases = () => {
 
   const boxRef = useRef<HTMLDivElement | null>(null);
 
-  const previousHalfInning = useAppSelector(getOppositeHalfInning);
-  const canChangeFieldersRetroactively = useAppSelector(isRetroactiveFielderChangePossible);
-  const previousHalfInningFielders = useAppSelector(getFieldersForPreviousHalfInning);
   const [showFielderChangeUI, setShowFielderChangeUI] = useState(false);
 
   if (!gameInProgress) {
@@ -80,20 +72,12 @@ const Bases = () => {
 
   return (
     <Box fill>
-      <FielderChange
-        open={showFielderChangeUI}
-        fielders={previousHalfInningFielders}
-        onClose={() => setShowFielderChangeUI(false)}
-        onSave={positions => {
-          dispatch(gameActions.changePositionsRetroactive(positions));
-          setShowFielderChangeUI(false);
-        }}
-      />
+      <FielderChange open={showFielderChangeUI} onClose={() => setShowFielderChangeUI(false)} />
       <Box flex ref={boxRef}>
         <Grid
           fill
           rows={['xsmall', 'auto', 'xsmall']}
-          columns={['280px', 'auto', '280px']}
+          columns={['240px', 'auto', '240px']}
           areas={[
             ['undo-redo', 'second-base', 'fielder-change'],
             ['third-base', 'reporter', 'first-base'],
@@ -109,17 +93,15 @@ const Bases = () => {
             <Button icon={<Undo />} disabled={!undoPossible} onClick={undo} />
             <Button icon={<Redo />} disabled={!redoPossible} onClick={redo} />
           </Box>
-          {canChangeFieldersRetroactively && (
-            <Box gridArea="fielder-change" direction="row" margin="medium" justify="end">
-              <Button
-                size="small"
-                icon={<Edit />}
-                label={`Fielders (${_.lowerCase(previousHalfInning)} half)`}
-                plain={false}
-                onClick={() => setShowFielderChangeUI(true)}
-              />
-            </Box>
-          )}
+          <Box gridArea="fielder-change" margin="medium" align="end">
+            <Button
+              size="small"
+              icon={<Edit />}
+              label="Edit Fielders"
+              plain={false}
+              onClick={() => setShowFielderChangeUI(true)}
+            />
+          </Box>
           <Box gridArea="first-base" direction="row" justify="end" align="center">
             <Text textAlign="center">{firstBaseRunner}</Text>
             <Base occupied={!!firstBaseRunner} />

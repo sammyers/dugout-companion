@@ -17,9 +17,10 @@ interface Props extends LineupSpot {
   index: number;
   editable: boolean;
   atBat: boolean;
+  upNextInning: boolean;
 }
 
-const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat }) => {
+const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat, upNextInning }) => {
   const dispatch = useAppDispatch();
 
   const name = useAppSelector(state => getPlayerName(state, playerId));
@@ -64,20 +65,32 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat }) => 
             <Box
               round="xsmall"
               pad="small"
-              background={!editable && atBat ? 'accent-4' : 'initial'}
+              background={
+                !editable && atBat ? 'accent-4' : !editable && upNextInning ? 'light-4' : 'initial'
+              }
             >
               <Text>{name}</Text>
             </Box>
-            {!editable && atBat && (
-              <Box
-                pad="xsmall"
-                background="neutral-2"
-                round
-                style={{ transform: 'translate(-30%, -50%)' }}
-              >
-                <Text size="xsmall">Batting</Text>
-              </Box>
-            )}
+            {!editable &&
+              (atBat ? (
+                <Box
+                  pad="xsmall"
+                  background="neutral-2"
+                  round
+                  style={{ transform: 'translate(-30%, -50%)' }}
+                >
+                  <Text size="xsmall">Batting</Text>
+                </Box>
+              ) : upNextInning ? (
+                <Box
+                  pad="xsmall"
+                  background="neutral-3"
+                  round
+                  style={{ transform: 'translate(-30%, -50%)' }}
+                >
+                  <Text size="xsmall">Up Next Inning</Text>
+                </Box>
+              ) : null)}
           </Stack>
           {editable ? (
             <>
