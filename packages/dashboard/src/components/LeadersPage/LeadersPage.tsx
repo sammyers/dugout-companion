@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react';
 import { Box, Select, Text } from 'grommet';
+import { useSearchParams } from 'react-router-dom';
+
+import { groupIdOptions, useGetAllAvailableSeasonsQuery } from '@sammyers/dc-shared';
 
 import CareerLeaders from './CareerLeaders';
-import SingleSeasonLeaders from './SingleSeasonLeaders';
-import { useCurrentGroupId } from '../context';
-import { groupIdOptions, useGetAllAvailableSeasonsQuery } from '@sammyers/dc-shared';
-import { useSearchParams } from 'react-router-dom';
 import SeasonLeaders from './SeasonLeaders';
+import SingleSeasonLeaders from './SingleSeasonLeaders';
+
+import { useCurrentGroupId } from '../context';
 
 const LeadersPage = () => {
   const groupId = useCurrentGroupId();

@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import { Box, ColumnConfig, DataTable } from 'grommet';
 
 import { GetCareerStatLeadersQuery, SimplifyType } from '@sammyers/dc-shared';
+
 import { extractPlayerName } from '../../utils';
 
 type LeaderRow = NonNullable<SimplifyType<GetCareerStatLeadersQuery['hitsLeaders']>>[number];

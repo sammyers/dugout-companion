@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { ColumnConfig, DataTable } from 'grommet';
 
 import {
@@ -7,8 +7,9 @@ import {
   SimplifyType,
   useGetStatsForSeasonQuery,
 } from '@sammyers/dc-shared';
+
+import { extractPlayerName } from '../../utils';
 import { useCurrentGroupId } from '../context';
-import { useMemo } from 'react';
 
 type PlayerStatResult = NonNullable<SimplifyType<GetStatsForSeasonQuery['seasonStats']>>[number];
 
@@ -17,12 +18,7 @@ const columns: ColumnConfig<PlayerStatResult>[] = [
     property: 'player',
     sortable: false,
     header: 'Player',
-    render: row => {
-      if (row.player) {
-        return row.player.fullName;
-      }
-      return row.legacyPlayer!.playerName;
-    },
+    render: extractPlayerName,
   },
   {
     property: 'games',

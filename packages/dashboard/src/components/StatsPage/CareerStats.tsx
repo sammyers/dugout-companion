@@ -8,6 +8,7 @@ import {
   useGetCareerStatsQuery,
 } from '@sammyers/dc-shared';
 
+import { extractPlayerName } from '../../utils';
 import { useCurrentGroupId } from '../context';
 
 type PlayerStatResult = NonNullable<SimplifyType<GetCareerStatsQuery['careerStats']>>[number];
@@ -17,12 +18,7 @@ const columns: ColumnConfig<PlayerStatResult>[] = [
     property: 'player',
     sortable: false,
     header: 'Player',
-    render: row => {
-      if (row.player) {
-        return row.player.fullName;
-      }
-      return row.legacyPlayer!.playerName;
-    },
+    render: extractPlayerName,
   },
   {
     property: 'seasons',
