@@ -564,6 +564,7 @@ export type CareerStat = {
   groupId: Maybe<Scalars['UUID']>;
   playerId: Maybe<Scalars['UUID']>;
   legacyPlayerId: Maybe<Scalars['Int']>;
+  seasons: Maybe<Scalars['Int']>;
   games: Maybe<Scalars['Int']>;
   plateAppearances: Maybe<Scalars['Int']>;
   atBats: Maybe<Scalars['Int']>;
@@ -602,6 +603,8 @@ export type CareerStatCondition = {
   playerId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `legacyPlayerId` field. */
   legacyPlayerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `seasons` field. */
+  seasons?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `games` field. */
   games?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `plateAppearances` field. */
@@ -675,6 +678,8 @@ export enum CareerStatsOrderBy {
   PLAYER_ID_DESC = 'PLAYER_ID_DESC',
   LEGACY_PLAYER_ID_ASC = 'LEGACY_PLAYER_ID_ASC',
   LEGACY_PLAYER_ID_DESC = 'LEGACY_PLAYER_ID_DESC',
+  SEASONS_ASC = 'SEASONS_ASC',
+  SEASONS_DESC = 'SEASONS_DESC',
   GAMES_ASC = 'GAMES_ASC',
   GAMES_DESC = 'GAMES_DESC',
   PLATE_APPEARANCES_ASC = 'PLATE_APPEARANCES_ASC',
@@ -720,6 +725,7 @@ export type CareerStatsQualifiedBatter = {
   groupId: Maybe<Scalars['UUID']>;
   playerId: Maybe<Scalars['UUID']>;
   legacyPlayerId: Maybe<Scalars['Int']>;
+  seasons: Maybe<Scalars['Int']>;
   games: Maybe<Scalars['Int']>;
   plateAppearances: Maybe<Scalars['Int']>;
   atBats: Maybe<Scalars['Int']>;
@@ -758,6 +764,8 @@ export type CareerStatsQualifiedBatterCondition = {
   playerId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `legacyPlayerId` field. */
   legacyPlayerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `seasons` field. */
+  seasons?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `games` field. */
   games?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `plateAppearances` field. */
@@ -831,6 +839,8 @@ export enum CareerStatsQualifiedBattersOrderBy {
   PLAYER_ID_DESC = 'PLAYER_ID_DESC',
   LEGACY_PLAYER_ID_ASC = 'LEGACY_PLAYER_ID_ASC',
   LEGACY_PLAYER_ID_DESC = 'LEGACY_PLAYER_ID_DESC',
+  SEASONS_ASC = 'SEASONS_ASC',
+  SEASONS_DESC = 'SEASONS_DESC',
   GAMES_ASC = 'GAMES_ASC',
   GAMES_DESC = 'GAMES_DESC',
   PLATE_APPEARANCES_ASC = 'PLATE_APPEARANCES_ASC',
@@ -2314,6 +2324,7 @@ export type DeleteTeamPayload = {
 export type FakePublicCareerStatsForeignKey0CareerStatsCreateInput = {
   groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
+  seasons?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['Int']>;
   plateAppearances?: Maybe<Scalars['Int']>;
   atBats?: Maybe<Scalars['Int']>;
@@ -2400,6 +2411,7 @@ export type FakePublicCareerStatsForeignKey0PlayerCreateInput = {
 export type FakePublicCareerStatsForeignKey1CareerStatsCreateInput = {
   groupId?: Maybe<Scalars['UUID']>;
   playerId?: Maybe<Scalars['UUID']>;
+  seasons?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['Int']>;
   plateAppearances?: Maybe<Scalars['Int']>;
   atBats?: Maybe<Scalars['Int']>;
@@ -2467,6 +2479,7 @@ export type FakePublicCareerStatsForeignKey1LegacyPlayerCreateInput = {
 export type FakePublicCareerStatsForeignKey2CareerStatsCreateInput = {
   playerId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
+  seasons?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['Int']>;
   plateAppearances?: Maybe<Scalars['Int']>;
   atBats?: Maybe<Scalars['Int']>;
@@ -2540,6 +2553,7 @@ export type FakePublicCareerStatsForeignKey2InverseInput = {
 export type FakePublicCareerStatsQualifiedBattersForeignKey0CareerStatsQualifiedBattersCreateInput = {
   groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
+  seasons?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['Int']>;
   plateAppearances?: Maybe<Scalars['Int']>;
   atBats?: Maybe<Scalars['Int']>;
@@ -2626,6 +2640,7 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey0PlayerCreateInput = 
 export type FakePublicCareerStatsQualifiedBattersForeignKey1CareerStatsQualifiedBattersCreateInput = {
   groupId?: Maybe<Scalars['UUID']>;
   playerId?: Maybe<Scalars['UUID']>;
+  seasons?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['Int']>;
   plateAppearances?: Maybe<Scalars['Int']>;
   atBats?: Maybe<Scalars['Int']>;
@@ -2693,6 +2708,7 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey1LegacyPlayerCreateIn
 export type FakePublicCareerStatsQualifiedBattersForeignKey2CareerStatsQualifiedBattersCreateInput = {
   playerId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
+  seasons?: Maybe<Scalars['Int']>;
   games?: Maybe<Scalars['Int']>;
   plateAppearances?: Maybe<Scalars['Int']>;
   atBats?: Maybe<Scalars['Int']>;
@@ -3149,11 +3165,11 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0SeasonStatsAl
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3217,11 +3233,11 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey1SeasonStatsAl
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3291,11 +3307,11 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2SeasonStatsAl
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3378,11 +3394,11 @@ export type FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput = {
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3446,11 +3462,11 @@ export type FakePublicSeasonStatsForeignKey1SeasonStatsCreateInput = {
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3520,11 +3536,11 @@ export type FakePublicSeasonStatsForeignKey2SeasonStatsCreateInput = {
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3607,11 +3623,11 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey0SeasonStatsQualified
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3675,11 +3691,11 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey1SeasonStatsQualified
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -3749,11 +3765,11 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey2SeasonStatsQualified
   triples?: Maybe<Scalars['Int']>;
   homeruns?: Maybe<Scalars['Int']>;
   walks?: Maybe<Scalars['Int']>;
-  strikeouts?: Maybe<Scalars['BigInt']>;
-  sacFlies?: Maybe<Scalars['BigInt']>;
-  gidp?: Maybe<Scalars['BigInt']>;
-  runs?: Maybe<Scalars['BigInt']>;
-  rbi?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  gidp?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
   xbh?: Maybe<Scalars['Int']>;
   battingAverage?: Maybe<Scalars['Float']>;
   onBasePct?: Maybe<Scalars['Float']>;
@@ -7933,11 +7949,11 @@ export type ModernSeasonStat = {
   triples: Maybe<Scalars['Int']>;
   homeruns: Maybe<Scalars['Int']>;
   walks: Maybe<Scalars['Int']>;
-  strikeouts: Maybe<Scalars['BigInt']>;
-  sacFlies: Maybe<Scalars['BigInt']>;
-  gidp: Maybe<Scalars['BigInt']>;
-  runs: Maybe<Scalars['BigInt']>;
-  rbi: Maybe<Scalars['BigInt']>;
+  strikeouts: Maybe<Scalars['Int']>;
+  sacFlies: Maybe<Scalars['Int']>;
+  gidp: Maybe<Scalars['Int']>;
+  runs: Maybe<Scalars['Int']>;
+  rbi: Maybe<Scalars['Int']>;
   xbh: Maybe<Scalars['Int']>;
   battingAverage: Maybe<Scalars['Float']>;
   onBasePct: Maybe<Scalars['Float']>;
@@ -7977,15 +7993,15 @@ export type ModernSeasonStatCondition = {
   /** Checks for equality with the object’s `walks` field. */
   walks?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `strikeouts` field. */
-  strikeouts?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sacFlies` field. */
-  sacFlies?: Maybe<Scalars['BigInt']>;
+  sacFlies?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gidp` field. */
-  gidp?: Maybe<Scalars['BigInt']>;
+  gidp?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `runs` field. */
-  runs?: Maybe<Scalars['BigInt']>;
+  runs?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `rbi` field. */
-  rbi?: Maybe<Scalars['BigInt']>;
+  rbi?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `xbh` field. */
   xbh?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `battingAverage` field. */
@@ -11254,11 +11270,11 @@ export type SeasonStat = {
   triples: Maybe<Scalars['Int']>;
   homeruns: Maybe<Scalars['Int']>;
   walks: Maybe<Scalars['Int']>;
-  strikeouts: Maybe<Scalars['BigInt']>;
-  sacFlies: Maybe<Scalars['BigInt']>;
-  gidp: Maybe<Scalars['BigInt']>;
-  runs: Maybe<Scalars['BigInt']>;
-  rbi: Maybe<Scalars['BigInt']>;
+  strikeouts: Maybe<Scalars['Int']>;
+  sacFlies: Maybe<Scalars['Int']>;
+  gidp: Maybe<Scalars['Int']>;
+  runs: Maybe<Scalars['Int']>;
+  rbi: Maybe<Scalars['Int']>;
   xbh: Maybe<Scalars['Int']>;
   battingAverage: Maybe<Scalars['Float']>;
   onBasePct: Maybe<Scalars['Float']>;
@@ -11304,15 +11320,15 @@ export type SeasonStatCondition = {
   /** Checks for equality with the object’s `walks` field. */
   walks?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `strikeouts` field. */
-  strikeouts?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sacFlies` field. */
-  sacFlies?: Maybe<Scalars['BigInt']>;
+  sacFlies?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gidp` field. */
-  gidp?: Maybe<Scalars['BigInt']>;
+  gidp?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `runs` field. */
-  runs?: Maybe<Scalars['BigInt']>;
+  runs?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `rbi` field. */
-  rbi?: Maybe<Scalars['BigInt']>;
+  rbi?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `xbh` field. */
   xbh?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `battingAverage` field. */
@@ -11364,11 +11380,11 @@ export type SeasonStatsAllTimeQualifiedBatter = {
   triples: Maybe<Scalars['Int']>;
   homeruns: Maybe<Scalars['Int']>;
   walks: Maybe<Scalars['Int']>;
-  strikeouts: Maybe<Scalars['BigInt']>;
-  sacFlies: Maybe<Scalars['BigInt']>;
-  gidp: Maybe<Scalars['BigInt']>;
-  runs: Maybe<Scalars['BigInt']>;
-  rbi: Maybe<Scalars['BigInt']>;
+  strikeouts: Maybe<Scalars['Int']>;
+  sacFlies: Maybe<Scalars['Int']>;
+  gidp: Maybe<Scalars['Int']>;
+  runs: Maybe<Scalars['Int']>;
+  rbi: Maybe<Scalars['Int']>;
   xbh: Maybe<Scalars['Int']>;
   battingAverage: Maybe<Scalars['Float']>;
   onBasePct: Maybe<Scalars['Float']>;
@@ -11414,15 +11430,15 @@ export type SeasonStatsAllTimeQualifiedBatterCondition = {
   /** Checks for equality with the object’s `walks` field. */
   walks?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `strikeouts` field. */
-  strikeouts?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sacFlies` field. */
-  sacFlies?: Maybe<Scalars['BigInt']>;
+  sacFlies?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gidp` field. */
-  gidp?: Maybe<Scalars['BigInt']>;
+  gidp?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `runs` field. */
-  runs?: Maybe<Scalars['BigInt']>;
+  runs?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `rbi` field. */
-  rbi?: Maybe<Scalars['BigInt']>;
+  rbi?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `xbh` field. */
   xbh?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `battingAverage` field. */
@@ -11576,11 +11592,11 @@ export type SeasonStatsQualifiedBatter = {
   triples: Maybe<Scalars['Int']>;
   homeruns: Maybe<Scalars['Int']>;
   walks: Maybe<Scalars['Int']>;
-  strikeouts: Maybe<Scalars['BigInt']>;
-  sacFlies: Maybe<Scalars['BigInt']>;
-  gidp: Maybe<Scalars['BigInt']>;
-  runs: Maybe<Scalars['BigInt']>;
-  rbi: Maybe<Scalars['BigInt']>;
+  strikeouts: Maybe<Scalars['Int']>;
+  sacFlies: Maybe<Scalars['Int']>;
+  gidp: Maybe<Scalars['Int']>;
+  runs: Maybe<Scalars['Int']>;
+  rbi: Maybe<Scalars['Int']>;
   xbh: Maybe<Scalars['Int']>;
   battingAverage: Maybe<Scalars['Float']>;
   onBasePct: Maybe<Scalars['Float']>;
@@ -11626,15 +11642,15 @@ export type SeasonStatsQualifiedBatterCondition = {
   /** Checks for equality with the object’s `walks` field. */
   walks?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `strikeouts` field. */
-  strikeouts?: Maybe<Scalars['BigInt']>;
+  strikeouts?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sacFlies` field. */
-  sacFlies?: Maybe<Scalars['BigInt']>;
+  sacFlies?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `gidp` field. */
-  gidp?: Maybe<Scalars['BigInt']>;
+  gidp?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `runs` field. */
-  runs?: Maybe<Scalars['BigInt']>;
+  runs?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `rbi` field. */
-  rbi?: Maybe<Scalars['BigInt']>;
+  rbi?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `xbh` field. */
   xbh?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `battingAverage` field. */
@@ -14580,6 +14596,19 @@ export type GetGameQuery = (
   )> }
 );
 
+export type GetAllAvailableSeasonsQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
+
+
+export type GetAllAvailableSeasonsQuery = (
+  { __typename?: 'Query' }
+  & { group: Maybe<(
+    { __typename?: 'Group' }
+    & Pick<Group, 'allSeasons'>
+  )> }
+);
+
 export type GetAllGameSummariesQueryVariables = Exact<{
   groupId: Scalars['UUID'];
 }>;
@@ -14590,24 +14619,6 @@ export type GetAllGameSummariesQuery = (
   & { games: Maybe<Array<(
     { __typename?: 'Game' }
     & Pick<Game, 'id' | 'name' | 'timeStarted' | 'timeEnded' | 'score'>
-  )>> }
-);
-
-export type GetAllPlayerStatsQueryVariables = Exact<{
-  groupId: Scalars['UUID'];
-  season: Scalars['Int'];
-}>;
-
-
-export type GetAllPlayerStatsQuery = (
-  { __typename?: 'Query' }
-  & { seasonStats: Maybe<Array<(
-    { __typename?: 'SeasonStat' }
-    & Pick<SeasonStat, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'xbh' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
-    & { player: Maybe<(
-      { __typename?: 'Player' }
-      & Pick<Player, 'id' | 'fullName'>
-    )> }
   )>> }
 );
 
@@ -14625,6 +14636,96 @@ export type GetBoxScoreQuery = (
       & Pick<TraditionalStatLine, 'playerId' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi'>
     )>>> }
   )> }
+);
+
+export type GetCareerStatLeadersQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
+
+
+export type GetCareerStatLeadersQuery = (
+  { __typename?: 'Query' }
+  & { hitsLeaders: Maybe<Array<(
+    { __typename?: 'CareerStat' }
+    & { value: CareerStat['hits'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, homerunsLeaders: Maybe<Array<(
+    { __typename?: 'CareerStat' }
+    & { value: CareerStat['homeruns'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, walksLeaders: Maybe<Array<(
+    { __typename?: 'CareerStat' }
+    & { value: CareerStat['walks'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, battingAverageLeaders: Maybe<Array<(
+    { __typename?: 'CareerStatsQualifiedBatter' }
+    & { value: CareerStatsQualifiedBatter['battingAverage'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, onBasePctLeaders: Maybe<Array<(
+    { __typename?: 'CareerStatsQualifiedBatter' }
+    & { value: CareerStatsQualifiedBatter['onBasePct'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, opsLeaders: Maybe<Array<(
+    { __typename?: 'CareerStatsQualifiedBatter' }
+    & { value: CareerStatsQualifiedBatter['ops'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>> }
+);
+
+export type GetCareerStatsQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
+
+
+export type GetCareerStatsQuery = (
+  { __typename?: 'Query' }
+  & { careerStats: Maybe<Array<(
+    { __typename?: 'CareerStat' }
+    & Pick<CareerStat, 'seasons' | 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'xbh' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName' | 'playerImage'>
+    )> }
+  )>> }
 );
 
 export type GetGameDetailsQueryVariables = Exact<{
@@ -14765,6 +14866,192 @@ export type GetLatestGameSummaryQuery = (
   & { games: Maybe<Array<(
     { __typename?: 'Game' }
     & Pick<Game, 'id' | 'timeStarted' | 'timeEnded' | 'score' | 'gameLength'>
+  )>> }
+);
+
+export type GetPreviewStatsQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+  currentSeason: Scalars['Int'];
+}>;
+
+
+export type GetPreviewStatsQuery = (
+  { __typename?: 'Query' }
+  & { seasonStats: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & Pick<SeasonStat, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'xbh' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )> }
+  )>> }
+);
+
+export type GetSingleSeasonStatLeadersQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
+
+
+export type GetSingleSeasonStatLeadersQuery = (
+  { __typename?: 'Query' }
+  & { hitsLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & Pick<SeasonStat, 'season'>
+    & { value: SeasonStat['hits'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, homerunsLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & Pick<SeasonStat, 'season'>
+    & { value: SeasonStat['homeruns'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, walksLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & Pick<SeasonStat, 'season'>
+    & { value: SeasonStat['walks'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, battingAverageLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStatsAllTimeQualifiedBatter' }
+    & Pick<SeasonStatsAllTimeQualifiedBatter, 'season'>
+    & { value: SeasonStatsAllTimeQualifiedBatter['battingAverage'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, onBasePctLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStatsAllTimeQualifiedBatter' }
+    & Pick<SeasonStatsAllTimeQualifiedBatter, 'season'>
+    & { value: SeasonStatsAllTimeQualifiedBatter['onBasePct'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, opsLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStatsAllTimeQualifiedBatter' }
+    & Pick<SeasonStatsAllTimeQualifiedBatter, 'season'>
+    & { value: SeasonStatsAllTimeQualifiedBatter['ops'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>> }
+);
+
+export type GetStatLeadersForSeasonQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+  season: Scalars['Int'];
+}>;
+
+
+export type GetStatLeadersForSeasonQuery = (
+  { __typename?: 'Query' }
+  & { hitsLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & { value: SeasonStat['hits'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, homerunsLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & { value: SeasonStat['homeruns'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, walksLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & { value: SeasonStat['walks'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, battingAverageLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStatsQualifiedBatter' }
+    & { value: SeasonStatsQualifiedBatter['battingAverage'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, onBasePctLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStatsQualifiedBatter' }
+    & { value: SeasonStatsQualifiedBatter['onBasePct'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>>, opsLeaders: Maybe<Array<(
+    { __typename?: 'SeasonStatsQualifiedBatter' }
+    & { value: SeasonStatsQualifiedBatter['ops'] }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName'>
+    )> }
+  )>> }
+);
+
+export type GetStatsForSeasonQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+  season: Scalars['Int'];
+}>;
+
+
+export type GetStatsForSeasonQuery = (
+  { __typename?: 'Query' }
+  & { seasonStats: Maybe<Array<(
+    { __typename?: 'SeasonStat' }
+    & Pick<SeasonStat, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'xbh' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>, legacyPlayer: Maybe<(
+      { __typename?: 'LegacyPlayer' }
+      & Pick<LegacyPlayer, 'playerId' | 'playerName' | 'playerImage'>
+    )> }
   )>> }
 );
 
@@ -15071,6 +15358,39 @@ export function useGetGameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetGameQueryHookResult = ReturnType<typeof useGetGameQuery>;
 export type GetGameLazyQueryHookResult = ReturnType<typeof useGetGameLazyQuery>;
 export type GetGameQueryResult = Apollo.QueryResult<GetGameQuery, GetGameQueryVariables>;
+export const GetAllAvailableSeasonsDocument = gql`
+    query GetAllAvailableSeasons($groupId: UUID!) {
+  group(id: $groupId) {
+    allSeasons
+  }
+}
+    `;
+
+/**
+ * __useGetAllAvailableSeasonsQuery__
+ *
+ * To run a query within a React component, call `useGetAllAvailableSeasonsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllAvailableSeasonsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllAvailableSeasonsQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGetAllAvailableSeasonsQuery(baseOptions: Apollo.QueryHookOptions<GetAllAvailableSeasonsQuery, GetAllAvailableSeasonsQueryVariables>) {
+        return Apollo.useQuery<GetAllAvailableSeasonsQuery, GetAllAvailableSeasonsQueryVariables>(GetAllAvailableSeasonsDocument, baseOptions);
+      }
+export function useGetAllAvailableSeasonsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllAvailableSeasonsQuery, GetAllAvailableSeasonsQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllAvailableSeasonsQuery, GetAllAvailableSeasonsQueryVariables>(GetAllAvailableSeasonsDocument, baseOptions);
+        }
+export type GetAllAvailableSeasonsQueryHookResult = ReturnType<typeof useGetAllAvailableSeasonsQuery>;
+export type GetAllAvailableSeasonsLazyQueryHookResult = ReturnType<typeof useGetAllAvailableSeasonsLazyQuery>;
+export type GetAllAvailableSeasonsQueryResult = Apollo.QueryResult<GetAllAvailableSeasonsQuery, GetAllAvailableSeasonsQueryVariables>;
 export const GetAllGameSummariesDocument = gql`
     query GetAllGameSummaries($groupId: UUID!) {
   games(condition: {groupId: $groupId}, orderBy: TIME_STARTED_DESC) {
@@ -15108,61 +15428,6 @@ export function useGetAllGameSummariesLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type GetAllGameSummariesQueryHookResult = ReturnType<typeof useGetAllGameSummariesQuery>;
 export type GetAllGameSummariesLazyQueryHookResult = ReturnType<typeof useGetAllGameSummariesLazyQuery>;
 export type GetAllGameSummariesQueryResult = Apollo.QueryResult<GetAllGameSummariesQuery, GetAllGameSummariesQueryVariables>;
-export const GetAllPlayerStatsDocument = gql`
-    query GetAllPlayerStats($groupId: UUID!, $season: Int!) {
-  seasonStats(condition: {groupId: $groupId, season: $season}) {
-    player {
-      id
-      fullName
-    }
-    games
-    plateAppearances
-    atBats
-    hits
-    doubles
-    triples
-    homeruns
-    xbh
-    walks
-    strikeouts
-    sacFlies
-    gidp
-    runs
-    rbi
-    battingAverage
-    onBasePct
-    sluggingPct
-    ops
-  }
-}
-    `;
-
-/**
- * __useGetAllPlayerStatsQuery__
- *
- * To run a query within a React component, call `useGetAllPlayerStatsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetAllPlayerStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetAllPlayerStatsQuery({
- *   variables: {
- *      groupId: // value for 'groupId'
- *      season: // value for 'season'
- *   },
- * });
- */
-export function useGetAllPlayerStatsQuery(baseOptions: Apollo.QueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
-        return Apollo.useQuery<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>(GetAllPlayerStatsDocument, baseOptions);
-      }
-export function useGetAllPlayerStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>) {
-          return Apollo.useLazyQuery<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>(GetAllPlayerStatsDocument, baseOptions);
-        }
-export type GetAllPlayerStatsQueryHookResult = ReturnType<typeof useGetAllPlayerStatsQuery>;
-export type GetAllPlayerStatsLazyQueryHookResult = ReturnType<typeof useGetAllPlayerStatsLazyQuery>;
-export type GetAllPlayerStatsQueryResult = Apollo.QueryResult<GetAllPlayerStatsQuery, GetAllPlayerStatsQueryVariables>;
 export const GetBoxScoreDocument = gql`
     query GetBoxScore($gameId: UUID!) {
   game(id: $gameId) {
@@ -15210,6 +15475,186 @@ export function useGetBoxScoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetBoxScoreQueryHookResult = ReturnType<typeof useGetBoxScoreQuery>;
 export type GetBoxScoreLazyQueryHookResult = ReturnType<typeof useGetBoxScoreLazyQuery>;
 export type GetBoxScoreQueryResult = Apollo.QueryResult<GetBoxScoreQuery, GetBoxScoreQueryVariables>;
+export const GetCareerStatLeadersDocument = gql`
+    query GetCareerStatLeaders($groupId: UUID!) {
+  hitsLeaders: careerStats(
+    condition: {groupId: $groupId}
+    orderBy: HITS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: hits
+  }
+  homerunsLeaders: careerStats(
+    condition: {groupId: $groupId}
+    orderBy: HOMERUNS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: homeruns
+  }
+  walksLeaders: careerStats(
+    condition: {groupId: $groupId}
+    orderBy: WALKS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: walks
+  }
+  battingAverageLeaders: careerStatsQualifiedBatters(
+    condition: {groupId: $groupId}
+    orderBy: BATTING_AVERAGE_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: battingAverage
+  }
+  onBasePctLeaders: careerStatsQualifiedBatters(
+    condition: {groupId: $groupId}
+    orderBy: ON_BASE_PCT_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: onBasePct
+  }
+  opsLeaders: careerStatsQualifiedBatters(
+    condition: {groupId: $groupId}
+    orderBy: OPS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: ops
+  }
+}
+    `;
+
+/**
+ * __useGetCareerStatLeadersQuery__
+ *
+ * To run a query within a React component, call `useGetCareerStatLeadersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCareerStatLeadersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCareerStatLeadersQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGetCareerStatLeadersQuery(baseOptions: Apollo.QueryHookOptions<GetCareerStatLeadersQuery, GetCareerStatLeadersQueryVariables>) {
+        return Apollo.useQuery<GetCareerStatLeadersQuery, GetCareerStatLeadersQueryVariables>(GetCareerStatLeadersDocument, baseOptions);
+      }
+export function useGetCareerStatLeadersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCareerStatLeadersQuery, GetCareerStatLeadersQueryVariables>) {
+          return Apollo.useLazyQuery<GetCareerStatLeadersQuery, GetCareerStatLeadersQueryVariables>(GetCareerStatLeadersDocument, baseOptions);
+        }
+export type GetCareerStatLeadersQueryHookResult = ReturnType<typeof useGetCareerStatLeadersQuery>;
+export type GetCareerStatLeadersLazyQueryHookResult = ReturnType<typeof useGetCareerStatLeadersLazyQuery>;
+export type GetCareerStatLeadersQueryResult = Apollo.QueryResult<GetCareerStatLeadersQuery, GetCareerStatLeadersQueryVariables>;
+export const GetCareerStatsDocument = gql`
+    query GetCareerStats($groupId: UUID!) {
+  careerStats(condition: {groupId: $groupId}, orderBy: GAMES_DESC) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+      playerImage
+    }
+    seasons
+    games
+    plateAppearances
+    atBats
+    hits
+    doubles
+    triples
+    homeruns
+    xbh
+    walks
+    strikeouts
+    sacFlies
+    gidp
+    runs
+    rbi
+    battingAverage
+    onBasePct
+    sluggingPct
+    ops
+  }
+}
+    `;
+
+/**
+ * __useGetCareerStatsQuery__
+ *
+ * To run a query within a React component, call `useGetCareerStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCareerStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCareerStatsQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGetCareerStatsQuery(baseOptions: Apollo.QueryHookOptions<GetCareerStatsQuery, GetCareerStatsQueryVariables>) {
+        return Apollo.useQuery<GetCareerStatsQuery, GetCareerStatsQueryVariables>(GetCareerStatsDocument, baseOptions);
+      }
+export function useGetCareerStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCareerStatsQuery, GetCareerStatsQueryVariables>) {
+          return Apollo.useLazyQuery<GetCareerStatsQuery, GetCareerStatsQueryVariables>(GetCareerStatsDocument, baseOptions);
+        }
+export type GetCareerStatsQueryHookResult = ReturnType<typeof useGetCareerStatsQuery>;
+export type GetCareerStatsLazyQueryHookResult = ReturnType<typeof useGetCareerStatsLazyQuery>;
+export type GetCareerStatsQueryResult = Apollo.QueryResult<GetCareerStatsQuery, GetCareerStatsQueryVariables>;
 export const GetGameDetailsDocument = gql`
     query GetGameDetails($gameId: UUID!) {
   game(id: $gameId) {
@@ -15475,3 +15920,372 @@ export function useGetLatestGameSummaryLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetLatestGameSummaryQueryHookResult = ReturnType<typeof useGetLatestGameSummaryQuery>;
 export type GetLatestGameSummaryLazyQueryHookResult = ReturnType<typeof useGetLatestGameSummaryLazyQuery>;
 export type GetLatestGameSummaryQueryResult = Apollo.QueryResult<GetLatestGameSummaryQuery, GetLatestGameSummaryQueryVariables>;
+export const GetPreviewStatsDocument = gql`
+    query GetPreviewStats($groupId: UUID!, $currentSeason: Int!) {
+  seasonStats(
+    condition: {groupId: $groupId, season: $currentSeason}
+    orderBy: GAMES_DESC
+    first: 20
+  ) {
+    player {
+      id
+      fullName
+    }
+    games
+    plateAppearances
+    atBats
+    hits
+    doubles
+    triples
+    homeruns
+    xbh
+    walks
+    strikeouts
+    sacFlies
+    gidp
+    runs
+    rbi
+    battingAverage
+    onBasePct
+    sluggingPct
+    ops
+  }
+}
+    `;
+
+/**
+ * __useGetPreviewStatsQuery__
+ *
+ * To run a query within a React component, call `useGetPreviewStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPreviewStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPreviewStatsQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      currentSeason: // value for 'currentSeason'
+ *   },
+ * });
+ */
+export function useGetPreviewStatsQuery(baseOptions: Apollo.QueryHookOptions<GetPreviewStatsQuery, GetPreviewStatsQueryVariables>) {
+        return Apollo.useQuery<GetPreviewStatsQuery, GetPreviewStatsQueryVariables>(GetPreviewStatsDocument, baseOptions);
+      }
+export function useGetPreviewStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPreviewStatsQuery, GetPreviewStatsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPreviewStatsQuery, GetPreviewStatsQueryVariables>(GetPreviewStatsDocument, baseOptions);
+        }
+export type GetPreviewStatsQueryHookResult = ReturnType<typeof useGetPreviewStatsQuery>;
+export type GetPreviewStatsLazyQueryHookResult = ReturnType<typeof useGetPreviewStatsLazyQuery>;
+export type GetPreviewStatsQueryResult = Apollo.QueryResult<GetPreviewStatsQuery, GetPreviewStatsQueryVariables>;
+export const GetSingleSeasonStatLeadersDocument = gql`
+    query GetSingleSeasonStatLeaders($groupId: UUID!) {
+  hitsLeaders: seasonStats(
+    condition: {groupId: $groupId}
+    orderBy: HITS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    season
+    value: hits
+  }
+  homerunsLeaders: seasonStats(
+    condition: {groupId: $groupId}
+    orderBy: HOMERUNS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    season
+    value: homeruns
+  }
+  walksLeaders: seasonStats(
+    condition: {groupId: $groupId}
+    orderBy: WALKS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    season
+    value: walks
+  }
+  battingAverageLeaders: seasonStatsAllTimeQualifiedBatters(
+    condition: {groupId: $groupId}
+    orderBy: BATTING_AVERAGE_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    season
+    value: battingAverage
+  }
+  onBasePctLeaders: seasonStatsAllTimeQualifiedBatters(
+    condition: {groupId: $groupId}
+    orderBy: ON_BASE_PCT_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    season
+    value: onBasePct
+  }
+  opsLeaders: seasonStatsAllTimeQualifiedBatters(
+    condition: {groupId: $groupId}
+    orderBy: OPS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    season
+    value: ops
+  }
+}
+    `;
+
+/**
+ * __useGetSingleSeasonStatLeadersQuery__
+ *
+ * To run a query within a React component, call `useGetSingleSeasonStatLeadersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSingleSeasonStatLeadersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSingleSeasonStatLeadersQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGetSingleSeasonStatLeadersQuery(baseOptions: Apollo.QueryHookOptions<GetSingleSeasonStatLeadersQuery, GetSingleSeasonStatLeadersQueryVariables>) {
+        return Apollo.useQuery<GetSingleSeasonStatLeadersQuery, GetSingleSeasonStatLeadersQueryVariables>(GetSingleSeasonStatLeadersDocument, baseOptions);
+      }
+export function useGetSingleSeasonStatLeadersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSingleSeasonStatLeadersQuery, GetSingleSeasonStatLeadersQueryVariables>) {
+          return Apollo.useLazyQuery<GetSingleSeasonStatLeadersQuery, GetSingleSeasonStatLeadersQueryVariables>(GetSingleSeasonStatLeadersDocument, baseOptions);
+        }
+export type GetSingleSeasonStatLeadersQueryHookResult = ReturnType<typeof useGetSingleSeasonStatLeadersQuery>;
+export type GetSingleSeasonStatLeadersLazyQueryHookResult = ReturnType<typeof useGetSingleSeasonStatLeadersLazyQuery>;
+export type GetSingleSeasonStatLeadersQueryResult = Apollo.QueryResult<GetSingleSeasonStatLeadersQuery, GetSingleSeasonStatLeadersQueryVariables>;
+export const GetStatLeadersForSeasonDocument = gql`
+    query GetStatLeadersForSeason($groupId: UUID!, $season: Int!) {
+  hitsLeaders: seasonStats(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: HITS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: hits
+  }
+  homerunsLeaders: seasonStats(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: HOMERUNS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: homeruns
+  }
+  walksLeaders: seasonStats(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: WALKS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: walks
+  }
+  battingAverageLeaders: seasonStatsQualifiedBatters(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: BATTING_AVERAGE_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: battingAverage
+  }
+  onBasePctLeaders: seasonStatsQualifiedBatters(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: ON_BASE_PCT_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: onBasePct
+  }
+  opsLeaders: seasonStatsQualifiedBatters(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: OPS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: ops
+  }
+}
+    `;
+
+/**
+ * __useGetStatLeadersForSeasonQuery__
+ *
+ * To run a query within a React component, call `useGetStatLeadersForSeasonQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatLeadersForSeasonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatLeadersForSeasonQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      season: // value for 'season'
+ *   },
+ * });
+ */
+export function useGetStatLeadersForSeasonQuery(baseOptions: Apollo.QueryHookOptions<GetStatLeadersForSeasonQuery, GetStatLeadersForSeasonQueryVariables>) {
+        return Apollo.useQuery<GetStatLeadersForSeasonQuery, GetStatLeadersForSeasonQueryVariables>(GetStatLeadersForSeasonDocument, baseOptions);
+      }
+export function useGetStatLeadersForSeasonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatLeadersForSeasonQuery, GetStatLeadersForSeasonQueryVariables>) {
+          return Apollo.useLazyQuery<GetStatLeadersForSeasonQuery, GetStatLeadersForSeasonQueryVariables>(GetStatLeadersForSeasonDocument, baseOptions);
+        }
+export type GetStatLeadersForSeasonQueryHookResult = ReturnType<typeof useGetStatLeadersForSeasonQuery>;
+export type GetStatLeadersForSeasonLazyQueryHookResult = ReturnType<typeof useGetStatLeadersForSeasonLazyQuery>;
+export type GetStatLeadersForSeasonQueryResult = Apollo.QueryResult<GetStatLeadersForSeasonQuery, GetStatLeadersForSeasonQueryVariables>;
+export const GetStatsForSeasonDocument = gql`
+    query GetStatsForSeason($groupId: UUID!, $season: Int!) {
+  seasonStats(
+    condition: {groupId: $groupId, season: $season}
+    orderBy: GAMES_DESC
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+      playerImage
+    }
+    games
+    plateAppearances
+    atBats
+    hits
+    doubles
+    triples
+    homeruns
+    xbh
+    walks
+    strikeouts
+    sacFlies
+    gidp
+    runs
+    rbi
+    battingAverage
+    onBasePct
+    sluggingPct
+    ops
+  }
+}
+    `;
+
+/**
+ * __useGetStatsForSeasonQuery__
+ *
+ * To run a query within a React component, call `useGetStatsForSeasonQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatsForSeasonQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatsForSeasonQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *      season: // value for 'season'
+ *   },
+ * });
+ */
+export function useGetStatsForSeasonQuery(baseOptions: Apollo.QueryHookOptions<GetStatsForSeasonQuery, GetStatsForSeasonQueryVariables>) {
+        return Apollo.useQuery<GetStatsForSeasonQuery, GetStatsForSeasonQueryVariables>(GetStatsForSeasonDocument, baseOptions);
+      }
+export function useGetStatsForSeasonLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatsForSeasonQuery, GetStatsForSeasonQueryVariables>) {
+          return Apollo.useLazyQuery<GetStatsForSeasonQuery, GetStatsForSeasonQueryVariables>(GetStatsForSeasonDocument, baseOptions);
+        }
+export type GetStatsForSeasonQueryHookResult = ReturnType<typeof useGetStatsForSeasonQuery>;
+export type GetStatsForSeasonLazyQueryHookResult = ReturnType<typeof useGetStatsForSeasonLazyQuery>;
+export type GetStatsForSeasonQueryResult = Apollo.QueryResult<GetStatsForSeasonQuery, GetStatsForSeasonQueryVariables>;

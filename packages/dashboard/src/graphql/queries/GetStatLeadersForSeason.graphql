@@ -1,0 +1,92 @@
+query GetStatLeadersForSeason($groupId: UUID!, $season: Int!) {
+  hitsLeaders: seasonStats(
+    condition: { groupId: $groupId, season: $season }
+    orderBy: HITS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: hits
+  }
+  homerunsLeaders: seasonStats(
+    condition: { groupId: $groupId, season: $season }
+    orderBy: HOMERUNS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: homeruns
+  }
+  walksLeaders: seasonStats(
+    condition: { groupId: $groupId, season: $season }
+    orderBy: WALKS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: walks
+  }
+  battingAverageLeaders: seasonStatsQualifiedBatters(
+    condition: { groupId: $groupId, season: $season }
+    orderBy: BATTING_AVERAGE_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: battingAverage
+  }
+  onBasePctLeaders: seasonStatsQualifiedBatters(
+    condition: { groupId: $groupId, season: $season }
+    orderBy: ON_BASE_PCT_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: onBasePct
+  }
+  opsLeaders: seasonStatsQualifiedBatters(
+    condition: { groupId: $groupId, season: $season }
+    orderBy: OPS_DESC
+    first: 5
+  ) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+    }
+    value: ops
+  }
+}

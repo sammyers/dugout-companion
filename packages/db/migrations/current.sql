@@ -149,11 +149,11 @@ create view modern_season_stats as select
       count(case when type = 'TRIPLE' then 1 end)::int as triples,
       count(case when type = 'HOMERUN' then 1 end)::int as homeruns,
       count(case when type = 'WALK' then 1 end)::int as walks,
-      count(case when type = 'OUT' and contact = 'NONE' then 1 end) as strikeouts,
-      count(case when type = 'SACRIFICE_FLY' then 1 end) as sac_flies,
-      count(case when type = 'DOUBLE_PLAY' then 1 end) as gidp,
-      (select count (*) from get_runs_scored(runner_id => player_id)) as runs,
-      (select count (*) from get_runs_scored(batter_id => player_id)) as rbi
+      count(case when type = 'OUT' and contact = 'NONE' then 1 end)::int as strikeouts,
+      count(case when type = 'SACRIFICE_FLY' then 1 end)::int as sac_flies,
+      count(case when type = 'DOUBLE_PLAY' then 1 end)::int as gidp,
+      (select count (*) from get_runs_scored(runner_id => player_id))::int as runs,
+      (select count (*) from get_runs_scored(batter_id => player_id))::int as rbi
     from get_plate_appearances()
     group by player_id, season
   ) s
@@ -236,6 +236,7 @@ create view career_stats as
       group_id,
       player_id,
       legacy_player_id,
+      count(*)::int as seasons,
       sum(games)::int as games,
       sum(plate_appearances)::int as plate_appearances,
       sum(at_bats)::int as at_bats,

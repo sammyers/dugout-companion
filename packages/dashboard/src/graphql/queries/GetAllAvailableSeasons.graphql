@@ -1,0 +1,5 @@
+query GetAllAvailableSeasons($groupId: UUID!) {
+  group(id: $groupId) {
+    allSeasons
+  }
+}

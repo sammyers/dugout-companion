@@ -1,0 +1,31 @@
+query GetStatsForSeason($groupId: UUID!, $season: Int!) {
+  seasonStats(condition: { groupId: $groupId, season: $season }, orderBy: GAMES_DESC) {
+    player {
+      id
+      fullName
+    }
+    legacyPlayer {
+      playerId
+      playerName
+      playerImage
+    }
+    games
+    plateAppearances
+    atBats
+    hits
+    doubles
+    triples
+    homeruns
+    xbh
+    walks
+    strikeouts
+    sacFlies
+    gidp
+    runs
+    rbi
+    battingAverage
+    onBasePct
+    sluggingPct
+    ops
+  }
+}

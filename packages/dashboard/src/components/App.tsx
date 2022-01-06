@@ -2,18 +2,20 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grommet } from 'grommet';
 import { Route, Routes } from 'react-router';
 
+import { useGetAllGroupsQuery } from '@sammyers/dc-shared';
+
 import TopBar from './TopBar';
 import Dashboard from './Dashboard';
 import GamesPage, { GamesPageTitle } from './GamesPage';
 import GamePage, { GamePageTitle } from './GamePage';
+import StatsPage, { StatsPageTitle } from './StatsPage';
 
 import theme from '../theme';
-import { useGetAllGroupsQuery } from '@sammyers/dc-shared';
 import { Group, groupContext } from './context';
 
 const DEFAULT_GROUP = 'SF Meetup';
 
-const DefaultTitle = () => <>{'Dugout Companion Stats'}</>;
+const DefaultTitle = () => <>{'Dugout Companion Dashboard'}</>;
 
 const App = () => {
   const [currentGroupId, setCurrentGroupId] = useState<string>();
@@ -52,6 +54,7 @@ const App = () => {
               <Route path="" element={<DefaultTitle />} />
               <Route path="games" element={<GamesPageTitle />} />
               <Route path="game/:id" element={<GamePageTitle />} />
+              <Route path="/stats" element={<StatsPageTitle />} />
             </Route>
           </Routes>
           <Box flex>
@@ -59,6 +62,7 @@ const App = () => {
               <Route path="/" element={<Dashboard />} />
               <Route path="/games" element={<GamesPage />} />
               <Route path="/game/:id" element={<GamePage />} />
+              <Route path="/stats" element={<StatsPage />} />
             </Routes>
           </Box>
         </Box>

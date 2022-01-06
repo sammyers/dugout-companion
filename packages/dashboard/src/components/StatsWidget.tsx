@@ -1,16 +1,18 @@
 import React from 'react';
 import { getYear } from 'date-fns';
-import { Box, ColumnConfig, DataTable } from 'grommet';
+import { Box, Button, ColumnConfig, DataTable } from 'grommet';
 
 import {
-  GetAllPlayerStatsQuery,
+  GetPreviewStatsQuery,
   SimplifyType,
-  useGetAllPlayerStatsQuery,
+  useGetPreviewStatsQuery,
+  groupIdOptions,
 } from '@sammyers/dc-shared';
 
 import { useCurrentGroupId } from './context';
+import { useNavigate } from 'react-router-dom';
 
-type PlayerStatResult = NonNullable<SimplifyType<GetAllPlayerStatsQuery['seasonStats']>>[number];
+type PlayerStatResult = NonNullable<SimplifyType<GetPreviewStatsQuery['seasonStats']>>[number];
 type PlayerStatRow = SimplifyType<Omit<PlayerStatResult, 'player'> & PlayerStatResult['player']>;
 const columns: ColumnConfig<PlayerStatRow>[] = [
   {
@@ -56,12 +58,11 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
 // TODO: filter columns for xsmall and xxsmall screens
 
 const StatsWidget = () => {
+  const navigate = useNavigate();
+
   const currentYear = getYear(new Date());
   const groupId = useCurrentGroupId();
-  const { data } = useGetAllPlayerStatsQuery({
-    skip: !groupId,
-    variables: groupId ? { groupId, season: currentYear } : undefined,
-  });
+  const { data } = useGetPreviewStatsQuery(groupIdOptions(groupId, { currentSeason: currentYear }));
 
   if (!data) {
     return null;
@@ -89,6 +90,9 @@ const StatsWidget = () => {
         pad="xsmall"
         background={{ body: ['neutral-5', 'neutral-6'] }}
       />
+      <Button plain={false} color="accent-2" onClick={() => navigate('/stats')}>
+        All Stats
+      </Button>
     </Box>
   );
 };

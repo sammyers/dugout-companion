@@ -1672,6 +1672,7 @@ type CareerStat {
   groupId: UUID
   playerId: UUID
   legacyPlayerId: Int
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -1711,6 +1712,8 @@ enum CareerStatsOrderBy {
   PLAYER_ID_DESC
   LEGACY_PLAYER_ID_ASC
   LEGACY_PLAYER_ID_DESC
+  SEASONS_ASC
+  SEASONS_DESC
   GAMES_ASC
   GAMES_DESC
   PLATE_APPEARANCES_ASC
@@ -1764,6 +1767,9 @@ input CareerStatCondition {
 
   """Checks for equality with the object’s `legacyPlayerId` field."""
   legacyPlayerId: Int
+
+  """Checks for equality with the object’s `seasons` field."""
+  seasons: Int
 
   """Checks for equality with the object’s `games` field."""
   games: Int
@@ -1827,6 +1833,7 @@ type CareerStatsQualifiedBatter {
   groupId: UUID
   playerId: UUID
   legacyPlayerId: Int
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -1872,6 +1879,8 @@ enum CareerStatsQualifiedBattersOrderBy {
   PLAYER_ID_DESC
   LEGACY_PLAYER_ID_ASC
   LEGACY_PLAYER_ID_DESC
+  SEASONS_ASC
+  SEASONS_DESC
   GAMES_ASC
   GAMES_DESC
   PLATE_APPEARANCES_ASC
@@ -1925,6 +1934,9 @@ input CareerStatsQualifiedBatterCondition {
 
   """Checks for equality with the object’s `legacyPlayerId` field."""
   legacyPlayerId: Int
+
+  """Checks for equality with the object’s `seasons` field."""
+  seasons: Int
 
   """Checks for equality with the object’s `games` field."""
   games: Int
@@ -2222,11 +2234,11 @@ type SeasonStat {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -2339,19 +2351,19 @@ input SeasonStatCondition {
   walks: Int
 
   """Checks for equality with the object’s `strikeouts` field."""
-  strikeouts: BigInt
+  strikeouts: Int
 
   """Checks for equality with the object’s `sacFlies` field."""
-  sacFlies: BigInt
+  sacFlies: Int
 
   """Checks for equality with the object’s `gidp` field."""
-  gidp: BigInt
+  gidp: Int
 
   """Checks for equality with the object’s `runs` field."""
-  runs: BigInt
+  runs: Int
 
   """Checks for equality with the object’s `rbi` field."""
-  rbi: BigInt
+  rbi: Int
 
   """Checks for equality with the object’s `xbh` field."""
   xbh: Int
@@ -2383,11 +2395,11 @@ type SeasonStatsAllTimeQualifiedBatter {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -2506,19 +2518,19 @@ input SeasonStatsAllTimeQualifiedBatterCondition {
   walks: Int
 
   """Checks for equality with the object’s `strikeouts` field."""
-  strikeouts: BigInt
+  strikeouts: Int
 
   """Checks for equality with the object’s `sacFlies` field."""
-  sacFlies: BigInt
+  sacFlies: Int
 
   """Checks for equality with the object’s `gidp` field."""
-  gidp: BigInt
+  gidp: Int
 
   """Checks for equality with the object’s `runs` field."""
-  runs: BigInt
+  runs: Int
 
   """Checks for equality with the object’s `rbi` field."""
-  rbi: BigInt
+  rbi: Int
 
   """Checks for equality with the object’s `xbh` field."""
   xbh: Int
@@ -2550,11 +2562,11 @@ type SeasonStatsQualifiedBatter {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -2673,19 +2685,19 @@ input SeasonStatsQualifiedBatterCondition {
   walks: Int
 
   """Checks for equality with the object’s `strikeouts` field."""
-  strikeouts: BigInt
+  strikeouts: Int
 
   """Checks for equality with the object’s `sacFlies` field."""
-  sacFlies: BigInt
+  sacFlies: Int
 
   """Checks for equality with the object’s `gidp` field."""
-  gidp: BigInt
+  gidp: Int
 
   """Checks for equality with the object’s `runs` field."""
-  runs: BigInt
+  runs: Int
 
   """Checks for equality with the object’s `rbi` field."""
-  rbi: BigInt
+  rbi: Int
 
   """Checks for equality with the object’s `xbh` field."""
   xbh: Int
@@ -4299,11 +4311,11 @@ type ModernSeasonStat {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -4407,19 +4419,19 @@ input ModernSeasonStatCondition {
   walks: Int
 
   """Checks for equality with the object’s `strikeouts` field."""
-  strikeouts: BigInt
+  strikeouts: Int
 
   """Checks for equality with the object’s `sacFlies` field."""
-  sacFlies: BigInt
+  sacFlies: Int
 
   """Checks for equality with the object’s `gidp` field."""
-  gidp: BigInt
+  gidp: Int
 
   """Checks for equality with the object’s `runs` field."""
-  runs: BigInt
+  runs: Int
 
   """Checks for equality with the object’s `rbi` field."""
-  rbi: BigInt
+  rbi: Int
 
   """Checks for equality with the object’s `xbh` field."""
   xbh: Int
@@ -6639,6 +6651,7 @@ input FakePublicCareerStatsForeignKey1InverseInput {
 input FakePublicCareerStatsForeignKey1CareerStatsCreateInput {
   groupId: UUID
   playerId: UUID
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -10279,6 +10292,7 @@ input FakePublicCareerStatsForeignKey0InverseInput {
 input FakePublicCareerStatsForeignKey0CareerStatsCreateInput {
   groupId: UUID
   legacyPlayerId: Int
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -10383,6 +10397,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput {
 input FakePublicCareerStatsQualifiedBattersForeignKey1CareerStatsQualifiedBattersCreateInput {
   groupId: UUID
   playerId: UUID
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -10503,6 +10518,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput {
 input FakePublicCareerStatsQualifiedBattersForeignKey0CareerStatsQualifiedBattersCreateInput {
   groupId: UUID
   legacyPlayerId: Int
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -10929,11 +10945,11 @@ input FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -11052,11 +11068,11 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0SeasonStatsAllTimeQ
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -11173,11 +11189,11 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey0SeasonStatsQualifiedBatter
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -11441,11 +11457,11 @@ input FakePublicSeasonStatsForeignKey1SeasonStatsCreateInput {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -11548,11 +11564,11 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey1SeasonStatsAllTimeQ
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -11653,11 +11669,11 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey1SeasonStatsQualifiedBatter
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -11751,6 +11767,7 @@ input FakePublicCareerStatsForeignKey2InverseInput {
 input FakePublicCareerStatsForeignKey2CareerStatsCreateInput {
   playerId: UUID
   legacyPlayerId: Int
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -11858,6 +11875,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput {
 input FakePublicCareerStatsQualifiedBattersForeignKey2CareerStatsQualifiedBattersCreateInput {
   playerId: UUID
   legacyPlayerId: Int
+  seasons: Int
   games: Int
   plateAppearances: Int
   atBats: Int
@@ -12083,11 +12101,11 @@ input FakePublicSeasonStatsForeignKey2SeasonStatsCreateInput {
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -12193,11 +12211,11 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2SeasonStatsAllTimeQ
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float
@@ -12301,11 +12319,11 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2SeasonStatsQualifiedBatter
   triples: Int
   homeruns: Int
   walks: Int
-  strikeouts: BigInt
-  sacFlies: BigInt
-  gidp: BigInt
-  runs: BigInt
-  rbi: BigInt
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
   xbh: Int
   battingAverage: Float
   onBasePct: Float

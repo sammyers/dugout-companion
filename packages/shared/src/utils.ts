@@ -48,3 +48,11 @@ export const ordinalSuffix = (n: number) =>
     : n % 10 === 3
     ? 'rd'
     : 'th';
+
+export const groupIdOptions = <T extends Record<string, any>>(
+  groupId: string | undefined,
+  variables: T
+) => ({
+  variables: groupId ? { groupId, ...variables } : undefined,
+  skip: !groupId,
+});

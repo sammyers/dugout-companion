@@ -1,5 +1,9 @@
-query GetAllPlayerStats($groupId: UUID!, $season: Int!) {
-  seasonStats(condition: { groupId: $groupId, season: $season }) {
+query GetPreviewStats($groupId: UUID!, $currentSeason: Int!) {
+  seasonStats(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: GAMES_DESC
+    first: 20
+  ) {
     player {
       id
       fullName
