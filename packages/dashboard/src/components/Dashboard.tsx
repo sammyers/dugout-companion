@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { Box, Grid, GridColumnsType, GridSizeType, ResponsiveContext, Text } from 'grommet';
+
 import GameWidget from './GameWidget';
 import StatsWidget from './StatsWidget';
+import LeadersWidget from './LeadersWidget';
 
 const columns: Record<string, GridColumnsType> = {
   xsmall: ['auto'],
@@ -61,9 +63,7 @@ const Dashboard = () => {
       >
         <GameWidget />
         <StatsWidget />
-        <Box gridArea="leaderboard" round="small" background="neutral-5" pad="small">
-          <Text>Leaderboards</Text>
-        </Box>
+        <LeadersWidget />
       </Grid>
     </Box>
   );

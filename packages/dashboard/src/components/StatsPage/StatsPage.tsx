@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { Box, CheckBox, Select } from 'grommet';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { Box, CheckBox, Select, Text, ThemeContext } from 'grommet';
+import { useSearchParams } from 'react-router-dom';
 
 import { groupIdOptions, useGetAllAvailableSeasonsQuery } from '@sammyers/dc-shared';
 
-import { useCurrentGroupId } from '../context';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
-import { useCallback } from 'react';
 import CareerStats from './CareerStats';
 import SeasonStats from './SeasonStats';
 
+import { useCurrentGroupId } from '../context';
+
 const StatsPage = () => {
-  const navigate = useNavigate();
+  const theme = useContext(ThemeContext);
 
   const groupId = useCurrentGroupId();
   const { data } = useGetAllAvailableSeasonsQuery(groupIdOptions(groupId, {}));
@@ -42,24 +41,28 @@ const StatsPage = () => {
 
   return (
     <Box>
-      <Box direction="row" alignSelf="center" gap="small">
-        <Select
-          options={[
-            { label: 'All Time', value: 'all' },
-            ...data.group.allSeasons!.map(season => ({
-              label: String(season),
-              value: String(season),
-            })),
-          ]}
-          labelKey="label"
-          valueKey={{ key: 'value', reduce: true }}
-          value={season}
-          onChange={({ value }) => setSeason(value)}
-        />
+      <Box direction="row" gap="medium" margin={{ horizontal: 'small' }}>
+        <Box direction="row" align="center" gap="small">
+          <Text>Season: </Text>
+          <Select
+            size="small"
+            options={[
+              { label: 'All', value: 'all' },
+              ...data.group.allSeasons!.map(season => ({
+                label: String(season),
+                value: String(season),
+              })),
+            ]}
+            labelKey="label"
+            valueKey={{ key: 'value', reduce: true }}
+            value={season}
+            onChange={({ value }) => setSeason(value)}
+          />
+        </Box>
         <CheckBox
           checked={qualifiedBatters}
           onChange={e => setQualifiedBatters(e.target.checked)}
-          label="Qualified Batters"
+          label={<Text alignSelf="center">Qualified Batters</Text>}
         />
       </Box>
       <Box margin="small" pad="small" background="neutral-5" round="small">
@@ -74,7 +77,14 @@ const StatsPage = () => {
 };
 
 export const StatsPageTitle = () => {
-  return <>Player Stats</>;
+  const [searchParams] = useSearchParams();
+  const season = searchParams.get('season');
+
+  if (season !== 'all') {
+    return <>Player Stats - {season} Season</>;
+  }
+
+  return <>Player Stats - All Time</>;
 };
 
 export default StatsPage;
