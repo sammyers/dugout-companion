@@ -18,10 +18,12 @@ const SingleSeasonLeaders: FC = () => {
 
   return (
     <Box margin="small">
-      <Heading level={4}>Single-Season Leaders</Heading>
+      <Heading level={3} margin="small">
+        Single-Season Leaders
+      </Heading>
       <Grid columns="min(100%, max(300px, 30%))" gap="small">
         <SeasonLeaderboard name="Batting Average" decimal leaders={data.battingAverageLeaders!} />
-        <SeasonLeaderboard name="On Base Percentage" decimal leaders={data.onBasePctLeaders!} />
+        <SeasonLeaderboard name="On-Base Percentage" decimal leaders={data.onBasePctLeaders!} />
         <SeasonLeaderboard name="OPS" decimal leaders={data.opsLeaders!} />
         <SeasonLeaderboard name="Hits" leaders={data.hitsLeaders!} />
         <SeasonLeaderboard name="Walks" leaders={data.walksLeaders!} />

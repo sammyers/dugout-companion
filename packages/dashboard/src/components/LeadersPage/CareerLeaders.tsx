@@ -18,10 +18,12 @@ const CareerLeaders: FC = () => {
 
   return (
     <Box margin="small">
-      <Heading level={4}>Career Leaders</Heading>
+      <Heading level={3} margin="small">
+        Career Leaders
+      </Heading>
       <Grid columns="min(100%, max(240px, 30%))" gap="small">
         <Leaderboard name="Batting Average" decimal leaders={data.battingAverageLeaders!} />
-        <Leaderboard name="On Base Percentage" decimal leaders={data.onBasePctLeaders!} />
+        <Leaderboard name="On-Base Percentage" decimal leaders={data.onBasePctLeaders!} />
         <Leaderboard name="OPS" decimal leaders={data.opsLeaders!} />
         <Leaderboard name="Hits" leaders={data.hitsLeaders!} />
         <Leaderboard name="Walks" leaders={data.walksLeaders!} />

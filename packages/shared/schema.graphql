@@ -671,6 +671,7 @@ type Query implements Node {
   player(id: UUID!): Player
   playerByFirstNameAndLastName(firstName: String!, lastName: String!): Player
   scoredRunner(gameEventRecordId: UUID!, runnerId: UUID!): ScoredRunner
+  season(groupId: UUID!, year: Int!): Season
   stolenBaseAttempt(id: UUID!): StolenBaseAttempt
   team(id: UUID!): Team
   teamByGameIdAndRole(gameId: UUID!, role: TeamRole!): Team
@@ -851,6 +852,12 @@ type Query implements Node {
     """
     nodeId: ID!
   ): ScoredRunner
+
+  """Reads a single `Season` using its globally unique `ID`."""
+  seasonByNodeId(
+    """The globally unique `ID` to be used in selecting a single `Season`."""
+    nodeId: ID!
+  ): Season
 
   """Reads a single `StolenBaseAttempt` using its globally unique `ID`."""
   stolenBaseAttemptByNodeId(
@@ -4492,16 +4499,15 @@ input PlateAppearanceCondition {
   routinePlay: Boolean
 }
 
-type Season {
-  groupId: UUID
-  year: BigFloat
+type Season implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  groupId: UUID!
+  year: Int!
   totalGames: BigInt
 }
-
-"""
-A floating point number that requires more precision than IEEE 754 binary 64
-"""
-scalar BigFloat
 
 """Methods to use when ordering `Season`."""
 enum SeasonsOrderBy {
@@ -4512,6 +4518,8 @@ enum SeasonsOrderBy {
   YEAR_DESC
   TOTAL_GAMES_ASC
   TOTAL_GAMES_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
 }
 
 """
@@ -4522,7 +4530,7 @@ input SeasonCondition {
   groupId: UUID
 
   """Checks for equality with the object’s `year` field."""
-  year: BigFloat
+  year: Int
 
   """Checks for equality with the object’s `totalGames` field."""
   totalGames: BigInt

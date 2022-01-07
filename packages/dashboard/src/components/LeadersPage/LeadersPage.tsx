@@ -52,10 +52,10 @@ const LeadersPage = () => {
       {season ? (
         <SeasonLeaders season={Number(season)} />
       ) : (
-        <>
+        <Box gap="medium">
           <CareerLeaders />
           <SingleSeasonLeaders />
-        </>
+        </Box>
       )}
     </Box>
   );

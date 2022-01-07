@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { Box, ColumnConfig, DataTable } from 'grommet';
+import { Box, ColumnConfig, DataTable, Text } from 'grommet';
 
 import { GetSingleSeasonStatLeadersQuery, SimplifyType } from '@sammyers/dc-shared';
 
@@ -17,20 +17,34 @@ const SeasonLeaderboard: FC<Props> = ({ name, leaders, decimal }) => {
   const columns: ColumnConfig<LeaderRow & { place: number }>[] = [
     {
       property: 'place',
-      header: name,
+      header: (
+        <Text weight="bold" size="large" color="accent-4">
+          {name}
+        </Text>
+      ),
       render: row => {
         const name = extractPlayerName(row);
-        return `${row.place}. ${name}`;
+        return (
+          <Text
+            weight="bold"
+            color={row.place === 1 ? 'accent-1' : undefined}
+          >{`${row.place}. ${name}`}</Text>
+        );
       },
     },
     {
       property: 'value',
       header: '',
-      render: row => (decimal ? row.value!.toFixed(3) : row.value),
+      render: row => (
+        <Text color={row.place === 1 ? 'accent-1' : undefined}>
+          {decimal ? row.value!.toFixed(3) : row.value}
+        </Text>
+      ),
     },
     {
       property: 'season',
-      header: 'Year',
+      header: <Text color="accent-4">Year</Text>,
+      render: row => <Text color={row.place === 1 ? 'accent-1' : undefined}>{row.season}</Text>,
     },
   ];
 

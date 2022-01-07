@@ -8,12 +8,12 @@ import {
   useGetStatsForSeasonQuery,
 } from '@sammyers/dc-shared';
 
-import { extractPlayerName } from '../../utils';
+import { extractPlayerName, useResponsiveColumns } from '../../utils';
 import { useCurrentGroupId } from '../context';
 
 type PlayerStatResult = NonNullable<SimplifyType<GetStatsForSeasonQuery['seasonStats']>>[number];
 
-const columns: ColumnConfig<PlayerStatResult>[] = [
+const columnDefs: ColumnConfig<PlayerStatResult>[] = [
   {
     property: 'player',
     sortable: false,
@@ -57,6 +57,10 @@ const columns: ColumnConfig<PlayerStatResult>[] = [
     header: 'BB',
   },
   {
+    property: 'sacFlies',
+    header: 'SAC',
+  },
+  {
     property: 'battingAverage',
     header: 'AVG',
     render: row => row.battingAverage!.toFixed(3),
@@ -77,10 +81,15 @@ const SeasonStats: FC<{ season: number; qualified: boolean }> = ({ season, quali
   const groupId = useCurrentGroupId();
   const { data } = useGetStatsForSeasonQuery(groupIdOptions(groupId, { season }));
 
+  const columns = useResponsiveColumns(columnDefs, {
+    xsmall: ['atBats', 'runs', 'walks', 'sacFlies', 'doubles', 'triples', 'rbi', 'battingAverage'],
+    small: ['runs', 'rbi'],
+  });
+
   const rows = useMemo(() => {
     if (data) {
       if (qualified) {
-        return data.seasonStats?.filter(row => row.atBats! >= 200);
+        return data.seasonStats?.filter(row => row.atBats! >= data.season!.totalGames * 2);
       }
       return data.seasonStats;
     }

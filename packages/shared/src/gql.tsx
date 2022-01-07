@@ -12,8 +12,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A floating point number that requires more precision than IEEE 754 binary 64 */
-  BigFloat: any;
   /**
    * A signed eight-byte integer. The upper big integer values are greater than the
    * max value for a JavaScript number. Therefore all big integers will be output as
@@ -556,7 +554,6 @@ export enum BasepathMovementsOrderBy {
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
-
 
 
 export type CareerStat = {
@@ -10200,6 +10197,7 @@ export type Query = Node & {
   player: Maybe<Player>;
   playerByFirstNameAndLastName: Maybe<Player>;
   scoredRunner: Maybe<ScoredRunner>;
+  season: Maybe<Season>;
   stolenBaseAttempt: Maybe<StolenBaseAttempt>;
   team: Maybe<Team>;
   teamByGameIdAndRole: Maybe<Team>;
@@ -10250,6 +10248,8 @@ export type Query = Node & {
   playerByNodeId: Maybe<Player>;
   /** Reads a single `ScoredRunner` using its globally unique `ID`. */
   scoredRunnerByNodeId: Maybe<ScoredRunner>;
+  /** Reads a single `Season` using its globally unique `ID`. */
+  seasonByNodeId: Maybe<Season>;
   /** Reads a single `StolenBaseAttempt` using its globally unique `ID`. */
   stolenBaseAttemptByNodeId: Maybe<StolenBaseAttempt>;
   /** Reads a single `Team` using its globally unique `ID`. */
@@ -10763,6 +10763,13 @@ export type QueryScoredRunnerArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QuerySeasonArgs = {
+  groupId: Scalars['UUID'];
+  year: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryStolenBaseAttemptArgs = {
   id: Scalars['UUID'];
 };
@@ -10962,6 +10969,12 @@ export type QueryPlayerByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryScoredRunnerByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QuerySeasonByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -11238,10 +11251,12 @@ export enum ScoredRunnersOrderBy {
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
 
-export type Season = {
+export type Season = Node & {
   __typename?: 'Season';
-  groupId: Maybe<Scalars['UUID']>;
-  year: Maybe<Scalars['BigFloat']>;
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  groupId: Scalars['UUID'];
+  year: Scalars['Int'];
   totalGames: Maybe<Scalars['BigInt']>;
 };
 
@@ -11250,7 +11265,7 @@ export type SeasonCondition = {
   /** Checks for equality with the object’s `groupId` field. */
   groupId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `year` field. */
-  year?: Maybe<Scalars['BigFloat']>;
+  year?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `totalGames` field. */
   totalGames?: Maybe<Scalars['BigInt']>;
 };
@@ -11746,7 +11761,9 @@ export enum SeasonsOrderBy {
   YEAR_ASC = 'YEAR_ASC',
   YEAR_DESC = 'YEAR_DESC',
   TOTAL_GAMES_ASC = 'TOTAL_GAMES_ASC',
-  TOTAL_GAMES_DESC = 'TOTAL_GAMES_DESC'
+  TOTAL_GAMES_DESC = 'TOTAL_GAMES_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
 
 export type StolenBaseAttempt = Node & {
@@ -15042,7 +15059,10 @@ export type GetStatsForSeasonQueryVariables = Exact<{
 
 export type GetStatsForSeasonQuery = (
   { __typename?: 'Query' }
-  & { seasonStats: Maybe<Array<(
+  & { season: Maybe<(
+    { __typename?: 'Season' }
+    & Pick<Season, 'totalGames'>
+  )>, seasonStats: Maybe<Array<(
     { __typename?: 'SeasonStat' }
     & Pick<SeasonStat, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'doubles' | 'triples' | 'homeruns' | 'xbh' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'runs' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
     & { player: Maybe<(
@@ -16228,6 +16248,9 @@ export type GetStatLeadersForSeasonLazyQueryHookResult = ReturnType<typeof useGe
 export type GetStatLeadersForSeasonQueryResult = Apollo.QueryResult<GetStatLeadersForSeasonQuery, GetStatLeadersForSeasonQueryVariables>;
 export const GetStatsForSeasonDocument = gql`
     query GetStatsForSeason($groupId: UUID!, $season: Int!) {
+  season(groupId: $groupId, year: $season) {
+    totalGames
+  }
   seasonStats(
     condition: {groupId: $groupId, season: $season}
     orderBy: GAMES_DESC

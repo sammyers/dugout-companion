@@ -1,4 +1,7 @@
 query GetStatsForSeason($groupId: UUID!, $season: Int!) {
+  season(groupId: $groupId, year: $season) {
+    totalGames
+  }
   seasonStats(condition: { groupId: $groupId, season: $season }, orderBy: GAMES_DESC) {
     player {
       id

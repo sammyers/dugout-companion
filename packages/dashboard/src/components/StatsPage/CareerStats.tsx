@@ -8,12 +8,12 @@ import {
   useGetCareerStatsQuery,
 } from '@sammyers/dc-shared';
 
-import { extractPlayerName } from '../../utils';
+import { extractPlayerName, useResponsiveColumns } from '../../utils';
 import { useCurrentGroupId } from '../context';
 
 type PlayerStatResult = NonNullable<SimplifyType<GetCareerStatsQuery['careerStats']>>[number];
 
-const columns: ColumnConfig<PlayerStatResult>[] = [
+const columnDefs: ColumnConfig<PlayerStatResult>[] = [
   {
     property: 'player',
     sortable: false,
@@ -85,6 +85,21 @@ const CareerStats: FC<{ qualified: boolean }> = ({ qualified }) => {
   const groupId = useCurrentGroupId();
   const { data } = useGetCareerStatsQuery(groupIdOptions(groupId, {}));
 
+  const columns = useResponsiveColumns(columnDefs, {
+    xsmall: [
+      'seasons',
+      'atBats',
+      'runs',
+      'walks',
+      'sacFlies',
+      'doubles',
+      'triples',
+      'rbi',
+      'battingAverage',
+    ],
+    small: ['runs', 'rbi', 'sacFlies'],
+  });
+
   const rows = useMemo(() => {
     if (data) {
       if (qualified) {
@@ -97,8 +112,6 @@ const CareerStats: FC<{ qualified: boolean }> = ({ qualified }) => {
   if (!rows) {
     return null;
   }
-
-  console.log(data);
 
   return (
     <DataTable

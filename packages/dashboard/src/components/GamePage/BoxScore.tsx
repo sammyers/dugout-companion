@@ -115,8 +115,6 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
     }));
   }, [teams, boxScoreLines]);
 
-  console.log(teamBoxScores);
-
   return (
     <Box direction="row" justify="stretch" wrap>
       {teamBoxScores.map(team => (
