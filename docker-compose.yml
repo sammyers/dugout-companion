@@ -43,6 +43,17 @@ services:
       - network
     ports:
       - 5433:5432
+  migrations:
+    image: sam4core/dc-migrations
+    build:
+      context: ./packages/db
+      dockerfile: migrations.Dockerfile
+    env_file:
+      - ./prod.env
+    depends_on:
+      - db
+    networks:
+      - network
   server:
     restart: always
     image: sam4core/dc-server
