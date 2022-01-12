@@ -675,6 +675,7 @@ type Query implements Node {
   stolenBaseAttempt(id: UUID!): StolenBaseAttempt
   team(id: UUID!): Team
   teamByGameIdAndRole(gameId: UUID!, role: TeamRole!): Team
+  firstDateOfYear(year: Int): Datetime
   getAvg(hits: Int, atBats: Int): Float
   getObp(hits: Int, walks: Int, plateAppearances: Int): Float
   getOps(hits: Int, totalBases: Int, walks: Int, atBats: Int, plateAppearances: Int): Float
@@ -706,6 +707,7 @@ type Query implements Node {
   ): [GetRunsScoredRecord]
   getSlg(totalBases: Int, atBats: Int): Float
   getTb(singles: Int, doubles: Int, triples: Int, homeruns: Int): Int
+  lastDateOfYear(year: Int): Datetime
 
   """Reads a single `BaseRunner` using its globally unique `ID`."""
   baseRunnerByNodeId(
