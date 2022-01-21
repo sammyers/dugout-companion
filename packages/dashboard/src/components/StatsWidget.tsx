@@ -103,22 +103,21 @@ const StatsWidget = () => {
   }
 
   return (
-    <Box
-      gridArea="stats"
-      round="small"
-      background="neutral-5"
-      pad="small"
-      align="center"
-      gap="small"
-    >
-      <Box fill direction="row" justify="between" align="center" pad={{ horizontal: 'small' }}>
+    <Box gridArea="stats" round="small" background="neutral-5" pad="small" gap="small">
+      <Box
+        fill
+        alignSelf="center"
+        direction="row"
+        justify="between"
+        align="center"
+        pad={{ horizontal: 'small' }}
+      >
         <Text weight="bold">{currentYear} Stats</Text>
         <Button plain={false} color="accent-2" onClick={() => navigate('/stats')}>
           All Stats
         </Button>
       </Box>
       <DataTable
-        fill
         sortable
         columns={columns}
         data={data.seasonStats!}
