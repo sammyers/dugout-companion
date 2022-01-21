@@ -16,6 +16,8 @@ import {
   getPositionAbbreviation,
 } from '@sammyers/dc-shared';
 
+import PlayerLink from '../util/PlayerLink';
+
 type BoxScoreLine = NonNullable<NonNullable<GetGameDetailsQuery['game']>['boxScore']>[number];
 
 interface Props {
@@ -41,7 +43,7 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
         header: 'Player',
         render: row => (
           <Box direction="row" align="center" gap="xsmall">
-            <Text weight="bold">{row.name}</Text>
+            <PlayerLink player={{ id: row.playerId, fullName: row.name }} legacyPlayer={null} />
             {size !== 'xsmall' && (
               <Text size="small" color="dark-4">
                 {getPositionAbbreviation(row.position)}
