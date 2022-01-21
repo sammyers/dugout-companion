@@ -1,9 +1,15 @@
 query GetLatestGameSummary($groupId: UUID!) {
   games(orderBy: TIME_STARTED_DESC, first: 1, condition: { groupId: $groupId }) {
     id
+    name
     timeStarted
     timeEnded
     score
     gameLength
+    teams {
+      role
+      name
+      winner
+    }
   }
 }

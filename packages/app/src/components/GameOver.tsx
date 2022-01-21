@@ -1,6 +1,16 @@
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { formatISO } from 'date-fns';
-import { Box, Button, CheckBox, Heading, Main, Notification, TextInput } from 'grommet';
+import {
+  Box,
+  Button,
+  CheckBox,
+  Heading,
+  Layer,
+  Main,
+  Notification,
+  Text,
+  TextInput,
+} from 'grommet';
 import { Navigate } from 'react-router-dom';
 
 import SaveGameButton from './SaveGameButton';
@@ -52,9 +62,8 @@ const GameOver = () => {
     [dispatch]
   );
 
-  const onClickExtendGame = useCallback(() => {
-    dispatch(gameActions.extendGame());
-  }, [dispatch]);
+  const [showConfirmNewGame, setShowConfirmNewGame] = useState(false);
+  const [showConfirmExtendGame, setShowConfirmExtendGame] = useState(false);
 
   const onClickResetGame = useCallback(() => {
     if (!saved) {
@@ -65,7 +74,13 @@ const GameOver = () => {
     } else {
       dispatch(gameActions.fullResetGame());
     }
-  }, [saved, keepTeams, dispatch]);
+    setShowConfirmNewGame(false);
+  }, [saved, keepTeams, dispatch, setShowConfirmNewGame]);
+
+  const onClickExtendGame = useCallback(() => {
+    dispatch(gameActions.extendGame());
+    setShowConfirmExtendGame(false);
+  }, [dispatch]);
 
   if (gameStatus === GameStatus.IN_PROGRESS) {
     return <Navigate to="/field" />;
@@ -76,6 +91,64 @@ const GameOver = () => {
 
   return (
     <Main flex background="brand" justify="center" align="center">
+      {showConfirmNewGame && (
+        <Layer onClickOutside={() => setShowConfirmNewGame(false)} background="transparent">
+          <Box pad="medium" background="light-2" round gap="small">
+            <Heading level={3} margin={{ vertical: 'small' }}>
+              New Game
+            </Heading>
+            <Text>Are you sure you want to start a new game?</Text>
+            {!saved && (
+              <Box margin="small">
+                <Notification
+                  status="warning"
+                  title="The current game will be stashed locally. It will be uploaded along with the next game you save."
+                />
+              </Box>
+            )}
+            <Box direction="row" gap="medium" margin={{ top: 'small' }}>
+              <Button
+                color="status-critical"
+                plain={false}
+                label="Cancel"
+                onClick={() => setShowConfirmNewGame(false)}
+              />
+              <Button
+                color="status-ok"
+                primary
+                plain={false}
+                label="Confirm"
+                onClick={onClickResetGame}
+              />
+            </Box>
+          </Box>
+        </Layer>
+      )}
+      {showConfirmExtendGame && (
+        <Layer onClickOutside={() => setShowConfirmExtendGame(false)} background="transparent">
+          <Box pad="medium" background="light-2" round gap="small">
+            <Heading level={3} margin={{ vertical: 'small' }}>
+              Extend Game
+            </Heading>
+            <Text>Are you sure you want to play another inning?</Text>
+            <Box direction="row" gap="medium" margin={{ top: 'small' }}>
+              <Button
+                color="status-critical"
+                plain={false}
+                label="Cancel"
+                onClick={() => setShowConfirmExtendGame(false)}
+              />
+              <Button
+                color="status-ok"
+                primary
+                plain={false}
+                label="Confirm"
+                onClick={onClickExtendGame}
+              />
+            </Box>
+          </Box>
+        </Layer>
+      )}
       <Box align="center">
         <Heading level={2} margin={{ bottom: 'small' }}>
           {winningTeamName} wins!
@@ -110,7 +183,7 @@ const GameOver = () => {
               color="status-ok"
               plain={false}
               label="New Game"
-              onClick={onClickResetGame}
+              onClick={() => (saved ? onClickResetGame() : setShowConfirmNewGame(true))}
             />
             <CheckBox
               toggle
@@ -119,12 +192,6 @@ const GameOver = () => {
               onChange={e => setKeepTeams(e.target.checked)}
             />
           </Box>
-          {!saved && (
-            <Notification
-              status="warning"
-              title="The current game will be stashed locally. It will be uploaded along with the next game you save."
-            />
-          )}
         </Box>
         {gameLength < maxGameLength && (
           <Button
@@ -132,7 +199,7 @@ const GameOver = () => {
             plain={false}
             disabled={saved}
             label="Play another inning"
-            onClick={onClickExtendGame}
+            onClick={() => setShowConfirmExtendGame(true)}
           />
         )}
       </Box>

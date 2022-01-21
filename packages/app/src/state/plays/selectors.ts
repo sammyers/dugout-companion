@@ -14,7 +14,7 @@ import { FieldingPosition, HalfInning, TeamRole } from '@sammyers/dc-shared';
 
 const getPlayerAtPosition = (team: Team, position: FieldingPosition, lineupId: string) => {
   const { lineupSpots } = team.lineups.find(lineup => lineup.id === lineupId)!;
-  return lineupSpots.find(spot => spot.position === position)!.playerId;
+  return lineupSpots.find(spot => spot.position === position)?.playerId;
 };
 
 const makeInterpolatedPlayDescription = (
@@ -38,9 +38,10 @@ const makeInterpolatedPlayDescription = (
     const { id: lineupId } = gameStateBefore.lineups!.find(
       lineup => lineup.team.role === teamRole
     )!;
+    const playerAtPosition = getPlayerAtPosition(team, position, lineupId);
     interpolatedDescription = description.replace(
       new RegExp(`{${position}}`),
-      formatShortName(playerGetter(getPlayerAtPosition(team, position, lineupId)))
+      playerAtPosition ? formatShortName(playerGetter(playerAtPosition)) : 'unknown'
     );
   }
   playerIds.forEach(playerId => {

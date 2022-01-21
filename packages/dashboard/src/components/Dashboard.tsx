@@ -7,15 +7,15 @@ import LeadersWidget from './LeadersWidget';
 
 const columns: Record<string, GridColumnsType> = {
   xsmall: ['auto'],
-  small: ['auto', 'flex'],
-  medium: ['auto', 'flex'],
+  small: ['auto'],
+  medium: ['auto', 'auto'],
   large: ['auto', 'auto'],
   xlarge: ['auto', 'auto', 'auto'],
 };
 
 const rows: Record<string, GridSizeType[]> = {
-  xsmall: ['auto', 'flex', 'medium'],
-  small: ['auto', 'flex'],
+  xsmall: ['auto', 'auto', 'flex'],
+  small: ['auto', 'auto', 'flex'],
   medium: ['auto', 'flex'],
   large: ['auto', 'flex'],
   xlarge: ['full'],
@@ -24,18 +24,18 @@ const rows: Record<string, GridSizeType[]> = {
 const areas = {
   xsmall: [
     { name: 'game', start: [0, 0], end: [0, 0] },
-    { name: 'stats', start: [0, 1], end: [0, 1] },
-    { name: 'leaderboard', start: [0, 2], end: [0, 2] },
+    { name: 'leaderboard', start: [0, 1], end: [0, 1] },
+    { name: 'stats', start: [0, 2], end: [0, 2] },
   ],
   small: [
     { name: 'game', start: [0, 0], end: [0, 0] },
-    { name: 'stats', start: [1, 0], end: [1, 1] },
     { name: 'leaderboard', start: [0, 1], end: [0, 1] },
+    { name: 'stats', start: [0, 2], end: [0, 2] },
   ],
   medium: [
     { name: 'game', start: [0, 0], end: [0, 0] },
-    { name: 'stats', start: [1, 0], end: [1, 1] },
-    { name: 'leaderboard', start: [0, 1], end: [0, 1] },
+    { name: 'leaderboard', start: [1, 0], end: [1, 0] },
+    { name: 'stats', start: [0, 1], end: [1, 1] },
   ],
   large: [
     { name: 'game', start: [0, 0], end: [0, 0] },

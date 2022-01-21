@@ -1,4 +1,5 @@
 import { ThemeType } from 'grommet';
+import { FormDown, FormNext } from 'grommet-icons';
 
 const theme: ThemeType = {
   global: {
@@ -58,6 +59,12 @@ const theme: ThemeType = {
   button: {
     border: {
       radius: '4px',
+    },
+  },
+  dataTable: {
+    icons: {
+      expand: FormNext,
+      contract: FormDown,
     },
   },
 };

@@ -1,0 +1,88 @@
+query GetPlayerProfile($playerId: UUID!) {
+  player(id: $playerId) {
+    fullName
+    debut
+    careerStats {
+      games
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      rbi
+      battingAverage
+      onBasePct
+      sluggingPct
+      ops
+    }
+    seasonStats(orderBy: SEASON_DESC) {
+      season
+      games
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      rbi
+      battingAverage
+      onBasePct
+      sluggingPct
+      ops
+    }
+    gameBattingLines {
+      game {
+        name
+        timeStarted
+        timeEnded
+      }
+      season
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      rbi
+      onBasePct
+    }
+    legacyGameBattingLines {
+      legacyGame {
+        gameTitle
+        gameDate
+        gameStartTime
+        gameEndTime
+      }
+      season
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      rbi
+      onBasePct
+    }
+  }
+}

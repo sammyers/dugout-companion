@@ -1,0 +1,68 @@
+query GetPreviewLeaders($groupId: UUID!, $currentSeason: Int!) {
+  hits: seasonStats(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: HITS_DESC
+    first: 1
+  ) {
+    player {
+      id
+      fullName
+    }
+    value: hits
+  }
+  homeruns: seasonStats(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: HOMERUNS_DESC
+    first: 1
+  ) {
+    player {
+      id
+      fullName
+    }
+    value: homeruns
+  }
+  walks: seasonStats(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: WALKS_DESC
+    first: 1
+  ) {
+    player {
+      id
+      fullName
+    }
+    value: walks
+  }
+  battingAverage: seasonStatsQualifiedBatters(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: BATTING_AVERAGE_DESC
+    first: 1
+  ) {
+    player {
+      id
+      fullName
+    }
+    value: battingAverage
+  }
+  onBasePct: seasonStatsQualifiedBatters(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: ON_BASE_PCT_DESC
+    first: 1
+  ) {
+    player {
+      id
+      fullName
+    }
+    value: onBasePct
+  }
+  ops: seasonStatsQualifiedBatters(
+    condition: { groupId: $groupId, season: $currentSeason }
+    orderBy: OPS_DESC
+    first: 1
+  ) {
+    player {
+      id
+      fullName
+    }
+    value: ops
+  }
+}

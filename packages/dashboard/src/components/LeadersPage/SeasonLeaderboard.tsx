@@ -3,7 +3,7 @@ import { Box, ColumnConfig, DataTable, Text } from 'grommet';
 
 import { GetSingleSeasonStatLeadersQuery, SimplifyType } from '@sammyers/dc-shared';
 
-import { extractPlayerName } from '../../utils';
+import PlayerLink from '../util/PlayerLink';
 
 type LeaderRow = NonNullable<SimplifyType<GetSingleSeasonStatLeadersQuery['hitsLeaders']>>[number];
 
@@ -23,12 +23,12 @@ const SeasonLeaderboard: FC<Props> = ({ name, leaders, decimal }) => {
         </Text>
       ),
       render: row => {
-        const name = extractPlayerName(row);
+        const color = row.place === 1 ? 'accent-1' : 'light-1';
         return (
-          <Text
-            weight="bold"
-            color={row.place === 1 ? 'accent-1' : undefined}
-          >{`${row.place}. ${name}`}</Text>
+          <Text weight="bold" color={color}>
+            {`${row.place}. `}
+            <PlayerLink color={color} player={row.player} legacyPlayer={row.legacyPlayer} />
+          </Text>
         );
       },
     },

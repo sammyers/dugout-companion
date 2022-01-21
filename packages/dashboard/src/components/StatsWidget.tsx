@@ -1,6 +1,7 @@
 import React from 'react';
 import { getYear } from 'date-fns';
-import { Box, Button, ColumnConfig, DataTable } from 'grommet';
+import { Box, Button, ColumnConfig, DataTable, Text } from 'grommet';
+import { useNavigate } from 'react-router-dom';
 
 import {
   GetPreviewStatsQuery,
@@ -9,15 +10,18 @@ import {
   groupIdOptions,
 } from '@sammyers/dc-shared';
 
-import { useCurrentGroupId } from './context';
-import { useNavigate } from 'react-router-dom';
+import PlayerLink from './util/PlayerLink';
 
-type PlayerStatResult = NonNullable<SimplifyType<GetPreviewStatsQuery['seasonStats']>>[number];
-type PlayerStatRow = SimplifyType<Omit<PlayerStatResult, 'player'> & PlayerStatResult['player']>;
-const columns: ColumnConfig<PlayerStatRow>[] = [
+import { useCurrentGroupId } from './context';
+import { useResponsiveColumns } from '../utils';
+
+type PlayerStatRow = NonNullable<SimplifyType<GetPreviewStatsQuery['seasonStats']>>[number];
+const columnDefs: ColumnConfig<PlayerStatRow>[] = [
   {
-    property: 'fullName',
+    property: 'player',
     header: 'Player',
+    render: ({ player }) => <PlayerLink player={player} legacyPlayer={null} />,
+    sortable: false,
   },
   {
     property: 'games',
@@ -28,6 +32,10 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
     header: 'AB',
   },
   {
+    property: 'runs',
+    header: 'R',
+  },
+  {
     property: 'hits',
     header: 'H',
   },
@@ -36,12 +44,33 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
     header: 'XBH',
   },
   {
+    property: 'doubles',
+    header: '2B',
+  },
+  {
+    property: 'triples',
+    header: '3B',
+  },
+  {
+    property: 'homeruns',
+    header: 'HR',
+  },
+  {
+    property: 'rbi',
+    header: 'RBI',
+  },
+  {
     property: 'walks',
     header: 'BB',
   },
   {
     property: 'sacFlies',
     header: 'SAC',
+  },
+  {
+    property: 'battingAverage',
+    header: 'AVG',
+    render: row => row.battingAverage!.toFixed(3),
   },
   {
     property: 'onBasePct',
@@ -55,8 +84,6 @@ const columns: ColumnConfig<PlayerStatRow>[] = [
   },
 ];
 
-// TODO: filter columns for xsmall and xxsmall screens
-
 const StatsWidget = () => {
   const navigate = useNavigate();
 
@@ -64,14 +91,16 @@ const StatsWidget = () => {
   const groupId = useCurrentGroupId();
   const { data } = useGetPreviewStatsQuery(groupIdOptions(groupId, { currentSeason: currentYear }));
 
+  const columns = useResponsiveColumns(columnDefs, {
+    xsmall: ['runs', 'rbi', 'sacFlies', 'doubles', 'triples', 'homeruns', 'battingAverage'],
+    small: ['xbh', 'battingAverage'],
+    medium: ['xbh'],
+    large: ['xbh'],
+  });
+
   if (!data) {
     return null;
   }
-
-  const rows = data.seasonStats!.map(({ player, ...stats }) => ({
-    ...player!,
-    ...stats,
-  }));
 
   return (
     <Box
@@ -82,17 +111,20 @@ const StatsWidget = () => {
       align="center"
       gap="small"
     >
+      <Box fill direction="row" justify="between" align="center" pad={{ horizontal: 'small' }}>
+        <Text weight="bold">{currentYear} Stats</Text>
+        <Button plain={false} color="accent-2" onClick={() => navigate('/stats')}>
+          All Stats
+        </Button>
+      </Box>
       <DataTable
         fill
         sortable
         columns={columns}
-        data={rows}
+        data={data.seasonStats!}
         pad="xsmall"
         background={{ body: ['neutral-5', 'neutral-6'] }}
       />
-      <Button plain={false} color="accent-2" onClick={() => navigate('/stats')}>
-        All Stats
-      </Button>
     </Box>
   );
 };

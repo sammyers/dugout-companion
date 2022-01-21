@@ -8,7 +8,9 @@ import {
   useGetStatsForSeasonQuery,
 } from '@sammyers/dc-shared';
 
-import { extractPlayerName, useResponsiveColumns } from '../../utils';
+import PlayerLink from '../util/PlayerLink';
+
+import { useResponsiveColumns } from '../../utils';
 import { useCurrentGroupId } from '../context';
 
 type PlayerStatResult = NonNullable<SimplifyType<GetStatsForSeasonQuery['seasonStats']>>[number];
@@ -18,7 +20,9 @@ const columnDefs: ColumnConfig<PlayerStatResult>[] = [
     property: 'player',
     sortable: false,
     header: 'Player',
-    render: extractPlayerName,
+    render: ({ player, legacyPlayer }) => (
+      <PlayerLink player={player} legacyPlayer={legacyPlayer} />
+    ),
   },
   {
     property: 'games',

@@ -2,8 +2,9 @@ import { Maybe } from '@sammyers/dc-shared';
 import { ColumnConfig, ResponsiveContext } from 'grommet';
 import { useContext, useMemo } from 'react';
 
-interface PlayerRecord {
+export interface PlayerRecord {
   player: Maybe<{
+    id: string;
     fullName: Maybe<string>;
   }>;
   legacyPlayer: Maybe<{
@@ -25,7 +26,6 @@ export const useResponsiveColumns = <T>(
   sizeMap: Record<string, string[]>
 ) => {
   const screenSize = useContext(ResponsiveContext);
-  console.log('screensize', screenSize);
   const hideColumns = screenSize in sizeMap ? sizeMap[screenSize] : [];
 
   const filteredColumns = useMemo(

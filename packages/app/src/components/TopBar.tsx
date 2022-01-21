@@ -3,9 +3,8 @@ import { Header, Nav, Button, Box, DropButton } from 'grommet';
 import { SettingsOption } from 'grommet-icons';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
-import { BasesPreview } from '@sammyers/dc-shared';
+import { BasesPreview, AnchorLink } from '@sammyers/dc-shared';
 
-import AnchorLink from './AnchorLink';
 import ScoreBug from './ScoreBug';
 import SettingsMenu from './SettingsMenu';
 

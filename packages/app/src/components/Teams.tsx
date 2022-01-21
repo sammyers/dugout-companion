@@ -101,8 +101,13 @@ const Teams = () => {
             )
           ) : (
             [
-              <Button plain={false} icon={<Transaction />} onClick={handleFlipTeams} />,
-              <Button plain={false} icon={<ShuffleIcon />} onClick={handleShuffleTeams} />,
+              <Button key="flip" plain={false} icon={<Transaction />} onClick={handleFlipTeams} />,
+              <Button
+                key="shuffle"
+                plain={false}
+                icon={<ShuffleIcon />}
+                onClick={handleShuffleTeams}
+              />,
             ]
           )}
         </ButtonContainer>

@@ -204,6 +204,23 @@ type Query implements Node {
     condition: GameCondition
   ): [Game!]
 
+  """Reads a set of `GameBattingLine`."""
+  gameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameBattingLine`."""
+    orderBy: [GameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameBattingLineCondition
+  ): [GameBattingLine!]
+
   """Reads a set of `GameEvent`."""
   gameEvents(
     """Only read the first `n` values of the set."""
@@ -305,6 +322,23 @@ type Query implements Node {
     """
     condition: LegacyGameCondition
   ): [LegacyGame!]
+
+  """Reads a set of `LegacyGameBattingLine`."""
+  legacyGameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyGameBattingLine`."""
+    orderBy: [LegacyGameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyGameBattingLineCondition
+  ): [LegacyGameBattingLine!]
 
   """Reads a set of `LegacyPlayer`."""
   legacyPlayers(
@@ -650,6 +684,7 @@ type Query implements Node {
   field(id: UUID!): Field
   game(id: UUID!): Game
   gameByName(name: String!): Game
+  gameBattingLine(playerId: UUID!, gameId: UUID!): GameBattingLine
   gameEvent(id: UUID!): GameEvent
   gameEventRecord(id: UUID!): GameEventRecord
   gameEventRecordByGameIdAndEventIndex(gameId: UUID!, eventIndex: Int!): GameEventRecord
@@ -658,6 +693,7 @@ type Query implements Node {
   groupByName(name: String!): Group
   legacyField(fieldId: Int!): LegacyField
   legacyGame(gameId: Int!): LegacyGame
+  legacyGameBattingLine(legacyPlayerId: Int!, legacyGameId: Int!): LegacyGameBattingLine
   legacyPlayer(playerId: Int!): LegacyPlayer
   legacyTeam(teamId: Int!): LegacyTeam
   lineup(id: UUID!): Lineup
@@ -707,6 +743,7 @@ type Query implements Node {
   ): [GetRunsScoredRecord]
   getSlg(totalBases: Int, atBats: Int): Float
   getTb(singles: Int, doubles: Int, triples: Int, homeruns: Int): Int
+  getTeamForPlayer(playerId: UUID, gameId: UUID): UUID
   lastDateOfYear(year: Int): Datetime
 
   """Reads a single `BaseRunner` using its globally unique `ID`."""
@@ -736,6 +773,14 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Game`."""
     nodeId: ID!
   ): Game
+
+  """Reads a single `GameBattingLine` using its globally unique `ID`."""
+  gameBattingLineByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `GameBattingLine`.
+    """
+    nodeId: ID!
+  ): GameBattingLine
 
   """Reads a single `GameEvent` using its globally unique `ID`."""
   gameEventByNodeId(
@@ -778,6 +823,14 @@ type Query implements Node {
     """
     nodeId: ID!
   ): LegacyGame
+
+  """Reads a single `LegacyGameBattingLine` using its globally unique `ID`."""
+  legacyGameBattingLineByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyGameBattingLine`.
+    """
+    nodeId: ID!
+  ): LegacyGameBattingLine
 
   """Reads a single `LegacyPlayer` using its globally unique `ID`."""
   legacyPlayerByNodeId(
@@ -1085,6 +1138,23 @@ type Game implements Node {
     """
     condition: GameEventRecordCondition
   ): [GameEventRecord!]!
+
+  """Reads and enables pagination through a set of `GameBattingLine`."""
+  gameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameBattingLine`."""
+    orderBy: [GameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameBattingLineCondition
+  ): [GameBattingLine!]!
 
   """Reads and enables pagination through a set of `TraditionalStatLine`."""
   boxScore(
@@ -1462,6 +1532,40 @@ type Player implements Node {
     condition: CareerStatsQualifiedBatterCondition
   ): [CareerStatsQualifiedBatter!]!
 
+  """Reads and enables pagination through a set of `GameBattingLine`."""
+  gameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `GameBattingLine`."""
+    orderBy: [GameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: GameBattingLineCondition
+  ): [GameBattingLine!]!
+
+  """Reads and enables pagination through a set of `LegacyGameBattingLine`."""
+  legacyGameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyGameBattingLine`."""
+    orderBy: [LegacyGameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyGameBattingLineCondition
+  ): [LegacyGameBattingLine!]!
+
   """Reads and enables pagination through a set of `LegacySeasonStat`."""
   legacySeasonStats(
     """Only read the first `n` values of the set."""
@@ -1533,6 +1637,7 @@ type Player implements Node {
     """
     condition: SeasonStatsQualifiedBatterCondition
   ): [SeasonStatsQualifiedBatter!]!
+  debut: Date
   fullName: String
   gamesPlayed(beforeDate: Datetime, afterDate: Datetime): Int
 
@@ -1586,6 +1691,23 @@ type LegacyPlayer implements Node {
     """
     condition: CareerStatsQualifiedBatterCondition
   ): [CareerStatsQualifiedBatter!]!
+
+  """Reads and enables pagination through a set of `LegacyGameBattingLine`."""
+  legacyGameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyGameBattingLine`."""
+    orderBy: [LegacyGameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyGameBattingLineCondition
+  ): [LegacyGameBattingLine!]!
 
   """Reads and enables pagination through a set of `LegacySeasonStat`."""
   legacySeasonStats(
@@ -2005,12 +2127,225 @@ input CareerStatsQualifiedBatterCondition {
   ops: Float
 }
 
+type LegacyGameBattingLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  playerId: UUID
+  legacyPlayerId: Int!
+  legacyGameId: Int!
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+
+  """
+  Reads a single `Player` that is related to this `LegacyGameBattingLine`.
+  """
+  player: Player
+
+  """
+  Reads a single `LegacyPlayer` that is related to this `LegacyGameBattingLine`.
+  """
+  legacyPlayer: LegacyPlayer
+
+  """
+  Reads a single `LegacyGame` that is related to this `LegacyGameBattingLine`.
+  """
+  legacyGame: LegacyGame
+}
+
+type LegacyGame implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  gameId: Int!
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+
+  """Reads and enables pagination through a set of `LegacyGameBattingLine`."""
+  legacyGameBattingLines(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyGameBattingLine`."""
+    orderBy: [LegacyGameBattingLinesOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyGameBattingLineCondition
+  ): [LegacyGameBattingLine!]!
+}
+
+"""The day, does not include a time."""
+scalar Date
+
+"""
+The exact time of day, does not include the date. May or may not have a timezone offset.
+"""
+scalar Time
+
+"""Methods to use when ordering `LegacyGameBattingLine`."""
+enum LegacyGameBattingLinesOrderBy {
+  NATURAL
+  PLAYER_ID_ASC
+  PLAYER_ID_DESC
+  LEGACY_PLAYER_ID_ASC
+  LEGACY_PLAYER_ID_DESC
+  LEGACY_GAME_ID_ASC
+  LEGACY_GAME_ID_DESC
+  SEASON_ASC
+  SEASON_DESC
+  LEGACY_TEAM_ID_ASC
+  LEGACY_TEAM_ID_DESC
+  PLATE_APPEARANCES_ASC
+  PLATE_APPEARANCES_DESC
+  AT_BATS_ASC
+  AT_BATS_DESC
+  HITS_ASC
+  HITS_DESC
+  SINGLES_ASC
+  SINGLES_DESC
+  DOUBLES_ASC
+  DOUBLES_DESC
+  TRIPLES_ASC
+  TRIPLES_DESC
+  HOMERUNS_ASC
+  HOMERUNS_DESC
+  WALKS_ASC
+  WALKS_DESC
+  STRIKEOUTS_ASC
+  STRIKEOUTS_DESC
+  SAC_FLIES_ASC
+  SAC_FLIES_DESC
+  GIDP_ASC
+  GIDP_DESC
+  RUNS_ASC
+  RUNS_DESC
+  RBI_ASC
+  RBI_DESC
+  XBH_ASC
+  XBH_DESC
+  BATTING_AVERAGE_ASC
+  BATTING_AVERAGE_DESC
+  ON_BASE_PCT_ASC
+  ON_BASE_PCT_DESC
+  SLUGGING_PCT_ASC
+  SLUGGING_PCT_DESC
+  OPS_ASC
+  OPS_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyGameBattingLine` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input LegacyGameBattingLineCondition {
+  """Checks for equality with the object’s `playerId` field."""
+  playerId: UUID
+
+  """Checks for equality with the object’s `legacyPlayerId` field."""
+  legacyPlayerId: Int
+
+  """Checks for equality with the object’s `legacyGameId` field."""
+  legacyGameId: Int
+
+  """Checks for equality with the object’s `season` field."""
+  season: Int
+
+  """Checks for equality with the object’s `legacyTeamId` field."""
+  legacyTeamId: Int
+
+  """Checks for equality with the object’s `plateAppearances` field."""
+  plateAppearances: Int
+
+  """Checks for equality with the object’s `atBats` field."""
+  atBats: Int
+
+  """Checks for equality with the object’s `hits` field."""
+  hits: Int
+
+  """Checks for equality with the object’s `singles` field."""
+  singles: Int
+
+  """Checks for equality with the object’s `doubles` field."""
+  doubles: Int
+
+  """Checks for equality with the object’s `triples` field."""
+  triples: Int
+
+  """Checks for equality with the object’s `homeruns` field."""
+  homeruns: Int
+
+  """Checks for equality with the object’s `walks` field."""
+  walks: Int
+
+  """Checks for equality with the object’s `strikeouts` field."""
+  strikeouts: Int
+
+  """Checks for equality with the object’s `sacFlies` field."""
+  sacFlies: Int
+
+  """Checks for equality with the object’s `gidp` field."""
+  gidp: Int
+
+  """Checks for equality with the object’s `runs` field."""
+  runs: Int
+
+  """Checks for equality with the object’s `rbi` field."""
+  rbi: Int
+
+  """Checks for equality with the object’s `xbh` field."""
+  xbh: Int
+
+  """Checks for equality with the object’s `battingAverage` field."""
+  battingAverage: Float
+
+  """Checks for equality with the object’s `onBasePct` field."""
+  onBasePct: Float
+
+  """Checks for equality with the object’s `sluggingPct` field."""
+  sluggingPct: Float
+
+  """Checks for equality with the object’s `ops` field."""
+  ops: Float
+}
+
 type LegacySeasonStat {
   groupId: UUID
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -2041,13 +2376,6 @@ type LegacySeasonStat {
   """Reads a single `Group` that is related to this `LegacySeasonStat`."""
   group: Group
 }
-
-"""
-A signed eight-byte integer. The upper big integer values are greater than the
-max value for a JavaScript number. Therefore all big integers will be output as
-strings and not numbers.
-"""
-scalar BigInt
 
 """Methods to use when ordering `LegacySeasonStat`."""
 enum LegacySeasonStatsOrderBy {
@@ -2118,7 +2446,7 @@ input LegacySeasonStatCondition {
   season: Int
 
   """Checks for equality with the object’s `games` field."""
-  games: BigInt
+  games: Int
 
   """Checks for equality with the object’s `plateAppearances` field."""
   plateAppearances: Int
@@ -2234,7 +2562,7 @@ type SeasonStat {
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -2333,7 +2661,7 @@ input SeasonStatCondition {
   season: Int
 
   """Checks for equality with the object’s `games` field."""
-  games: BigInt
+  games: Int
 
   """Checks for equality with the object’s `plateAppearances` field."""
   plateAppearances: Int
@@ -2395,7 +2723,7 @@ type SeasonStatsAllTimeQualifiedBatter {
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -2500,7 +2828,7 @@ input SeasonStatsAllTimeQualifiedBatterCondition {
   season: Int
 
   """Checks for equality with the object’s `games` field."""
-  games: BigInt
+  games: Int
 
   """Checks for equality with the object’s `plateAppearances` field."""
   plateAppearances: Int
@@ -2562,7 +2890,7 @@ type SeasonStatsQualifiedBatter {
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -2667,7 +2995,7 @@ input SeasonStatsQualifiedBatterCondition {
   season: Int
 
   """Checks for equality with the object’s `games` field."""
-  games: BigInt
+  games: Int
 
   """Checks for equality with the object’s `plateAppearances` field."""
   plateAppearances: Int
@@ -3516,6 +3844,164 @@ input ScoredRunnerCondition {
   battedIn: Boolean
 }
 
+type GameBattingLine implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  playerId: UUID!
+  gameId: UUID!
+  season: Int
+  teamId: UUID
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+
+  """Reads a single `Player` that is related to this `GameBattingLine`."""
+  player: Player
+
+  """Reads a single `Game` that is related to this `GameBattingLine`."""
+  game: Game
+}
+
+"""Methods to use when ordering `GameBattingLine`."""
+enum GameBattingLinesOrderBy {
+  NATURAL
+  PLAYER_ID_ASC
+  PLAYER_ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  SEASON_ASC
+  SEASON_DESC
+  TEAM_ID_ASC
+  TEAM_ID_DESC
+  PLATE_APPEARANCES_ASC
+  PLATE_APPEARANCES_DESC
+  AT_BATS_ASC
+  AT_BATS_DESC
+  HITS_ASC
+  HITS_DESC
+  SINGLES_ASC
+  SINGLES_DESC
+  DOUBLES_ASC
+  DOUBLES_DESC
+  TRIPLES_ASC
+  TRIPLES_DESC
+  HOMERUNS_ASC
+  HOMERUNS_DESC
+  WALKS_ASC
+  WALKS_DESC
+  STRIKEOUTS_ASC
+  STRIKEOUTS_DESC
+  SAC_FLIES_ASC
+  SAC_FLIES_DESC
+  GIDP_ASC
+  GIDP_DESC
+  RUNS_ASC
+  RUNS_DESC
+  RBI_ASC
+  RBI_DESC
+  XBH_ASC
+  XBH_DESC
+  BATTING_AVERAGE_ASC
+  BATTING_AVERAGE_DESC
+  ON_BASE_PCT_ASC
+  ON_BASE_PCT_DESC
+  SLUGGING_PCT_ASC
+  SLUGGING_PCT_DESC
+  OPS_ASC
+  OPS_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `GameBattingLine` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input GameBattingLineCondition {
+  """Checks for equality with the object’s `playerId` field."""
+  playerId: UUID
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: UUID
+
+  """Checks for equality with the object’s `season` field."""
+  season: Int
+
+  """Checks for equality with the object’s `teamId` field."""
+  teamId: UUID
+
+  """Checks for equality with the object’s `plateAppearances` field."""
+  plateAppearances: Int
+
+  """Checks for equality with the object’s `atBats` field."""
+  atBats: Int
+
+  """Checks for equality with the object’s `hits` field."""
+  hits: Int
+
+  """Checks for equality with the object’s `singles` field."""
+  singles: Int
+
+  """Checks for equality with the object’s `doubles` field."""
+  doubles: Int
+
+  """Checks for equality with the object’s `triples` field."""
+  triples: Int
+
+  """Checks for equality with the object’s `homeruns` field."""
+  homeruns: Int
+
+  """Checks for equality with the object’s `walks` field."""
+  walks: Int
+
+  """Checks for equality with the object’s `strikeouts` field."""
+  strikeouts: Int
+
+  """Checks for equality with the object’s `sacFlies` field."""
+  sacFlies: Int
+
+  """Checks for equality with the object’s `gidp` field."""
+  gidp: Int
+
+  """Checks for equality with the object’s `runs` field."""
+  runs: Int
+
+  """Checks for equality with the object’s `rbi` field."""
+  rbi: Int
+
+  """Checks for equality with the object’s `xbh` field."""
+  xbh: Int
+
+  """Checks for equality with the object’s `battingAverage` field."""
+  battingAverage: Float
+
+  """Checks for equality with the object’s `onBasePct` field."""
+  onBasePct: Float
+
+  """Checks for equality with the object’s `sluggingPct` field."""
+  sluggingPct: Float
+
+  """Checks for equality with the object’s `ops` field."""
+  ops: Float
+}
+
 type TraditionalStatLine {
   playerId: UUID
   games: Int
@@ -3705,14 +4191,6 @@ type ForeignDbGame {
   gameTeamId2: Int!
   season: Int!
 }
-
-"""The day, does not include a time."""
-scalar Date
-
-"""
-The exact time of day, does not include the date. May or may not have a timezone offset.
-"""
-scalar Time
 
 """Methods to use when ordering `ForeignDbGame`."""
 enum ForeignDbGamesOrderBy {
@@ -4037,21 +4515,6 @@ input LegacyFieldCondition {
   fieldNumber: String
 }
 
-type LegacyGame implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  gameId: Int!
-  gameTitle: String
-  gameDate: Date
-  gameStartTime: Time
-  gameEndTime: Time
-  gameTeamId1: Int
-  gameTeamId2: Int
-  season: Int
-}
-
 """Methods to use when ordering `LegacyGame`."""
 enum LegacyGamesOrderBy {
   NATURAL
@@ -4143,6 +4606,13 @@ type LegacySeason {
   year: Int
   totalGames: BigInt
 }
+
+"""
+A signed eight-byte integer. The upper big integer values are greater than the
+max value for a JavaScript number. Therefore all big integers will be output as
+strings and not numbers.
+"""
+scalar BigInt
 
 """Methods to use when ordering `LegacySeason`."""
 enum LegacySeasonsOrderBy {
@@ -4311,7 +4781,7 @@ type ModernSeasonStat {
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -4401,7 +4871,7 @@ input ModernSeasonStatCondition {
   season: Int
 
   """Checks for equality with the object’s `games` field."""
-  games: BigInt
+  games: Int
 
   """Checks for equality with the object’s `plateAppearances` field."""
   plateAppearances: Int
@@ -5702,6 +6172,7 @@ input updateGameOnGameStateForGameStateGameIdFkeyPatch {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """Input for the nested mutation of `group` in the `GameInput` mutation."""
@@ -5925,6 +6396,8 @@ input updatePlayerOnPlayerForPlayerGroupIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -6072,6 +6545,7 @@ input updateGameOnGameForGameGroupIdFkeyPatch {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """Input for the nested mutation of `field` in the `GameInput` mutation."""
@@ -6221,6 +6695,7 @@ input updateGameOnGameForGameFieldIdFkeyPatch {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """Input for the nested mutation of `team` in the `GameInput` mutation."""
@@ -6398,6 +6873,7 @@ input updateGameOnTeamForTeamGameIdFkeyPatch {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """
@@ -6549,6 +7025,8 @@ input updatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -6640,6 +7118,7 @@ input updateLegacyPlayerOnPlayerForFakePublicPlayerForeignKey0Patch {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -6762,6 +7241,8 @@ input updatePlayerOnCareerStatForFakePublicCareerStatsForeignKey0Patch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -6911,6 +7392,8 @@ input updatePlayerOnTeamForTeamCaptainIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -7438,6 +7921,8 @@ input updatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -7770,6 +8255,8 @@ input updatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -8072,6 +8559,8 @@ input updatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -8244,6 +8733,8 @@ input updatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -8492,6 +8983,8 @@ input updatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -8878,6 +9371,7 @@ input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """
@@ -10282,6 +10776,8 @@ input updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -10386,6 +10882,7 @@ input updateLegacyPlayerOnCareerStatForFakePublicCareerStatsForeignKey1Patch {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -10508,6 +11005,8 @@ input updatePlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedB
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -10612,6 +11111,554 @@ input updateLegacyPlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQual
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
+  legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
+  seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey1InverseInput
+  seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey1InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyGameBattingLine` in the `LegacyPlayerInput` mutation.
+"""
+input FakePublicLegacyGameBattingLinesForeignKey1InverseInput {
+  """
+  Flag indicating whether all other `legacyGameBattingLine` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  connectByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyConnect!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyGameBattingLineNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  deleteByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyDelete!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyGameBattingLineNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  updateByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1UsingFakePublicLegacyGameBattingLinesPrimaryKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyPlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1NodeIdUpdate!]
+
+  """
+  A `LegacyGameBattingLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicLegacyGameBattingLinesForeignKey1LegacyGameBattingLinesCreateInput!]
+}
+
+"""The fields on `legacyGameBattingLine` to look up the row to connect."""
+input LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyConnect {
+  legacyPlayerId: Int!
+  legacyGameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyGameBattingLineNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyGameBattingLine` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGameBattingLine` to look up the row to delete."""
+input LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyDelete {
+  legacyPlayerId: Int!
+  legacyGameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyGameBattingLineNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyGameBattingLine` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGameBattingLine` to look up the row to update."""
+input LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1UsingFakePublicLegacyGameBattingLinesPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+  """
+  patch: updateLegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1Patch!
+  legacyPlayerId: Int!
+  legacyGameId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+"""
+input updateLegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1Patch {
+  playerId: UUID
+  legacyGameId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
+}
+
+"""
+Input for the nested mutation of `player` in the `LegacyGameBattingLineInput` mutation.
+"""
+input FakePublicLegacyGameBattingLinesForeignKey0Input {
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectById: PlayerPlayerPkeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByNodeId: PlayerNodeIdConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteById: PlayerPlayerPkeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByNodeId: PlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateById: PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByFirstNameAndLastName: PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0NodeIdUpdate
+
+  """
+  A `PlayerInput` object that will be created and connected to this object.
+  """
+  create: FakePublicLegacyGameBattingLinesForeignKey0PlayerCreateInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `player` being updated.
+"""
+input updatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  careerStats: FakePublicCareerStatsForeignKey0InverseInput
+  careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
+  legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+  seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
+  seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `gameBattingLine` in the `PlayerInput` mutation.
+"""
+input FakePublicGameBattingLinesForeignKey0InverseInput {
+  """
+  Flag indicating whether all other `gameBattingLine` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  connectByPlayerIdAndGameId: [GameBattingLineFakePublicGameBattingLinesPrimaryKeyConnect!]
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  connectByNodeId: [GameBattingLineNodeIdConnect!]
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  deleteByPlayerIdAndGameId: [GameBattingLineFakePublicGameBattingLinesPrimaryKeyDelete!]
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  deleteByNodeId: [GameBattingLineNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `gameBattingLine` for the far side of the relationship.
+  """
+  updateByPlayerIdAndGameId: [GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingFakePublicGameBattingLinesPrimaryKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameBattingLine` for the far side of the relationship.
+  """
+  updateByNodeId: [PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0NodeIdUpdate!]
+
+  """
+  A `GameBattingLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicGameBattingLinesForeignKey0GameBattingLinesCreateInput!]
+}
+
+"""The fields on `gameBattingLine` to look up the row to connect."""
+input GameBattingLineFakePublicGameBattingLinesPrimaryKeyConnect {
+  playerId: UUID!
+  gameId: UUID!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input GameBattingLineNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `gameBattingLine` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `gameBattingLine` to look up the row to delete."""
+input GameBattingLineFakePublicGameBattingLinesPrimaryKeyDelete {
+  playerId: UUID!
+  gameId: UUID!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input GameBattingLineNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `gameBattingLine` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `gameBattingLine` to look up the row to update."""
+input GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingFakePublicGameBattingLinesPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameBattingLine` being updated.
+  """
+  patch: updateGameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch!
+  playerId: UUID!
+  gameId: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `gameBattingLine` being updated.
+"""
+input updateGameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch {
+  gameId: UUID
+  season: Int
+  teamId: UUID
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicGameBattingLinesForeignKey0Input
+  game: FakePublicGameBattingLinesForeignKey1Input
+}
+
+"""
+Input for the nested mutation of `player` in the `GameBattingLineInput` mutation.
+"""
+input FakePublicGameBattingLinesForeignKey0Input {
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectById: PlayerPlayerPkeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  connectByNodeId: PlayerNodeIdConnect
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteById: PlayerPlayerPkeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+
+  """The primary key(s) for `player` for the far side of the relationship."""
+  deleteByNodeId: PlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateById: PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByFirstNameAndLastName: PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `player` for the far side of the relationship.
+  """
+  updateByNodeId: GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0NodeIdUpdate
+
+  """
+  A `PlayerInput` object that will be created and connected to this object.
+  """
+  create: FakePublicGameBattingLinesForeignKey0PlayerCreateInput
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `player` being updated.
+"""
+input updatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  careerStats: FakePublicCareerStatsForeignKey0InverseInput
+  careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
+  legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+  seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
+  seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyGameBattingLine` in the `PlayerInput` mutation.
+"""
+input FakePublicLegacyGameBattingLinesForeignKey0InverseInput {
+  """
+  Flag indicating whether all other `legacyGameBattingLine` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  connectByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyConnect!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyGameBattingLineNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  deleteByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyDelete!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyGameBattingLineNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  updateByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingFakePublicLegacyGameBattingLinesPrimaryKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  updateByNodeId: [PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0NodeIdUpdate!]
+
+  """
+  A `LegacyGameBattingLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicLegacyGameBattingLinesForeignKey0LegacyGameBattingLinesCreateInput!]
+}
+
+"""The fields on `legacyGameBattingLine` to look up the row to update."""
+input LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingFakePublicLegacyGameBattingLinesPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+  """
+  patch: updateLegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch!
+  legacyPlayerId: Int!
+  legacyGameId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+"""
+input updateLegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch {
+  legacyPlayerId: Int
+  legacyGameId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
+}
+
+"""
+Input for the nested mutation of `legacyPlayer` in the `LegacyGameBattingLineInput` mutation.
+"""
+input FakePublicLegacyGameBattingLinesForeignKey1Input {
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyPlayerNodeIdConnect
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByPlayerId: LegacyPlayerFakePublicLegacyPlayerPrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyPlayer` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyPlayerNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByPlayerId: LegacyPlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1UsingFakePublicLegacyPlayerPrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyPlayer` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1NodeIdUpdate
+
+  """
+  A `LegacyPlayerInput` object that will be created and connected to this object.
+  """
+  create: FakePublicLegacyGameBattingLinesForeignKey1LegacyPlayerCreateInput
+}
+
+"""The fields on `legacyPlayer` to look up the row to update."""
+input LegacyPlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1UsingFakePublicLegacyPlayerPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: updateLegacyPlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1Patch!
+  playerId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyPlayer` being updated.
+"""
+input updateLegacyPlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1Patch {
+  playerId: Int
+  playerName: String
+  playerImage: String
+  memberId: String
+  careerStats: FakePublicCareerStatsForeignKey1InverseInput
+  careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -10634,7 +11681,7 @@ input FakePublicLegacySeasonStatsForeignKey1LegacySeasonStatsCreateInput {
   groupId: UUID
   playerId: UUID
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -10734,6 +11781,8 @@ input updatePlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0Pat
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -10755,7 +11804,7 @@ input FakePublicLegacySeasonStatsForeignKey0LegacySeasonStatsCreateInput {
   groupId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -10838,6 +11887,7 @@ input updateLegacyPlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignK
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -10925,6 +11975,8 @@ input updatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -10946,7 +11998,7 @@ input FakePublicSeasonStatsForeignKey0SeasonStatsCreateInput {
   groupId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -11046,6 +12098,8 @@ input updatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -11069,7 +12123,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0SeasonStatsAllTimeQ
   groupId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -11169,6 +12223,8 @@ input updatePlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAll
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -11190,7 +12246,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey0SeasonStatsQualifiedBatter
   groupId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -11290,6 +12346,8 @@ input updatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedB
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -11343,6 +12401,8 @@ input PlayerPatch {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -11371,6 +12431,8 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -11436,6 +12498,7 @@ input updateLegacyPlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQual
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -11458,7 +12521,7 @@ input FakePublicSeasonStatsForeignKey1SeasonStatsCreateInput {
   groupId: UUID
   playerId: UUID
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -11541,6 +12604,7 @@ input updateLegacyPlayerOnSeasonStatForFakePublicSeasonStatsForeignKey1Patch {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -11565,7 +12629,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey1SeasonStatsAllTimeQ
   groupId: UUID
   playerId: UUID
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -11648,6 +12712,7 @@ input updateLegacyPlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonSt
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -11670,7 +12735,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey1SeasonStatsQualifiedBatter
   groupId: UUID
   playerId: UUID
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -11994,7 +13059,7 @@ input FakePublicLegacySeasonStatsForeignKey2LegacySeasonStatsCreateInput {
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -12102,7 +13167,7 @@ input FakePublicSeasonStatsForeignKey2SeasonStatsCreateInput {
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -12212,7 +13277,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2SeasonStatsAllTimeQ
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -12320,7 +13385,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2SeasonStatsQualifiedBatter
   playerId: UUID
   legacyPlayerId: Int
   season: Int
-  games: BigInt
+  games: Int
   plateAppearances: Int
   atBats: Int
   hits: Int
@@ -12606,6 +13671,7 @@ input LegacyPlayerPatch {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -12621,6 +13687,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey1LegacyPlayerCreateI
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -12649,6 +13716,7 @@ input FakePublicSeasonStatsForeignKey1LegacyPlayerCreateInput {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -12677,6 +13745,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey1LegacyPlayerCreateInput {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -12729,6 +13798,8 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -12780,6 +13851,8 @@ input FakePublicSeasonStatsForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -12830,6 +13903,8 @@ input FakePublicPlayerForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -12857,6 +13932,7 @@ input FakePublicLegacySeasonStatsForeignKey1LegacyPlayerCreateInput {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -12909,10 +13985,849 @@ input FakePublicLegacySeasonStatsForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
   seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyPlayer` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyPlayer` being updated.
+  """
+  patch: LegacyPlayerPatch!
+}
+
+"""The `legacyPlayer` to be created by this mutation."""
+input FakePublicLegacyGameBattingLinesForeignKey1LegacyPlayerCreateInput {
+  playerId: Int!
+  playerName: String
+  playerImage: String
+  memberId: String
+  careerStats: FakePublicCareerStatsForeignKey1InverseInput
+  careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
+  legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
+  players: FakePublicPlayerForeignKey0InverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
+  seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey1InverseInput
+  seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey1InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyGame` in the `LegacyGameBattingLineInput` mutation.
+"""
+input FakePublicLegacyGameBattingLinesForeignKey2Input {
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  connectByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyConnect
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyGameNodeIdConnect
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  deleteByGameId: LegacyGameFakePublicLegacyGamePrimaryKeyDelete
+
+  """
+  The primary key(s) for `legacyGame` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyGameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
+  """
+  updateByGameId: LegacyGameOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2UsingFakePublicLegacyGamePrimaryKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyGame` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2NodeIdUpdate
+
+  """
+  A `LegacyGameInput` object that will be created and connected to this object.
+  """
+  create: FakePublicLegacyGameBattingLinesForeignKey2LegacyGameCreateInput
+}
+
+"""The fields on `legacyGame` to look up the row to connect."""
+input LegacyGameFakePublicLegacyGamePrimaryKeyConnect {
+  gameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyGameNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGame` to look up the row to delete."""
+input LegacyGameFakePublicLegacyGamePrimaryKeyDelete {
+  gameId: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyGameNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyGame` to look up the row to update."""
+input LegacyGameOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2UsingFakePublicLegacyGamePrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyGame` being updated.
+  """
+  patch: updateLegacyGameOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2Patch!
+  gameId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyGame` being updated.
+"""
+input updateLegacyGameOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2Patch {
+  gameId: Int
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey2InverseInput
+}
+
+"""
+Input for the nested mutation of `legacyGameBattingLine` in the `LegacyGameInput` mutation.
+"""
+input FakePublicLegacyGameBattingLinesForeignKey2InverseInput {
+  """
+  Flag indicating whether all other `legacyGameBattingLine` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  connectByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyConnect!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyGameBattingLineNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  deleteByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineFakePublicLegacyGameBattingLinesPrimaryKeyDelete!]
+
+  """
+  The primary key(s) for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyGameBattingLineNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  updateByLegacyPlayerIdAndLegacyGameId: [LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2UsingFakePublicLegacyGameBattingLinesPrimaryKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyGameBattingLine` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyGameOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2NodeIdUpdate!]
+
+  """
+  A `LegacyGameBattingLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicLegacyGameBattingLinesForeignKey2LegacyGameBattingLinesCreateInput!]
+}
+
+"""The fields on `legacyGameBattingLine` to look up the row to update."""
+input LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2UsingFakePublicLegacyGameBattingLinesPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+  """
+  patch: updateLegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2Patch!
+  legacyPlayerId: Int!
+  legacyGameId: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+"""
+input updateLegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2Patch {
+  playerId: UUID
+  legacyPlayerId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyGameOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyGameBattingLine` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+  """
+  patch: LegacyGameBattingLinePatch!
+}
+
+"""
+Represents an update to a `LegacyGameBattingLine`. Fields that are set will be updated.
+"""
+input LegacyGameBattingLinePatch {
+  playerId: UUID
+  legacyPlayerId: Int
+  legacyGameId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
+}
+
+"""The `legacyGameBattingLine` to be created by this mutation."""
+input FakePublicLegacyGameBattingLinesForeignKey2LegacyGameBattingLinesCreateInput {
+  playerId: UUID
+  legacyPlayerId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey2NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyGame` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyGame` being updated.
+  """
+  patch: LegacyGamePatch!
+}
+
+"""
+Represents an update to a `LegacyGame`. Fields that are set will be updated.
+"""
+input LegacyGamePatch {
+  gameId: Int
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey2InverseInput
+}
+
+"""The `legacyGame` to be created by this mutation."""
+input FakePublicLegacyGameBattingLinesForeignKey2LegacyGameCreateInput {
+  gameId: Int!
+  gameTitle: String
+  gameDate: Date
+  gameStartTime: Time
+  gameEndTime: Time
+  gameTeamId1: Int
+  gameTeamId2: Int
+  season: Int
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey2InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyGameBattingLine` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+  """
+  patch: LegacyGameBattingLinePatch!
+}
+
+"""The `legacyGameBattingLine` to be created by this mutation."""
+input FakePublicLegacyGameBattingLinesForeignKey0LegacyGameBattingLinesCreateInput {
+  legacyPlayerId: Int
+  legacyGameId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch!
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: PlayerPatch!
+}
+
+"""The `player` to be created by this mutation."""
+input FakePublicGameBattingLinesForeignKey0PlayerCreateInput {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  careerStats: FakePublicCareerStatsForeignKey0InverseInput
+  careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
+  legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+  seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
+  seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput
+}
+
+"""
+Input for the nested mutation of `game` in the `GameBattingLineInput` mutation.
+"""
+input FakePublicGameBattingLinesForeignKey1Input {
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectById: GameGamePkeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByName: GameGameNameKeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByNodeId: GameNodeIdConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteById: GameGamePkeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByName: GameGameNameKeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByNodeId: GameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateById: GameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1UsingGamePkeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByName: GameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1UsingGameNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByNodeId: GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey1NodeIdUpdate
+
+  """
+  A `GameInput` object that will be created and connected to this object.
+  """
+  create: FakePublicGameBattingLinesForeignKey1GameCreateInput
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1UsingGamePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `game` being updated.
+"""
+input updateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch {
+  id: UUID
+  groupId: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]
+  gameLength: Int
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
+}
+
+"""
+Input for the nested mutation of `gameBattingLine` in the `GameInput` mutation.
+"""
+input FakePublicGameBattingLinesForeignKey1InverseInput {
+  """
+  Flag indicating whether all other `gameBattingLine` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  connectByPlayerIdAndGameId: [GameBattingLineFakePublicGameBattingLinesPrimaryKeyConnect!]
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  connectByNodeId: [GameBattingLineNodeIdConnect!]
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  deleteByPlayerIdAndGameId: [GameBattingLineFakePublicGameBattingLinesPrimaryKeyDelete!]
+
+  """
+  The primary key(s) for `gameBattingLine` for the far side of the relationship.
+  """
+  deleteByNodeId: [GameBattingLineNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `gameBattingLine` for the far side of the relationship.
+  """
+  updateByPlayerIdAndGameId: [GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey1UsingFakePublicGameBattingLinesPrimaryKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameBattingLine` for the far side of the relationship.
+  """
+  updateByNodeId: [GameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1NodeIdUpdate!]
+
+  """
+  A `GameBattingLineInput` object that will be created and connected to this object.
+  """
+  create: [FakePublicGameBattingLinesForeignKey1GameBattingLinesCreateInput!]
+}
+
+"""The fields on `gameBattingLine` to look up the row to update."""
+input GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey1UsingFakePublicGameBattingLinesPrimaryKeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameBattingLine` being updated.
+  """
+  patch: updateGameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch!
+  playerId: UUID!
+  gameId: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `gameBattingLine` being updated.
+"""
+input updateGameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch {
+  playerId: UUID
+  season: Int
+  teamId: UUID
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicGameBattingLinesForeignKey0Input
+  game: FakePublicGameBattingLinesForeignKey1Input
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `gameBattingLine` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `gameBattingLine` being updated.
+  """
+  patch: GameBattingLinePatch!
+}
+
+"""
+Represents an update to a `GameBattingLine`. Fields that are set will be updated.
+"""
+input GameBattingLinePatch {
+  playerId: UUID
+  gameId: UUID
+  season: Int
+  teamId: UUID
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicGameBattingLinesForeignKey0Input
+  game: FakePublicGameBattingLinesForeignKey1Input
+}
+
+"""The `gameBattingLine` to be created by this mutation."""
+input FakePublicGameBattingLinesForeignKey1GameBattingLinesCreateInput {
+  playerId: UUID
+  season: Int
+  teamId: UUID
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicGameBattingLinesForeignKey0Input
+  game: FakePublicGameBattingLinesForeignKey1Input
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1UsingGameNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey1NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: GamePatch!
+}
+
+"""Represents an update to a `Game`. Fields that are set will be updated."""
+input GamePatch {
+  id: UUID
+  groupId: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]
+  gameLength: Int
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
+}
+
+"""The `game` to be created by this mutation."""
+input FakePublicGameBattingLinesForeignKey1GameCreateInput {
+  id: UUID
+  groupId: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]!
+  gameLength: Int
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `gameBattingLine` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `gameBattingLine` being updated.
+  """
+  patch: GameBattingLinePatch!
+}
+
+"""The `gameBattingLine` to be created by this mutation."""
+input FakePublicGameBattingLinesForeignKey0GameBattingLinesCreateInput {
+  gameId: UUID
+  season: Int
+  teamId: UUID
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicGameBattingLinesForeignKey0Input
+  game: FakePublicGameBattingLinesForeignKey1Input
+}
+
+"""The fields on `player` to look up the row to update."""
+input PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: updatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch!
+  firstName: String!
+  lastName: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `player` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `player` being updated.
+  """
+  patch: PlayerPatch!
+}
+
+"""The `player` to be created by this mutation."""
+input FakePublicLegacyGameBattingLinesForeignKey0PlayerCreateInput {
+  id: UUID
+  groupId: UUID
+  legacyPlayerId: Int
+  firstName: String!
+  lastName: String
+  nickname: String
+  imageUrl: String
+  timeCreated: Datetime
+  group: PlayerGroupIdFkeyInput
+  legacyPlayer: FakePublicPlayerForeignKey0Input
+  teams: TeamCaptainIdFkeyInverseInput
+  lineupSpots: LineupSpotPlayerIdFkeyInverseInput
+  basepathMovements: BasepathMovementRunnerIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerRunnerIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptRunnerIdFkeyInverseInput
+  gameStates: GameStatePlayerAtBatFkeyInverseInput
+  baseRunners: BaseRunnerRunnerIdFkeyInverseInput
+  scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
+  careerStats: FakePublicCareerStatsForeignKey0InverseInput
+  careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
+  legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
+  seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
+  seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
+  seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyPlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey1NodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyGameBattingLine` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyGameBattingLine` being updated.
+  """
+  patch: LegacyGameBattingLinePatch!
+}
+
+"""The `legacyGameBattingLine` to be created by this mutation."""
+input FakePublicLegacyGameBattingLinesForeignKey1LegacyGameBattingLinesCreateInput {
+  playerId: UUID
+  legacyGameId: Int
+  season: Int
+  legacyTeamId: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
+  player: FakePublicLegacyGameBattingLinesForeignKey0Input
+  legacyPlayer: FakePublicLegacyGameBattingLinesForeignKey1Input
+  legacyGame: FakePublicLegacyGameBattingLinesForeignKey2Input
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -12936,6 +14851,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey1LegacyPlayerCreateInput {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -12988,6 +14904,8 @@ input FakePublicCareerStatsQualifiedBattersForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -13015,6 +14933,7 @@ input FakePublicCareerStatsForeignKey1LegacyPlayerCreateInput {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -13067,6 +14986,8 @@ input ScoredRunnerRunnerIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -13963,24 +15884,6 @@ input GameEventRecordOnGameEventRecordForGameEventRecordGameIdFkeyNodeIdUpdate {
   patch: GamePatch!
 }
 
-"""Represents an update to a `Game`. Fields that are set will be updated."""
-input GamePatch {
-  id: UUID
-  groupId: UUID
-  name: String
-  fieldId: UUID
-  score: [Int]
-  gameLength: Int
-  timeStarted: Datetime
-  timeEnded: Datetime
-  timeSaved: Datetime
-  group: GameGroupIdFkeyInput
-  field: GameFieldIdFkeyInput
-  teams: TeamGameIdFkeyInverseInput
-  gameStates: GameStateGameIdFkeyInverseInput
-  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
-}
-
 """The `game` to be created by this mutation."""
 input GameEventRecordGameIdFkeyGameCreateInput {
   id: UUID
@@ -13997,6 +15900,7 @@ input GameEventRecordGameIdFkeyGameCreateInput {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """The fields on `gameEventRecord` to look up the row to update."""
@@ -14104,6 +16008,8 @@ input BaseRunnerRunnerIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14206,6 +16112,8 @@ input StolenBaseAttemptRunnerIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14278,6 +16186,8 @@ input OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14405,6 +16315,8 @@ input BasepathMovementRunnerIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14538,6 +16450,8 @@ input LineupSpotPlayerIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14781,6 +16695,8 @@ input TeamCaptainIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14867,6 +16783,8 @@ input FakePublicCareerStatsForeignKey0PlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -14894,6 +16812,7 @@ input FakePublicPlayerForeignKey0LegacyPlayerCreateInput {
   memberId: String
   careerStats: FakePublicCareerStatsForeignKey1InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey1InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey1InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey1InverseInput
   players: FakePublicPlayerForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey1InverseInput
@@ -14946,6 +16865,8 @@ input GameStatePlayerAtBatFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -15020,6 +16941,7 @@ input TeamGameIdFkeyGameCreateInput {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """The fields on `team` to look up the row to update."""
@@ -15094,6 +17016,7 @@ input GameFieldIdFkeyGameCreateInput {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -15164,6 +17087,7 @@ input GameGroupIdFkeyGameCreateInput {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """The fields on `group` to look up the row to update."""
@@ -15247,6 +17171,8 @@ input PlayerGroupIdFkeyPlayerCreateInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
@@ -15328,6 +17254,7 @@ input GameStateGameIdFkeyGameCreateInput {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -15694,6 +17621,7 @@ input GameInput {
   teams: TeamGameIdFkeyInverseInput
   gameStates: GameStateGameIdFkeyInverseInput
   gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
 }
 
 """The output of our create `GameEvent` mutation."""
@@ -16223,6 +18151,8 @@ input PlayerInput {
   scoredRunners: ScoredRunnerRunnerIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey0InverseInput
   careerStatsQualifiedBatters: FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey0InverseInput
+  legacyGameBattingLines: FakePublicLegacyGameBattingLinesForeignKey0InverseInput
   legacySeasonStats: FakePublicLegacySeasonStatsForeignKey0InverseInput
   seasonStats: FakePublicSeasonStatsForeignKey0InverseInput
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput
