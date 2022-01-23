@@ -14,6 +14,7 @@ services:
       - dhparam:/etc/nginx/dhparam
       - certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./nginx_proxy_custom.conf:/etc/nginx/conf.d/nginx_proxy_custom.conf:ro
     networks:
       - network
   acme-companion:
