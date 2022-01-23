@@ -308,16 +308,18 @@ export const getGameForMutation = createSelector(
       })),
     },
     gameStates: {
-      create: gameStates.map((gameState, i) => ({
-        gameStateIndex: i,
-        ..._.omit(gameState, 'lineups'),
-        lineupForGameStates: {
-          create: gameState.lineups!.map(({ id }) => ({ lineupId: id })),
-        },
-        baseRunners: {
-          create: gameState.baseRunners,
-        },
-      })),
+      create: gameStates
+        .filter(gameState => !(gameState.inning < gameLength && gameState.outs === 3))
+        .map((gameState, i) => ({
+          gameStateIndex: i,
+          ..._.omit(gameState, 'lineups'),
+          lineupForGameStates: {
+            create: gameState.lineups!.map(({ id }) => ({ lineupId: id })),
+          },
+          baseRunners: {
+            create: gameState.baseRunners,
+          },
+        })),
     },
     gameEventRecords: {
       create: gameEventRecords.map(
