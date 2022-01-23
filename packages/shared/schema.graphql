@@ -561,6 +561,23 @@ type Query implements Node {
     condition: PlayerCondition
   ): [Player!]
 
+  """Reads a set of `ReduxDump`."""
+  reduxDumps(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `ReduxDump`."""
+    orderBy: [ReduxDumpsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: ReduxDumpCondition
+  ): [ReduxDump!]
+
   """Reads a set of `ScoredRunner`."""
   scoredRunners(
     """Only read the first `n` values of the set."""
@@ -706,6 +723,7 @@ type Query implements Node {
   plateAppearance(id: UUID!): PlateAppearance
   player(id: UUID!): Player
   playerByFirstNameAndLastName(firstName: String!, lastName: String!): Player
+  reduxDump(id: UUID!): ReduxDump
   scoredRunner(gameEventRecordId: UUID!, runnerId: UUID!): ScoredRunner
   season(groupId: UUID!, year: Int!): Season
   stolenBaseAttempt(id: UUID!): StolenBaseAttempt
@@ -899,6 +917,12 @@ type Query implements Node {
     """The globally unique `ID` to be used in selecting a single `Player`."""
     nodeId: ID!
   ): Player
+
+  """Reads a single `ReduxDump` using its globally unique `ID`."""
+  reduxDumpByNodeId(
+    """The globally unique `ID` to be used in selecting a single `ReduxDump`."""
+    nodeId: ID!
+  ): ReduxDump
 
   """Reads a single `ScoredRunner` using its globally unique `ID`."""
   scoredRunnerByNodeId(
@@ -4971,6 +4995,49 @@ input PlateAppearanceCondition {
   routinePlay: Boolean
 }
 
+type ReduxDump implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  storeData: JSON!
+  timeCreated: Datetime
+}
+
+"""
+A JavaScript object encoded in the JSON format as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""Methods to use when ordering `ReduxDump`."""
+enum ReduxDumpsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  STORE_DATA_ASC
+  STORE_DATA_DESC
+  TIME_CREATED_ASC
+  TIME_CREATED_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `ReduxDump` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input ReduxDumpCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `storeData` field."""
+  storeData: JSON
+
+  """Checks for equality with the object’s `timeCreated` field."""
+  timeCreated: Datetime
+}
+
 type Season implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -5193,6 +5260,14 @@ type Mutation {
     """
     input: CreatePlayerInput!
   ): CreatePlayerPayload
+
+  """Creates a single `ReduxDump`."""
+  createReduxDump(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateReduxDumpInput!
+  ): CreateReduxDumpPayload
 
   """Creates a single `ScoredRunner`."""
   createScoredRunner(
@@ -5521,6 +5596,22 @@ type Mutation {
     """
     input: UpdatePlayerByFirstNameAndLastNameInput!
   ): UpdatePlayerPayload
+
+  """Updates a single `ReduxDump` using its globally unique id and a patch."""
+  updateReduxDumpByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReduxDumpByNodeIdInput!
+  ): UpdateReduxDumpPayload
+
+  """Updates a single `ReduxDump` using a unique key and a patch."""
+  updateReduxDump(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateReduxDumpInput!
+  ): UpdateReduxDumpPayload
 
   """
   Updates a single `ScoredRunner` using its globally unique id and a patch.
@@ -5869,6 +5960,22 @@ type Mutation {
     """
     input: DeletePlayerByFirstNameAndLastNameInput!
   ): DeletePlayerPayload
+
+  """Deletes a single `ReduxDump` using its globally unique id."""
+  deleteReduxDumpByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReduxDumpByNodeIdInput!
+  ): DeleteReduxDumpPayload
+
+  """Deletes a single `ReduxDump` using a unique key."""
+  deleteReduxDump(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteReduxDumpInput!
+  ): DeleteReduxDumpPayload
 
   """Deletes a single `ScoredRunner` using its globally unique id."""
   deleteScoredRunnerByNodeId(
@@ -18159,6 +18266,42 @@ input PlayerInput {
   seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput
 }
 
+"""The output of our create `ReduxDump` mutation."""
+type CreateReduxDumpPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReduxDump` that was created by this mutation."""
+  reduxDump: ReduxDump
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `ReduxDump` mutation."""
+input CreateReduxDumpInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `ReduxDump` to be created by this mutation."""
+  reduxDump: ReduxDumpInput!
+}
+
+"""An input for mutations affecting `ReduxDump`"""
+input ReduxDumpInput {
+  id: UUID
+  storeData: JSON!
+  timeCreated: Datetime
+}
+
 """The output of our create `ScoredRunner` mutation."""
 type CreateScoredRunnerPayload {
   """
@@ -19248,6 +19391,66 @@ input UpdatePlayerByFirstNameAndLastNameInput {
   lastName: String!
 }
 
+"""The output of our update `ReduxDump` mutation."""
+type UpdateReduxDumpPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReduxDump` that was updated by this mutation."""
+  reduxDump: ReduxDump
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateReduxDumpByNodeId` mutation."""
+input UpdateReduxDumpByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReduxDump` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `ReduxDump` being updated.
+  """
+  patch: ReduxDumpPatch!
+}
+
+"""
+Represents an update to a `ReduxDump`. Fields that are set will be updated.
+"""
+input ReduxDumpPatch {
+  id: UUID
+  storeData: JSON
+  timeCreated: Datetime
+}
+
+"""All input for the `updateReduxDump` mutation."""
+input UpdateReduxDumpInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `ReduxDump` being updated.
+  """
+  patch: ReduxDumpPatch!
+  id: UUID!
+}
+
 """The output of our update `ScoredRunner` mutation."""
 type UpdateScoredRunnerPayload {
   """
@@ -20222,6 +20425,48 @@ input DeletePlayerByFirstNameAndLastNameInput {
   clientMutationId: String
   firstName: String!
   lastName: String!
+}
+
+"""The output of our delete `ReduxDump` mutation."""
+type DeleteReduxDumpPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `ReduxDump` that was deleted by this mutation."""
+  reduxDump: ReduxDump
+  deletedReduxDumpNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteReduxDumpByNodeId` mutation."""
+input DeleteReduxDumpByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `ReduxDump` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteReduxDump` mutation."""
+input DeleteReduxDumpInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
 }
 
 """The output of our delete `ScoredRunner` mutation."""

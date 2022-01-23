@@ -14,6 +14,7 @@ import {
 import { Navigate } from 'react-router-dom';
 
 import SaveGameButton from './SaveGameButton';
+import DumpReduxStoreButton from './DumpReduxStoreButton';
 
 import {
   getCurrentGameLength,
@@ -202,6 +203,7 @@ const GameOver = () => {
             onClick={() => setShowConfirmExtendGame(true)}
           />
         )}
+        <DumpReduxStoreButton />
       </Box>
     </Main>
   );

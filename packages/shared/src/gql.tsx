@@ -25,6 +25,8 @@ export type Scalars = {
    * 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone.
    */
   Datetime: string;
+  /** A JavaScript object encoded in the JSON format as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+  JSON: any;
   /** The exact time of day, does not include the date. May or may not have a timezone offset. */
   Time: any;
   /** A universally unique identifier as defined by [RFC 4122](https://tools.ietf.org/html/rfc4122). */
@@ -1443,6 +1445,31 @@ export type CreatePlayerPayload = {
   legacyPlayer: Maybe<LegacyPlayer>;
 };
 
+/** All input for the create `ReduxDump` mutation. */
+export type CreateReduxDumpInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReduxDump` to be created by this mutation. */
+  reduxDump: ReduxDumpInput;
+};
+
+/** The output of our create `ReduxDump` mutation. */
+export type CreateReduxDumpPayload = {
+  __typename?: 'CreateReduxDumpPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `ReduxDump` that was created by this mutation. */
+  reduxDump: Maybe<ReduxDump>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the create `ScoredRunner` mutation. */
 export type CreateScoredRunnerInput = {
   /**
@@ -2189,6 +2216,42 @@ export type DeletePlayerPayload = {
   group: Maybe<Group>;
   /** Reads a single `LegacyPlayer` that is related to this `Player`. */
   legacyPlayer: Maybe<LegacyPlayer>;
+};
+
+/** All input for the `deleteReduxDumpByNodeId` mutation. */
+export type DeleteReduxDumpByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReduxDump` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteReduxDump` mutation. */
+export type DeleteReduxDumpInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `ReduxDump` mutation. */
+export type DeleteReduxDumpPayload = {
+  __typename?: 'DeleteReduxDumpPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `ReduxDump` that was deleted by this mutation. */
+  reduxDump: Maybe<ReduxDump>;
+  deletedReduxDumpNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
 };
 
 /** All input for the `deleteScoredRunnerByNodeId` mutation. */
@@ -7033,6 +7096,7 @@ export enum HalfInning {
   BOTTOM = 'BOTTOM'
 }
 
+
 export type LegacyField = Node & {
   __typename?: 'LegacyField';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -9176,6 +9240,8 @@ export type Mutation = {
   createPlateAppearance: Maybe<CreatePlateAppearancePayload>;
   /** Creates a single `Player`. */
   createPlayer: Maybe<CreatePlayerPayload>;
+  /** Creates a single `ReduxDump`. */
+  createReduxDump: Maybe<CreateReduxDumpPayload>;
   /** Creates a single `ScoredRunner`. */
   createScoredRunner: Maybe<CreateScoredRunnerPayload>;
   /** Creates a single `StolenBaseAttempt`. */
@@ -9254,6 +9320,10 @@ export type Mutation = {
   updatePlayer: Maybe<UpdatePlayerPayload>;
   /** Updates a single `Player` using a unique key and a patch. */
   updatePlayerByFirstNameAndLastName: Maybe<UpdatePlayerPayload>;
+  /** Updates a single `ReduxDump` using its globally unique id and a patch. */
+  updateReduxDumpByNodeId: Maybe<UpdateReduxDumpPayload>;
+  /** Updates a single `ReduxDump` using a unique key and a patch. */
+  updateReduxDump: Maybe<UpdateReduxDumpPayload>;
   /** Updates a single `ScoredRunner` using its globally unique id and a patch. */
   updateScoredRunnerByNodeId: Maybe<UpdateScoredRunnerPayload>;
   /** Updates a single `ScoredRunner` using a unique key and a patch. */
@@ -9340,6 +9410,10 @@ export type Mutation = {
   deletePlayer: Maybe<DeletePlayerPayload>;
   /** Deletes a single `Player` using a unique key. */
   deletePlayerByFirstNameAndLastName: Maybe<DeletePlayerPayload>;
+  /** Deletes a single `ReduxDump` using its globally unique id. */
+  deleteReduxDumpByNodeId: Maybe<DeleteReduxDumpPayload>;
+  /** Deletes a single `ReduxDump` using a unique key. */
+  deleteReduxDump: Maybe<DeleteReduxDumpPayload>;
   /** Deletes a single `ScoredRunner` using its globally unique id. */
   deleteScoredRunnerByNodeId: Maybe<DeleteScoredRunnerPayload>;
   /** Deletes a single `ScoredRunner` using a unique key. */
@@ -9474,6 +9548,12 @@ export type MutationCreatePlateAppearanceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePlayerArgs = {
   input: CreatePlayerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReduxDumpArgs = {
+  input: CreateReduxDumpInput;
 };
 
 
@@ -9708,6 +9788,18 @@ export type MutationUpdatePlayerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePlayerByFirstNameAndLastNameArgs = {
   input: UpdatePlayerByFirstNameAndLastNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReduxDumpByNodeIdArgs = {
+  input: UpdateReduxDumpByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReduxDumpArgs = {
+  input: UpdateReduxDumpInput;
 };
 
 
@@ -9966,6 +10058,18 @@ export type MutationDeletePlayerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePlayerByFirstNameAndLastNameArgs = {
   input: DeletePlayerByFirstNameAndLastNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReduxDumpByNodeIdArgs = {
+  input: DeleteReduxDumpByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReduxDumpArgs = {
+  input: DeleteReduxDumpInput;
 };
 
 
@@ -11307,6 +11411,8 @@ export type Query = Node & {
   plateAppearances: Maybe<Array<PlateAppearance>>;
   /** Reads a set of `Player`. */
   players: Maybe<Array<Player>>;
+  /** Reads a set of `ReduxDump`. */
+  reduxDumps: Maybe<Array<ReduxDump>>;
   /** Reads a set of `ScoredRunner`. */
   scoredRunners: Maybe<Array<ScoredRunner>>;
   /** Reads a set of `Season`. */
@@ -11348,6 +11454,7 @@ export type Query = Node & {
   plateAppearance: Maybe<PlateAppearance>;
   player: Maybe<Player>;
   playerByFirstNameAndLastName: Maybe<Player>;
+  reduxDump: Maybe<ReduxDump>;
   scoredRunner: Maybe<ScoredRunner>;
   season: Maybe<Season>;
   stolenBaseAttempt: Maybe<StolenBaseAttempt>;
@@ -11405,6 +11512,8 @@ export type Query = Node & {
   plateAppearanceByNodeId: Maybe<PlateAppearance>;
   /** Reads a single `Player` using its globally unique `ID`. */
   playerByNodeId: Maybe<Player>;
+  /** Reads a single `ReduxDump` using its globally unique `ID`. */
+  reduxDumpByNodeId: Maybe<ReduxDump>;
   /** Reads a single `ScoredRunner` using its globally unique `ID`. */
   scoredRunnerByNodeId: Maybe<ScoredRunner>;
   /** Reads a single `Season` using its globally unique `ID`. */
@@ -11711,6 +11820,15 @@ export type QueryPlayersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReduxDumpsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<ReduxDumpsOrderBy>>;
+  condition?: Maybe<ReduxDumpCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryScoredRunnersArgs = {
   first?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -11943,6 +12061,12 @@ export type QueryPlayerArgs = {
 export type QueryPlayerByFirstNameAndLastNameArgs = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReduxDumpArgs = {
+  id: Scalars['UUID'];
 };
 
 
@@ -12190,6 +12314,12 @@ export type QueryPlayerByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReduxDumpByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryScoredRunnerByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -12211,6 +12341,55 @@ export type QueryStolenBaseAttemptByNodeIdArgs = {
 export type QueryTeamByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
+
+export type ReduxDump = Node & {
+  __typename?: 'ReduxDump';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['UUID'];
+  storeData: Scalars['JSON'];
+  timeCreated: Maybe<Scalars['Datetime']>;
+};
+
+/**
+ * A condition to be used against `ReduxDump` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ReduxDumpCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `storeData` field. */
+  storeData?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
+};
+
+/** An input for mutations affecting `ReduxDump` */
+export type ReduxDumpInput = {
+  id?: Maybe<Scalars['UUID']>;
+  storeData: Scalars['JSON'];
+  timeCreated?: Maybe<Scalars['Datetime']>;
+};
+
+/** Represents an update to a `ReduxDump`. Fields that are set will be updated. */
+export type ReduxDumpPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  storeData?: Maybe<Scalars['JSON']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+};
+
+/** Methods to use when ordering `ReduxDump`. */
+export enum ReduxDumpsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  STORE_DATA_ASC = 'STORE_DATA_ASC',
+  STORE_DATA_DESC = 'STORE_DATA_DESC',
+  TIME_CREATED_ASC = 'TIME_CREATED_ASC',
+  TIME_CREATED_DESC = 'TIME_CREATED_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
 
 export type ScoredRunner = Node & {
   __typename?: 'ScoredRunner';
@@ -14292,6 +14471,45 @@ export type UpdatePlayerPayload = {
   legacyPlayer: Maybe<LegacyPlayer>;
 };
 
+/** All input for the `updateReduxDumpByNodeId` mutation. */
+export type UpdateReduxDumpByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReduxDump` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ReduxDump` being updated. */
+  patch: ReduxDumpPatch;
+};
+
+/** All input for the `updateReduxDump` mutation. */
+export type UpdateReduxDumpInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ReduxDump` being updated. */
+  patch: ReduxDumpPatch;
+  id: Scalars['UUID'];
+};
+
+/** The output of our update `ReduxDump` mutation. */
+export type UpdateReduxDumpPayload = {
+  __typename?: 'UpdateReduxDumpPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `ReduxDump` that was updated by this mutation. */
+  reduxDump: Maybe<ReduxDump>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `updateScoredRunnerByNodeId` mutation. */
 export type UpdateScoredRunnerByNodeIdInput = {
   /**
@@ -16085,6 +16303,22 @@ export type CreatePlayerMutation = (
   )> }
 );
 
+export type DumpReduxStoreMutationVariables = Exact<{
+  storeJson: Scalars['JSON'];
+}>;
+
+
+export type DumpReduxStoreMutation = (
+  { __typename?: 'Mutation' }
+  & { createReduxDump: Maybe<(
+    { __typename?: 'CreateReduxDumpPayload' }
+    & { reduxDump: Maybe<(
+      { __typename?: 'ReduxDump' }
+      & Pick<ReduxDump, 'id'>
+    )> }
+  )> }
+);
+
 export type GetAllGamesQueryVariables = Exact<{
   groupId: Scalars['UUID'];
 }>;
@@ -16856,6 +17090,40 @@ export function useCreatePlayerMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreatePlayerMutationHookResult = ReturnType<typeof useCreatePlayerMutation>;
 export type CreatePlayerMutationResult = Apollo.MutationResult<CreatePlayerMutation>;
 export type CreatePlayerMutationOptions = Apollo.BaseMutationOptions<CreatePlayerMutation, CreatePlayerMutationVariables>;
+export const DumpReduxStoreDocument = gql`
+    mutation DumpReduxStore($storeJson: JSON!) {
+  createReduxDump(input: {reduxDump: {storeData: $storeJson}}) {
+    reduxDump {
+      id
+    }
+  }
+}
+    `;
+export type DumpReduxStoreMutationFn = Apollo.MutationFunction<DumpReduxStoreMutation, DumpReduxStoreMutationVariables>;
+
+/**
+ * __useDumpReduxStoreMutation__
+ *
+ * To run a mutation, you first call `useDumpReduxStoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDumpReduxStoreMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [dumpReduxStoreMutation, { data, loading, error }] = useDumpReduxStoreMutation({
+ *   variables: {
+ *      storeJson: // value for 'storeJson'
+ *   },
+ * });
+ */
+export function useDumpReduxStoreMutation(baseOptions?: Apollo.MutationHookOptions<DumpReduxStoreMutation, DumpReduxStoreMutationVariables>) {
+        return Apollo.useMutation<DumpReduxStoreMutation, DumpReduxStoreMutationVariables>(DumpReduxStoreDocument, baseOptions);
+      }
+export type DumpReduxStoreMutationHookResult = ReturnType<typeof useDumpReduxStoreMutation>;
+export type DumpReduxStoreMutationResult = Apollo.MutationResult<DumpReduxStoreMutation>;
+export type DumpReduxStoreMutationOptions = Apollo.BaseMutationOptions<DumpReduxStoreMutation, DumpReduxStoreMutationVariables>;
 export const GetAllGamesDocument = gql`
     query GetAllGames($groupId: UUID!) {
   games(condition: {groupId: $groupId}) {

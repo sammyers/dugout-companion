@@ -1,0 +1,7 @@
+mutation DumpReduxStore($storeJson: JSON!) {
+  createReduxDump(input: { reduxDump: { storeData: $storeJson } }) {
+    reduxDump {
+      id
+    }
+  }
+}
