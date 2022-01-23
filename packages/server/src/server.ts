@@ -13,6 +13,7 @@ const middleware = postgraphile(process.env.AUTH_DATABASE_URL, 'public', {
   graphiql: isDev || !!process.env.ENABLE_GRAPHIQL,
   enhanceGraphiql: true,
   ownerConnectionString: process.env.DATABASE_URL,
+  bodySizeLimit: '50MB',
   extendedErrors: [
     'severity',
     'detail',
