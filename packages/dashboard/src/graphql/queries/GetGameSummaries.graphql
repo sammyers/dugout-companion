@@ -1,0 +1,19 @@
+query GetGameSummaries($groupId: UUID!, $season: Int!) {
+  unifiedGames(condition: { groupId: $groupId, season: $season }) {
+    game {
+      id
+      name
+      timeStarted
+      timeEnded
+      score
+    }
+    legacyGame {
+      gameId
+      gameTitle
+      gameDate
+      gameStartTime
+      gameEndTime
+      score
+    }
+  }
+}

@@ -1,0 +1,41 @@
+query GetLegacyGameDetails($id: Int!) {
+  legacyGame(gameId: $id) {
+    gameTitle
+    gameDate
+    gameStartTime
+    gameEndTime
+    team1: legacyTeamByGameTeamId1 {
+      teamId
+      teamName
+    }
+    team2: legacyTeamByGameTeamId2 {
+      teamId
+      teamName
+    }
+    battingLines: legacyGameBattingLines {
+      player {
+        id
+        fullName
+      }
+      legacyPlayer {
+        playerId
+        playerName
+      }
+      statLineId
+      legacyTeamId
+      plateAppearances
+      atBats
+      hits
+      runs
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      rbi
+      onBasePct
+      ops
+    }
+  }
+}

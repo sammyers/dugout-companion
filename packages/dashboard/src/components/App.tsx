@@ -11,6 +11,7 @@ import GamePage, { GamePageTitle } from './GamePage';
 import StatsPage, { StatsPageTitle } from './StatsPage';
 import LeadersPage, { LeadersPageTitle } from './LeadersPage';
 import PlayerPage, { PlayerPageTitle } from './PlayerPage';
+import LegacyGamePage, { LegacyGamePageTitle } from './GamePage/LegacyGamePage';
 
 import theme from '../theme';
 import { Group, groupContext } from './context';
@@ -55,6 +56,7 @@ const App = () => {
             <Route path="/" element={<TopBar />}>
               <Route path="" element={<DefaultTitle />} />
               <Route path="games" element={<GamesPageTitle />} />
+              <Route path="game/legacy/:id" element={<LegacyGamePageTitle />} />
               <Route path="game/:id" element={<GamePageTitle />} />
               <Route path="stats" element={<StatsPageTitle />} />
               <Route path="leaders" element={<LeadersPageTitle />} />
@@ -65,6 +67,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/games" element={<GamesPage />} />
+              <Route path="game/legacy/:id" element={<LegacyGamePage />} />
               <Route path="/game/:id" element={<GamePage />} />
               <Route path="/stats" element={<StatsPage />} />
               <Route path="/leaders" element={<LeadersPage />} />

@@ -1,55 +1,106 @@
 import React from 'react';
-import { format, parseISO } from 'date-fns';
+import { format, getYear, parseISO } from 'date-fns';
 import { Box, Button, List, Text } from 'grommet';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { useGetAllGameSummariesQuery } from '@sammyers/dc-shared';
+import { groupIdOptions, useGetGameSummariesQuery } from '@sammyers/dc-shared';
 
 import { useCurrentGroupId } from './context';
+import { useEffect } from 'react';
+import { useMemo } from 'react';
+import { parseLegacyDate } from '../utils';
+import SeasonSelector from './util/SeasonSelector';
+import _ from 'lodash';
 
 const GamesPage = () => {
   const navigate = useNavigate();
   const groupId = useCurrentGroupId();
 
-  const { data } = useGetAllGameSummariesQuery({
-    skip: !groupId,
-    variables: groupId ? { groupId } : undefined,
+  const [searchParams, setSearchParams] = useSearchParams();
+  const season = searchParams.get('season');
+
+  const { data } = useGetGameSummariesQuery({
+    skip: !season || !groupId,
+    variables: groupId && season ? { groupId, season: Number(season) } : undefined,
   });
 
-  if (!data) {
+  useEffect(() => {
+    if (!season) {
+      const currentSeason = getYear(new Date());
+      const params = new URLSearchParams();
+      params.set('season', String(currentSeason));
+      setSearchParams(params, { replace: true });
+    }
+  }, [season, setSearchParams]);
+
+  const games = useMemo(
+    () =>
+      data?.unifiedGames?.map(({ game, legacyGame }) => {
+        if (game) {
+          const { id, name, score, timeStarted, timeEnded } = game;
+          return {
+            id,
+            name,
+            score,
+            startTime: new Date(timeStarted),
+            endTime: new Date(timeEnded),
+            legacy: false,
+          };
+        } else {
+          const { gameId, gameTitle, score, gameDate, gameStartTime, gameEndTime } = legacyGame!;
+          return {
+            id: String(gameId),
+            name: gameTitle,
+            score,
+            startTime: parseLegacyDate(gameDate!, gameStartTime),
+            endTime: parseLegacyDate(gameDate!, gameEndTime),
+            legacy: true,
+          };
+        }
+      }),
+    [data]
+  );
+
+  if (!games) {
     return null;
   }
 
   return (
     <Box flex>
+      <SeasonSelector margin={{ horizontal: 'small' }} includeAll={false} />
       <List
-        data={data.games!}
+        data={_.orderBy(games, 'startTime', 'desc')}
         defaultItemProps={{
           pad: 'medium',
           background: 'neutral-5',
           round: 'small',
           margin: 'small',
         }}
-        primaryKey={({ timeStarted }) => (
-          <Text weight="bold" color="accent-3">
-            {format(parseISO(timeStarted), 'M/d/yyyy (h:mmaaa)')}
-          </Text>
+        primaryKey={({ name, startTime, endTime }) => (
+          <Box>
+            <Text weight="bold" size="large">
+              {name}
+            </Text>
+            <Text color="accent-3">
+              {`${format(startTime, 'M/d/yyyy (h:mmaaa ')}-${format(endTime, ' h:mmaaa)')}`}
+            </Text>
+          </Box>
         )}
         secondaryKey={({ score }) => {
           const [awayScore, homeScore] = score as number[];
           return (
-            <Text>
-              {' '}
-              Final Score {awayScore} - {homeScore}
+            <Text weight="bold">
+              Final Score: {awayScore ?? '?'} - {homeScore ?? '?'}
             </Text>
           );
         }}
-        action={({ id }) => (
+        action={({ id, legacy }) => (
           <Button
             key={id}
             alignSelf="center"
             plain={false}
-            onClick={() => navigate(`../game/${id}`)}
+            style={{ whiteSpace: 'nowrap' }}
+            onClick={() => navigate(`../game/${legacy ? 'legacy/' : ''}${id}`)}
           >
             Game Details
           </Button>

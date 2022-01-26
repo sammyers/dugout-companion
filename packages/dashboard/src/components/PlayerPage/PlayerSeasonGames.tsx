@@ -1,19 +1,21 @@
-import React, { FC, useMemo } from 'react';
-import { format, parse } from 'date-fns';
-import { Box, ColumnConfig, DataTable, Text } from 'grommet';
+import React, { FC, useMemo, useContext } from 'react';
+import { format } from 'date-fns';
+import { ColumnConfig, DataTable, ResponsiveContext, Text } from 'grommet';
 import _ from 'lodash';
+
+import { AnchorLink } from '@sammyers/dc-shared';
 
 import PageBlock from '../util/PageBlock';
 
+import { parseLegacyDate, useResponsiveColumns } from '../../utils';
+
 import { GameRow, LegacyGameRow } from './types';
-import { useResponsiveColumns } from '../../utils';
 
 const getGameTime = (row: GameRow | LegacyGameRow) => {
   if ('game' in row) {
     return new Date(row.game!.timeStarted);
   }
-  const dateStr = `${row.legacyGame!.gameDate} ${row.legacyGame!.gameStartTime}`;
-  return parse(dateStr, 'yyyy-MM-dd HH:mm:ss', new Date());
+  return parseLegacyDate(row.legacyGame!.gameDate!, row.legacyGame!.gameStartTime);
 };
 
 const getGameName = (row: GameRow | LegacyGameRow) => {
@@ -23,11 +25,20 @@ const getGameName = (row: GameRow | LegacyGameRow) => {
   return row.legacyGame?.gameTitle;
 };
 
+const getLinkToGame = (row: GameRow | LegacyGameRow) =>
+  'game' in row ? `/game/${row.game!.id}` : `/game/legacy/${row.legacyGame!.gameId}`;
+
 const columnDefs: ColumnConfig<GameRow | LegacyGameRow>[] = [
   {
     property: 'game',
     header: 'Game',
-    render: getGameName,
+    render: row => (
+      <Text>
+        <AnchorLink to={getLinkToGame(row)} defaultColor="accent-2" weight="bold">
+          {getGameName(row)}
+        </AnchorLink>
+      </Text>
+    ),
     sortable: false,
   },
   {
@@ -78,15 +89,39 @@ const columnDefs: ColumnConfig<GameRow | LegacyGameRow>[] = [
     render: row => row.onBasePct!.toFixed(3),
   },
 ];
+const gameDatePrimaryColumn: ColumnConfig<GameRow | LegacyGameRow> = {
+  ...columnDefs[1],
+  header: 'Game Date',
+  render: row => (
+    <Text>
+      <AnchorLink to={getLinkToGame(row)} defaultColor="accent-2" weight="bold">
+        {format(getGameTime(row), 'M/d/yy')}
+      </AnchorLink>
+    </Text>
+  ),
+};
 
 interface Props {
   games: (GameRow | LegacyGameRow)[];
 }
 
 const PlayerSeasonGames: FC<Props> = ({ games }) => {
-  const columns = useResponsiveColumns(columnDefs, {
+  const size = useContext(ResponsiveContext);
+
+  const responsiveColumns = useResponsiveColumns(columnDefs, {
     xsmall: ['game', 'doubles', 'triples', 'walks', 'sacFlies'],
+    small: ['game'],
   });
+  const columns = useMemo(
+    () =>
+      responsiveColumns.map(column => {
+        if (['xsmall', 'small'].includes(size) && column.property === 'legacyGame') {
+          return gameDatePrimaryColumn;
+        }
+        return column;
+      }),
+    [responsiveColumns]
+  );
   const rows = useMemo(
     () => games.map(game => ({ ...game, gameTime: getGameTime(game) })),
     [games]

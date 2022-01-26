@@ -43,6 +43,7 @@ query GetPlayerProfile($playerId: UUID!) {
     }
     gameBattingLines {
       game {
+        id
         name
         timeStarted
         timeEnded
@@ -64,6 +65,7 @@ query GetPlayerProfile($playerId: UUID!) {
     }
     legacyGameBattingLines {
       legacyGame {
+        gameId
         gameTitle
         gameDate
         gameStartTime

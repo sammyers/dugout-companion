@@ -87,9 +87,9 @@ const columnDefs: ColumnConfig<PlayerStatRow>[] = [
 const StatsWidget = () => {
   const navigate = useNavigate();
 
-  const currentYear = getYear(new Date());
+  const currentSeason = getYear(new Date());
   const groupId = useCurrentGroupId();
-  const { data } = useGetPreviewStatsQuery(groupIdOptions(groupId, { currentSeason: currentYear }));
+  const { data } = useGetPreviewStatsQuery(groupIdOptions(groupId, { currentSeason }));
 
   const columns = useResponsiveColumns(columnDefs, {
     xsmall: ['runs', 'rbi', 'sacFlies', 'doubles', 'triples', 'homeruns', 'battingAverage'],
@@ -112,8 +112,12 @@ const StatsWidget = () => {
         align="center"
         pad={{ horizontal: 'small' }}
       >
-        <Text weight="bold">{currentYear} Stats</Text>
-        <Button plain={false} color="accent-2" onClick={() => navigate('/stats')}>
+        <Text weight="bold">{currentSeason} Stats</Text>
+        <Button
+          plain={false}
+          color="accent-2"
+          onClick={() => navigate(`/stats?season=${currentSeason}`)}
+        >
           All Stats
         </Button>
       </Box>

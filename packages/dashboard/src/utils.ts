@@ -1,6 +1,8 @@
-import { Maybe } from '@sammyers/dc-shared';
+import { parse } from 'date-fns';
 import { ColumnConfig, ResponsiveContext } from 'grommet';
 import { useContext, useMemo } from 'react';
+
+import { Maybe } from '@sammyers/dc-shared';
 
 export interface PlayerRecord {
   player: Maybe<{
@@ -35,3 +37,6 @@ export const useResponsiveColumns = <T>(
 
   return filteredColumns;
 };
+
+export const parseLegacyDate = (date: string, time: string = '00:00:00') =>
+  parse(`${date} ${time}`, 'yyyy-MM-dd HH:mm:ss', new Date());

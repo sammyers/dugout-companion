@@ -28,7 +28,7 @@ const LeadersPreview: FC<GetPreviewLeadersQuery> = props => {
       {categories.map(({ property, name, decimal }) => {
         const { player, value } = props[property as keyof SimplifyType<GetPreviewLeadersQuery>]![0];
         return (
-          <Box key="property">
+          <Box key={property}>
             <Text alignSelf="center" weight="bold">
               {name}
             </Text>
@@ -62,7 +62,11 @@ const LeadersWidget = () => {
     <Box gridArea="leaderboard" round="small" background="neutral-5" pad="small">
       <Box direction="row" justify="between" align="center" pad={{ horizontal: 'small' }}>
         <Text weight="bold">{currentSeason} Leaders</Text>
-        <Button plain={false} color="accent-2" onClick={() => navigate('/leaders')}>
+        <Button
+          plain={false}
+          color="accent-2"
+          onClick={() => navigate(`/leaders?season=${currentSeason}`)}
+        >
           All Leaders
         </Button>
       </Box>
