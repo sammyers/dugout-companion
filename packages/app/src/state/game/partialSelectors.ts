@@ -50,6 +50,11 @@ export const getFieldingTeam = createSelector(getTeams, getFieldingTeamRole, get
 export const getBattingLineup = createSelector(getBattingTeam, getCurrentLineup);
 export const getFieldingLineup = createSelector(getFieldingTeam, getCurrentLineup);
 
+export const isBattingTeamSoloModeOpponent = createSelector(
+  getBattingTeam,
+  team => !!team.soloModeOpponent
+);
+
 export const getOnDeckBatter = createSelector(getCurrentBatter, getBattingLineup, getNextBatter);
 
 export const isEditingLineups = (state: AppGameState) => state.editingLineups;
@@ -63,3 +68,20 @@ export const getLineupToEdit = (state: AppGameState, teamRole: TeamRole) =>
   isEditingLineups(state)
     ? getDraftLineup(state, teamRole)
     : getCurrentLineup(getTeam(state, teamRole));
+export const isSoloModeActive = (state: AppGameState) => state.soloMode;
+export const getSoloModeOpponentPositions = (state: AppGameState) =>
+  state.soloModeOpponentPositions;
+export const getProtagonistTeamRole = (state: AppGameState) =>
+  state.teams.find(team => !team.soloModeOpponent)!.role;
+const getOpponentTeamRole = (state: AppGameState) =>
+  state.teams.find(team => team.soloModeOpponent)?.role;
+export const getOpponentTeamName = (state: AppGameState) => {
+  const role = getOpponentTeamRole(state);
+  const team = role && getTeam(state, role);
+  return team?.name;
+};
+export const isOpponentTeamBatting = createSelector(
+  getOpponentTeamRole,
+  getBattingTeamRole,
+  (opponentTeam, battingTeam) => opponentTeam === battingTeam
+);

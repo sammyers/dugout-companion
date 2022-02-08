@@ -23,6 +23,7 @@ export const getPositionAbbreviation = (position: FieldingPosition) =>
     [FieldingPosition.LEFT_CENTER]: 'LCF',
     [FieldingPosition.RIGHT_CENTER]: 'RCF',
     [FieldingPosition.RIGHT_FIELD]: 'RF',
+    [FieldingPosition.MIDDLE_INFIELD]: 'MI',
   }[position]);
 
 export const getPlateAppearanceLabel = (paType: PlateAppearanceType) =>

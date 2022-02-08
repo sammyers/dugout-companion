@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grommet } from 'grommet';
 import { Route, Routes } from 'react-router';
 
-import { useGetAllGroupsQuery } from '@sammyers/dc-shared';
+import {
+  DASHBOARD_DEFAULT_GROUP,
+  SOLO_MODE_OPPONENT_GROUP,
+  useGetAllGroupsQuery,
+} from '@sammyers/dc-shared';
 
 import TopBar from './TopBar';
 import Dashboard from './Dashboard';
@@ -15,8 +19,6 @@ import LegacyGamePage, { LegacyGamePageTitle } from './GamePage/LegacyGamePage';
 
 import theme from '../theme';
 import { Group, groupContext } from './context';
-
-const DEFAULT_GROUP = 'SF Meetup';
 
 const DefaultTitle = () => <>{'Dugout Companion Dashboard'}</>;
 
@@ -40,8 +42,8 @@ const App = () => {
 
   useEffect(() => {
     if (data?.groups) {
-      setGroups(data.groups);
-      setCurrentGroupId(data.groups.find(group => group.name === DEFAULT_GROUP)?.id);
+      setGroups(data.groups.filter(group => group.name !== SOLO_MODE_OPPONENT_GROUP));
+      setCurrentGroupId(data.groups.find(group => group.name === DASHBOARD_DEFAULT_GROUP)?.id);
     }
   }, [data]);
 

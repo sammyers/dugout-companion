@@ -60,7 +60,8 @@ const EventReporter = () => {
                 primary
                 label={getPlateAppearanceLabel(paType)}
                 onClick={handleClickPlateAppearance(paType)}
-                margin="small"
+                margin={{ vertical: 'medium', horizontal: 'small' }}
+                style={{ paddingTop: '10px', paddingBottom: '10px' }}
               />
             ))}
         </Box>

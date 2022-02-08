@@ -11,6 +11,7 @@ import {
   getFieldingLineup,
   getFieldingTeamRole,
   getLineupToEdit,
+  getTeam,
 } from './partialSelectors';
 import {
   updatePositions,
@@ -22,6 +23,7 @@ import {
   applyMidGameLineupChange,
   getCurrentLineupsFromTeams,
   makeGameEvent,
+  applySoloModeInning,
 } from './stateHelpers';
 import {
   getAvailablePositionsForLineup,
@@ -29,6 +31,7 @@ import {
   previousHalfInning,
   getTeamWithRole,
   getLineupWithNewPositions,
+  allPositions,
 } from './utils';
 
 import { FieldingPosition, HalfInning, Maybe, TeamRole } from '@sammyers/dc-shared';
@@ -40,6 +43,7 @@ import {
   GameStatus,
   AppGameState,
   PlateAppearance,
+  SoloModeInning,
 } from './types';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
@@ -47,6 +51,7 @@ const makeInitialTeamState = (role: TeamRole): Team => ({
   role,
   lineups: [],
   winner: null,
+  soloModeOpponent: false,
 });
 
 const initialState: AppGameState = {
@@ -63,12 +68,67 @@ const initialState: AppGameState = {
     [TeamRole.HOME]: [],
   },
   saved: false,
+  soloMode: false,
+  soloModeOpponentPositions: [],
+  soloModeOpponentBatterId: '',
 };
 
 const { actions: gameActions, reducer } = createSlice({
   name: 'game',
   initialState,
   reducers: {
+    setSoloModeOpponentBatterId(state, { payload }: PayloadAction<string>) {
+      state.soloModeOpponentBatterId = payload;
+    },
+    changeOpponentTeamName(state, { payload }: PayloadAction<string>) {
+      const team = state.teams.find(team => team.soloModeOpponent);
+      if (team) {
+        team.name = payload;
+      }
+    },
+    changeOpponentTeamSize(state, { payload }: PayloadAction<'large' | 'small'>) {
+      if (payload === 'large') {
+        state.soloModeOpponentPositions = _.difference(allPositions, [
+          FieldingPosition.CENTER_FIELD,
+          FieldingPosition.MIDDLE_INFIELD,
+        ]);
+      } else {
+        state.soloModeOpponentPositions = _.difference(allPositions, [
+          FieldingPosition.LEFT_CENTER,
+          FieldingPosition.RIGHT_CENTER,
+          FieldingPosition.MIDDLE_INFIELD,
+        ]);
+      }
+    },
+    changeOpponentNumOutfielders(state, { payload }: PayloadAction<3 | 4>) {
+      if (state.soloModeOpponentPositions.length >= 10) {
+        if (payload === 3) {
+          state.soloModeOpponentPositions = _.difference(allPositions, [
+            FieldingPosition.LEFT_CENTER,
+            FieldingPosition.RIGHT_CENTER,
+          ]);
+        } else {
+          state.soloModeOpponentPositions = _.difference(allPositions, [
+            FieldingPosition.CENTER_FIELD,
+            FieldingPosition.MIDDLE_INFIELD,
+          ]);
+        }
+      } else {
+        if (payload === 3) {
+          state.soloModeOpponentPositions = _.difference(allPositions, [
+            FieldingPosition.LEFT_CENTER,
+            FieldingPosition.RIGHT_CENTER,
+            FieldingPosition.MIDDLE_INFIELD,
+          ]);
+        } else {
+          state.soloModeOpponentPositions = _.difference(allPositions, [
+            FieldingPosition.CENTER_FIELD,
+            FieldingPosition.MIDDLE_INFIELD,
+            FieldingPosition.CATCHER,
+          ]);
+        }
+      }
+    },
     addPlayerToGame(state, { payload: { teamRole, playerId } }: PayloadAction<AddPlayerPayload>) {
       const team = getTeamWithRole(state.teams, teamRole);
       if (!team.lineups.length) {
@@ -165,6 +225,11 @@ const { actions: gameActions, reducer } = createSlice({
         state.teams[1].lineups[0].lineupSpots = updatePositions(_.slice(shuffled, awayTeamSize));
       }
     },
+    shuffleLineup(state, { payload }: PayloadAction<TeamRole>) {
+      const team = getTeam(state, payload);
+      const newLineup = _.shuffle(team.lineups[0].lineupSpots);
+      team.lineups[0].lineupSpots = newLineup;
+    },
     startGame: {
       prepare: () => ({
         payload: {
@@ -176,6 +241,7 @@ const { actions: gameActions, reducer } = createSlice({
       reducer(state, action: PayloadAction<{ gameId: string; stateId: string; time: string }>) {
         state.gameId = action.payload.gameId;
         state.timeStarted = action.payload.time;
+        const awayTeam = getTeamWithRole(state.teams, TeamRole.AWAY);
         state.gameState = {
           id: action.payload.stateId,
           inning: 1,
@@ -183,7 +249,9 @@ const { actions: gameActions, reducer } = createSlice({
           baseRunners: [],
           outs: 0,
           score: [0, 0],
-          playerAtBat: getCurrentLineup(getTeamWithRole(state.teams, TeamRole.AWAY))[0].playerId,
+          playerAtBat: awayTeam.soloModeOpponent
+            ? state.soloModeOpponentBatterId
+            : getCurrentLineup(awayTeam)[0].playerId,
           lineups: getCurrentLineupsFromTeams(state.teams),
         };
         state.upNextHalfInning = getCurrentLineup(
@@ -194,6 +262,9 @@ const { actions: gameActions, reducer } = createSlice({
     },
     recordPlateAppearance(state, { payload }: PayloadAction<PlateAppearance>) {
       applyPlateAppearance(state, payload);
+    },
+    recordSoloModeOpponentInning(state, { payload }: PayloadAction<SoloModeInning>) {
+      applySoloModeInning(state, payload);
     },
     editLineup(state) {
       state.editingLineups = true;
@@ -351,15 +422,21 @@ const { actions: gameActions, reducer } = createSlice({
     },
   },
   extraReducers: builder =>
-    builder.addCase(groupActions.setCurrentGroup, state => {
-      state.teams.forEach(team => {
-        team.lineups = [
-          {
-            id: uuid4(),
-            lineupSpots: [],
-          },
-        ];
-      });
+    builder.addCase(groupActions.setCurrentGroup, (state, { payload }) => {
+      state.teams = state.teams.map(({ role }) => makeInitialTeamState(role));
+
+      if (payload.soloMode) {
+        state.teams[0].soloModeOpponent = true;
+        state.teams[1].name = payload.name;
+        state.soloModeOpponentPositions = _.difference(allPositions, [
+          FieldingPosition.CENTER_FIELD,
+          FieldingPosition.MIDDLE_INFIELD,
+        ]);
+        state.gameLength = 7;
+      } else {
+        state.soloModeOpponentPositions = [];
+      }
+      state.soloMode = !!payload.soloMode;
     }),
 });
 

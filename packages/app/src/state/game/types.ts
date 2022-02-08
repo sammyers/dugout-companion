@@ -21,6 +21,7 @@ export type GameEventContainer = GameEventRecord['gameEvent'];
 export type PlateAppearance = NonNullable<GameEventContainer['plateAppearance']>;
 export type LineupChange = NonNullable<GameEventContainer['lineupChange']>;
 export type StolenBaseAttempt = NonNullable<GameEventContainer['stolenBaseAttempt']>;
+export type SoloModeInning = NonNullable<GameEventContainer['soloModeOpponentInning']>;
 
 export type HitType =
   | PlateAppearanceType.SINGLE
@@ -53,6 +54,9 @@ export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords
   editingLineups: boolean;
   lineupDrafts: Record<TeamRole, LineupSpot[]>;
   saved: boolean;
+  soloMode: boolean;
+  soloModeOpponentPositions: FieldingPosition[];
+  soloModeOpponentBatterId: string;
 };
 
 export interface AddPlayerPayload {

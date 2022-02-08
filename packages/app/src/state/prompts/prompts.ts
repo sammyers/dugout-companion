@@ -57,7 +57,7 @@ export const getAvailableBases = (currentBase: BaseType, nextRunner: BaseType | 
 };
 
 const inPlayContactOptions = _.values(ContactQuality).filter(
-  ct => ct !== ContactQuality.NONE
+  ct => ![ContactQuality.NONE, ContactQuality.DEAD_BALL, ContactQuality.FOUL].includes(ct)
 ) as HitContactType[];
 const getContactOptionsForHit = (contactTypes: HitContactType[] = inPlayContactOptions) =>
   contactTypes.map((contactType, id) => ({
@@ -79,44 +79,44 @@ const infieldPositions = [
   FieldingPosition.SECOND_BASE,
   FieldingPosition.THIRD_BASE,
   FieldingPosition.SHORTSTOP,
+  FieldingPosition.MIDDLE_INFIELD,
 ];
-const getOutfieldPositions = (fourOutfielders: boolean) => [
+const outfieldPositions = [
   FieldingPosition.LEFT_FIELD,
-  ...(fourOutfielders
-    ? [FieldingPosition.LEFT_CENTER, FieldingPosition.RIGHT_CENTER]
-    : [FieldingPosition.CENTER_FIELD]),
+  FieldingPosition.LEFT_CENTER,
+  FieldingPosition.CENTER_FIELD,
+  FieldingPosition.RIGHT_CENTER,
   FieldingPosition.RIGHT_FIELD,
 ];
-const getAllPositions = (fourOutfielders: boolean) => [
-  ...infieldPositions,
-  ...getOutfieldPositions(fourOutfielders),
-];
+
 const makeFielderOptions = (positions: FieldingPosition[]) =>
   positions.map((position, id) => ({ id, position, label: getPositionAbbreviation(position) }));
 
 const getFielderOptionsForContactType = (
   contactType: ContactQuality,
   hit: boolean,
-  fourOutfielders: boolean
+  fieldingPositions: FieldingPosition[]
 ) => {
   let positions: FieldingPosition[];
   switch (contactType) {
     case ContactQuality.GROUNDER:
-      positions = hit ? getAllPositions(fourOutfielders) : infieldPositions;
+      positions = hit ? fieldingPositions : _.intersection(fieldingPositions, infieldPositions);
       break;
     case ContactQuality.POPUP:
-      positions = infieldPositions;
+      positions = _.intersection(fieldingPositions, infieldPositions);
       break;
     case ContactQuality.LAZY_FLY:
     case ContactQuality.LONG_FLY:
-      positions = getOutfieldPositions(fourOutfielders);
+      positions = _.intersection(fieldingPositions, outfieldPositions);
+      break;
+    case ContactQuality.DEAD_BALL:
+      positions = outfieldPositions;
       break;
     case ContactQuality.LINE_DRIVE:
-      positions = getAllPositions(fourOutfielders).filter(
-        position => position !== FieldingPosition.CATCHER
-      );
+      positions = fieldingPositions.filter(position => position !== FieldingPosition.CATCHER);
       break;
     case ContactQuality.NONE:
+    case ContactQuality.FOUL:
       positions = [];
       break;
   }
@@ -238,7 +238,7 @@ export const getPlateAppearanceDetailPrompt = (
   batterId: string,
   outs: number,
   runners: BaseRunnerMap,
-  fourOutfielders: boolean
+  fieldingPositions: FieldingPosition[]
 ): PlateAppearanceDetailOptions | void => {
   switch (paType) {
     case PlateAppearanceType.WALK:
@@ -251,7 +251,7 @@ export const getPlateAppearanceDetailPrompt = (
           options: getContactOptionsForHit([ContactQuality.LINE_DRIVE, ContactQuality.LONG_FLY]),
         },
         getNextOptions: () => ({
-          options: makeFielderOptions(getOutfieldPositions(fourOutfielders)),
+          options: makeFielderOptions(outfieldPositions),
         }),
       };
 
@@ -264,13 +264,17 @@ export const getPlateAppearanceDetailPrompt = (
         },
         getNextOptions: (contactType: ContactQuality) => {
           const newRunners = { ...runners };
-          if (contactType === ContactQuality.NONE) return;
+
+          if ([ContactQuality.NONE, ContactQuality.FOUL].includes(contactType)) return;
+
           const fielderOptions = {
-            options: getFielderOptionsForContactType(contactType, false, fourOutfielders),
+            options: getFielderOptionsForContactType(contactType, false, fieldingPositions),
           };
-          if (outs === 2) {
+
+          if (outs === 2 || contactType === ContactQuality.DEAD_BALL) {
             return { fielderOptions };
           }
+
           const expectedBases = getExpectedBases(
             newRunners,
             contactType === ContactQuality.GROUNDER ? 1 : 0
@@ -291,7 +295,9 @@ export const getPlateAppearanceDetailPrompt = (
       };
 
     case PlateAppearanceType.SACRIFICE_FLY:
-      const fielderOptions = { options: makeFielderOptions(getOutfieldPositions(fourOutfielders)) };
+      const fielderOptions = {
+        options: makeFielderOptions(_.intersection(fieldingPositions, outfieldPositions)),
+      };
       if (_.size(runners) === 1) {
         return { kind: 'sacrificeFly', fielderOptions };
       }
@@ -315,7 +321,11 @@ export const getPlateAppearanceDetailPrompt = (
         kind: 'fieldersChoice',
         outOnPlayOptions: { runnerIds: _.values(runners) as string[] },
         fielderOptions: {
-          options: getFielderOptionsForContactType(ContactQuality.GROUNDER, false, fourOutfielders),
+          options: getFielderOptionsForContactType(
+            ContactQuality.GROUNDER,
+            false,
+            fieldingPositions
+          ),
         },
         getNextOptions:
           outs < 2
@@ -340,7 +350,7 @@ export const getPlateAppearanceDetailPrompt = (
         },
         getNextOptions: contactType => {
           const fielderOptions = {
-            options: getFielderOptionsForContactType(contactType, false, fourOutfielders),
+            options: getFielderOptionsForContactType(contactType, false, fieldingPositions),
           };
           if (_.size(runners) === 1) {
             return {
@@ -404,7 +414,7 @@ export const getPlateAppearanceDetailPrompt = (
         contactOptions: { options: getContactOptionsForHit() },
         runnerOptions: getRunnerOptions(defaultRunnerPositions, outs, expectedBases),
         getNextOptions: contactType => ({
-          options: getFielderOptionsForContactType(contactType, true, fourOutfielders),
+          options: getFielderOptionsForContactType(contactType, true, fieldingPositions),
         }),
       };
   }

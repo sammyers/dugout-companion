@@ -5,6 +5,7 @@ import _ from 'lodash';
 interface BaseProps<T> {
   options: (T | { value: T; label: ReactNode; extra?: string })[];
   vertical?: boolean;
+  selectedColor?: string;
 }
 
 interface SingleChoiceProps<T> extends BaseProps<T> {
@@ -27,6 +28,7 @@ const OptionSelector = <T extends any>({
   value,
   onChange,
   vertical,
+  selectedColor,
   ...otherProps
 }: Props<T> & BoxProps) => {
   const isSelected = useCallback(
@@ -106,9 +108,9 @@ const OptionSelector = <T extends any>({
             key={key}
             flex
             width={typeof label === 'string' && label.length < 4 ? 'xxsmall' : 'xsmall'}
-            background={selected ? 'neutral-5' : undefined}
+            background={selected ? selectedColor ?? 'neutral-5' : undefined}
             hoverIndicator={!selected}
-            pad="small"
+            pad={{ vertical: 'small', horizontal: 'xsmall' }}
             align="center"
             justify="center"
             border={index > 0 ? { side: 'left', size: '1px' } : undefined}

@@ -4,7 +4,13 @@ import { Navigate } from 'react-router-dom';
 
 import { getPositionAbbreviation, TeamRole } from '@sammyers/dc-shared';
 
-import { isGameInProgress, getPlayerPosition, isGameOver } from 'state/game/selectors';
+import {
+  isGameInProgress,
+  getPlayerPosition,
+  isGameOver,
+  isSoloModeActive,
+  getProtagonistTeamRole,
+} from 'state/game/selectors';
 import { getShortPlayerName } from 'state/players/selectors';
 import { getBoxScore } from 'state/stats/selectors';
 import { useAppSelector } from 'utils/hooks';
@@ -77,6 +83,8 @@ const BoxScore = () => {
   const gameInProgress = useAppSelector(isGameInProgress);
   const gameOver = useAppSelector(isGameOver);
   const [awayStats, homeStats] = useAppSelector(getBoxScore);
+  const soloMode = useAppSelector(isSoloModeActive);
+  const protagonistRole = useAppSelector(getProtagonistTeamRole);
 
   if (!(gameOver || gameInProgress)) {
     return <Navigate to="/teams" />;
@@ -93,8 +101,17 @@ const BoxScore = () => {
       height="fit-content"
       overflow="auto"
     >
-      <TeamBoxScore rows={awayStats} team={TeamRole.AWAY} />
-      <TeamBoxScore rows={homeStats} team={TeamRole.HOME} />
+      {soloMode ? (
+        <TeamBoxScore
+          rows={protagonistRole === TeamRole.AWAY ? awayStats : homeStats}
+          team={protagonistRole}
+        />
+      ) : (
+        [
+          <TeamBoxScore key={TeamRole.AWAY} rows={awayStats} team={TeamRole.AWAY} />,
+          <TeamBoxScore key={TeamRole.HOME} rows={homeStats} team={TeamRole.HOME} />,
+        ]
+      )}
     </Box>
   );
 };

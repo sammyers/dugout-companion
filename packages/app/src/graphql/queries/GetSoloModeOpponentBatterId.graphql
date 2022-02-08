@@ -1,0 +1,9 @@
+query GetSoloModeOpponentBatterId($groupId: UUID!) {
+  player: playerByGroupIdAndFirstNameAndLastName(
+    groupId: $groupId
+    firstName: "Opponent"
+    lastName: "Batter"
+  ) {
+    id
+  }
+}

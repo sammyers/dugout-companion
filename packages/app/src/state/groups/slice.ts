@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { APP_DEFAULT_GROUP } from '@sammyers/dc-shared';
+import { APP_DEFAULT_GROUP, SOLO_MODE_OPPONENT_GROUP } from '@sammyers/dc-shared';
 
 import { Group } from './types';
 
 export interface GroupState {
-  currentGroup?: string;
+  currentGroup?: Group;
   all: Group[];
 }
 
@@ -13,14 +13,12 @@ const { reducer, actions: groupActions } = createSlice({
   initialState: { all: [] } as GroupState,
   reducers: {
     loadGroups: (state, { payload }: PayloadAction<Group[]>) => {
-      state.all = payload;
+      state.all = payload.filter(group => group.name !== SOLO_MODE_OPPONENT_GROUP);
       if (!state.currentGroup) {
-        state.currentGroup = (
-          payload.find(group => group.id === APP_DEFAULT_GROUP) ?? payload[0]
-        ).id;
+        state.currentGroup = payload.find(group => group.id === APP_DEFAULT_GROUP) ?? payload[0];
       }
     },
-    setCurrentGroup: (state, { payload }: PayloadAction<string>) => {
+    setCurrentGroup: (state, { payload }: PayloadAction<Group>) => {
       state.currentGroup = payload;
     },
   },

@@ -1,6 +1,7 @@
 query GetGameDetails($gameId: UUID!) {
   game(id: $gameId) {
     id
+    soloMode
     gameLength
     name
     score
@@ -16,6 +17,7 @@ query GetGameDetails($gameId: UUID!) {
       name
       role
       winner
+      soloModeOpponent
       finalLineup {
         lineupSpots(orderBy: BATTING_ORDER_ASC) {
           player {

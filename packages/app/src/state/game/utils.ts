@@ -18,15 +18,45 @@ export const getCurrentLineup = (team: Team) => _.last(team.lineups)?.lineupSpot
 
 export const allPositions = _.keys(FieldingPosition) as FieldingPosition[];
 
-export const shouldLineupHaveFourOutfielders = (lineup: LineupSpot[], addingPlayer = false) =>
-  lineup.length > (addingPlayer ? 8 : 9);
 export const getAvailablePositionsForLineup = (lineup: LineupSpot[], addingPlayer = false) => {
-  if (shouldLineupHaveFourOutfielders(lineup, addingPlayer)) {
-    return allPositions.filter(position => position !== FieldingPosition.CENTER_FIELD);
+  const lineupSize = lineup.length + (addingPlayer ? 1 : 0);
+  const occupiedPositions = lineup.filter(spot => !!spot.position).map(spot => spot.position!);
+
+  // Already in 5-man infield configuration
+  if (lineupSize >= 10 && occupiedPositions.includes(FieldingPosition.MIDDLE_INFIELD)) {
+    return _.difference(allPositions, [
+      FieldingPosition.LEFT_CENTER,
+      FieldingPosition.RIGHT_CENTER,
+    ]);
   }
-  return allPositions.filter(
-    position => ![FieldingPosition.RIGHT_CENTER, FieldingPosition.LEFT_CENTER].includes(position)
-  );
+
+  // Already in no-catcher configuration
+  if (
+    lineupSize === 9 &&
+    [FieldingPosition.LEFT_CENTER, FieldingPosition.RIGHT_CENTER].some(
+      position =>
+        occupiedPositions.includes(position) &&
+        !occupiedPositions.includes(FieldingPosition.CATCHER)
+    )
+  ) {
+    return _.difference(allPositions, [
+      FieldingPosition.CATCHER,
+      FieldingPosition.CENTER_FIELD,
+      FieldingPosition.MIDDLE_INFIELD,
+    ]);
+  }
+
+  if (lineupSize >= 10) {
+    return _.difference(allPositions, [
+      FieldingPosition.CENTER_FIELD,
+      FieldingPosition.MIDDLE_INFIELD,
+    ]);
+  }
+  return _.difference(allPositions, [
+    FieldingPosition.RIGHT_CENTER,
+    FieldingPosition.LEFT_CENTER,
+    FieldingPosition.MIDDLE_INFIELD,
+  ]);
 };
 
 export const getPlayerAtPositionFromTeams = (
@@ -219,3 +249,40 @@ export const getLineupWithNewPositions = (
   lineup: LineupSpot[],
   positions: Record<string, Maybe<FieldingPosition>>
 ) => lineup.map(({ playerId }) => ({ playerId, position: positions[playerId] }));
+
+export const mapFieldingPosition = (
+  position: FieldingPosition,
+  totalFielders: number,
+  numOutfielders: number
+) => {
+  if (numOutfielders === 3 && position === FieldingPosition.LEFT_CENTER) {
+    return FieldingPosition.CENTER_FIELD;
+  }
+  if (numOutfielders === 4 && position === FieldingPosition.CENTER_FIELD) {
+    return FieldingPosition.LEFT_CENTER;
+  }
+  if (numOutfielders === 3 && position === FieldingPosition.RIGHT_CENTER) {
+    if (totalFielders >= 10) {
+      return FieldingPosition.MIDDLE_INFIELD;
+    } else {
+      return FieldingPosition.CATCHER;
+    }
+  }
+  if (
+    numOutfielders === 4 &&
+    ((totalFielders <= 9 && position === FieldingPosition.CATCHER) ||
+      (totalFielders >= 10 && position === FieldingPosition.MIDDLE_INFIELD))
+  ) {
+    return FieldingPosition.RIGHT_CENTER;
+  }
+
+  return position;
+};
+
+export const isHit = (plateAppearanceType: PlateAppearanceType) =>
+  [
+    PlateAppearanceType.SINGLE,
+    PlateAppearanceType.DOUBLE,
+    PlateAppearanceType.TRIPLE,
+    PlateAppearanceType.HOMERUN,
+  ].includes(plateAppearanceType);

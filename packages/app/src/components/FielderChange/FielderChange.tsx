@@ -28,9 +28,16 @@ import {
   getBattingLineup,
   getFieldingLineup,
   getPreviousHalfInning,
+  getSoloModeOpponentPositions,
+  isOpponentTeamBatting,
   isRetroactiveFielderChangePossible,
+  isSoloModeActive,
 } from 'state/game/selectors';
-import { getAvailablePositionsForLineup } from 'state/game/utils';
+import {
+  getAvailablePositionsForLineup,
+  getLineupWithNewPositions,
+  mapFieldingPosition,
+} from 'state/game/utils';
 import { getShortPlayerName } from 'state/players/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
@@ -54,14 +61,15 @@ const positions: Record<FieldingPosition, CSSProperties> = {
   [FieldingPosition.PITCHER]: { top: 62, left: 50 },
   [FieldingPosition.CATCHER]: { top: 82, left: 50 },
   [FieldingPosition.FIRST_BASE]: { top: 55, right: 31 },
-  [FieldingPosition.SECOND_BASE]: { top: 38, right: 38 },
+  [FieldingPosition.SECOND_BASE]: { top: 42, right: 36 },
   [FieldingPosition.THIRD_BASE]: { top: 55, left: 31 },
-  [FieldingPosition.SHORTSTOP]: { top: 38, left: 38 },
+  [FieldingPosition.SHORTSTOP]: { top: 42, left: 36 },
   [FieldingPosition.LEFT_FIELD]: { top: 25, left: 22 },
   [FieldingPosition.CENTER_FIELD]: { top: 12, left: 50 },
   [FieldingPosition.LEFT_CENTER]: { top: 15, left: 40 },
   [FieldingPosition.RIGHT_CENTER]: { top: 15, right: 40 },
   [FieldingPosition.RIGHT_FIELD]: { top: 25, right: 22 },
+  [FieldingPosition.MIDDLE_INFIELD]: { top: 32, left: 50 },
 };
 
 const PlayerBubble = forwardRef<
@@ -138,7 +146,7 @@ const Position: FC<{ position: FieldingPosition }> = ({ position }) => {
           pad={{ horizontal: 'medium', vertical: 'small' }}
           round="medium"
           border={{ color: 'dark-1', size: '3px' }}
-          background={isOver ? 'accent-3' : 'neutral-4'}
+          background={isOver ? 'accent-3' : 'dark-4'}
         >
           {getPositionAbbreviation(position)}
         </Box>
@@ -177,6 +185,22 @@ const DragPreview = () => {
   return <PlayerBubble name={item.name} style={{ ...style, zIndex: 25 }} />;
 };
 
+const SwitchFieldingConfigurationButton: FC<{
+  numFielders: number;
+  numOutfielders: number;
+  onClick: () => void;
+}> = ({ numFielders, numOutfielders, onClick }) => (
+  <Button plain={false} onClick={onClick} style={{ maxWidth: '15rem' }}>
+    {numFielders === 9
+      ? numOutfielders === 4
+        ? 'Switch to 3 outfielders'
+        : 'Switch to 4 outfielders (no catcher)'
+      : numOutfielders === 4
+      ? 'Switch to 5 infielders'
+      : 'Switch to 4 outfielders'}
+  </Button>
+);
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -185,9 +209,17 @@ interface Props {
 const FielderChange: FC<Props> = ({ open, onClose }) => {
   const dispatch = useAppDispatch();
 
+  const soloMode = useAppSelector(isSoloModeActive);
+  const opponentBatting = useAppSelector(isOpponentTeamBatting);
   const canChangeFieldersRetroactively = useAppSelector(isRetroactiveFielderChangePossible);
   const previousHalfInning = useAppSelector(getPreviousHalfInning);
   const [selectedHalfInning, setSelectedHalfInning] = useState<'current' | 'previous'>('current');
+
+  useEffect(() => {
+    setSelectedHalfInning('current');
+  }, [setSelectedHalfInning]);
+
+  const editingSoloModeOpponent = soloMode && !opponentBatting && selectedHalfInning === 'current';
 
   const battingLineup = useAppSelector(getBattingLineup);
   const fieldingLineup = useAppSelector(getFieldingLineup);
@@ -200,18 +232,37 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
     () => _.fromPairs(lineupToEdit.map(({ playerId, position }) => [playerId, position])),
     [lineupToEdit]
   );
-
   const [editedFielders, setEditedFielders] = useState<FielderMap>({} as FielderMap);
+  // Initialize fielder state
+  useEffect(() => {
+    setEditedFielders(originalFielders);
+  }, [open, originalFielders]);
+
+  const numFielders = useMemo(() => _.size(editedFielders), [editedFielders]);
+  const numOutfielders = useMemo(
+    () => (_.some(editedFielders, position => position === FieldingPosition.LEFT_CENTER) ? 4 : 3),
+    [editedFielders]
+  );
+
+  const opponentPositions = useAppSelector(getSoloModeOpponentPositions);
+  const numOpponentOutfielders = useMemo(
+    () =>
+      _.some(opponentPositions, position => position === FieldingPosition.LEFT_CENTER) ? 4 : 3,
+    [opponentPositions]
+  );
+
+  const availablePositions = useMemo(
+    () =>
+      editingSoloModeOpponent
+        ? opponentPositions
+        : getAvailablePositionsForLineup(getLineupWithNewPositions(lineupToEdit, editedFielders)),
+    [editingSoloModeOpponent, opponentPositions, lineupToEdit, editedFielders]
+  );
 
   const playersWithoutPositions = useMemo(
     () => _.keys(_.pickBy(editedFielders, position => !position)),
     [editedFielders]
   );
-
-  // Initialize fielder state
-  useEffect(() => {
-    setEditedFielders(originalFielders);
-  }, [open, originalFielders]);
 
   const moveFielder: FielderContext['moveFielder'] = useCallback(
     (playerId, position, playerToSwap) => {
@@ -233,6 +284,19 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
     [setEditedFielders]
   );
 
+  const setNumOutfielders = useCallback(
+    (value: number) => {
+      setEditedFielders(fielders => {
+        const numFielders = _.size(fielders);
+        return _.mapValues(
+          fielders,
+          position => position && mapFieldingPosition(position, numFielders, value)
+        );
+      });
+    },
+    [setEditedFielders]
+  );
+
   const handleSave = useCallback(() => {
     if (selectedHalfInning === 'current') {
       dispatch(gameActions.changePositionsCurrent(editedFielders));
@@ -242,6 +306,10 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
     onClose();
   }, [selectedHalfInning, dispatch, editedFielders, onClose]);
 
+  const handleChangeOpponentOutfielders = useCallback(() => {
+    dispatch(gameActions.changeOpponentNumOutfielders(numOpponentOutfielders === 3 ? 4 : 3));
+  }, [dispatch, numOpponentOutfielders]);
+
   if (!open) {
     return null;
   }
@@ -249,8 +317,10 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
   return (
     <Layer full modal margin="medium" onClickOutside={onClose}>
       <Box flex pad={{ vertical: 'medium', horizontal: 'large' }} align="center" gap="small">
-        <Text weight="bold">Drag players to update their positions.</Text>
-        {canChangeFieldersRetroactively && (
+        {!editingSoloModeOpponent && (
+          <Text weight="bold">Drag players to update their positions.</Text>
+        )}
+        {canChangeFieldersRetroactively && !(soloMode && opponentBatting) && (
           <Box gap="small">
             <Box direction="row" gap="small" alignSelf="center">
               <Button
@@ -282,6 +352,11 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
             )}
           </Box>
         )}
+        {editingSoloModeOpponent && (
+          <Text weight="bold" margin={{ top: 'medium' }}>
+            Opponent fielding configuration:
+          </Text>
+        )}
         <Box flex style={{ aspectRatio: '10/7', position: 'relative' }}>
           <fielderContext.Provider value={{ fielders: editedFielders, moveFielder }}>
             <DndProvider options={HTML5toTouch}>
@@ -289,7 +364,7 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
               <Stack>
                 <FieldGraphic runnerMode={false} />
                 <Box style={{ position: 'absolute', top: 0, bottom: 0 }} fill>
-                  {getAvailablePositionsForLineup(lineupToEdit).map(position => (
+                  {availablePositions.map(position => (
                     <Position key={position} position={position as FieldingPosition} />
                   ))}
                 </Box>
@@ -306,22 +381,45 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
                   </Box>
                 </Box>
               )}
+              {numFielders >= 9 && (
+                <Box
+                  style={{ position: 'absolute', bottom: 0, right: 0 }}
+                  pad={{ bottom: 'small' }}
+                >
+                  <SwitchFieldingConfigurationButton
+                    numFielders={numFielders}
+                    numOutfielders={numOutfielders}
+                    onClick={() => setNumOutfielders(numOutfielders === 4 ? 3 : 4)}
+                  />
+                </Box>
+              )}
             </DndProvider>
           </fielderContext.Provider>
         </Box>
-        <Box direction="row" align="center" gap="small">
-          <Button primary plain={false} color="status-critical" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button
-            plain={false}
-            primary
-            onClick={handleSave}
-            disabled={_.isEqual(originalFielders, editedFielders)}
-          >
-            Save Changes
-          </Button>
-        </Box>
+        {editingSoloModeOpponent && (
+          <Box margin="medium">
+            <SwitchFieldingConfigurationButton
+              numFielders={opponentPositions.length}
+              numOutfielders={numOpponentOutfielders}
+              onClick={handleChangeOpponentOutfielders}
+            />
+          </Box>
+        )}
+        {!editingSoloModeOpponent && (
+          <Box direction="row" align="center" gap="small">
+            <Button primary plain={false} color="status-critical" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              plain={false}
+              primary
+              onClick={handleSave}
+              disabled={_.isEqual(originalFielders, editedFielders)}
+            >
+              Save Changes
+            </Button>
+          </Box>
+        )}
       </Box>
     </Layer>
   );

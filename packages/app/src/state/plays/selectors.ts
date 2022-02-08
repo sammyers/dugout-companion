@@ -1,7 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
-import { getFuture, getGameHistory, getGameStateGetter, getTeams } from 'state/game/selectors';
+import {
+  getFuture,
+  getGameHistory,
+  getGameStateGetter,
+  getTeams,
+  isSoloModeActive,
+} from 'state/game/selectors';
 import { getTeamWithRole } from 'state/game/utils';
 import { getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
@@ -21,17 +27,19 @@ const makeInterpolatedPlayDescription = (
   play: GameEventRecord,
   playerGetter: (playerId: string) => Player,
   gameStateGetter: (gameStateId: string) => GameState,
-  teams: Team[]
+  teams: Team[],
+  soloMode: boolean
 ): PlayDescription => {
   const gameStateBefore = gameStateGetter(play.gameStateBeforeId);
   const gameStateAfter = gameStateGetter(play.gameStateAfterId);
   const { description, playerIds, position, newNumOuts, newScore } = getPlayDescription(
     play,
     gameStateBefore,
-    gameStateAfter
+    gameStateAfter,
+    soloMode
   );
   let interpolatedDescription = description;
-  if (position) {
+  if (position && !soloMode) {
     const teamRole =
       gameStateBefore.halfInning === HalfInning.BOTTOM ? TeamRole.AWAY : TeamRole.HOME;
     const team = getTeamWithRole(teams, teamRole);
@@ -64,7 +72,8 @@ export const getAllPlays = createSelector(
   getPlayerGetter,
   getGameStateGetter,
   getTeams,
-  (history, playerGetter, gameStateGetter, teams): HalfInningPlaysGroup[] => {
+  isSoloModeActive,
+  (history, playerGetter, gameStateGetter, teams, soloMode): HalfInningPlaysGroup[] => {
     const groupedPlaysByInning = history.reduce((groupedPlays, play) => {
       const gameStateBefore = gameStateGetter(play.gameStateBeforeId);
       const { inning, halfInning } = gameStateBefore;
@@ -86,7 +95,9 @@ export const getAllPlays = createSelector(
       halfInning,
       plays: plays
         .filter(play => !play.gameEvent.lineupChange)
-        .map(play => makeInterpolatedPlayDescription(play, playerGetter, gameStateGetter, teams)),
+        .map(play =>
+          makeInterpolatedPlayDescription(play, playerGetter, gameStateGetter, teams, soloMode)
+        ),
     }));
   }
 );
@@ -106,10 +117,12 @@ export const getLastPlay = createSelector(
   getPlayerGetter,
   getGameStateGetter,
   getTeams,
-  (history, playerGetter, gameStateGetter, teams) => {
+  isSoloModeActive,
+  (history, playerGetter, gameStateGetter, teams, soloMode) => {
     const lastPlay = _.last(history);
     return (
-      lastPlay && makeInterpolatedPlayDescription(lastPlay, playerGetter, gameStateGetter, teams)
+      lastPlay &&
+      makeInterpolatedPlayDescription(lastPlay, playerGetter, gameStateGetter, teams, soloMode)
     );
   }
 );
@@ -118,12 +131,19 @@ export const getNextPlay = createSelector(
   getFuture,
   getPlayerGetter,
   getGameStateGetter,
-  (future, playerGetter, gameStateGetter) => {
+  isSoloModeActive,
+  (future, playerGetter, gameStateGetter, soloMode) => {
     const nextState = _.first(future);
     const nextPlay = _.last(nextState?.gameEventRecords);
     return (
       nextPlay &&
-      makeInterpolatedPlayDescription(nextPlay, playerGetter, gameStateGetter, nextState!.teams)
+      makeInterpolatedPlayDescription(
+        nextPlay,
+        playerGetter,
+        gameStateGetter,
+        nextState!.teams,
+        soloMode
+      )
     );
   }
 );

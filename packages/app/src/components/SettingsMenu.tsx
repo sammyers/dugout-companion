@@ -1,15 +1,11 @@
-import React, { useCallback, ChangeEvent } from 'react';
-import { Box, Button, DropButton, Heading, RangeInput, Select, Text } from 'grommet';
-import { Add, Erase, PowerReset, Subtract } from 'grommet-icons';
+import React, { useCallback } from 'react';
+import { Box, Button, DropButton, Heading, Select, Text } from 'grommet';
+import { Erase, PowerReset } from 'grommet-icons';
 import { PURGE } from 'redux-persist';
 
-import {
-  getCurrentGameLength,
-  getMaxGameLength,
-  getMinGameLength,
-  isGameInExtraInnings,
-  isGameInProgress,
-} from 'state/game/selectors';
+import GameLengthSelector from './GameLengthSelector';
+
+import { isGameInProgress, isSoloModeActive } from 'state/game/selectors';
 import { getAllGroups, getCurrentGroup } from 'state/groups/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
@@ -17,8 +13,17 @@ import { groupActions } from 'state/groups/slice';
 
 const GroupSelector = () => {
   const dispatch = useAppDispatch();
-  const currentGroupId = useAppSelector(getCurrentGroup);
+  const currentGroup = useAppSelector(getCurrentGroup);
   const groups = useAppSelector(getAllGroups);
+
+  const handleChange = useCallback(
+    ({ value }: { value: string }) => {
+      if (value !== currentGroup?.id) {
+        dispatch(groupActions.setCurrentGroup(groups.find(group => group.id === value)!));
+      }
+    },
+    [dispatch, currentGroup, groups]
+  );
 
   return (
     <Select
@@ -26,12 +31,8 @@ const GroupSelector = () => {
       options={groups}
       labelKey="name"
       valueKey={{ key: 'id', reduce: true }}
-      value={currentGroupId}
-      onChange={({ value }) => {
-        if (value !== currentGroupId) {
-          dispatch(groupActions.setCurrentGroup(value));
-        }
-      }}
+      value={currentGroup?.id}
+      onChange={handleChange}
     />
   );
 };
@@ -71,32 +72,17 @@ const PurgeConfirm = () => {
 };
 
 const SettingsMenu = () => {
-  const dispatch = useAppDispatch();
-
-  const minInnings = useAppSelector(getMinGameLength);
-  const maxInnings = useAppSelector(getMaxGameLength);
-  const currentGameLength = useAppSelector(getCurrentGameLength);
   const inProgress = useAppSelector(isGameInProgress);
-  const inExtraInnings = useAppSelector(isGameInExtraInnings);
-
-  const handleChangeGameLength = useCallback(
-    ({ target }: ChangeEvent<HTMLInputElement>) => {
-      dispatch(gameActions.changeGameLength(parseInt(target.value)));
-    },
-    [dispatch]
-  );
-
-  const handleClickSubtractGameLength = useCallback(
-    () => dispatch(gameActions.decrementGameLength()),
-    [dispatch]
-  );
-  const handleClickAddGameLength = useCallback(
-    () => dispatch(gameActions.incrementGameLength()),
-    [dispatch]
-  );
+  const soloMode = useAppSelector(isSoloModeActive);
 
   return (
-    <Box pad={{ bottom: 'medium', horizontal: 'small', top: 'small' }} gap="medium">
+    <Box
+      pad={{ bottom: 'medium', horizontal: 'small', top: 'small' }}
+      gap="medium"
+      background="white"
+      border={{ color: 'dark-3', side: 'all' }}
+      round="xsmall"
+    >
       <Box>
         {!inProgress && (
           <>
@@ -106,36 +92,7 @@ const SettingsMenu = () => {
             <GroupSelector />
           </>
         )}
-        <Heading level={5} margin="none" alignSelf="center">
-          Game Length
-        </Heading>
-        <Box direction="row" align="center" gap="xsmall">
-          <Button
-            icon={<Subtract />}
-            onClick={handleClickSubtractGameLength}
-            disabled={currentGameLength === minInnings || inExtraInnings}
-          />
-          <RangeInput
-            step={1}
-            min={minInnings}
-            max={maxInnings}
-            value={currentGameLength}
-            onChange={handleChangeGameLength}
-            disabled={inExtraInnings}
-          />
-          <Button
-            icon={<Add />}
-            onClick={handleClickAddGameLength}
-            disabled={currentGameLength === maxInnings || inExtraInnings}
-          />
-        </Box>
-        <Text
-          size="small"
-          alignSelf="center"
-          color={inExtraInnings ? 'status-critical' : undefined}
-        >
-          {inExtraInnings ? 'In extra' : currentGameLength} innings
-        </Text>
+        {!soloMode && <GameLengthSelector />}
       </Box>
       {inProgress && (
         <DropButton

@@ -2,5 +2,6 @@ query GetAllGroups {
   groups {
     id
     name
+    soloMode
   }
 }

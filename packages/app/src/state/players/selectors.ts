@@ -1,18 +1,18 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
+import { getCurrentGroupId } from 'state/groups/selectors';
 import { formatName, formatShortName } from './utils';
 
 import { AppState } from 'state/store';
 import { Player } from './types';
-import { getCurrentGroup } from 'state/groups/selectors';
 
 export const getUnsyncedPlayers = (state: AppState) =>
-  state.players.unsynced[getCurrentGroup(state)!];
+  state.players.unsynced[getCurrentGroupId(state)!];
 export const anyUnsyncedPlayers = createSelector(getUnsyncedPlayers, players => !!_.size(players));
 
 const getMergedPlayers = (state: AppState) => {
-  const groupId = getCurrentGroup(state);
+  const groupId = getCurrentGroupId(state);
   const { synced, unsynced } = state.players;
   return { ...synced[groupId!], ...unsynced[groupId!] };
 };

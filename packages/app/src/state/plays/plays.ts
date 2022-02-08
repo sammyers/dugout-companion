@@ -25,6 +25,7 @@ const getPositionTitle = (position: FieldingPosition) =>
     [FieldingPosition.LEFT_CENTER]: 'left center fielder',
     [FieldingPosition.RIGHT_CENTER]: 'right center fielder',
     [FieldingPosition.RIGHT_FIELD]: 'right fielder',
+    [FieldingPosition.MIDDLE_INFIELD]: 'middle infielder',
   }[position]);
 
 const getContactVerb = (contactType: ContactQuality) =>
@@ -35,6 +36,8 @@ const getContactVerb = (contactType: ContactQuality) =>
     [ContactQuality.LINE_DRIVE]: 'lines',
     [ContactQuality.LONG_FLY]: 'flies',
     [ContactQuality.POPUP]: 'pops',
+    [ContactQuality.FOUL]: 'fouls',
+    [ContactQuality.DEAD_BALL]: 'hits a dead ball',
   }[contactType]);
 
 const getHitVerb = (hitType: HitType) =>
@@ -59,11 +62,12 @@ const makeOutPhrase = (runnerId: string, base: BaseType | null) =>
 
 export const getPlayDescription = (
   {
-    gameEvent: { plateAppearance, stolenBaseAttempt, lineupChange },
+    gameEvent: { plateAppearance, stolenBaseAttempt, lineupChange, soloModeOpponentInning },
     scoredRunners,
   }: GameEventRecord,
   gameStateBefore: GameState,
-  gameStateAfter: GameState
+  gameStateAfter: GameState,
+  soloMode: boolean
 ): RawPlayDescription => {
   const sentences: string[] = [];
   const playerIds: string[] = [];
@@ -89,12 +93,28 @@ export const getPlayDescription = (
     playerIds.push(runnerId);
   } else if (lineupChange) {
     sentences.push('Lineup change');
+  } else if (soloModeOpponentInning) {
+    const { runsScored } = soloModeOpponentInning;
+    if (runsScored) {
+      sentences.push(`Opponent scores ${runsScored} run${runsScored > 1 ? 's' : ''}.`);
+      newScore = gameStateAfter.score;
+    } else {
+      sentences.push('Opponent is held scoreless.');
+    }
   } else if (plateAppearance) {
     const { playerAtBat, baseRunners, outs } = gameStateBefore;
     const runners = runnersToMap(baseRunners);
     const { type, fieldedBy, contact, outOnPlayRunners, basepathMovements } = plateAppearance;
     playerIds.push(playerAtBat);
-    const fielderToken = fieldedBy && `${getPositionTitle(fieldedBy)} {${fieldedBy}}`;
+    let fielderToken = '';
+    if (fieldedBy) {
+      const positionTitle = getPositionTitle(fieldedBy);
+      if (soloMode) {
+        fielderToken = `the ${positionTitle}`;
+      } else {
+        fielderToken = `${positionTitle} {${fieldedBy}}`;
+      }
+    }
 
     switch (type) {
       case PlateAppearanceType.WALK:
@@ -146,7 +166,13 @@ export const getPlayDescription = (
         break;
       case PlateAppearanceType.OUT: {
         const parts = [`{${playerAtBat}} ${getContactVerb(contact!)} out`];
-        if (contact !== ContactQuality.NONE && fielderToken) {
+        if (contact === ContactQuality.DEAD_BALL && fieldedBy) {
+          parts.push(` to ${getPositionTitle(fieldedBy).slice(0, -2)}`);
+        } else if (
+          contact !== ContactQuality.NONE &&
+          contact !== ContactQuality.FOUL &&
+          fielderToken
+        ) {
           parts.push(` to ${fielderToken}`);
           position = fieldedBy!;
         }
@@ -186,7 +212,7 @@ export const getPlayDescription = (
           playerIds.push(runnerId);
         }
       });
-      newScore = gameStateAfter.score as number[];
+      newScore = gameStateAfter.score;
     }
     forEachRunner(runnersToMap(gameStateAfter.baseRunners), (runnerId, base) => {
       if (runners[base] !== runnerId && runnerId !== playerAtBat) {

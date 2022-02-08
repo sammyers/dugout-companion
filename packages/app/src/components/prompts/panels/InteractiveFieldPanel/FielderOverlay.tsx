@@ -5,7 +5,7 @@ import _ from 'lodash';
 
 import { FieldingPosition, getPositionAbbreviation } from '@sammyers/dc-shared';
 
-import { getSelectedFielderOption } from 'state/prompts/selectors';
+import { getSelectedFielderOption, wasHitOverFence } from 'state/prompts/selectors';
 import { promptActions } from 'state/prompts/slice';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
@@ -27,12 +27,22 @@ const positions: Record<FieldingPosition, CSSProperties> = {
   [FieldingPosition.LEFT_CENTER]: { top: 15, left: 40 },
   [FieldingPosition.RIGHT_CENTER]: { top: 15, right: 40 },
   [FieldingPosition.RIGHT_FIELD]: { top: 25, right: 22 },
+  [FieldingPosition.MIDDLE_INFIELD]: { top: 32, left: 50 },
+};
+
+const deepOutfieldPositions: Partial<Record<FieldingPosition, CSSProperties>> = {
+  [FieldingPosition.LEFT_FIELD]: { top: 25, left: 17 },
+  [FieldingPosition.CENTER_FIELD]: { top: 3, left: 50 },
+  [FieldingPosition.LEFT_CENTER]: { top: 11, left: 31 },
+  [FieldingPosition.RIGHT_CENTER]: { top: 11, right: 31 },
+  [FieldingPosition.RIGHT_FIELD]: { top: 25, right: 17 },
 };
 
 const FielderOverlay: FC<FielderOptions> = ({ options }) => {
   const dispatch = useAppDispatch();
 
   const selectedOption = useAppSelector(getSelectedFielderOption);
+  const overFence = useAppSelector(wasHitOverFence);
 
   useEffect(() => {
     if (!_.some(options, option => option.position === selectedOption?.position)) {
@@ -51,7 +61,7 @@ const FielderOverlay: FC<FielderOptions> = ({ options }) => {
   return (
     <AnimatePresence>
       {selectorOptions.map(position => {
-        const { top, ...style } = positions[position];
+        const { top, ...style } = (overFence ? deepOutfieldPositions : positions)[position]!;
         const animateFrom = top! <= 30 ? '-15%' : '110%';
         return (
           <AnimatedButton

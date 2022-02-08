@@ -105,7 +105,10 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
 
   const teamBoxScores = useMemo(() => {
     const battingLineMap = Object.fromEntries(boxScoreLines.map(line => [line!.playerId!, line]));
-    return _.sortBy(teams, 'role').map(({ name, role, winner, finalLineup }) => ({
+    return _.sortBy(
+      teams.filter(team => !team.soloModeOpponent),
+      'role'
+    ).map(({ name, role, winner, finalLineup }) => ({
       name: name!,
       role: role!,
       winner,
@@ -133,7 +136,6 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
           <Heading level={4} margin="small" color={team.winner ? 'status-ok' : 'status-critical'}>
             {team.name}
           </Heading>
-          <ThemeContext.Extend value={{ text: { font: { size: '14px' } } }}></ThemeContext.Extend>
           <DataTable
             fill
             columns={responsiveColumns}

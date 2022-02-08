@@ -18,11 +18,13 @@ import {
   isGameInProgress,
   isUndoPossible,
   isRedoPossible,
+  isOpponentTeamBatting,
 } from 'state/game/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
 import { ReactComponent as BaseIcon } from 'graphics/base.svg';
 import { ReactComponent as HomeIcon } from 'graphics/home.svg';
+import OpponentScoreReporter from './OpponentScoreReporter';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (
   <Blank
@@ -43,6 +45,7 @@ const Bases = () => {
   const dispatch = useAppDispatch();
 
   const gameInProgress = useAppSelector(isGameInProgress);
+  const opponentBatting = useAppSelector(isOpponentTeamBatting);
   const {
     [BaseType.FIRST]: firstBaseRunner,
     [BaseType.SECOND]: secondBaseRunner,
@@ -102,53 +105,59 @@ const Bases = () => {
               onClick={() => setShowFielderChangeUI(true)}
             />
           </Box>
-          <Box gridArea="first-base" direction="row" justify="end" align="center">
-            <Text textAlign="center">{firstBaseRunner}</Text>
-            <Base occupied={!!firstBaseRunner} />
-          </Box>
-          <Box gridArea="second-base" align="center">
-            <Base occupied={!!secondBaseRunner} />
-            <Text>{secondBaseRunner}</Text>
-          </Box>
-          <Box gridArea="third-base" direction="row" align="center">
-            <Base occupied={!!thirdBaseRunner} />
-            <Text textAlign="center">{thirdBaseRunner}</Text>
-          </Box>
-          <Box
-            gridArea="home-plate"
-            justify="end"
-            align="center"
-            background="neutral-2"
-            round="small"
-            pad={{ horizontal: 'small' }}
-            margin={{ bottom: 'xsmall' }}
-            style={{ justifySelf: 'center' }}
-          >
-            <Text weight="bold" size="xlarge">
-              {batter}
-            </Text>
-            <HomePlate />
-          </Box>
-          <EventReporter />
+          {!opponentBatting && (
+            <>
+              <Box gridArea="first-base" direction="row" justify="end" align="center">
+                <Text textAlign="center">{firstBaseRunner}</Text>
+                <Base occupied={!!firstBaseRunner} />
+              </Box>
+              <Box gridArea="second-base" align="center">
+                <Base occupied={!!secondBaseRunner} />
+                <Text>{secondBaseRunner}</Text>
+              </Box>
+              <Box gridArea="third-base" direction="row" align="center">
+                <Base occupied={!!thirdBaseRunner} />
+                <Text textAlign="center">{thirdBaseRunner}</Text>
+              </Box>
+              <Box
+                gridArea="home-plate"
+                justify="end"
+                align="center"
+                background="neutral-2"
+                round="small"
+                pad={{ horizontal: 'small' }}
+                margin={{ bottom: 'xsmall' }}
+                style={{ justifySelf: 'center' }}
+              >
+                <Text weight="bold" size="xlarge">
+                  {batter}
+                </Text>
+                <HomePlate />
+              </Box>
+            </>
+          )}
+          {opponentBatting ? <OpponentScoreReporter /> : <EventReporter />}
         </Grid>
         {boxRef.current && <PlayNotification target={boxRef.current} />}
       </Box>
-      <Box
-        border={{ side: 'top' }}
-        direction="row"
-        justify="around"
-        pad="medium"
-        background="neutral-5"
-      >
-        <Box direction="row" gap="small">
-          <Text>On Deck</Text>
-          <Text weight="bold">{onDeck}</Text>
+      {!opponentBatting && (
+        <Box
+          border={{ side: 'top' }}
+          direction="row"
+          justify="around"
+          pad="medium"
+          background="neutral-5"
+        >
+          <Box direction="row" gap="small">
+            <Text>On Deck</Text>
+            <Text weight="bold">{onDeck}</Text>
+          </Box>
+          <Box direction="row" gap="small">
+            <Text>In the Hole</Text>
+            <Text weight="bold">{inTheHole}</Text>
+          </Box>
         </Box>
-        <Box direction="row" gap="small">
-          <Text>In the Hole</Text>
-          <Text weight="bold">{inTheHole}</Text>
-        </Box>
-      </Box>
+      )}
     </Box>
   );
 };

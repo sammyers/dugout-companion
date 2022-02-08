@@ -14,11 +14,13 @@ export const formatShortBaseName = (base: BaseType | null) => {
 export const getOutLabelFromContact = (contactType: ContactQuality) =>
   ({
     [ContactQuality.GROUNDER]: 'Groundout',
-    [ContactQuality.LAZY_FLY]: 'Lazy flyout',
+    [ContactQuality.LAZY_FLY]: 'Lazy Flyout',
     [ContactQuality.LINE_DRIVE]: 'Lineout',
-    [ContactQuality.LONG_FLY]: 'Long flyout',
+    [ContactQuality.LONG_FLY]: 'Long Flyout',
     [ContactQuality.POPUP]: 'Popout',
     [ContactQuality.NONE]: 'Strikeout',
+    [ContactQuality.FOUL]: 'Foul Out',
+    [ContactQuality.DEAD_BALL]: 'DBO',
   }[contactType]);
 
 export const getHitLabelFromContact = (contactType: HitContactType) =>
@@ -28,6 +30,9 @@ export const getHitLabelFromContact = (contactType: HitContactType) =>
     [ContactQuality.LINE_DRIVE]: 'Line drive',
     [ContactQuality.LONG_FLY]: 'Long fly ball',
     [ContactQuality.POPUP]: 'Pop fly',
+    // These shouldn't show up
+    [ContactQuality.FOUL]: '',
+    [ContactQuality.DEAD_BALL]: '',
   }[contactType]);
 
 export const getRunnerOptionLabel = (option: BasepathOutcome) => {

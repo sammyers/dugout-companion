@@ -2,9 +2,9 @@ import { createNextState, createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
 import {
-  doesFieldingTeamHaveFourOutfielders,
   getCurrentBatter,
   getNumOuts,
+  getOccupiedFieldingPositions,
   getPresent,
   getRunnerMap,
 } from 'state/game/selectors';
@@ -15,7 +15,7 @@ import {
   getPlateAppearanceDetailPrompt,
 } from './prompts';
 
-import { BaseType } from '@sammyers/dc-shared';
+import { BaseType, ContactQuality, PlateAppearanceType } from '@sammyers/dc-shared';
 import { PlateAppearance } from 'state/game/types';
 import { AppState } from 'state/store';
 import { BasepathOutcome } from './types';
@@ -166,9 +166,9 @@ export const getPrompt = createSelector(
   getCurrentBatter,
   getNumOuts,
   getRunnerMap,
-  doesFieldingTeamHaveFourOutfielders,
-  (paType, batterId, outs, runners, fourOutfielders) =>
-    getPlateAppearanceDetailPrompt(paType!, batterId!, outs, runners, fourOutfielders)
+  getOccupiedFieldingPositions,
+  (paType, batterId, outs, runners, fieldingPositions) =>
+    getPlateAppearanceDetailPrompt(paType!, batterId!, outs, runners, fieldingPositions)
 );
 
 export const getAllRunnersOut = createSelector(
@@ -200,3 +200,11 @@ export const getDetailedOutOnPlayOptions = (state: AppState, runnerIds: string[]
       : 'Batter',
   }));
 };
+
+export const wasHitOverFence = createSelector(
+  getPlateAppearanceType,
+  getSelectedContactOption,
+  (paType, contactOption) =>
+    paType === PlateAppearanceType.HOMERUN ||
+    contactOption?.contactType === ContactQuality.DEAD_BALL
+);

@@ -663,6 +663,23 @@ type Query implements Node {
     condition: SeasonStatsQualifiedBatterCondition
   ): [SeasonStatsQualifiedBatter!]
 
+  """Reads a set of `SoloModeOpponentInning`."""
+  soloModeOpponentInnings(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `SoloModeOpponentInning`."""
+    orderBy: [SoloModeOpponentInningsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: SoloModeOpponentInningCondition
+  ): [SoloModeOpponentInning!]
+
   """Reads a set of `StolenBaseAttempt`."""
   stolenBaseAttempts(
     """Only read the first `n` values of the set."""
@@ -740,10 +757,11 @@ type Query implements Node {
   outOnPlayRunner(plateAppearanceId: UUID!, runnerId: UUID!): OutOnPlayRunner
   plateAppearance(id: UUID!): PlateAppearance
   player(id: UUID!): Player
-  playerByFirstNameAndLastName(firstName: String!, lastName: String!): Player
+  playerByGroupIdAndFirstNameAndLastName(groupId: UUID!, firstName: String!, lastName: String!): Player
   reduxDump(id: UUID!): ReduxDump
   scoredRunner(gameEventRecordId: UUID!, runnerId: UUID!): ScoredRunner
   season(groupId: UUID!, year: Int!): Season
+  soloModeOpponentInning(id: UUID!): SoloModeOpponentInning
   stolenBaseAttempt(id: UUID!): StolenBaseAttempt
   team(id: UUID!): Team
   teamByGameIdAndRole(gameId: UUID!, role: TeamRole!): Team
@@ -964,6 +982,16 @@ type Query implements Node {
     nodeId: ID!
   ): Season
 
+  """
+  Reads a single `SoloModeOpponentInning` using its globally unique `ID`.
+  """
+  soloModeOpponentInningByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `SoloModeOpponentInning`.
+    """
+    nodeId: ID!
+  ): SoloModeOpponentInning
+
   """Reads a single `StolenBaseAttempt` using its globally unique `ID`."""
   stolenBaseAttemptByNodeId(
     """
@@ -1131,6 +1159,7 @@ type Game implements Node {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime!
+  soloMode: Boolean
 
   """Reads a single `Group` that is related to this `Game`."""
   group: Group
@@ -1256,6 +1285,7 @@ type Group implements Node {
   id: UUID!
   name: String!
   notes: String
+  soloMode: Boolean
 
   """Reads and enables pagination through a set of `Player`."""
   players(
@@ -3359,6 +3389,7 @@ type Team implements Node {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
 
   """Reads a single `Game` that is related to this `Team`."""
   game: Game
@@ -3499,6 +3530,7 @@ enum FieldingPosition {
   LEFT_CENTER
   RIGHT_CENTER
   RIGHT_FIELD
+  MIDDLE_INFIELD
 }
 
 """Methods to use when ordering `LineupSpot`."""
@@ -3655,6 +3687,8 @@ enum TeamsOrderBy {
   CAPTAIN_ID_DESC
   WINNER_ASC
   WINNER_DESC
+  SOLO_MODE_OPPONENT_ASC
+  SOLO_MODE_OPPONENT_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -3680,6 +3714,9 @@ input TeamCondition {
 
   """Checks for equality with the object’s `winner` field."""
   winner: Boolean
+
+  """Checks for equality with the object’s `soloModeOpponent` field."""
+  soloModeOpponent: Boolean
 }
 
 type BasepathMovement implements Node {
@@ -3767,6 +3804,8 @@ enum ContactQuality {
   POPUP
   LAZY_FLY
   LONG_FLY
+  FOUL
+  DEAD_BALL
 }
 
 """Methods to use when ordering `BasepathMovement`."""
@@ -4034,6 +4073,7 @@ type GameEvent implements Node {
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
 
   """Reads a single `PlateAppearance` that is related to this `GameEvent`."""
   plateAppearance: PlateAppearance
@@ -4045,6 +4085,11 @@ type GameEvent implements Node {
 
   """Reads a single `LineupChange` that is related to this `GameEvent`."""
   lineupChange: LineupChange
+
+  """
+  Reads a single `SoloModeOpponentInning` that is related to this `GameEvent`.
+  """
+  soloModeOpponentInning: SoloModeOpponentInning
 
   """Reads and enables pagination through a set of `GameEventRecord`."""
   gameEventRecords(
@@ -4062,6 +4107,15 @@ type GameEvent implements Node {
     """
     condition: GameEventRecordCondition
   ): [GameEventRecord!]!
+}
+
+type SoloModeOpponentInning implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  runsScored: Int!
 }
 
 """Methods to use when ordering `GameEventRecord`."""
@@ -4342,6 +4396,8 @@ enum GamesOrderBy {
   TIME_ENDED_DESC
   TIME_SAVED_ASC
   TIME_SAVED_DESC
+  SOLO_MODE_ASC
+  SOLO_MODE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4376,6 +4432,9 @@ input GameCondition {
 
   """Checks for equality with the object’s `timeSaved` field."""
   timeSaved: Datetime
+
+  """Checks for equality with the object’s `soloMode` field."""
+  soloMode: Boolean
 }
 
 type Field implements Node {
@@ -4718,6 +4777,8 @@ enum GameEventsOrderBy {
   STOLEN_BASE_ATTEMPT_ID_DESC
   LINEUP_CHANGE_ID_ASC
   LINEUP_CHANGE_ID_DESC
+  SOLO_MODE_OPPONENT_INNING_ID_ASC
+  SOLO_MODE_OPPONENT_INNING_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4738,6 +4799,11 @@ input GameEventCondition {
 
   """Checks for equality with the object’s `lineupChangeId` field."""
   lineupChangeId: UUID
+
+  """
+  Checks for equality with the object’s `soloModeOpponentInningId` field.
+  """
+  soloModeOpponentInningId: UUID
 }
 
 """Methods to use when ordering `Group`."""
@@ -4749,6 +4815,8 @@ enum GroupsOrderBy {
   NAME_DESC
   NOTES_ASC
   NOTES_DESC
+  SOLO_MODE_ASC
+  SOLO_MODE_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4765,6 +4833,9 @@ input GroupCondition {
 
   """Checks for equality with the object’s `notes` field."""
   notes: String
+
+  """Checks for equality with the object’s `soloMode` field."""
+  soloMode: Boolean
 }
 
 type LegacyField implements Node {
@@ -5269,6 +5340,29 @@ input SeasonCondition {
   totalGames: BigInt
 }
 
+"""Methods to use when ordering `SoloModeOpponentInning`."""
+enum SoloModeOpponentInningsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  RUNS_SCORED_ASC
+  RUNS_SCORED_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `SoloModeOpponentInning` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input SoloModeOpponentInningCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
+
+  """Checks for equality with the object’s `runsScored` field."""
+  runsScored: Int
+}
+
 """The return type of our `getPlateAppearancesConnection` query."""
 type GetPlateAppearancesRecord {
   gameId: UUID
@@ -5470,6 +5564,14 @@ type Mutation {
     """
     input: CreateScoredRunnerInput!
   ): CreateScoredRunnerPayload
+
+  """Creates a single `SoloModeOpponentInning`."""
+  createSoloModeOpponentInning(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateSoloModeOpponentInningInput!
+  ): CreateSoloModeOpponentInningPayload
 
   """Creates a single `StolenBaseAttempt`."""
   createStolenBaseAttempt(
@@ -5784,11 +5886,11 @@ type Mutation {
   ): UpdatePlayerPayload
 
   """Updates a single `Player` using a unique key and a patch."""
-  updatePlayerByFirstNameAndLastName(
+  updatePlayerByGroupIdAndFirstNameAndLastName(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdatePlayerByFirstNameAndLastNameInput!
+    input: UpdatePlayerByGroupIdAndFirstNameAndLastNameInput!
   ): UpdatePlayerPayload
 
   """Updates a single `ReduxDump` using its globally unique id and a patch."""
@@ -5824,6 +5926,26 @@ type Mutation {
     """
     input: UpdateScoredRunnerInput!
   ): UpdateScoredRunnerPayload
+
+  """
+  Updates a single `SoloModeOpponentInning` using its globally unique id and a patch.
+  """
+  updateSoloModeOpponentInningByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSoloModeOpponentInningByNodeIdInput!
+  ): UpdateSoloModeOpponentInningPayload
+
+  """
+  Updates a single `SoloModeOpponentInning` using a unique key and a patch.
+  """
+  updateSoloModeOpponentInning(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateSoloModeOpponentInningInput!
+  ): UpdateSoloModeOpponentInningPayload
 
   """
   Updates a single `StolenBaseAttempt` using its globally unique id and a patch.
@@ -6148,11 +6270,11 @@ type Mutation {
   ): DeletePlayerPayload
 
   """Deletes a single `Player` using a unique key."""
-  deletePlayerByFirstNameAndLastName(
+  deletePlayerByGroupIdAndFirstNameAndLastName(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: DeletePlayerByFirstNameAndLastNameInput!
+    input: DeletePlayerByGroupIdAndFirstNameAndLastNameInput!
   ): DeletePlayerPayload
 
   """Deletes a single `ReduxDump` using its globally unique id."""
@@ -6186,6 +6308,24 @@ type Mutation {
     """
     input: DeleteScoredRunnerInput!
   ): DeleteScoredRunnerPayload
+
+  """
+  Deletes a single `SoloModeOpponentInning` using its globally unique id.
+  """
+  deleteSoloModeOpponentInningByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSoloModeOpponentInningByNodeIdInput!
+  ): DeleteSoloModeOpponentInningPayload
+
+  """Deletes a single `SoloModeOpponentInning` using a unique key."""
+  deleteSoloModeOpponentInning(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteSoloModeOpponentInningInput!
+  ): DeleteSoloModeOpponentInningPayload
 
   """Deletes a single `StolenBaseAttempt` using its globally unique id."""
   deleteStolenBaseAttemptByNodeId(
@@ -6468,6 +6608,7 @@ input updateGameOnGameStateForGameStateGameIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -6570,6 +6711,7 @@ input updateGroupOnGameForGameGroupIdFkeyPatch {
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -6594,7 +6736,7 @@ input PlayerGroupIdFkeyInverseInput {
   connectById: [PlayerPlayerPkeyConnect!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyConnect!]
+  connectByGroupIdAndFirstNameAndLastName: [PlayerPlayerNameUniqueInGroupConnect!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: [PlayerNodeIdConnect!]
@@ -6603,7 +6745,7 @@ input PlayerGroupIdFkeyInverseInput {
   deleteById: [PlayerPlayerPkeyDelete!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyDelete!]
+  deleteByGroupIdAndFirstNameAndLastName: [PlayerPlayerNameUniqueInGroupDelete!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: [PlayerNodeIdDelete!]
@@ -6616,7 +6758,7 @@ input PlayerGroupIdFkeyInverseInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: [PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerFirstNameLastNameKeyUpdate!]
+  updateByGroupIdAndFirstNameAndLastName: [PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerNameUniqueInGroupUpdate!]
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -6635,7 +6777,8 @@ input PlayerPlayerPkeyConnect {
 }
 
 """The fields on `player` to look up the row to connect."""
-input PlayerPlayerFirstNameLastNameKeyConnect {
+input PlayerPlayerNameUniqueInGroupConnect {
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -6654,7 +6797,8 @@ input PlayerPlayerPkeyDelete {
 }
 
 """The fields on `player` to look up the row to delete."""
-input PlayerPlayerFirstNameLastNameKeyDelete {
+input PlayerPlayerNameUniqueInGroupDelete {
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -6766,6 +6910,7 @@ input updateGroupOnPlayerForPlayerGroupIdFkeyPatch {
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -6844,6 +6989,7 @@ input updateGameOnGameForGameGroupIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -6995,6 +7141,7 @@ input updateGameOnGameForGameFieldIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -7106,6 +7253,7 @@ input updateTeamOnTeamForTeamGameIdFkeyPatch {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -7174,6 +7322,7 @@ input updateGameOnTeamForTeamGameIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -7264,7 +7413,7 @@ input GameStatePlayerAtBatFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -7273,7 +7422,7 @@ input GameStatePlayerAtBatFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -7286,7 +7435,7 @@ input GameStatePlayerAtBatFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -7480,7 +7629,7 @@ input FakePublicCareerStatsForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -7489,7 +7638,7 @@ input FakePublicCareerStatsForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -7502,7 +7651,7 @@ input FakePublicCareerStatsForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -7620,6 +7769,7 @@ input updateTeamOnTeamForTeamCaptainIdFkeyPatch {
   role: TeamRole
   name: String
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -7631,7 +7781,7 @@ input TeamCaptainIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -7640,7 +7790,7 @@ input TeamCaptainIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -7653,7 +7803,7 @@ input TeamCaptainIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -7995,6 +8145,7 @@ input updateTeamOnLineupForLineupTeamIdFkeyPatch {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -8160,7 +8311,7 @@ input LineupSpotPlayerIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -8169,7 +8320,7 @@ input LineupSpotPlayerIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -8182,7 +8333,7 @@ input LineupSpotPlayerIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -8494,7 +8645,7 @@ input BasepathMovementRunnerIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -8503,7 +8654,7 @@ input BasepathMovementRunnerIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -8516,7 +8667,7 @@ input BasepathMovementRunnerIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -8798,7 +8949,7 @@ input OutOnPlayRunnerRunnerIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -8807,7 +8958,7 @@ input OutOnPlayRunnerRunnerIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -8820,7 +8971,7 @@ input OutOnPlayRunnerRunnerIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -8972,7 +9123,7 @@ input StolenBaseAttemptRunnerIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -8981,7 +9132,7 @@ input StolenBaseAttemptRunnerIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -8994,7 +9145,7 @@ input StolenBaseAttemptRunnerIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -9222,7 +9373,7 @@ input BaseRunnerRunnerIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -9231,7 +9382,7 @@ input BaseRunnerRunnerIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -9244,7 +9395,7 @@ input BaseRunnerRunnerIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -9673,6 +9824,7 @@ input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -10322,9 +10474,11 @@ input updateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch {
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -10453,9 +10607,11 @@ input updateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch {
   id: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -10580,9 +10736,11 @@ input updateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch {
   id: UUID
   plateAppearanceId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -10851,9 +11009,164 @@ input updateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch {
   id: UUID
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
+  gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `soloModeOpponentInning` in the `GameEventInput` mutation.
+"""
+input GameEventSoloModeOpponentInningIdFkeyInput {
+  """
+  The primary key(s) for `soloModeOpponentInning` for the far side of the relationship.
+  """
+  connectById: SoloModeOpponentInningSoloModeOpponentInningPkeyConnect
+
+  """
+  The primary key(s) for `soloModeOpponentInning` for the far side of the relationship.
+  """
+  connectByNodeId: SoloModeOpponentInningNodeIdConnect
+
+  """
+  The primary key(s) for `soloModeOpponentInning` for the far side of the relationship.
+  """
+  deleteById: SoloModeOpponentInningSoloModeOpponentInningPkeyDelete
+
+  """
+  The primary key(s) for `soloModeOpponentInning` for the far side of the relationship.
+  """
+  deleteByNodeId: SoloModeOpponentInningNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `soloModeOpponentInning` for the far side of the relationship.
+  """
+  updateById: SoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyUsingSoloModeOpponentInningPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `soloModeOpponentInning` for the far side of the relationship.
+  """
+  updateByNodeId: GameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyNodeIdUpdate
+
+  """
+  A `SoloModeOpponentInningInput` object that will be created and connected to this object.
+  """
+  create: GameEventSoloModeOpponentInningIdFkeySoloModeOpponentInningCreateInput
+}
+
+"""The fields on `soloModeOpponentInning` to look up the row to connect."""
+input SoloModeOpponentInningSoloModeOpponentInningPkeyConnect {
+  id: UUID!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input SoloModeOpponentInningNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `soloModeOpponentInning` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `soloModeOpponentInning` to look up the row to delete."""
+input SoloModeOpponentInningSoloModeOpponentInningPkeyDelete {
+  id: UUID!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input SoloModeOpponentInningNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `soloModeOpponentInning` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `soloModeOpponentInning` to look up the row to update."""
+input SoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyUsingSoloModeOpponentInningPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `soloModeOpponentInning` being updated.
+  """
+  patch: updateSoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `soloModeOpponentInning` being updated.
+"""
+input updateSoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyPatch {
+  id: UUID
+  runsScored: Int
+  gameEvents: GameEventSoloModeOpponentInningIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `gameEvent` in the `SoloModeOpponentInningInput` mutation.
+"""
+input GameEventSoloModeOpponentInningIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `gameEvent` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  connectById: [GameEventGameEventPkeyConnect!]
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  connectByNodeId: [GameEventNodeIdConnect!]
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  deleteById: [GameEventGameEventPkeyDelete!]
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  deleteByNodeId: [GameEventNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `gameEvent` for the far side of the relationship.
+  """
+  updateById: [GameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyUsingGameEventPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameEvent` for the far side of the relationship.
+  """
+  updateByNodeId: [SoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyNodeIdUpdate!]
+
+  """
+  A `GameEventInput` object that will be created and connected to this object.
+  """
+  create: [GameEventSoloModeOpponentInningIdFkeyGameEventCreateInput!]
+}
+
+"""The fields on `gameEvent` to look up the row to update."""
+input GameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyUsingGameEventPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEvent` being updated.
+  """
+  patch: updateGameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `gameEvent` being updated.
+"""
+input updateGameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyPatch {
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
+  plateAppearance: GameEventPlateAppearanceIdFkeyInput
+  stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
+  lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -11016,7 +11329,7 @@ input ScoredRunnerRunnerIdFkeyInput {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -11025,7 +11338,7 @@ input ScoredRunnerRunnerIdFkeyInput {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -11038,7 +11351,7 @@ input ScoredRunnerRunnerIdFkeyInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -11245,7 +11558,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -11254,7 +11567,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -11267,7 +11580,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -11550,7 +11863,7 @@ input FakePublicLegacyGameBattingLinesForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -11559,7 +11872,7 @@ input FakePublicLegacyGameBattingLinesForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -11572,7 +11885,7 @@ input FakePublicLegacyGameBattingLinesForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -11746,7 +12059,7 @@ input FakePublicGameBattingLinesForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -11755,7 +12068,7 @@ input FakePublicGameBattingLinesForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -11768,7 +12081,7 @@ input FakePublicGameBattingLinesForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -12023,7 +12336,7 @@ input FakePublicLegacySeasonStatsForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -12032,7 +12345,7 @@ input FakePublicLegacySeasonStatsForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -12045,7 +12358,7 @@ input FakePublicLegacySeasonStatsForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -12218,7 +12531,7 @@ input FakePublicPlayerForeignKey0InverseInput {
   connectById: [PlayerPlayerPkeyConnect!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyConnect!]
+  connectByGroupIdAndFirstNameAndLastName: [PlayerPlayerNameUniqueInGroupConnect!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: [PlayerNodeIdConnect!]
@@ -12227,7 +12540,7 @@ input FakePublicPlayerForeignKey0InverseInput {
   deleteById: [PlayerPlayerPkeyDelete!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: [PlayerPlayerFirstNameLastNameKeyDelete!]
+  deleteByGroupIdAndFirstNameAndLastName: [PlayerPlayerNameUniqueInGroupDelete!]
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: [PlayerNodeIdDelete!]
@@ -12240,7 +12553,7 @@ input FakePublicPlayerForeignKey0InverseInput {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: [PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerFirstNameLastNameKeyUpdate!]
+  updateByGroupIdAndFirstNameAndLastName: [PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerNameUniqueInGroupUpdate!]
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -12340,7 +12653,7 @@ input FakePublicSeasonStatsForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -12349,7 +12662,7 @@ input FakePublicSeasonStatsForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -12362,7 +12675,7 @@ input FakePublicSeasonStatsForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -12465,7 +12778,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -12474,7 +12787,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -12487,7 +12800,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -12588,7 +12901,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey0Input {
   connectById: PlayerPlayerPkeyConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  connectByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyConnect
+  connectByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupConnect
 
   """The primary key(s) for `player` for the far side of the relationship."""
   connectByNodeId: PlayerNodeIdConnect
@@ -12597,7 +12910,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey0Input {
   deleteById: PlayerPlayerPkeyDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
-  deleteByFirstNameAndLastName: PlayerPlayerFirstNameLastNameKeyDelete
+  deleteByGroupIdAndFirstNameAndLastName: PlayerPlayerNameUniqueInGroupDelete
 
   """The primary key(s) for `player` for the far side of the relationship."""
   deleteByNodeId: PlayerNodeIdDelete
@@ -12610,7 +12923,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey0Input {
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
   """
-  updateByFirstNameAndLastName: PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerFirstNameLastNameKeyUpdate
+  updateByGroupIdAndFirstNameAndLastName: PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate
 
   """
   The primary key(s) and patch data for `player` for the far side of the relationship.
@@ -12665,11 +12978,12 @@ input updatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedB
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -13128,6 +13442,7 @@ input updateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBa
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13237,6 +13552,7 @@ input updateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch {
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13346,6 +13662,7 @@ input updateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBa
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13455,6 +13772,7 @@ input updateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patc
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13564,6 +13882,7 @@ input updateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch {
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13675,6 +13994,7 @@ input updateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllT
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13804,6 +14124,7 @@ input updateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch {
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13844,6 +14165,7 @@ input GroupPatch {
   id: UUID
   name: String
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13860,6 +14182,7 @@ input FakePublicUnifiedGamesForeignKey0GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13936,6 +14259,7 @@ input updateGameOnUnifiedGameForFakePublicUnifiedGamesForeignKey1Patch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -14094,6 +14418,7 @@ input updateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -15164,6 +15489,7 @@ input GamePatch {
   timeStarted: Datetime
   timeEnded: Datetime
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -15184,6 +15510,7 @@ input FakePublicGameBattingLinesForeignKey1GameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -15296,6 +15623,7 @@ input FakePublicUnifiedGamesForeignKey1GameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -15332,6 +15660,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15370,6 +15699,7 @@ input FakePublicSeasonStatsForeignKey2GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15408,6 +15738,7 @@ input FakePublicLegacySeasonStatsForeignKey2GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15446,6 +15777,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15484,6 +15816,7 @@ input FakePublicCareerStatsForeignKey2GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15522,6 +15855,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2GroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15639,11 +15973,12 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey1LegacyPlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -15692,11 +16027,12 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0PlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -15745,11 +16081,12 @@ input FakePublicSeasonStatsForeignKey0PlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -15826,11 +16163,12 @@ input FakePublicLegacySeasonStatsForeignKey1LegacyPlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -15951,11 +16289,12 @@ input FakePublicLegacyGameBattingLinesForeignKey0LegacyGameBattingLinesCreateInp
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -16044,11 +16383,12 @@ input FakePublicGameBattingLinesForeignKey0GameBattingLinesCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -16169,11 +16509,12 @@ input FakePublicCareerStatsQualifiedBattersForeignKey1LegacyPlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -16251,11 +16592,12 @@ input FakePublicCareerStatsForeignKey1LegacyPlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -16392,7 +16734,7 @@ input GameEventRecordGameEventIdFkeyGameEventRecordCreateInput {
 }
 
 """The globally unique `ID` look up for the row to update."""
-input LineupChangeOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate {
+input SoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyNodeIdUpdate {
   """
   The globally unique `ID` which identifies a single `gameEvent` to be connected.
   """
@@ -16412,10 +16754,67 @@ input GameEventPatch {
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
+}
+
+"""The `gameEvent` to be created by this mutation."""
+input GameEventSoloModeOpponentInningIdFkeyGameEventCreateInput {
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
+  plateAppearance: GameEventPlateAppearanceIdFkeyInput
+  stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
+  lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
+  gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `soloModeOpponentInning` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `soloModeOpponentInning` being updated.
+  """
+  patch: SoloModeOpponentInningPatch!
+}
+
+"""
+Represents an update to a `SoloModeOpponentInning`. Fields that are set will be updated.
+"""
+input SoloModeOpponentInningPatch {
+  id: UUID
+  runsScored: Int
+  gameEvents: GameEventSoloModeOpponentInningIdFkeyInverseInput
+}
+
+"""The `soloModeOpponentInning` to be created by this mutation."""
+input GameEventSoloModeOpponentInningIdFkeySoloModeOpponentInningCreateInput {
+  id: UUID
+  runsScored: Int!
+  gameEvents: GameEventSoloModeOpponentInningIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LineupChangeOnGameEventForGameEventLineupChangeIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `gameEvent` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `gameEvent` being updated.
+  """
+  patch: GameEventPatch!
 }
 
 """The `gameEvent` to be created by this mutation."""
@@ -16423,9 +16822,11 @@ input GameEventLineupChangeIdFkeyGameEventCreateInput {
   id: UUID
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -16795,9 +17196,11 @@ input GameEventStolenBaseAttemptIdFkeyGameEventCreateInput {
   id: UUID
   plateAppearanceId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -16852,9 +17255,11 @@ input GameEventPlateAppearanceIdFkeyGameEventCreateInput {
   id: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -16918,9 +17323,11 @@ input GameEventRecordGameEventIdFkeyGameEventCreateInput {
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -17204,6 +17611,7 @@ input GameEventRecordGameIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -17274,11 +17682,12 @@ input ScoredRunnerRunnerIdFkeyScoredRunnerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -17378,11 +17787,12 @@ input GameStatePlayerAtBatFkeyGameStateCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -17452,11 +17862,12 @@ input StolenBaseAttemptRunnerIdFkeyStolenBaseAttemptCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -17581,11 +17992,12 @@ input OutOnPlayRunnerRunnerIdFkeyOutOnPlayRunnerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -17716,11 +18128,12 @@ input BasepathMovementRunnerIdFkeyBasepathMovementCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -17876,6 +18289,7 @@ input TeamPatch {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -17889,6 +18303,7 @@ input LineupTeamIdFkeyTeamCreateInput {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -17961,11 +18376,12 @@ input LineupSpotPlayerIdFkeyLineupSpotCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnTeamForTeamCaptainIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -18043,17 +18459,19 @@ input TeamCaptainIdFkeyTeamCreateInput {
   role: TeamRole!
   name: String
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnCareerStatForFakePublicCareerStatsForeignKey0Patch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -18131,11 +18549,12 @@ input FakePublicPlayerForeignKey0LegacyPlayerCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -18246,6 +18665,7 @@ input TeamGameIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -18285,6 +18705,7 @@ input TeamGameIdFkeyTeamCreateInput {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -18322,6 +18743,7 @@ input GameFieldIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -18394,6 +18816,7 @@ input GameGroupIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -18430,6 +18853,7 @@ input PlayerGroupIdFkeyGroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -18442,11 +18866,12 @@ input PlayerGroupIdFkeyGroupCreateInput {
 }
 
 """The fields on `player` to look up the row to update."""
-input PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerFirstNameLastNameKeyUpdate {
+input PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerNameUniqueInGroupUpdate {
   """
   An object where the defined keys will be set on the `player` being updated.
   """
   patch: updatePlayerOnPlayerForPlayerGroupIdFkeyPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -18520,6 +18945,7 @@ input GameGroupIdFkeyGroupCreateInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -18564,6 +18990,7 @@ input GameStateGameIdFkeyGameCreateInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -18932,6 +19359,7 @@ input GameInput {
   timeStarted: Datetime!
   timeEnded: Datetime!
   timeSaved: Datetime
+  soloMode: Boolean
   group: GameGroupIdFkeyInput
   field: GameFieldIdFkeyInput
   teams: TeamGameIdFkeyInverseInput
@@ -18967,6 +19395,11 @@ type CreateGameEventPayload {
 
   """Reads a single `LineupChange` that is related to this `GameEvent`."""
   lineupChange: LineupChange
+
+  """
+  Reads a single `SoloModeOpponentInning` that is related to this `GameEvent`.
+  """
+  soloModeOpponentInning: SoloModeOpponentInning
 }
 
 """All input for the create `GameEvent` mutation."""
@@ -18987,9 +19420,11 @@ input GameEventInput {
   plateAppearanceId: UUID
   stolenBaseAttemptId: UUID
   lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -19137,6 +19572,7 @@ input GroupInput {
   id: UUID
   name: String!
   notes: String
+  soloMode: Boolean
   players: PlayerGroupIdFkeyInverseInput
   games: GameGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -19559,6 +19995,42 @@ input ScoredRunnerInput {
   player: ScoredRunnerRunnerIdFkeyInput
 }
 
+"""The output of our create `SoloModeOpponentInning` mutation."""
+type CreateSoloModeOpponentInningPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SoloModeOpponentInning` that was created by this mutation."""
+  soloModeOpponentInning: SoloModeOpponentInning
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `SoloModeOpponentInning` mutation."""
+input CreateSoloModeOpponentInningInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `SoloModeOpponentInning` to be created by this mutation."""
+  soloModeOpponentInning: SoloModeOpponentInningInput!
+}
+
+"""An input for mutations affecting `SoloModeOpponentInning`"""
+input SoloModeOpponentInningInput {
+  id: UUID
+  runsScored: Int!
+  gameEvents: GameEventSoloModeOpponentInningIdFkeyInverseInput
+}
+
 """The output of our create `StolenBaseAttempt` mutation."""
 type CreateStolenBaseAttemptPayload {
   """
@@ -19643,6 +20115,7 @@ input TeamInput {
   name: String
   captainId: UUID
   winner: Boolean
+  soloModeOpponent: Boolean
   game: TeamGameIdFkeyInput
   player: TeamCaptainIdFkeyInput
   lineups: LineupTeamIdFkeyInverseInput
@@ -19915,6 +20388,11 @@ type UpdateGameEventPayload {
 
   """Reads a single `LineupChange` that is related to this `GameEvent`."""
   lineupChange: LineupChange
+
+  """
+  Reads a single `SoloModeOpponentInning` that is related to this `GameEvent`.
+  """
+  soloModeOpponentInning: SoloModeOpponentInning
 }
 
 """All input for the `updateGameEventByNodeId` mutation."""
@@ -20586,8 +21064,10 @@ input UpdatePlayerInput {
   id: UUID!
 }
 
-"""All input for the `updatePlayerByFirstNameAndLastName` mutation."""
-input UpdatePlayerByFirstNameAndLastNameInput {
+"""
+All input for the `updatePlayerByGroupIdAndFirstNameAndLastName` mutation.
+"""
+input UpdatePlayerByGroupIdAndFirstNameAndLastNameInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
@@ -20598,6 +21078,7 @@ input UpdatePlayerByFirstNameAndLastNameInput {
   An object where the defined keys will be set on the `Player` being updated.
   """
   patch: PlayerPatch!
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -20720,6 +21201,57 @@ input UpdateScoredRunnerInput {
   patch: ScoredRunnerPatch!
   gameEventRecordId: UUID!
   runnerId: UUID!
+}
+
+"""The output of our update `SoloModeOpponentInning` mutation."""
+type UpdateSoloModeOpponentInningPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SoloModeOpponentInning` that was updated by this mutation."""
+  soloModeOpponentInning: SoloModeOpponentInning
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateSoloModeOpponentInningByNodeId` mutation."""
+input UpdateSoloModeOpponentInningByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SoloModeOpponentInning` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `SoloModeOpponentInning` being updated.
+  """
+  patch: SoloModeOpponentInningPatch!
+}
+
+"""All input for the `updateSoloModeOpponentInning` mutation."""
+input UpdateSoloModeOpponentInningInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `SoloModeOpponentInning` being updated.
+  """
+  patch: SoloModeOpponentInningPatch!
+  id: UUID!
 }
 
 """The output of our update `StolenBaseAttempt` mutation."""
@@ -21076,6 +21608,11 @@ type DeleteGameEventPayload {
 
   """Reads a single `LineupChange` that is related to this `GameEvent`."""
   lineupChange: LineupChange
+
+  """
+  Reads a single `SoloModeOpponentInning` that is related to this `GameEvent`.
+  """
+  soloModeOpponentInning: SoloModeOpponentInning
 }
 
 """All input for the `deleteGameEventByNodeId` mutation."""
@@ -21627,13 +22164,16 @@ input DeletePlayerInput {
   id: UUID!
 }
 
-"""All input for the `deletePlayerByFirstNameAndLastName` mutation."""
-input DeletePlayerByFirstNameAndLastNameInput {
+"""
+All input for the `deletePlayerByGroupIdAndFirstNameAndLastName` mutation.
+"""
+input DeletePlayerByGroupIdAndFirstNameAndLastNameInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
+  groupId: UUID!
   firstName: String!
   lastName: String!
 }
@@ -21729,6 +22269,48 @@ input DeleteScoredRunnerInput {
   clientMutationId: String
   gameEventRecordId: UUID!
   runnerId: UUID!
+}
+
+"""The output of our delete `SoloModeOpponentInning` mutation."""
+type DeleteSoloModeOpponentInningPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `SoloModeOpponentInning` that was deleted by this mutation."""
+  soloModeOpponentInning: SoloModeOpponentInning
+  deletedSoloModeOpponentInningNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteSoloModeOpponentInningByNodeId` mutation."""
+input DeleteSoloModeOpponentInningByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `SoloModeOpponentInning` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteSoloModeOpponentInning` mutation."""
+input DeleteSoloModeOpponentInningInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
 }
 
 """The output of our delete `StolenBaseAttempt` mutation."""

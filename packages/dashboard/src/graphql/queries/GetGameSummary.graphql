@@ -10,6 +10,7 @@ query GetGameSummary($gameId: UUID!) {
       name
       role
       winner
+      soloModeOpponent
     }
   }
 }

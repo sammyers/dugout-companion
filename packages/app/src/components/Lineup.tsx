@@ -13,27 +13,33 @@ import {
   getLineupToEdit,
   getPlayersNotInGame,
   getTeamName,
+  isGameInProgress,
+  isLineupEditable,
+  isSoloModeActive,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
-import { getCurrentGroup } from 'state/groups/selectors';
+import { getCurrentGroupId } from 'state/groups/selectors';
 import { playerActions } from 'state/players/slice';
 import { formatName, getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
+import LineupEditControls from './LineupEditControls';
 
 const NEW_PLAYER_ID = 'new-player';
 
 interface Props {
   teamRole: TeamRole;
-  editable: boolean;
 }
 
-const Lineup = ({ teamRole, editable }: Props) => {
+const Lineup = ({ teamRole }: Props) => {
   const dispatch = useAppDispatch();
 
+  const inProgress = useAppSelector(isGameInProgress);
+  const soloMode = useAppSelector(isSoloModeActive);
+  const editable = useAppSelector(isLineupEditable);
   const players = useAppSelector(state => getLineupToEdit(state, teamRole));
   const availablePlayers = useAppSelector(getPlayersNotInGame);
-  const groupId = useAppSelector(getCurrentGroup)!;
+  const groupId = useAppSelector(getCurrentGroupId)!;
   const teamName = useAppSelector(state => getTeamName(state, teamRole));
   const playerAtBat = useAppSelector(getCurrentBatter);
   const batterUpNextInning = useAppSelector(getFirstBatterNextInning);
@@ -113,12 +119,21 @@ const Lineup = ({ teamRole, editable }: Props) => {
 
   return (
     <Box flex>
-      <Box alignSelf="center" margin={{ bottom: 'medium' }} width="medium">
-        <TextInput
-          value={teamName!}
-          onChange={handleNameChange}
-          placeholder={teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
-        />
+      <Box margin={{ bottom: 'medium' }}>
+        {soloMode ? (
+          <Box direction="row" justify="between" align="center">
+            <Text weight="bold">{teamName} Lineup</Text>
+            {inProgress && <LineupEditControls />}
+          </Box>
+        ) : (
+          <Box width="medium" alignSelf="center">
+            <TextInput
+              value={teamName!}
+              onChange={handleNameChange}
+              placeholder={teamRole === TeamRole.AWAY ? 'Away Team' : 'Home Team'}
+            />
+          </Box>
+        )}
       </Box>
       {editable && (
         <TextInput

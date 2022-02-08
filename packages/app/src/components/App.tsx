@@ -6,6 +6,8 @@ import {
   useGetAllPlayersQuery,
   useGetAllGamesQuery,
   useGetAllGroupsQuery,
+  useGetSoloModeOpponentBatterIdQuery,
+  SOLO_MODE_OPPONENT_GROUP,
 } from '@sammyers/dc-shared';
 
 import GameOver from './GameOver';
@@ -17,7 +19,7 @@ import Plays from './plays/Plays';
 
 import theme from 'theme';
 import { isGameOver } from 'state/game/selectors';
-import { getCurrentGroup } from 'state/groups/selectors';
+import { getCurrentGroupId } from 'state/groups/selectors';
 import { groupActions } from 'state/groups/slice';
 import { playerActions } from 'state/players/slice';
 import { historyActions } from 'state/history/slice';
@@ -26,6 +28,7 @@ import { networkStatusContext } from 'utils/network';
 
 import { Game } from 'state/game/types';
 import { Player } from 'state/players/types';
+import { gameActions } from 'state/game/slice';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -36,13 +39,25 @@ const App = () => {
   const gameOver = useAppSelector(isGameOver);
 
   const { data: groupData } = useGetAllGroupsQuery();
+  const { data: opponentBatterData } = useGetSoloModeOpponentBatterIdQuery({
+    skip: !groupData,
+    variables: groupData
+      ? { groupId: groupData.groups!.find(group => group.name === SOLO_MODE_OPPONENT_GROUP)!.id }
+      : undefined,
+  });
+
+  useEffect(() => {
+    if (opponentBatterData?.player) {
+      dispatch(gameActions.setSoloModeOpponentBatterId(opponentBatterData.player.id));
+    }
+  }, [opponentBatterData, dispatch]);
 
   useEffect(() => {
     if (groupData?.groups) {
       dispatch(groupActions.loadGroups(groupData.groups));
     }
   }, [groupData, dispatch]);
-  const groupId = useAppSelector(getCurrentGroup);
+  const groupId = useAppSelector(getCurrentGroupId);
 
   const { data: playerData } = useGetAllPlayersQuery({
     skip: !groupId,

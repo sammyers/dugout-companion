@@ -56,7 +56,7 @@ const LineScore: FC<Props> = ({ cells, teams }) => {
               <Text weight="bold">{_.sumBy(innings, 'runs')}</Text>
             </TableCell>
             <TableCell pad="xsmall" align="right" size={HITS_WIDTH}>
-              <Text weight="bold">{_.sumBy(innings, 'hits')}</Text>
+              <Text weight="bold">{team?.soloModeOpponent ? '' : _.sumBy(innings, 'hits')}</Text>
             </TableCell>
           </TableRow>
         ))}

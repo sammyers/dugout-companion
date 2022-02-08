@@ -48,6 +48,9 @@ fragment UnpackedGame_Game on Game {
         }
         runsScoredOnSacFly
       }
+      soloModeOpponentInning {
+        runsScored
+      }
     }
     scoredRunners {
       runnerId
@@ -67,5 +70,6 @@ fragment UnpackedGame_Game on Game {
       }
     }
     winner
+    soloModeOpponent
   }
 }

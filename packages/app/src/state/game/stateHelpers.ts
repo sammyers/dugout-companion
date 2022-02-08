@@ -1,7 +1,12 @@
 import _ from 'lodash';
 import { v4 as uuid4 } from 'uuid';
 
-import { getOnDeckBatter, getBattingTeamRole, getCurrentBaseForRunner } from './partialSelectors';
+import {
+  getOnDeckBatter,
+  getBattingTeamRole,
+  getCurrentBaseForRunner,
+  isBattingTeamSoloModeOpponent,
+} from './partialSelectors';
 import {
   getTeamWithRole,
   runnersToMap,
@@ -37,6 +42,7 @@ import {
   GameState,
   GameStatus,
   Team,
+  SoloModeInning,
 } from './types';
 
 const replaceLineup = (state: AppGameState, role: TeamRole, newLineup: LineupSpot[]) => {
@@ -123,7 +129,9 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
 export const cleanUpAfterGameEvent = (state: AppGameState, advanceLineup = true) => {
   const gameState = state.gameState!;
   const currentBatter = gameState.playerAtBat;
-  const nextBatter = getOnDeckBatter(state);
+  const nextBatter = isBattingTeamSoloModeOpponent(state)
+    ? state.soloModeOpponentBatterId
+    : getOnDeckBatter(state);
   if (gameState.outs === 3) {
     gameState.playerAtBat = state.upNextHalfInning!;
     if (advanceLineup) {
@@ -144,29 +152,37 @@ export const cleanUpAfterGameEvent = (state: AppGameState, advanceLineup = true)
 };
 
 export const getCurrentLineupsFromTeams = (teams: Team[]) =>
-  teams.map(({ role, lineups }) => {
-    const { id } = _.last(lineups)!;
-    return {
-      id,
-      team: { role },
-    };
-  });
+  teams
+    .filter(team => !team.soloModeOpponent)
+    .map(({ role, lineups }) => {
+      const { id } = _.last(lineups)!;
+      return {
+        id,
+        team: { role },
+      };
+    });
 
 export const makeGameEvent = ({
   plateAppearance = null,
   stolenBaseAttempt = null,
   lineupChange = null,
+  soloModeOpponentInning = null,
 }: Partial<GameEventContainer>): GameEventContainer => ({
   plateAppearance,
   stolenBaseAttempt,
   lineupChange,
+  soloModeOpponentInning,
 });
+
+type RunnersScoredCallback = (
+  args: { runnersScored: string[]; battedIn?: boolean } | { runsScored: number }
+) => void;
 
 const recordAndApplyGameEvent = (
   state: AppGameState,
   callback: (
     gameState: GameState,
-    recordRunnersScored: (runnersScored: string[], battedIn?: boolean) => void,
+    recordRunnersScored: RunnersScoredCallback,
     teams: Team[]
   ) => GameEventContainer
 ) => {
@@ -181,10 +197,18 @@ const recordAndApplyGameEvent = (
   state.gameState!.id = uuid4();
 
   const scoredRunners: ScoredRunner[] = [];
-  const recordRunnersScored = (runners: string[], battedIn = true) => {
+  const recordRunnersScored: RunnersScoredCallback = args => {
     const index = _.findIndex(state.teams, { role: getBattingTeamRole(state) });
-    state.gameState!.score[index] += runners.length;
-    scoredRunners.push(...runners.map(runnerId => ({ runnerId, battedIn })));
+    let runsScored = 0;
+    if ('runnersScored' in args) {
+      runsScored = args.runnersScored.length;
+      scoredRunners.push(
+        ...args.runnersScored.map(runnerId => ({ runnerId, battedIn: args.battedIn ?? true }))
+      );
+    } else {
+      runsScored = args.runsScored;
+    }
+    state.gameState!.score[index] += runsScored;
   };
 
   const gameEvent = callback(state.gameState!, recordRunnersScored, state.teams);
@@ -291,7 +315,7 @@ export const applyStolenBaseAttempt = (
         runners[endBase] = stolenBaseAttempt.runnerId;
       } else {
         // runner scored
-        recordRunnersScored([stolenBaseAttempt.runnerId], false);
+        recordRunnersScored({ runnersScored: [stolenBaseAttempt.runnerId], battedIn: false });
       }
     } else {
       delete runners[startBase];
@@ -302,16 +326,29 @@ export const applyStolenBaseAttempt = (
   });
 };
 
+export const applySoloModeInning = (
+  state: AppGameState,
+  soloModeOpponentInning: SoloModeInning
+) => {
+  recordAndApplyGameEvent(state, (state, recordRunnersScored) => {
+    state.outs += 3;
+    recordRunnersScored({ runsScored: soloModeOpponentInning.runsScored });
+    return makeGameEvent({ soloModeOpponentInning });
+  });
+};
+
 export const applyPlateAppearance = (state: AppGameState, plateAppearance: PlateAppearance) => {
   recordAndApplyGameEvent(state, (state, recordRunnersScored) => {
     let runners = runnersToMap(state.baseRunners);
     switch (plateAppearance.type) {
       case PlateAppearanceType.HOMERUN:
-        recordRunnersScored([...(_.values(runners) as string[]), state.playerAtBat]);
+        recordRunnersScored({
+          runnersScored: [...(_.values(runners) as string[]), state.playerAtBat],
+        });
         runners = {};
         break;
       case PlateAppearanceType.TRIPLE:
-        recordRunnersScored(_.values(runners) as string[]);
+        recordRunnersScored({ runnersScored: _.values(runners) as string[] });
         runners = { [BaseType.THIRD]: state.playerAtBat };
         break;
       case PlateAppearanceType.DOUBLE:
@@ -323,13 +360,13 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
           state.playerAtBat!
         );
         runners = newBaseRunners;
-        recordRunnersScored(runnersScored);
+        recordRunnersScored({ runnersScored });
         break;
       case PlateAppearanceType.SACRIFICE_FLY:
         _.times(plateAppearance.runsScoredOnSacFly!, () => {
           const [base, runnerId] = getLeadRunner(runners)!;
           moveRunner(runners, base, null);
-          recordRunnersScored([runnerId]);
+          recordRunnersScored({ runnersScored: [runnerId] });
         });
         state.outs++;
         break;
@@ -338,7 +375,7 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         const runnersScored = moveRunnersOnGroundBall(runners);
         runners[BaseType.FIRST] = state.playerAtBat;
         if (runnersScored.length && state.outs < 2) {
-          recordRunnersScored(runnersScored);
+          recordRunnersScored({ runnersScored });
         }
         state.outs++;
         break;
@@ -351,7 +388,7 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         if (plateAppearance.contact === ContactQuality.GROUNDER) {
           const runnersScored = moveRunnersOnGroundBall(runners);
           if (runnersScored.length && state.outs === 0) {
-            recordRunnersScored(runnersScored, false);
+            recordRunnersScored({ runnersScored, battedIn: false });
           }
 
           if (!_.some(plateAppearance.outOnPlayRunners, { runnerId: state.playerAtBat })) {
@@ -363,7 +400,7 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         if (plateAppearance.contact === ContactQuality.GROUNDER) {
           const runnersScored = moveRunnersOnGroundBall(runners);
           if (runnersScored.length && state.outs < 2) {
-            recordRunnersScored(runnersScored);
+            recordRunnersScored({ runnersScored });
           }
         }
         state.outs++;
@@ -376,10 +413,10 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         const startBase = getBaseForRunner(runners, runnerId);
         if (wasSafe) {
           if (moveRunner(runners, startBase, endBase)) {
-            recordRunnersScored(
-              [runnerId],
-              plateAppearance.type !== PlateAppearanceType.DOUBLE_PLAY
-            );
+            recordRunnersScored({
+              runnersScored: [runnerId],
+              battedIn: plateAppearance.type !== PlateAppearanceType.DOUBLE_PLAY,
+            });
           }
         } else {
           delete runners[startBase];

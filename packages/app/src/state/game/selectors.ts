@@ -9,7 +9,6 @@ import {
   getCurrentLineup,
   getPlayerAtPositionFromTeams,
   previousHalfInning,
-  shouldLineupHaveFourOutfielders,
 } from './utils';
 
 import {
@@ -21,7 +20,7 @@ import {
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
-import { getCurrentGroup, getCurrentGroupName } from 'state/groups/selectors';
+import { getCurrentGroupId, getCurrentGroupName } from 'state/groups/selectors';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -54,6 +53,30 @@ export const getGameStateGetter = createSelector(getPresent, state => (gameState
   return state.prevGameStates.find(({ id }) => id === gameStateId)!;
 });
 
+export const isSoloModeActive = createSelector(getPresent, partialSelectors.isSoloModeActive);
+
+export const getSoloModeOpponentPositions = createSelector(
+  getPresent,
+  partialSelectors.getSoloModeOpponentPositions
+);
+export const getProtagonistTeamRole = createSelector(
+  getPresent,
+  partialSelectors.getProtagonistTeamRole
+);
+export const getOpponentTeamName = createSelector(getPresent, partialSelectors.getOpponentTeamName);
+
+export const getOpponentTeamSize = createSelector(getPresent, state =>
+  _.some([FieldingPosition.MIDDLE_INFIELD, FieldingPosition.LEFT_CENTER], position =>
+    state.soloModeOpponentPositions.includes(position)
+  )
+    ? 'large'
+    : 'small'
+);
+export const isOpponentTeamBatting = createSelector(
+  getPresent,
+  partialSelectors.isOpponentTeamBatting
+);
+
 export const isGameInProgress = createSelector(
   getGameStatus,
   status => status === GameStatus.IN_PROGRESS
@@ -81,9 +104,17 @@ export const getTeam = (state: AppState, role: TeamRole) =>
 
 export const getTeamName = (state: AppState, role: TeamRole) => getTeam(state, role).name;
 
-export const doesFieldingTeamHaveFourOutfielders = createSelector(
-  getFieldingLineup,
-  shouldLineupHaveFourOutfielders
+export const getOccupiedFieldingPositions = createSelector(
+  getFieldingTeam,
+  getSoloModeOpponentPositions,
+  (fieldingTeam, soloModePositions) => {
+    if (fieldingTeam.soloModeOpponent) {
+      return soloModePositions;
+    }
+    return getCurrentLineup(fieldingTeam)
+      .filter(spot => !!spot.position)
+      .map(spot => spot.position!);
+  }
 );
 
 export const getRunnerNames = createSelector(
@@ -131,10 +162,22 @@ export const getPlayersNotInGame = createSelector(
 
 export const canStartGame = createSelector(
   getLineups,
-  ([{ length: numAwayPlayers }, { length: numHomePlayers }]) =>
-    Math.abs(numAwayPlayers - numHomePlayers) <= 1 &&
-    numAwayPlayers >= MIN_PLAYERS_TO_PLAY &&
-    numHomePlayers >= MIN_PLAYERS_TO_PLAY
+  isSoloModeActive,
+  getOpponentTeamName,
+  getProtagonistTeamRole,
+  ([{ length: numAwayPlayers }, { length: numHomePlayers }], soloMode, opponentName, teamRole) => {
+    if (soloMode) {
+      return (
+        !!opponentName &&
+        (teamRole === TeamRole.AWAY ? numAwayPlayers : numHomePlayers) >= MIN_PLAYERS_TO_PLAY
+      );
+    }
+    return (
+      Math.abs(numAwayPlayers - numHomePlayers) <= 1 &&
+      numAwayPlayers >= MIN_PLAYERS_TO_PLAY &&
+      numHomePlayers >= MIN_PLAYERS_TO_PLAY
+    );
+  }
 );
 
 export const getPlateAppearanceOptions = createSelector(getRunners, getNumOuts, (runners, outs) => {
@@ -180,15 +223,16 @@ export const getMinGameLength = createSelector(
   getHalfInning,
   getScore,
   getCurrentGroupName,
-  (inning, halfInning, [awayScore, homeScore], groupName) => {
-    const defaultMin = groupName === 'Testing' ? 2 : 7;
+  isSoloModeActive,
+  (inning, halfInning, [awayScore, homeScore], groupName, soloMode) => {
+    const defaultMin = soloMode || groupName === 'Testing' ? 2 : 7;
     if (halfInning === HalfInning.BOTTOM && homeScore > awayScore) {
       return Math.max(defaultMin, inning + 1);
     }
     return Math.max(defaultMin, inning);
   }
 );
-export const getMaxGameLength = () => 12;
+export const getMaxGameLength = createSelector(isSoloModeActive, soloMode => (soloMode ? 9 : 12));
 
 export const isGameInExtraInnings = createSelector(
   getInning,
@@ -265,7 +309,7 @@ export const getPreviousHalfInning = createSelector(
 export const getGameForMutation = createSelector(
   getGameId,
   getGameName,
-  getCurrentGroup,
+  getCurrentGroupId,
   getTimeStarted,
   getTimeEnded,
   getTeams,
@@ -273,6 +317,7 @@ export const getGameForMutation = createSelector(
   getCurrentGameLength,
   getPrevGameStates,
   getGameHistory,
+  isSoloModeActive,
   (
     id,
     name,
@@ -283,7 +328,8 @@ export const getGameForMutation = createSelector(
     score,
     gameLength,
     gameStates,
-    gameEventRecords
+    gameEventRecords,
+    soloMode
   ): GameInput => ({
     id,
     name,
@@ -292,19 +338,23 @@ export const getGameForMutation = createSelector(
     timeEnded: timeEnded!,
     score,
     gameLength,
+    soloMode,
     teams: {
-      create: teams.map(({ name, role, winner, lineups }) => ({
+      create: teams.map(({ name, role, winner, lineups, soloModeOpponent }) => ({
         name: name || `${_.capitalize(role)} Team`,
         role,
         winner,
-        lineups: {
-          create: lineups.map(({ id, lineupSpots }) => ({
-            id,
-            lineupSpots: {
-              create: lineupSpots.map((spot, battingOrder) => ({ battingOrder, ...spot })),
+        soloModeOpponent,
+        lineups: soloModeOpponent
+          ? undefined
+          : {
+              create: lineups.map(({ id, lineupSpots }) => ({
+                id,
+                lineupSpots: {
+                  create: lineupSpots.map((spot, battingOrder) => ({ battingOrder, ...spot })),
+                },
+              })),
             },
-          })),
-        },
       })),
     },
     gameStates: {
@@ -348,6 +398,14 @@ export const getGameForMutation = createSelector(
                   outOnPlayRunners: {
                     create: gameEvent.plateAppearance.outOnPlayRunners,
                   },
+                },
+              },
+            };
+          } else if (gameEvent.soloModeOpponentInning) {
+            event = {
+              soloModeOpponentInning: {
+                create: {
+                  ...gameEvent.soloModeOpponentInning,
                 },
               },
             };
