@@ -22,6 +22,8 @@ import {
   isPlayerInLineup,
   getCurrentLineup,
   getAvailablePositionsForLineup,
+  allPositions,
+  DEFAULT_GAME_LENGTH,
 } from './utils';
 
 import {
@@ -429,4 +431,20 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
 
     return makeGameEvent({ plateAppearance });
   });
+};
+
+export const initStateForSoloMode = (state: AppGameState, soloMode: boolean, teamName: string) => {
+  if (soloMode) {
+    state.teams[0].soloModeOpponent = true;
+    state.teams[1].name = teamName;
+    state.soloModeOpponentPositions = _.difference(allPositions, [
+      FieldingPosition.CENTER_FIELD,
+      FieldingPosition.MIDDLE_INFIELD,
+    ]);
+    state.gameLength = 7;
+  } else {
+    state.soloModeOpponentPositions = [];
+    state.gameLength = DEFAULT_GAME_LENGTH;
+  }
+  state.soloMode = soloMode;
 };

@@ -11,6 +11,8 @@ import {
 
 import { BaseRunners, Team, BaseRunnerMap, LineupSpot } from './types';
 
+export const DEFAULT_GAME_LENGTH = 9;
+
 export const getTeamWithRole = (teams: Team[], role: TeamRole) =>
   teams.find(team => team.role === role)!;
 

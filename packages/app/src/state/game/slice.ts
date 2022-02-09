@@ -24,6 +24,7 @@ import {
   getCurrentLineupsFromTeams,
   makeGameEvent,
   applySoloModeInning,
+  initStateForSoloMode,
 } from './stateHelpers';
 import {
   getAvailablePositionsForLineup,
@@ -32,6 +33,7 @@ import {
   getTeamWithRole,
   getLineupWithNewPositions,
   allPositions,
+  DEFAULT_GAME_LENGTH,
 } from './utils';
 
 import { FieldingPosition, HalfInning, Maybe, TeamRole } from '@sammyers/dc-shared';
@@ -60,7 +62,7 @@ const initialState: AppGameState = {
   teams: [makeInitialTeamState(TeamRole.AWAY), makeInitialTeamState(TeamRole.HOME)],
   prevGameStates: [],
   gameEventRecords: [],
-  gameLength: 9,
+  gameLength: DEFAULT_GAME_LENGTH,
   upNextHalfInning: '',
   editingLineups: false,
   lineupDrafts: {
@@ -404,19 +406,49 @@ const { actions: gameActions, reducer } = createSlice({
       });
       cleanUpAfterGameEvent(state);
     },
-    resetGame: state => ({
-      ...initialState,
-      teams: state.teams.map(team => ({
-        ...makeInitialTeamState(team.role),
-        lineups: [
-          {
-            id: uuid4(),
-            lineupSpots: getCurrentLineup(team),
-          },
-        ],
-      })),
-    }),
-    fullResetGame: () => ({ ...initialState }),
+    resetGame: state => {
+      // If we're in solo mode make sure the opponent starts as the away team
+      if (state.teams[1].soloModeOpponent) {
+        state.teams.reverse();
+        state.teams[0].role = TeamRole.AWAY;
+        state.teams[1].role = TeamRole.HOME;
+      }
+
+      const newState = {
+        ...initialState,
+        soloModeOpponentBatterId: state.soloModeOpponentBatterId,
+        teams: state.teams.map(team => ({
+          ...makeInitialTeamState(team.role),
+          lineups: team.soloModeOpponent
+            ? []
+            : [
+                {
+                  id: uuid4(),
+                  lineupSpots: getCurrentLineup(team),
+                },
+              ],
+        })),
+      };
+      initStateForSoloMode(
+        newState,
+        state.soloMode,
+        state.teams.find(team => !team.soloModeOpponent)!.name!
+      );
+      return newState;
+    },
+    fullResetGame: state => {
+      const newState = {
+        ...initialState,
+        teams: initialState.teams.map(({ role }) => makeInitialTeamState(role)),
+        soloModeOpponentBatterId: state.soloModeOpponentBatterId,
+      };
+      initStateForSoloMode(
+        newState,
+        state.soloMode,
+        state.teams.find(team => !team.soloModeOpponent)!.name!
+      );
+      return newState;
+    },
     setGameSaved(state) {
       state.saved = true;
     },
@@ -424,19 +456,7 @@ const { actions: gameActions, reducer } = createSlice({
   extraReducers: builder =>
     builder.addCase(groupActions.setCurrentGroup, (state, { payload }) => {
       state.teams = state.teams.map(({ role }) => makeInitialTeamState(role));
-
-      if (payload.soloMode) {
-        state.teams[0].soloModeOpponent = true;
-        state.teams[1].name = payload.name;
-        state.soloModeOpponentPositions = _.difference(allPositions, [
-          FieldingPosition.CENTER_FIELD,
-          FieldingPosition.MIDDLE_INFIELD,
-        ]);
-        state.gameLength = 7;
-      } else {
-        state.soloModeOpponentPositions = [];
-      }
-      state.soloMode = !!payload.soloMode;
+      initStateForSoloMode(state, !!payload.soloMode, payload.name);
     }),
 });
 
@@ -453,6 +473,9 @@ const lineupEditActions = [
 export default undoable(reducer, {
   filter: (action, state) => {
     if (action.type === gameActions.recordPlateAppearance.type) {
+      return true;
+    }
+    if (action.type === gameActions.recordSoloModeOpponentInning.type) {
       return true;
     }
     if (lineupEditActions.includes(action.type) && state.status === GameStatus.IN_PROGRESS) {

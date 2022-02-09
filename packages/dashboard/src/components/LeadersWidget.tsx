@@ -26,7 +26,11 @@ const LeadersPreview: FC<GetPreviewLeadersQuery> = props => {
   return (
     <Grid gap="small" margin={{ vertical: 'small' }} columns="min(100%, max(200px, 30%))">
       {categories.map(({ property, name, decimal }) => {
-        const { player, value } = props[property as keyof SimplifyType<GetPreviewLeadersQuery>]![0];
+        const leader = props[property as keyof SimplifyType<GetPreviewLeadersQuery>]![0];
+        if (!leader) {
+          return null;
+        }
+        const { player, value } = leader;
         return (
           <Box key={property}>
             <Text alignSelf="center" weight="bold">
