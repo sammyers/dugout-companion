@@ -800,19 +800,6 @@ type Query implements Node {
     """Skip the first `n` values."""
     offset: Int
   ): [GetPlateAppearancesRecord]
-  getRunsScored(
-    gameId: UUID
-    batterId: UUID
-    runnerId: UUID
-    beforeDate: Datetime
-    afterDate: Datetime
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-  ): [GetRunsScoredRecord]
   getSlg(totalBases: Int, atBats: Int): Float
   getTb(singles: Int, doubles: Int, triples: Int, homeruns: Int): Int
   getTeamForPlayer(playerId: UUID, gameId: UUID): UUID
@@ -1886,7 +1873,6 @@ type Player implements Node {
 
   """sortable"""
   gamesPlayedThisYear: Int
-  traditionalStats(beforeDate: Datetime, afterDate: Datetime): TraditionalStatLine
 }
 
 type LegacyPlayer implements Node {
@@ -4499,29 +4485,6 @@ input GameBattingLineCondition {
   ops: Float
 }
 
-type TraditionalStatLine {
-  playerId: UUID
-  games: Int
-  plateAppearances: Int
-  atBats: Int
-  hits: Int
-  singles: Int
-  doubles: Int
-  triples: Int
-  homeruns: Int
-  walks: Int
-  strikeouts: Int
-  sacFlies: Int
-  gidp: Int
-  runs: Int
-  rbi: Int
-  xbh: Int
-  battingAverage: Float
-  onBasePct: Float
-  sluggingPct: Float
-  ops: Float
-}
-
 type Field implements Node {
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -4547,6 +4510,29 @@ type Field implements Node {
     """
     condition: GameCondition
   ): [Game!]!
+}
+
+type TraditionalStatLine {
+  playerId: UUID
+  games: Int
+  plateAppearances: Int
+  atBats: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  gidp: Int
+  runs: Int
+  rbi: Int
+  xbh: Int
+  battingAverage: Float
+  onBasePct: Float
+  sluggingPct: Float
+  ops: Float
 }
 
 type LineScoreCell {
@@ -5461,13 +5447,6 @@ type GetPlateAppearancesRecord {
   halfInning: HalfInning
   gameStateBeforeId: UUID
   gameEventRecordId: UUID
-}
-
-"""The return type of our `getRunsScoredConnection` query."""
-type GetRunsScoredRecord {
-  batterId: UUID
-  runnerId: UUID
-  battedIn: Boolean
 }
 
 """
