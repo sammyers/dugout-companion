@@ -111,6 +111,7 @@ const Lineup = ({ teamRole }: Props) => {
             });
             const player = data?.createPlayer?.player;
             if (player) {
+              dispatch(playerActions.loadPlayer(player));
               playerId = player.id;
             }
           } else {
