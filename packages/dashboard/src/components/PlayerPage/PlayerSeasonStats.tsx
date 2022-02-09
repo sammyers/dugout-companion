@@ -2,11 +2,13 @@ import React, { FC, ReactNode, useMemo, useLayoutEffect } from 'react';
 import { ColumnConfig, DataTable, Text, ThemeContext } from 'grommet';
 import _ from 'lodash';
 
+import PageBlock from '../util/PageBlock';
 import PlayerSeasonGames from './PlayerSeasonGames';
 
-import { PlayerProfile, SeasonRow } from './types';
-import PageBlock from '../util/PageBlock';
 import { useResponsiveColumns } from '../../utils';
+import { useCurrentGroupId } from '../context';
+
+import { PlayerProfile, SeasonRow } from './types';
 
 const columnDefs: ColumnConfig<SeasonRow>[] = [
   {
@@ -83,6 +85,8 @@ const PlayerSeasonStats: FC<Props> = ({
   gameBattingLines,
   legacyGameBattingLines,
 }) => {
+  const groupId = useCurrentGroupId();
+
   const responsiveColumns = useResponsiveColumns(columnDefs, {
     xsmall: [
       'games',
@@ -122,8 +126,12 @@ const PlayerSeasonStats: FC<Props> = ({
   }, [careerStats, responsiveColumns]);
 
   const battingLinesBySeason = useMemo(
-    () => _.groupBy(gameBattingLines, 'season'),
-    [gameBattingLines]
+    () =>
+      _.groupBy(
+        gameBattingLines.filter(({ game }) => game?.groupId === groupId),
+        'season'
+      ),
+    [gameBattingLines, groupId]
   );
   const legacyBattingLinesBySeason = useMemo(
     () => _.groupBy(legacyGameBattingLines, 'season'),

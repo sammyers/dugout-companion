@@ -1,8 +1,10 @@
-query GetAllPlayers($groupId: UUID!) {
-  players(condition: { groupId: $groupId }) {
+query GetAllPlayers {
+  players {
     id
     firstName
     lastName
-    groupId
+    groups: playerGroupMemberships {
+      groupId
+    }
   }
 }

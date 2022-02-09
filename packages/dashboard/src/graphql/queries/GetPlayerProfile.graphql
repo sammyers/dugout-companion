@@ -1,8 +1,8 @@
-query GetPlayerProfile($playerId: UUID!) {
+query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
   player(id: $playerId) {
     fullName
     debut
-    careerStats {
+    careerStats(condition: { groupId: $groupId }) {
       games
       plateAppearances
       atBats
@@ -21,7 +21,7 @@ query GetPlayerProfile($playerId: UUID!) {
       sluggingPct
       ops
     }
-    seasonStats(orderBy: SEASON_DESC) {
+    seasonStats(orderBy: SEASON_DESC, condition: { groupId: $groupId }) {
       season
       games
       plateAppearances
@@ -43,6 +43,7 @@ query GetPlayerProfile($playerId: UUID!) {
     }
     gameBattingLines {
       game {
+        groupId
         id
         name
         timeStarted

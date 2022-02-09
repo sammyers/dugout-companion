@@ -2,10 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import _ from 'lodash';
 import { v4 as uuid4 } from 'uuid';
 
-import { Player, NewPlayer } from './types';
+import { Player, NewPlayer, GroupMembership } from './types';
 
 type PlayerMap = Record<string, Player>;
-type GroupPlayerMap = Record<string, PlayerMap>;
 
 const doesPlayerExist = (newPlayer: NewPlayer, players: PlayerMap) =>
   _.some(
@@ -14,13 +13,15 @@ const doesPlayerExist = (newPlayer: NewPlayer, players: PlayerMap) =>
   );
 
 export interface PlayerState {
-  synced: GroupPlayerMap;
-  unsynced: GroupPlayerMap;
+  syncedPlayers: PlayerMap;
+  unsyncedPlayers: PlayerMap;
+  unsyncedMemberships: GroupMembership[];
 }
 
 const initialState: PlayerState = {
-  synced: {},
-  unsynced: {},
+  syncedPlayers: {},
+  unsyncedPlayers: {}, // Includes membership links for players not in the database
+  unsyncedMemberships: [], // Only membership links for players already in the database
 };
 
 const { actions: playerActions, reducer } = createSlice({
@@ -28,53 +29,54 @@ const { actions: playerActions, reducer } = createSlice({
   initialState,
   reducers: {
     loadPlayers: (state, { payload }: PayloadAction<Player[]>) => {
-      const groupId = payload[0]?.groupId;
-      if (groupId) {
-        state.synced[groupId] = _.reduce(
-          payload,
-          (all, player) => ({
-            ...all,
-            [player.id]: player,
-          }),
-          {} as Record<string, Player>
-        );
-        if (!(groupId in state.unsynced)) {
-          state.unsynced[groupId] = {};
+      state.syncedPlayers = _.reduce(
+        payload,
+        (all, player) => ({
+          ...all,
+          [player.id]: player,
+        }),
+        {} as Record<string, Player>
+      );
+      payload.forEach(({ id, groups }) => {
+        if (id in state.unsyncedPlayers) {
+          delete state.unsyncedPlayers[id];
         }
-        payload.forEach(({ id }) => {
-          if (id in state.unsynced[groupId]) {
-            delete state.unsynced[id];
-          }
-        });
-      }
+        state.unsyncedMemberships = state.unsyncedMemberships.filter(
+          ({ playerId, groupId }) => playerId !== id || !_.some(groups, { groupId })
+        );
+      });
     },
     loadPlayer(state, { payload }: PayloadAction<Player>) {
-      if (!(payload.groupId in state.synced)) {
-        state.synced[payload.groupId] = {};
-      }
-      state.synced[payload.groupId][payload.id] = payload;
-      if (payload.groupId in state.unsynced && payload.id in state.unsynced[payload.groupId]) {
-        delete state.unsynced[payload.groupId][payload.id];
+      state.syncedPlayers[payload.id] = payload;
+      if (payload.id in state.unsyncedPlayers) {
+        delete state.unsyncedPlayers[payload.id];
       }
     },
     createPlayerOffline: {
       reducer(state, { payload }: PayloadAction<Player>) {
-        if (!(payload.groupId in state.unsynced)) {
-          state.unsynced[payload.groupId] = {};
-        }
-        if (!doesPlayerExist(payload, state.unsynced[payload.groupId])) {
-          state.unsynced[payload.groupId][payload.id] = payload;
+        if (!doesPlayerExist(payload, state.unsyncedPlayers)) {
+          state.unsyncedPlayers[payload.id] = payload;
         }
       },
-      prepare: (player: NewPlayer) => ({ payload: { ...player, id: uuid4() } }),
+      prepare: (player: NewPlayer, groupId: string) => ({
+        payload: { ...player, id: uuid4(), groups: [{ groupId }] },
+      }),
+    },
+    addPlayerToGroupOffline(state, { payload }: PayloadAction<GroupMembership>) {
+      if (payload.playerId in state.unsyncedPlayers) {
+        state.unsyncedPlayers[payload.playerId].groups.push({ groupId: payload.groupId });
+      } else {
+        state.unsyncedMemberships.push(payload);
+      }
     },
     syncPlayer(state, { payload }: PayloadAction<string>) {
-      const groupId = _.findKey(state.unsynced, playerMap => payload in playerMap)!;
-      if (!(groupId in state.synced)) {
-        state.synced[groupId] = {};
-      }
-      state.synced[groupId][payload] = state.unsynced[groupId][payload];
-      delete state.unsynced[groupId][payload];
+      state.syncedPlayers[payload] = state.unsyncedPlayers[payload];
+      delete state.unsyncedPlayers[payload];
+    },
+    syncMembership(state, { payload }: PayloadAction<GroupMembership>) {
+      state.unsyncedMemberships = state.unsyncedMemberships.filter(
+        ({ playerId, groupId }) => playerId !== payload.playerId || groupId !== payload.groupId
+      );
     },
   },
 });

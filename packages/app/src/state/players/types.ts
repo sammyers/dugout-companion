@@ -29,4 +29,9 @@ export type PlayerStats = CountingStats & Partial<RateStats>;
 
 export type Player = NonNullable<SimplifyType<GetAllPlayersQuery>['players']>[number];
 
-export type NewPlayer = Omit<Player, 'id'>;
+export type NewPlayer = Omit<Player, 'id' | 'groups'>;
+
+export interface GroupMembership {
+  playerId: string;
+  groupId: string;
+}

@@ -7,7 +7,6 @@ import {
   useGetAllGamesQuery,
   useGetAllGroupsQuery,
   useGetSoloModeOpponentBatterIdQuery,
-  SOLO_MODE_OPPONENT_GROUP,
 } from '@sammyers/dc-shared';
 
 import GameOver from './GameOver';
@@ -39,12 +38,7 @@ const App = () => {
   const gameOver = useAppSelector(isGameOver);
 
   const { data: groupData } = useGetAllGroupsQuery();
-  const { data: opponentBatterData } = useGetSoloModeOpponentBatterIdQuery({
-    skip: !groupData,
-    variables: groupData
-      ? { groupId: groupData.groups!.find(group => group.name === SOLO_MODE_OPPONENT_GROUP)!.id }
-      : undefined,
-  });
+  const { data: opponentBatterData } = useGetSoloModeOpponentBatterIdQuery();
 
   useEffect(() => {
     if (opponentBatterData?.player) {
@@ -59,10 +53,7 @@ const App = () => {
   }, [groupData, dispatch]);
   const groupId = useAppSelector(getCurrentGroupId);
 
-  const { data: playerData } = useGetAllPlayersQuery({
-    skip: !groupId,
-    variables: groupId ? { groupId } : undefined,
-  });
+  const { data: playerData } = useGetAllPlayersQuery();
   const { data: gameData } = useGetAllGamesQuery({
     skip: !groupId,
     variables: groupId ? { groupId } : undefined,
@@ -91,10 +82,8 @@ const App = () => {
   const [online, setOnline] = useState(false);
   useEffect(() => {
     const handleNetworkChange = () => {
+      console.log('online', navigator.onLine);
       setOnline(navigator.onLine);
-      if (navigator.onLine) {
-        syncAllPlayers();
-      }
     };
     handleNetworkChange();
     window.addEventListener('online', handleNetworkChange);
@@ -105,6 +94,12 @@ const App = () => {
       window.removeEventListener('offline', handleNetworkChange);
     };
   }, [setOnline, syncAllPlayers]);
+
+  useEffect(() => {
+    if (online) {
+      syncAllPlayers();
+    }
+  }, [online, syncAllPlayers]);
 
   return (
     <Grommet full theme={theme}>

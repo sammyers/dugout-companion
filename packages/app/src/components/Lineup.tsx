@@ -3,8 +3,13 @@ import { Box, Text, TextInput, TextInputProps } from 'grommet';
 import _ from 'lodash';
 import { Droppable } from 'react-beautiful-dnd';
 
-import { TeamRole, useCreatePlayerMutation } from '@sammyers/dc-shared';
+import {
+  TeamRole,
+  useCreatePlayerMutation,
+  useAddPlayerToGroupMutation,
+} from '@sammyers/dc-shared';
 
+import LineupEditControls from './LineupEditControls';
 import LineupPlayer from './LineupPlayer';
 
 import {
@@ -23,7 +28,6 @@ import { playerActions } from 'state/players/slice';
 import { formatName, getNameParts } from 'state/players/utils';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
-import LineupEditControls from './LineupEditControls';
 
 const NEW_PLAYER_ID = 'new-player';
 
@@ -49,6 +53,7 @@ const Lineup = ({ teamRole }: Props) => {
   const online = useNetworkStatus();
 
   const [createPlayer] = useCreatePlayerMutation();
+  const [addPlayerToGroup] = useAddPlayerToGroupMutation();
 
   const suggestions = useMemo(() => {
     if (!searchValue.length) return [];
@@ -97,24 +102,49 @@ const Lineup = ({ teamRole }: Props) => {
         if (playerId === NEW_PLAYER_ID) {
           const nameParts = getNameParts(searchValue);
           if (online) {
-            const { data } = await createPlayer({ variables: { ...nameParts, groupId } });
+            const { data } = await createPlayer({
+              variables: {
+                input: {
+                  player: { ...nameParts, playerGroupMemberships: { create: [{ groupId }] } },
+                },
+              },
+            });
             const player = data?.createPlayer?.player;
             if (player) {
-              dispatch(playerActions.loadPlayer(player));
               playerId = player.id;
             }
           } else {
             const { payload } = dispatch(
-              playerActions.createPlayerOffline({ ...nameParts, groupId })
+              playerActions.createPlayerOffline({ ...nameParts }, groupId)
             );
             playerId = payload.id;
+          }
+        } else {
+          const player = _.find(availablePlayers, { id: playerId })!;
+          if (!_.some(player.groups, { groupId })) {
+            // Player not yet a member of the current group
+            if (online) {
+              await addPlayerToGroup({ variables: { playerId, groupId } });
+            } else {
+              dispatch(playerActions.addPlayerToGroupOffline({ playerId, groupId }));
+            }
           }
         }
         dispatch(gameActions.addPlayerToGame({ teamRole, playerId }));
         setSearchValue('');
       }
     },
-    [groupId, online, teamRole, dispatch, searchValue, setSearchValue, createPlayer]
+    [
+      groupId,
+      online,
+      teamRole,
+      availablePlayers,
+      dispatch,
+      searchValue,
+      setSearchValue,
+      createPlayer,
+      addPlayerToGroup,
+    ]
   );
 
   return (

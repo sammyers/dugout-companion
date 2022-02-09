@@ -1,12 +1,12 @@
-mutation CreatePlayer($id: UUID, $firstName: String!, $lastName: String, $groupId: UUID!) {
-  createPlayer(
-    input: { player: { id: $id, firstName: $firstName, lastName: $lastName, groupId: $groupId } }
-  ) {
+mutation CreatePlayer($input: CreatePlayerInput!) {
+  createPlayer(input: $input) {
     player {
       id
       firstName
       lastName
-      groupId
+      groups: playerGroupMemberships {
+        groupId
+      }
     }
   }
 }

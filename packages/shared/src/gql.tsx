@@ -210,19 +210,19 @@ export type BaseRunnerRunnerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<BaseRunnerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -252,14 +252,12 @@ export type BaseRunnerRunnerIdFkeyInverseInput = {
 /** The `player` to be created by this mutation. */
 export type BaseRunnerRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -269,6 +267,7 @@ export type BaseRunnerRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -477,19 +476,19 @@ export type BasepathMovementRunnerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<BasepathMovementOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -519,14 +518,12 @@ export type BasepathMovementRunnerIdFkeyInverseInput = {
 /** The `player` to be created by this mutation. */
 export type BasepathMovementRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -536,6 +533,7 @@ export type BasepathMovementRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -1420,6 +1418,35 @@ export type CreatePlateAppearancePayload = {
   query: Maybe<Query>;
 };
 
+/** All input for the create `PlayerGroupMembership` mutation. */
+export type CreatePlayerGroupMembershipInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `PlayerGroupMembership` to be created by this mutation. */
+  playerGroupMembership: PlayerGroupMembershipInput;
+};
+
+/** The output of our create `PlayerGroupMembership` mutation. */
+export type CreatePlayerGroupMembershipPayload = {
+  __typename?: 'CreatePlayerGroupMembershipPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `PlayerGroupMembership` that was created by this mutation. */
+  playerGroupMembership: Maybe<PlayerGroupMembership>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `PlayerGroupMembership`. */
+  player: Maybe<Player>;
+  /** Reads a single `Group` that is related to this `PlayerGroupMembership`. */
+  group: Maybe<Group>;
+};
+
 /** All input for the create `Player` mutation. */
 export type CreatePlayerInput = {
   /**
@@ -1443,8 +1470,6 @@ export type CreatePlayerPayload = {
   player: Maybe<Player>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  /** Reads a single `Group` that is related to this `Player`. */
-  group: Maybe<Group>;
   /** Reads a single `LegacyPlayer` that is related to this `Player`. */
   legacyPlayer: Maybe<LegacyPlayer>;
 };
@@ -2198,14 +2223,13 @@ export type DeletePlateAppearancePayload = {
   query: Maybe<Query>;
 };
 
-/** All input for the `deletePlayerByGroupIdAndFirstNameAndLastName` mutation. */
-export type DeletePlayerByGroupIdAndFirstNameAndLastNameInput = {
+/** All input for the `deletePlayerByFirstNameAndLastName` mutation. */
+export type DeletePlayerByFirstNameAndLastNameInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -2219,6 +2243,47 @@ export type DeletePlayerByNodeIdInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** The globally unique `ID` which will identify a single `Player` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** All input for the `deletePlayerGroupMembershipByNodeId` mutation. */
+export type DeletePlayerGroupMembershipByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlayerGroupMembership` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deletePlayerGroupMembership` mutation. */
+export type DeletePlayerGroupMembershipInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+};
+
+/** The output of our delete `PlayerGroupMembership` mutation. */
+export type DeletePlayerGroupMembershipPayload = {
+  __typename?: 'DeletePlayerGroupMembershipPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `PlayerGroupMembership` that was deleted by this mutation. */
+  playerGroupMembership: Maybe<PlayerGroupMembership>;
+  deletedPlayerGroupMembershipNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `PlayerGroupMembership`. */
+  player: Maybe<Player>;
+  /** Reads a single `Group` that is related to this `PlayerGroupMembership`. */
+  group: Maybe<Group>;
 };
 
 /** All input for the `deletePlayer` mutation. */
@@ -2244,8 +2309,6 @@ export type DeletePlayerPayload = {
   deletedPlayerNodeId: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  /** Reads a single `Group` that is related to this `Player`. */
-  group: Maybe<Group>;
   /** Reads a single `LegacyPlayer` that is related to this `Player`. */
   legacyPlayer: Maybe<LegacyPlayer>;
 };
@@ -2486,19 +2549,19 @@ export type FakePublicCareerStatsForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<CareerStatOnCareerStatForFakePublicCareerStatsForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -2514,14 +2577,12 @@ export type FakePublicCareerStatsForeignKey0InverseInput = {
 /** The `player` to be created by this mutation. */
 export type FakePublicCareerStatsForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -2531,6 +2592,7 @@ export type FakePublicCareerStatsForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -2645,8 +2707,8 @@ export type FakePublicCareerStatsForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -2720,19 +2782,19 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<CareerStatsQualifiedBatterOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -2748,14 +2810,12 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput = {
 /** The `player` to be created by this mutation. */
 export type FakePublicCareerStatsQualifiedBattersForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -2765,6 +2825,7 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey0PlayerCreateInput = 
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -2879,8 +2940,8 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -2952,19 +3013,19 @@ export type FakePublicGameBattingLinesForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<GameBattingLineOnGameBattingLineForFakePublicGameBattingLinesForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -2994,14 +3055,12 @@ export type FakePublicGameBattingLinesForeignKey0InverseInput = {
 /** The `player` to be created by this mutation. */
 export type FakePublicGameBattingLinesForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -3011,6 +3070,7 @@ export type FakePublicGameBattingLinesForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -3118,19 +3178,19 @@ export type FakePublicLegacyGameBattingLinesForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<LegacyGameBattingLineOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -3190,14 +3250,12 @@ export type FakePublicLegacyGameBattingLinesForeignKey0LegacyGameBattingLinesCre
 /** The `player` to be created by this mutation. */
 export type FakePublicLegacyGameBattingLinesForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -3207,6 +3265,7 @@ export type FakePublicLegacyGameBattingLinesForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -3569,19 +3628,19 @@ export type FakePublicLegacySeasonStatsForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<LegacySeasonStatOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -3626,14 +3685,12 @@ export type FakePublicLegacySeasonStatsForeignKey0LegacySeasonStatsCreateInput =
 /** The `player` to be created by this mutation. */
 export type FakePublicLegacySeasonStatsForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -3643,6 +3700,7 @@ export type FakePublicLegacySeasonStatsForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -3728,8 +3786,8 @@ export type FakePublicLegacySeasonStatsForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -3823,19 +3881,19 @@ export type FakePublicPlayerForeignKey0InverseInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<Array<PlayerPlayerPkeyConnect>>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<Array<PlayerPlayerNameUniqueInGroupConnect>>;
+  connectByFirstNameAndLastName?: Maybe<Array<PlayerPlayerNameUniqueConnect>>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<PlayerNodeIdConnect>>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<Array<PlayerPlayerPkeyDelete>>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<Array<PlayerPlayerNameUniqueInGroupDelete>>;
+  deleteByFirstNameAndLastName?: Maybe<Array<PlayerPlayerNameUniqueDelete>>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<PlayerNodeIdDelete>>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<Array<PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerPkeyUpdate>>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<Array<PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerNameUniqueInGroupUpdate>>;
+  updateByFirstNameAndLastName?: Maybe<Array<PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerNameUniqueUpdate>>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<LegacyPlayerOnPlayerForFakePublicPlayerForeignKey0NodeIdUpdate>>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -3861,13 +3919,11 @@ export type FakePublicPlayerForeignKey0LegacyPlayerCreateInput = {
 /** The `player` to be created by this mutation. */
 export type FakePublicPlayerForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -3877,6 +3933,7 @@ export type FakePublicPlayerForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -3892,19 +3949,19 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<SeasonStatsAllTimeQualifiedBatterOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -3920,14 +3977,12 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0InverseInput 
 /** The `player` to be created by this mutation. */
 export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -3937,6 +3992,7 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0PlayerCreateI
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -4051,8 +4107,8 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2GroupCreateIn
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -4126,19 +4182,19 @@ export type FakePublicSeasonStatsForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -4154,14 +4210,12 @@ export type FakePublicSeasonStatsForeignKey0InverseInput = {
 /** The `player` to be created by this mutation. */
 export type FakePublicSeasonStatsForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -4171,6 +4225,7 @@ export type FakePublicSeasonStatsForeignKey0PlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -4285,8 +4340,8 @@ export type FakePublicSeasonStatsForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -4360,19 +4415,19 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey0Input = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<SeasonStatsQualifiedBatterOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0NodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -4388,14 +4443,12 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput = {
 /** The `player` to be created by this mutation. */
 export type FakePublicSeasonStatsQualifiedBattersForeignKey0PlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -4405,6 +4458,7 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey0PlayerCreateInput = 
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -4519,8 +4573,8 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -4595,8 +4649,8 @@ export type FakePublicUnifiedGamesForeignKey0GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -6607,8 +6661,8 @@ export type GameGroupIdFkeyGroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -7209,19 +7263,19 @@ export type GameStatePlayerAtBatFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<GameStateOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -7251,14 +7305,12 @@ export type GameStatePlayerAtBatFkeyInverseInput = {
 /** The `player` to be created by this mutation. */
 export type GameStatePlayerAtBatFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -7268,6 +7320,7 @@ export type GameStatePlayerAtBatFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -7360,10 +7413,10 @@ export type Group = Node & {
   name: Scalars['String'];
   notes: Maybe<Scalars['String']>;
   soloMode: Maybe<Scalars['Boolean']>;
-  /** Reads and enables pagination through a set of `Player`. */
-  players: Array<Player>;
   /** Reads and enables pagination through a set of `Game`. */
   games: Array<Game>;
+  /** Reads and enables pagination through a set of `PlayerGroupMembership`. */
+  playerGroupMemberships: Array<PlayerGroupMembership>;
   /** Reads and enables pagination through a set of `CareerStat`. */
   careerStats: Array<CareerStat>;
   /** Reads and enables pagination through a set of `CareerStatsQualifiedBatter`. */
@@ -7379,14 +7432,8 @@ export type Group = Node & {
   /** Reads and enables pagination through a set of `UnifiedGame`. */
   unifiedGames: Array<UnifiedGame>;
   allSeasons: Maybe<Array<Maybe<Scalars['Int']>>>;
-};
-
-
-export type GroupPlayersArgs = {
-  first?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  orderBy?: Maybe<Array<PlayersOrderBy>>;
-  condition?: Maybe<PlayerCondition>;
+  /** Reads and enables pagination through a set of `Player`. */
+  players: Maybe<Array<Maybe<Player>>>;
 };
 
 
@@ -7395,6 +7442,14 @@ export type GroupGamesArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<GamesOrderBy>>;
   condition?: Maybe<GameCondition>;
+};
+
+
+export type GroupPlayerGroupMembershipsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<PlayerGroupMembershipsOrderBy>>;
+  condition?: Maybe<PlayerGroupMembershipCondition>;
 };
 
 
@@ -7459,6 +7514,12 @@ export type GroupAllSeasonsArgs = {
   offset?: Maybe<Scalars['Int']>;
 };
 
+
+export type GroupPlayersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+};
+
 /** A condition to be used against `Group` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type GroupCondition = {
   /** Checks for equality with the object’s `id` field. */
@@ -7497,8 +7558,8 @@ export type GroupInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -7585,24 +7646,24 @@ export type GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Usin
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type GroupOnPlayerForPlayerGroupIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `player` to be connected. */
+export type GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `playerGroupMembership` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `player` being updated. */
-  patch: PlayerPatch;
+  /** An object where the defined keys will be set on the `playerGroupMembership` being updated. */
+  patch: PlayerGroupMembershipPatch;
 };
 
 /** The fields on `group` to look up the row to update. */
-export type GroupOnPlayerForPlayerGroupIdFkeyUsingGroupNameKeyUpdate = {
+export type GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupNameKeyUpdate = {
   /** An object where the defined keys will be set on the `group` being updated. */
-  patch: UpdateGroupOnPlayerForPlayerGroupIdFkeyPatch;
+  patch: UpdateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch;
   name: Scalars['String'];
 };
 
 /** The fields on `group` to look up the row to update. */
-export type GroupOnPlayerForPlayerGroupIdFkeyUsingGroupPkeyUpdate = {
+export type GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupPkeyUpdate = {
   /** An object where the defined keys will be set on the `group` being updated. */
-  patch: UpdateGroupOnPlayerForPlayerGroupIdFkeyPatch;
+  patch: UpdateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch;
   id: Scalars['UUID'];
 };
 
@@ -7668,8 +7729,8 @@ export type GroupPatch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -9702,19 +9763,19 @@ export type LineupSpotPlayerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<LineupSpotOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -9765,14 +9826,12 @@ export type LineupSpotPlayerIdFkeyLineupSpotCreateInput = {
 /** The `player` to be created by this mutation. */
 export type LineupSpotPlayerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -9782,6 +9841,7 @@ export type LineupSpotPlayerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -10060,6 +10120,8 @@ export type Mutation = {
   createPlateAppearance: Maybe<CreatePlateAppearancePayload>;
   /** Creates a single `Player`. */
   createPlayer: Maybe<CreatePlayerPayload>;
+  /** Creates a single `PlayerGroupMembership`. */
+  createPlayerGroupMembership: Maybe<CreatePlayerGroupMembershipPayload>;
   /** Creates a single `ReduxDump`. */
   createReduxDump: Maybe<CreateReduxDumpPayload>;
   /** Creates a single `ScoredRunner`. */
@@ -10141,7 +10203,11 @@ export type Mutation = {
   /** Updates a single `Player` using a unique key and a patch. */
   updatePlayer: Maybe<UpdatePlayerPayload>;
   /** Updates a single `Player` using a unique key and a patch. */
-  updatePlayerByGroupIdAndFirstNameAndLastName: Maybe<UpdatePlayerPayload>;
+  updatePlayerByFirstNameAndLastName: Maybe<UpdatePlayerPayload>;
+  /** Updates a single `PlayerGroupMembership` using its globally unique id and a patch. */
+  updatePlayerGroupMembershipByNodeId: Maybe<UpdatePlayerGroupMembershipPayload>;
+  /** Updates a single `PlayerGroupMembership` using a unique key and a patch. */
+  updatePlayerGroupMembership: Maybe<UpdatePlayerGroupMembershipPayload>;
   /** Updates a single `ReduxDump` using its globally unique id and a patch. */
   updateReduxDumpByNodeId: Maybe<UpdateReduxDumpPayload>;
   /** Updates a single `ReduxDump` using a unique key and a patch. */
@@ -10235,7 +10301,11 @@ export type Mutation = {
   /** Deletes a single `Player` using a unique key. */
   deletePlayer: Maybe<DeletePlayerPayload>;
   /** Deletes a single `Player` using a unique key. */
-  deletePlayerByGroupIdAndFirstNameAndLastName: Maybe<DeletePlayerPayload>;
+  deletePlayerByFirstNameAndLastName: Maybe<DeletePlayerPayload>;
+  /** Deletes a single `PlayerGroupMembership` using its globally unique id. */
+  deletePlayerGroupMembershipByNodeId: Maybe<DeletePlayerGroupMembershipPayload>;
+  /** Deletes a single `PlayerGroupMembership` using a unique key. */
+  deletePlayerGroupMembership: Maybe<DeletePlayerGroupMembershipPayload>;
   /** Deletes a single `ReduxDump` using its globally unique id. */
   deleteReduxDumpByNodeId: Maybe<DeleteReduxDumpPayload>;
   /** Deletes a single `ReduxDump` using a unique key. */
@@ -10378,6 +10448,12 @@ export type MutationCreatePlateAppearanceArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreatePlayerArgs = {
   input: CreatePlayerInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreatePlayerGroupMembershipArgs = {
+  input: CreatePlayerGroupMembershipInput;
 };
 
 
@@ -10622,8 +10698,20 @@ export type MutationUpdatePlayerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePlayerByGroupIdAndFirstNameAndLastNameArgs = {
-  input: UpdatePlayerByGroupIdAndFirstNameAndLastNameInput;
+export type MutationUpdatePlayerByFirstNameAndLastNameArgs = {
+  input: UpdatePlayerByFirstNameAndLastNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlayerGroupMembershipByNodeIdArgs = {
+  input: UpdatePlayerGroupMembershipByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePlayerGroupMembershipArgs = {
+  input: UpdatePlayerGroupMembershipInput;
 };
 
 
@@ -10904,8 +10992,20 @@ export type MutationDeletePlayerArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePlayerByGroupIdAndFirstNameAndLastNameArgs = {
-  input: DeletePlayerByGroupIdAndFirstNameAndLastNameInput;
+export type MutationDeletePlayerByFirstNameAndLastNameArgs = {
+  input: DeletePlayerByFirstNameAndLastNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlayerGroupMembershipByNodeIdArgs = {
+  input: DeletePlayerGroupMembershipByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePlayerGroupMembershipArgs = {
+  input: DeletePlayerGroupMembershipInput;
 };
 
 
@@ -11138,19 +11238,19 @@ export type OutOnPlayRunnerRunnerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<OutOnPlayRunnerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -11187,14 +11287,12 @@ export type OutOnPlayRunnerRunnerIdFkeyOutOnPlayRunnerCreateInput = {
 /** The `player` to be created by this mutation. */
 export type OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -11204,6 +11302,7 @@ export type OutOnPlayRunnerRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -11405,15 +11504,12 @@ export type Player = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['UUID'];
-  groupId: Scalars['UUID'];
   legacyPlayerId: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName: Maybe<Scalars['String']>;
   nickname: Maybe<Scalars['String']>;
   imageUrl: Maybe<Scalars['String']>;
   timeCreated: Maybe<Scalars['Datetime']>;
-  /** Reads a single `Group` that is related to this `Player`. */
-  group: Maybe<Group>;
   /** Reads a single `LegacyPlayer` that is related to this `Player`. */
   legacyPlayer: Maybe<LegacyPlayer>;
   /** Reads and enables pagination through a set of `Team`. */
@@ -11432,6 +11528,8 @@ export type Player = Node & {
   baseRunnersByRunnerId: Array<BaseRunner>;
   /** Reads and enables pagination through a set of `ScoredRunner`. */
   scoredRunnersByRunnerId: Array<ScoredRunner>;
+  /** Reads and enables pagination through a set of `PlayerGroupMembership`. */
+  playerGroupMemberships: Array<PlayerGroupMembership>;
   /** Reads and enables pagination through a set of `CareerStat`. */
   careerStats: Array<CareerStat>;
   /** Reads and enables pagination through a set of `CareerStatsQualifiedBatter`. */
@@ -11521,6 +11619,14 @@ export type PlayerScoredRunnersByRunnerIdArgs = {
 };
 
 
+export type PlayerPlayerGroupMembershipsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<PlayerGroupMembershipsOrderBy>>;
+  condition?: Maybe<PlayerGroupMembershipCondition>;
+};
+
+
 export type PlayerCareerStatsArgs = {
   first?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -11600,8 +11706,6 @@ export type PlayerTraditionalStatsArgs = {
 export type PlayerCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['UUID']>;
-  /** Checks for equality with the object’s `groupId` field. */
-  groupId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `legacyPlayerId` field. */
   legacyPlayerId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `firstName` field. */
@@ -11616,14 +11720,37 @@ export type PlayerCondition = {
   timeCreated?: Maybe<Scalars['Datetime']>;
 };
 
+export type PlayerGroupMembership = Node & {
+  __typename?: 'PlayerGroupMembership';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+  /** Reads a single `Player` that is related to this `PlayerGroupMembership`. */
+  player: Maybe<Player>;
+  /** Reads a single `Group` that is related to this `PlayerGroupMembership`. */
+  group: Maybe<Group>;
+};
+
+/**
+ * A condition to be used against `PlayerGroupMembership` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type PlayerGroupMembershipCondition = {
+  /** Checks for equality with the object’s `playerId` field. */
+  playerId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `groupId` field. */
+  groupId?: Maybe<Scalars['UUID']>;
+};
+
 /** The `group` to be created by this mutation. */
-export type PlayerGroupIdFkeyGroupCreateInput = {
+export type PlayerGroupMembershipGroupIdFkeyGroupCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -11633,8 +11760,8 @@ export type PlayerGroupIdFkeyGroupCreateInput = {
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey0InverseInput>;
 };
 
-/** Input for the nested mutation of `group` in the `PlayerInput` mutation. */
-export type PlayerGroupIdFkeyInput = {
+/** Input for the nested mutation of `group` in the `PlayerGroupMembershipInput` mutation. */
+export type PlayerGroupMembershipGroupIdFkeyInput = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectById?: Maybe<GroupGroupPkeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
@@ -11648,43 +11775,160 @@ export type PlayerGroupIdFkeyInput = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
-  updateById?: Maybe<GroupOnPlayerForPlayerGroupIdFkeyUsingGroupPkeyUpdate>;
+  updateById?: Maybe<GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
-  updateByName?: Maybe<GroupOnPlayerForPlayerGroupIdFkeyUsingGroupNameKeyUpdate>;
+  updateByName?: Maybe<GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupNameKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
-  updateByNodeId?: Maybe<PlayerOnPlayerForPlayerGroupIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyNodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
-  create?: Maybe<PlayerGroupIdFkeyGroupCreateInput>;
+  create?: Maybe<PlayerGroupMembershipGroupIdFkeyGroupCreateInput>;
 };
 
-/** Input for the nested mutation of `player` in the `GroupInput` mutation. */
-export type PlayerGroupIdFkeyInverseInput = {
-  /** Flag indicating whether all other `player` records that match this relationship should be removed. */
+/** Input for the nested mutation of `playerGroupMembership` in the `GroupInput` mutation. */
+export type PlayerGroupMembershipGroupIdFkeyInverseInput = {
+  /** Flag indicating whether all other `playerGroupMembership` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  connectByPlayerIdAndGroupId?: Maybe<Array<PlayerGroupMembershipPlayerGroupMembershipPkeyConnect>>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<PlayerGroupMembershipNodeIdConnect>>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  deleteByPlayerIdAndGroupId?: Maybe<Array<PlayerGroupMembershipPlayerGroupMembershipPkeyDelete>>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<PlayerGroupMembershipNodeIdDelete>>;
+  /** The primary key(s) and patch data for `playerGroupMembership` for the far side of the relationship. */
+  updateByPlayerIdAndGroupId?: Maybe<Array<PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingPlayerGroupMembershipPkeyUpdate>>;
+  /** The primary key(s) and patch data for `playerGroupMembership` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyNodeIdUpdate>>;
+  /** A `PlayerGroupMembershipInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<PlayerGroupMembershipGroupIdFkeyPlayerGroupMembershipCreateInput>>;
+};
+
+/** The `playerGroupMembership` to be created by this mutation. */
+export type PlayerGroupMembershipGroupIdFkeyPlayerGroupMembershipCreateInput = {
+  playerId?: Maybe<Scalars['UUID']>;
+  player?: Maybe<PlayerGroupMembershipPlayerIdFkeyInput>;
+  group?: Maybe<PlayerGroupMembershipGroupIdFkeyInput>;
+};
+
+/** An input for mutations affecting `PlayerGroupMembership` */
+export type PlayerGroupMembershipInput = {
+  playerId?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  player?: Maybe<PlayerGroupMembershipPlayerIdFkeyInput>;
+  group?: Maybe<PlayerGroupMembershipGroupIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type PlayerGroupMembershipNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `playerGroupMembership` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type PlayerGroupMembershipNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `playerGroupMembership` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `group` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: GroupPatch;
+};
+
+/** The fields on `playerGroupMembership` to look up the row to update. */
+export type PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingPlayerGroupMembershipPkeyUpdate = {
+  /** An object where the defined keys will be set on the `playerGroupMembership` being updated. */
+  patch: UpdatePlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch;
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `player` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `player` being updated. */
+  patch: PlayerPatch;
+};
+
+/** The fields on `playerGroupMembership` to look up the row to update. */
+export type PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyUsingPlayerGroupMembershipPkeyUpdate = {
+  /** An object where the defined keys will be set on the `playerGroupMembership` being updated. */
+  patch: UpdatePlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyPatch;
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+};
+
+/** Represents an update to a `PlayerGroupMembership`. Fields that are set will be updated. */
+export type PlayerGroupMembershipPatch = {
+  playerId?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  player?: Maybe<PlayerGroupMembershipPlayerIdFkeyInput>;
+  group?: Maybe<PlayerGroupMembershipGroupIdFkeyInput>;
+};
+
+/** The fields on `playerGroupMembership` to look up the row to connect. */
+export type PlayerGroupMembershipPlayerGroupMembershipPkeyConnect = {
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+};
+
+/** The fields on `playerGroupMembership` to look up the row to delete. */
+export type PlayerGroupMembershipPlayerGroupMembershipPkeyDelete = {
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+};
+
+/** Input for the nested mutation of `player` in the `PlayerGroupMembershipInput` mutation. */
+export type PlayerGroupMembershipPlayerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectById?: Maybe<Array<PlayerPlayerPkeyConnect>>;
+  connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<Array<PlayerPlayerNameUniqueInGroupConnect>>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<PlayerNodeIdConnect>>;
+  connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteById?: Maybe<Array<PlayerPlayerPkeyDelete>>;
+  deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<Array<PlayerPlayerNameUniqueInGroupDelete>>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<PlayerNodeIdDelete>>;
+  deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateById?: Maybe<Array<PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerPkeyUpdate>>;
+  updateById?: Maybe<PlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<Array<PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerNameUniqueInGroupUpdate>>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<GroupOnPlayerForPlayerGroupIdFkeyNodeIdUpdate>>;
+  updateByNodeId?: Maybe<PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<PlayerGroupIdFkeyPlayerCreateInput>>;
+  create?: Maybe<PlayerGroupMembershipPlayerIdFkeyPlayerCreateInput>;
+};
+
+/** Input for the nested mutation of `playerGroupMembership` in the `PlayerInput` mutation. */
+export type PlayerGroupMembershipPlayerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `playerGroupMembership` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  connectByPlayerIdAndGroupId?: Maybe<Array<PlayerGroupMembershipPlayerGroupMembershipPkeyConnect>>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<PlayerGroupMembershipNodeIdConnect>>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  deleteByPlayerIdAndGroupId?: Maybe<Array<PlayerGroupMembershipPlayerGroupMembershipPkeyDelete>>;
+  /** The primary key(s) for `playerGroupMembership` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<PlayerGroupMembershipNodeIdDelete>>;
+  /** The primary key(s) and patch data for `playerGroupMembership` for the far side of the relationship. */
+  updateByPlayerIdAndGroupId?: Maybe<Array<PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyUsingPlayerGroupMembershipPkeyUpdate>>;
+  /** The primary key(s) and patch data for `playerGroupMembership` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyNodeIdUpdate>>;
+  /** A `PlayerGroupMembershipInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<PlayerGroupMembershipPlayerIdFkeyPlayerGroupMembershipCreateInput>>;
 };
 
 /** The `player` to be created by this mutation. */
-export type PlayerGroupIdFkeyPlayerCreateInput = {
+export type PlayerGroupMembershipPlayerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
@@ -11692,7 +11936,6 @@ export type PlayerGroupIdFkeyPlayerCreateInput = {
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -11702,6 +11945,7 @@ export type PlayerGroupIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -11712,17 +11956,33 @@ export type PlayerGroupIdFkeyPlayerCreateInput = {
   seasonStatsQualifiedBatters?: Maybe<FakePublicSeasonStatsQualifiedBattersForeignKey0InverseInput>;
 };
 
+/** The `playerGroupMembership` to be created by this mutation. */
+export type PlayerGroupMembershipPlayerIdFkeyPlayerGroupMembershipCreateInput = {
+  groupId?: Maybe<Scalars['UUID']>;
+  player?: Maybe<PlayerGroupMembershipPlayerIdFkeyInput>;
+  group?: Maybe<PlayerGroupMembershipGroupIdFkeyInput>;
+};
+
+/** Methods to use when ordering `PlayerGroupMembership`. */
+export enum PlayerGroupMembershipsOrderBy {
+  NATURAL = 'NATURAL',
+  PLAYER_ID_ASC = 'PLAYER_ID_ASC',
+  PLAYER_ID_DESC = 'PLAYER_ID_DESC',
+  GROUP_ID_ASC = 'GROUP_ID_ASC',
+  GROUP_ID_DESC = 'GROUP_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
 /** An input for mutations affecting `Player` */
 export type PlayerInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -11732,6 +11992,7 @@ export type PlayerInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -11763,10 +12024,9 @@ export type PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyNodeIdUpdate = {
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11787,10 +12047,9 @@ export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyNodeIdUpdate 
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11803,10 +12062,9 @@ export type PlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyUsingPlayerPk
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnCareerStatForFakePublicCareerStatsForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11819,10 +12077,9 @@ export type PlayerOnCareerStatForFakePublicCareerStatsForeignKey0UsingPlayerPkey
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11843,10 +12100,9 @@ export type PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0NodeI
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11867,10 +12123,9 @@ export type PlayerOnGameStateForGameStatePlayerAtBatFkeyNodeIdUpdate = {
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnGameStateForGameStatePlayerAtBatFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11891,10 +12146,9 @@ export type PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesFore
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11907,10 +12161,9 @@ export type PlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesFore
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11931,10 +12184,9 @@ export type PlayerOnLineupSpotForLineupSpotPlayerIdFkeyNodeIdUpdate = {
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnLineupSpotForLineupSpotPlayerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11955,10 +12207,9 @@ export type PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyNodeIdUpdate = 
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11979,10 +12230,9 @@ export type PlayerOnPlayerForFakePublicPlayerForeignKey0NodeIdUpdate = {
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -11995,26 +12245,25 @@ export type PlayerOnPlayerForFakePublicPlayerForeignKey0UsingPlayerPkeyUpdate = 
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type PlayerOnPlayerForPlayerGroupIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `group` to be connected. */
+export type PlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `playerGroupMembership` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `group` being updated. */
-  patch: GroupPatch;
+  /** An object where the defined keys will be set on the `playerGroupMembership` being updated. */
+  patch: PlayerGroupMembershipPatch;
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
-  patch: UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch;
-  groupId: Scalars['UUID'];
+  patch: UpdatePlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyPatch;
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnPlayerForPlayerGroupIdFkeyUsingPlayerPkeyUpdate = {
+export type PlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyUsingPlayerPkeyUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
-  patch: UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch;
+  patch: UpdatePlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyPatch;
   id: Scalars['UUID'];
 };
 
@@ -12027,10 +12276,9 @@ export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate = {
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12043,10 +12291,9 @@ export type PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerPkeyUpdate
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12059,10 +12306,9 @@ export type PlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0UsingPlayerPkey
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12075,10 +12321,9 @@ export type PlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAll
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0UsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0Patch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12099,10 +12344,9 @@ export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdat
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12123,10 +12367,9 @@ export type PlayerOnTeamForTeamCaptainIdFkeyNodeIdUpdate = {
 };
 
 /** The fields on `player` to look up the row to update. */
-export type PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerNameUniqueInGroupUpdate = {
+export type PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerNameUniqueUpdate = {
   /** An object where the defined keys will be set on the `player` being updated. */
   patch: UpdatePlayerOnTeamForTeamCaptainIdFkeyPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12141,14 +12384,12 @@ export type PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerPkeyUpdate = {
 /** Represents an update to a `Player`. Fields that are set will be updated. */
 export type PlayerPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -12158,6 +12399,7 @@ export type PlayerPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -12169,15 +12411,13 @@ export type PlayerPatch = {
 };
 
 /** The fields on `player` to look up the row to connect. */
-export type PlayerPlayerNameUniqueInGroupConnect = {
-  groupId: Scalars['UUID'];
+export type PlayerPlayerNameUniqueConnect = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
 
 /** The fields on `player` to look up the row to delete. */
-export type PlayerPlayerNameUniqueInGroupDelete = {
-  groupId: Scalars['UUID'];
+export type PlayerPlayerNameUniqueDelete = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -12197,8 +12437,6 @@ export enum PlayersOrderBy {
   NATURAL = 'NATURAL',
   ID_ASC = 'ID_ASC',
   ID_DESC = 'ID_DESC',
-  GROUP_ID_ASC = 'GROUP_ID_ASC',
-  GROUP_ID_DESC = 'GROUP_ID_DESC',
   LEGACY_PLAYER_ID_ASC = 'LEGACY_PLAYER_ID_ASC',
   LEGACY_PLAYER_ID_DESC = 'LEGACY_PLAYER_ID_DESC',
   FIRST_NAME_ASC = 'FIRST_NAME_ASC',
@@ -12293,6 +12531,8 @@ export type Query = Node & {
   plateAppearances: Maybe<Array<PlateAppearance>>;
   /** Reads a set of `Player`. */
   players: Maybe<Array<Player>>;
+  /** Reads a set of `PlayerGroupMembership`. */
+  playerGroupMemberships: Maybe<Array<PlayerGroupMembership>>;
   /** Reads a set of `ReduxDump`. */
   reduxDumps: Maybe<Array<ReduxDump>>;
   /** Reads a set of `ScoredRunner`. */
@@ -12340,7 +12580,8 @@ export type Query = Node & {
   outOnPlayRunner: Maybe<OutOnPlayRunner>;
   plateAppearance: Maybe<PlateAppearance>;
   player: Maybe<Player>;
-  playerByGroupIdAndFirstNameAndLastName: Maybe<Player>;
+  playerByFirstNameAndLastName: Maybe<Player>;
+  playerGroupMembership: Maybe<PlayerGroupMembership>;
   reduxDump: Maybe<ReduxDump>;
   scoredRunner: Maybe<ScoredRunner>;
   season: Maybe<Season>;
@@ -12402,6 +12643,8 @@ export type Query = Node & {
   plateAppearanceByNodeId: Maybe<PlateAppearance>;
   /** Reads a single `Player` using its globally unique `ID`. */
   playerByNodeId: Maybe<Player>;
+  /** Reads a single `PlayerGroupMembership` using its globally unique `ID`. */
+  playerGroupMembershipByNodeId: Maybe<PlayerGroupMembership>;
   /** Reads a single `ReduxDump` using its globally unique `ID`. */
   reduxDumpByNodeId: Maybe<ReduxDump>;
   /** Reads a single `ScoredRunner` using its globally unique `ID`. */
@@ -12712,6 +12955,15 @@ export type QueryPlayersArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPlayerGroupMembershipsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<PlayerGroupMembershipsOrderBy>>;
+  condition?: Maybe<PlayerGroupMembershipCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReduxDumpsArgs = {
   first?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -12976,10 +13228,16 @@ export type QueryPlayerArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryPlayerByGroupIdAndFirstNameAndLastNameArgs = {
-  groupId: Scalars['UUID'];
+export type QueryPlayerByFirstNameAndLastNameArgs = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPlayerGroupMembershipArgs = {
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
 };
 
 
@@ -13245,6 +13503,12 @@ export type QueryPlayerByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryPlayerGroupMembershipByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReduxDumpByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -13489,19 +13753,19 @@ export type ScoredRunnerRunnerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<ScoredRunnerOnScoredRunnerForScoredRunnerRunnerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -13531,14 +13795,12 @@ export type ScoredRunnerRunnerIdFkeyInverseInput = {
 /** The `player` to be created by this mutation. */
 export type ScoredRunnerRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -13548,6 +13810,7 @@ export type ScoredRunnerRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -14276,19 +14539,19 @@ export type StolenBaseAttemptRunnerIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<StolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -14318,14 +14581,12 @@ export type StolenBaseAttemptRunnerIdFkeyInverseInput = {
 /** The `player` to be created by this mutation. */
 export type StolenBaseAttemptRunnerIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -14335,6 +14596,7 @@ export type StolenBaseAttemptRunnerIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -14409,19 +14671,19 @@ export type TeamCaptainIdFkeyInput = {
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectById?: Maybe<PlayerPlayerPkeyConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  connectByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupConnect>;
+  connectByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   connectByNodeId?: Maybe<PlayerNodeIdConnect>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteById?: Maybe<PlayerPlayerPkeyDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
-  deleteByGroupIdAndFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueInGroupDelete>;
+  deleteByFirstNameAndLastName?: Maybe<PlayerPlayerNameUniqueDelete>;
   /** The primary key(s) for `player` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PlayerNodeIdDelete>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateById?: Maybe<PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerPkeyUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
-  updateByGroupIdAndFirstNameAndLastName?: Maybe<PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerNameUniqueInGroupUpdate>;
+  updateByFirstNameAndLastName?: Maybe<PlayerOnTeamForTeamCaptainIdFkeyUsingPlayerNameUniqueUpdate>;
   /** The primary key(s) and patch data for `player` for the far side of the relationship. */
   updateByNodeId?: Maybe<TeamOnTeamForTeamCaptainIdFkeyNodeIdUpdate>;
   /** A `PlayerInput` object that will be created and connected to this object. */
@@ -14457,14 +14719,12 @@ export type TeamCaptainIdFkeyInverseInput = {
 /** The `player` to be created by this mutation. */
 export type TeamCaptainIdFkeyPlayerCreateInput = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName: Scalars['String'];
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -14474,6 +14734,7 @@ export type TeamCaptainIdFkeyPlayerCreateInput = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -15512,8 +15773,8 @@ export type UpdatePlateAppearancePayload = {
   query: Maybe<Query>;
 };
 
-/** All input for the `updatePlayerByGroupIdAndFirstNameAndLastName` mutation. */
-export type UpdatePlayerByGroupIdAndFirstNameAndLastNameInput = {
+/** All input for the `updatePlayerByFirstNameAndLastName` mutation. */
+export type UpdatePlayerByFirstNameAndLastNameInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -15521,7 +15782,6 @@ export type UpdatePlayerByGroupIdAndFirstNameAndLastNameInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** An object where the defined keys will be set on the `Player` being updated. */
   patch: PlayerPatch;
-  groupId: Scalars['UUID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
 };
@@ -15537,6 +15797,50 @@ export type UpdatePlayerByNodeIdInput = {
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `Player` being updated. */
   patch: PlayerPatch;
+};
+
+/** All input for the `updatePlayerGroupMembershipByNodeId` mutation. */
+export type UpdatePlayerGroupMembershipByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `PlayerGroupMembership` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `PlayerGroupMembership` being updated. */
+  patch: PlayerGroupMembershipPatch;
+};
+
+/** All input for the `updatePlayerGroupMembership` mutation. */
+export type UpdatePlayerGroupMembershipInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `PlayerGroupMembership` being updated. */
+  patch: PlayerGroupMembershipPatch;
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+};
+
+/** The output of our update `PlayerGroupMembership` mutation. */
+export type UpdatePlayerGroupMembershipPayload = {
+  __typename?: 'UpdatePlayerGroupMembershipPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `PlayerGroupMembership` that was updated by this mutation. */
+  playerGroupMembership: Maybe<PlayerGroupMembership>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Player` that is related to this `PlayerGroupMembership`. */
+  player: Maybe<Player>;
+  /** Reads a single `Group` that is related to this `PlayerGroupMembership`. */
+  group: Maybe<Group>;
 };
 
 /** All input for the `updatePlayer` mutation. */
@@ -15563,8 +15867,6 @@ export type UpdatePlayerPayload = {
   player: Maybe<Player>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
-  /** Reads a single `Group` that is related to this `Player`. */
-  group: Maybe<Group>;
   /** Reads a single `LegacyPlayer` that is related to this `Player`. */
   legacyPlayer: Maybe<LegacyPlayer>;
 };
@@ -16283,8 +16585,8 @@ export type UpdateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16300,8 +16602,8 @@ export type UpdateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQuali
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16317,8 +16619,8 @@ export type UpdateGroupOnGameForGameGroupIdFkeyPatch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16334,8 +16636,8 @@ export type UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKe
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16346,13 +16648,13 @@ export type UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKe
 };
 
 /** An object where the defined keys will be set on the `group` being updated. */
-export type UpdateGroupOnPlayerForPlayerGroupIdFkeyPatch = {
+export type UpdateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16368,8 +16670,8 @@ export type UpdateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16385,8 +16687,8 @@ export type UpdateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonSta
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16402,8 +16704,8 @@ export type UpdateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQuali
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16419,8 +16721,8 @@ export type UpdateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch = 
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
-  players?: Maybe<PlayerGroupIdFkeyInverseInput>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey2InverseInput>;
   legacySeasonStats?: Maybe<FakePublicLegacySeasonStatsForeignKey2InverseInput>;
@@ -16915,17 +17217,29 @@ export type UpdatePlateAppearanceOnOutOnPlayRunnerForOutOnPlayRunnerPlateAppeara
   gameEvents?: Maybe<GameEventPlateAppearanceIdFkeyInverseInput>;
 };
 
+/** An object where the defined keys will be set on the `playerGroupMembership` being updated. */
+export type UpdatePlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch = {
+  playerId?: Maybe<Scalars['UUID']>;
+  player?: Maybe<PlayerGroupMembershipPlayerIdFkeyInput>;
+  group?: Maybe<PlayerGroupMembershipGroupIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `playerGroupMembership` being updated. */
+export type UpdatePlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyPatch = {
+  groupId?: Maybe<Scalars['UUID']>;
+  player?: Maybe<PlayerGroupMembershipPlayerIdFkeyInput>;
+  group?: Maybe<PlayerGroupMembershipGroupIdFkeyInput>;
+};
+
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -16935,6 +17249,7 @@ export type UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -16948,14 +17263,12 @@ export type UpdatePlayerOnBaseRunnerForBaseRunnerRunnerIdFkeyPatch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -16965,6 +17278,7 @@ export type UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch =
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -16978,14 +17292,12 @@ export type UpdatePlayerOnBasepathMovementForBasepathMovementRunnerIdFkeyPatch =
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnCareerStatForFakePublicCareerStatsForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -16995,6 +17307,7 @@ export type UpdatePlayerOnCareerStatForFakePublicCareerStatsForeignKey0Patch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17008,14 +17321,12 @@ export type UpdatePlayerOnCareerStatForFakePublicCareerStatsForeignKey0Patch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17025,6 +17336,7 @@ export type UpdatePlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQual
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17038,14 +17350,12 @@ export type UpdatePlayerOnCareerStatsQualifiedBatterForFakePublicCareerStatsQual
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17055,6 +17365,7 @@ export type UpdatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17068,14 +17379,12 @@ export type UpdatePlayerOnGameBattingLineForFakePublicGameBattingLinesForeignKey
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17085,6 +17394,7 @@ export type UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17098,14 +17408,12 @@ export type UpdatePlayerOnGameStateForGameStatePlayerAtBatFkeyPatch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLinesForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17115,6 +17423,7 @@ export type UpdatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLin
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17128,14 +17437,12 @@ export type UpdatePlayerOnLegacyGameBattingLineForFakePublicLegacyGameBattingLin
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17145,6 +17452,7 @@ export type UpdatePlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignK
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17158,14 +17466,12 @@ export type UpdatePlayerOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignK
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17175,6 +17481,7 @@ export type UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17188,14 +17495,12 @@ export type UpdatePlayerOnLineupSpotForLineupSpotPlayerIdFkeyPatch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17205,6 +17510,7 @@ export type UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17218,13 +17524,11 @@ export type UpdatePlayerOnOutOnPlayRunnerForOutOnPlayRunnerRunnerIdFkeyPatch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17234,6 +17538,7 @@ export type UpdatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17245,7 +17550,7 @@ export type UpdatePlayerOnPlayerForFakePublicPlayerForeignKey0Patch = {
 };
 
 /** An object where the defined keys will be set on the `player` being updated. */
-export type UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch = {
+export type UpdatePlayerOnPlayerGroupMembershipForPlayerGroupMembershipPlayerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
@@ -17253,7 +17558,6 @@ export type UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch = {
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17263,6 +17567,7 @@ export type UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17276,14 +17581,12 @@ export type UpdatePlayerOnPlayerForPlayerGroupIdFkeyPatch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17293,6 +17596,7 @@ export type UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17306,14 +17610,12 @@ export type UpdatePlayerOnScoredRunnerForScoredRunnerRunnerIdFkeyPatch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17323,6 +17625,7 @@ export type UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17336,14 +17639,12 @@ export type UpdatePlayerOnSeasonStatForFakePublicSeasonStatsForeignKey0Patch = {
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17353,6 +17654,7 @@ export type UpdatePlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonSt
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17366,14 +17668,12 @@ export type UpdatePlayerOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonSt
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey0Patch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17383,6 +17683,7 @@ export type UpdatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQual
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17396,14 +17697,12 @@ export type UpdatePlayerOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQual
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17413,6 +17712,7 @@ export type UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17426,14 +17726,12 @@ export type UpdatePlayerOnStolenBaseAttemptForStolenBaseAttemptRunnerIdFkeyPatch
 /** An object where the defined keys will be set on the `player` being updated. */
 export type UpdatePlayerOnTeamForTeamCaptainIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
-  groupId?: Maybe<Scalars['UUID']>;
   legacyPlayerId?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   nickname?: Maybe<Scalars['String']>;
   imageUrl?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
-  group?: Maybe<PlayerGroupIdFkeyInput>;
   legacyPlayer?: Maybe<FakePublicPlayerForeignKey0Input>;
   teams?: Maybe<TeamCaptainIdFkeyInverseInput>;
   lineupSpots?: Maybe<LineupSpotPlayerIdFkeyInverseInput>;
@@ -17443,6 +17741,7 @@ export type UpdatePlayerOnTeamForTeamCaptainIdFkeyPatch = {
   gameStates?: Maybe<GameStatePlayerAtBatFkeyInverseInput>;
   baseRunners?: Maybe<BaseRunnerRunnerIdFkeyInverseInput>;
   scoredRunners?: Maybe<ScoredRunnerRunnerIdFkeyInverseInput>;
+  playerGroupMemberships?: Maybe<PlayerGroupMembershipPlayerIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey0InverseInput>;
   careerStatsQualifiedBatters?: Maybe<FakePublicCareerStatsQualifiedBattersForeignKey0InverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey0InverseInput>;
@@ -17609,6 +17908,27 @@ export type UnpackedGame_GameFragment = (
   )> }
 );
 
+export type AddPlayerToGroupMutationVariables = Exact<{
+  playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
+}>;
+
+
+export type AddPlayerToGroupMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePlayer: Maybe<(
+    { __typename?: 'UpdatePlayerPayload' }
+    & { player: Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'firstName' | 'lastName'>
+      & { groups: Array<(
+        { __typename?: 'PlayerGroupMembership' }
+        & Pick<PlayerGroupMembership, 'groupId'>
+      )> }
+    )> }
+  )> }
+);
+
 export type CreateGameMutationVariables = Exact<{
   input: CreateGameInput;
 }>;
@@ -17626,10 +17946,7 @@ export type CreateGameMutation = (
 );
 
 export type CreatePlayerMutationVariables = Exact<{
-  id?: Maybe<Scalars['UUID']>;
-  firstName: Scalars['String'];
-  lastName?: Maybe<Scalars['String']>;
-  groupId: Scalars['UUID'];
+  input: CreatePlayerInput;
 }>;
 
 
@@ -17639,7 +17956,11 @@ export type CreatePlayerMutation = (
     { __typename?: 'CreatePlayerPayload' }
     & { player: Maybe<(
       { __typename?: 'Player' }
-      & Pick<Player, 'id' | 'firstName' | 'lastName' | 'groupId'>
+      & Pick<Player, 'id' | 'firstName' | 'lastName'>
+      & { groups: Array<(
+        { __typename?: 'PlayerGroupMembership' }
+        & Pick<PlayerGroupMembership, 'groupId'>
+      )> }
     )> }
   )> }
 );
@@ -17684,16 +18005,18 @@ export type GetAllGroupsQuery = (
   )>> }
 );
 
-export type GetAllPlayersQueryVariables = Exact<{
-  groupId: Scalars['UUID'];
-}>;
+export type GetAllPlayersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetAllPlayersQuery = (
   { __typename?: 'Query' }
   & { players: Maybe<Array<(
     { __typename?: 'Player' }
-    & Pick<Player, 'id' | 'firstName' | 'lastName' | 'groupId'>
+    & Pick<Player, 'id' | 'firstName' | 'lastName'>
+    & { groups: Array<(
+      { __typename?: 'PlayerGroupMembership' }
+      & Pick<PlayerGroupMembership, 'groupId'>
+    )> }
   )>> }
 );
 
@@ -17710,9 +18033,7 @@ export type GetGameQuery = (
   )> }
 );
 
-export type GetSoloModeOpponentBatterIdQueryVariables = Exact<{
-  groupId: Scalars['UUID'];
-}>;
+export type GetSoloModeOpponentBatterIdQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetSoloModeOpponentBatterIdQuery = (
@@ -18052,6 +18373,7 @@ export type GetLegacyGameTitleQuery = (
 
 export type GetPlayerProfileQueryVariables = Exact<{
   playerId: Scalars['UUID'];
+  groupId: Scalars['UUID'];
 }>;
 
 
@@ -18071,7 +18393,7 @@ export type GetPlayerProfileQuery = (
       & Pick<GameBattingLine, 'season' | 'plateAppearances' | 'atBats' | 'hits' | 'runs' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'rbi' | 'onBasePct'>
       & { game: Maybe<(
         { __typename?: 'Game' }
-        & Pick<Game, 'id' | 'name' | 'timeStarted' | 'timeEnded'>
+        & Pick<Game, 'groupId' | 'id' | 'name' | 'timeStarted' | 'timeEnded'>
       )> }
     )>, legacyGameBattingLines: Array<(
       { __typename?: 'LegacyGameBattingLine' }
@@ -18422,6 +18744,48 @@ export const UnpackedGame_GameFragmentDoc = gql`
   }
 }
     `;
+export const AddPlayerToGroupDocument = gql`
+    mutation AddPlayerToGroup($playerId: UUID!, $groupId: UUID!) {
+  updatePlayer(
+    input: {id: $playerId, patch: {playerGroupMemberships: {create: [{groupId: $groupId}]}}}
+  ) {
+    player {
+      id
+      firstName
+      lastName
+      groups: playerGroupMemberships {
+        groupId
+      }
+    }
+  }
+}
+    `;
+export type AddPlayerToGroupMutationFn = Apollo.MutationFunction<AddPlayerToGroupMutation, AddPlayerToGroupMutationVariables>;
+
+/**
+ * __useAddPlayerToGroupMutation__
+ *
+ * To run a mutation, you first call `useAddPlayerToGroupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPlayerToGroupMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPlayerToGroupMutation, { data, loading, error }] = useAddPlayerToGroupMutation({
+ *   variables: {
+ *      playerId: // value for 'playerId'
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useAddPlayerToGroupMutation(baseOptions?: Apollo.MutationHookOptions<AddPlayerToGroupMutation, AddPlayerToGroupMutationVariables>) {
+        return Apollo.useMutation<AddPlayerToGroupMutation, AddPlayerToGroupMutationVariables>(AddPlayerToGroupDocument, baseOptions);
+      }
+export type AddPlayerToGroupMutationHookResult = ReturnType<typeof useAddPlayerToGroupMutation>;
+export type AddPlayerToGroupMutationResult = Apollo.MutationResult<AddPlayerToGroupMutation>;
+export type AddPlayerToGroupMutationOptions = Apollo.BaseMutationOptions<AddPlayerToGroupMutation, AddPlayerToGroupMutationVariables>;
 export const CreateGameDocument = gql`
     mutation CreateGame($input: CreateGameInput!) {
   createGame(input: $input) {
@@ -18457,15 +18821,15 @@ export type CreateGameMutationHookResult = ReturnType<typeof useCreateGameMutati
 export type CreateGameMutationResult = Apollo.MutationResult<CreateGameMutation>;
 export type CreateGameMutationOptions = Apollo.BaseMutationOptions<CreateGameMutation, CreateGameMutationVariables>;
 export const CreatePlayerDocument = gql`
-    mutation CreatePlayer($id: UUID, $firstName: String!, $lastName: String, $groupId: UUID!) {
-  createPlayer(
-    input: {player: {id: $id, firstName: $firstName, lastName: $lastName, groupId: $groupId}}
-  ) {
+    mutation CreatePlayer($input: CreatePlayerInput!) {
+  createPlayer(input: $input) {
     player {
       id
       firstName
       lastName
-      groupId
+      groups: playerGroupMemberships {
+        groupId
+      }
     }
   }
 }
@@ -18485,10 +18849,7 @@ export type CreatePlayerMutationFn = Apollo.MutationFunction<CreatePlayerMutatio
  * @example
  * const [createPlayerMutation, { data, loading, error }] = useCreatePlayerMutation({
  *   variables: {
- *      id: // value for 'id'
- *      firstName: // value for 'firstName'
- *      lastName: // value for 'lastName'
- *      groupId: // value for 'groupId'
+ *      input: // value for 'input'
  *   },
  * });
  */
@@ -18600,12 +18961,14 @@ export type GetAllGroupsQueryHookResult = ReturnType<typeof useGetAllGroupsQuery
 export type GetAllGroupsLazyQueryHookResult = ReturnType<typeof useGetAllGroupsLazyQuery>;
 export type GetAllGroupsQueryResult = Apollo.QueryResult<GetAllGroupsQuery, GetAllGroupsQueryVariables>;
 export const GetAllPlayersDocument = gql`
-    query GetAllPlayers($groupId: UUID!) {
-  players(condition: {groupId: $groupId}) {
+    query GetAllPlayers {
+  players {
     id
     firstName
     lastName
-    groupId
+    groups: playerGroupMemberships {
+      groupId
+    }
   }
 }
     `;
@@ -18622,11 +18985,10 @@ export const GetAllPlayersDocument = gql`
  * @example
  * const { data, loading, error } = useGetAllPlayersQuery({
  *   variables: {
- *      groupId: // value for 'groupId'
  *   },
  * });
  */
-export function useGetAllPlayersQuery(baseOptions: Apollo.QueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
+export function useGetAllPlayersQuery(baseOptions?: Apollo.QueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
         return Apollo.useQuery<GetAllPlayersQuery, GetAllPlayersQueryVariables>(GetAllPlayersDocument, baseOptions);
       }
 export function useGetAllPlayersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllPlayersQuery, GetAllPlayersQueryVariables>) {
@@ -18669,12 +19031,8 @@ export type GetGameQueryHookResult = ReturnType<typeof useGetGameQuery>;
 export type GetGameLazyQueryHookResult = ReturnType<typeof useGetGameLazyQuery>;
 export type GetGameQueryResult = Apollo.QueryResult<GetGameQuery, GetGameQueryVariables>;
 export const GetSoloModeOpponentBatterIdDocument = gql`
-    query GetSoloModeOpponentBatterId($groupId: UUID!) {
-  player: playerByGroupIdAndFirstNameAndLastName(
-    groupId: $groupId
-    firstName: "Opponent"
-    lastName: "Batter"
-  ) {
+    query GetSoloModeOpponentBatterId {
+  player: playerByFirstNameAndLastName(firstName: "Opponent", lastName: "Batter") {
     id
   }
 }
@@ -18692,11 +19050,10 @@ export const GetSoloModeOpponentBatterIdDocument = gql`
  * @example
  * const { data, loading, error } = useGetSoloModeOpponentBatterIdQuery({
  *   variables: {
- *      groupId: // value for 'groupId'
  *   },
  * });
  */
-export function useGetSoloModeOpponentBatterIdQuery(baseOptions: Apollo.QueryHookOptions<GetSoloModeOpponentBatterIdQuery, GetSoloModeOpponentBatterIdQueryVariables>) {
+export function useGetSoloModeOpponentBatterIdQuery(baseOptions?: Apollo.QueryHookOptions<GetSoloModeOpponentBatterIdQuery, GetSoloModeOpponentBatterIdQueryVariables>) {
         return Apollo.useQuery<GetSoloModeOpponentBatterIdQuery, GetSoloModeOpponentBatterIdQueryVariables>(GetSoloModeOpponentBatterIdDocument, baseOptions);
       }
 export function useGetSoloModeOpponentBatterIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSoloModeOpponentBatterIdQuery, GetSoloModeOpponentBatterIdQueryVariables>) {
@@ -19391,11 +19748,11 @@ export type GetLegacyGameTitleQueryHookResult = ReturnType<typeof useGetLegacyGa
 export type GetLegacyGameTitleLazyQueryHookResult = ReturnType<typeof useGetLegacyGameTitleLazyQuery>;
 export type GetLegacyGameTitleQueryResult = Apollo.QueryResult<GetLegacyGameTitleQuery, GetLegacyGameTitleQueryVariables>;
 export const GetPlayerProfileDocument = gql`
-    query GetPlayerProfile($playerId: UUID!) {
+    query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
   player(id: $playerId) {
     fullName
     debut
-    careerStats {
+    careerStats(condition: {groupId: $groupId}) {
       games
       plateAppearances
       atBats
@@ -19414,7 +19771,7 @@ export const GetPlayerProfileDocument = gql`
       sluggingPct
       ops
     }
-    seasonStats(orderBy: SEASON_DESC) {
+    seasonStats(orderBy: SEASON_DESC, condition: {groupId: $groupId}) {
       season
       games
       plateAppearances
@@ -19436,6 +19793,7 @@ export const GetPlayerProfileDocument = gql`
     }
     gameBattingLines {
       game {
+        groupId
         id
         name
         timeStarted
@@ -19496,6 +19854,7 @@ export const GetPlayerProfileDocument = gql`
  * const { data, loading, error } = useGetPlayerProfileQuery({
  *   variables: {
  *      playerId: // value for 'playerId'
+ *      groupId: // value for 'groupId'
  *   },
  * });
  */

@@ -2,11 +2,12 @@ import React from 'react';
 import { Box, Heading, Text } from 'grommet';
 import { useParams } from 'react-router-dom';
 
-import { useGetPlayerProfileQuery } from '@sammyers/dc-shared';
+import { groupIdOptions, useGetPlayerProfileQuery } from '@sammyers/dc-shared';
 
 import PageBlock from '../util/PageBlock';
 import PlayerSeasonStats from './PlayerSeasonStats';
 import { format, parse } from 'date-fns';
+import { useCurrentGroupId } from '../context';
 
 const formatDate = (dateStr: string) => {
   const date = parse(dateStr, 'yyyy-MM-dd', new Date());
@@ -15,7 +16,8 @@ const formatDate = (dateStr: string) => {
 
 const PlayerPage = () => {
   const { id } = useParams();
-  const { data } = useGetPlayerProfileQuery({ variables: { playerId: id! } });
+  const groupId = useCurrentGroupId();
+  const { data } = useGetPlayerProfileQuery(groupIdOptions(groupId, { playerId: id! }));
 
   if (!data) {
     return null;

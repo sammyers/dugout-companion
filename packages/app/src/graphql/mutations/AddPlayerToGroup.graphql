@@ -1,0 +1,14 @@
+mutation AddPlayerToGroup($playerId: UUID!, $groupId: UUID!) {
+  updatePlayer(
+    input: { id: $playerId, patch: { playerGroupMemberships: { create: [{ groupId: $groupId }] } } }
+  ) {
+    player {
+      id
+      firstName
+      lastName
+      groups: playerGroupMemberships {
+        groupId
+      }
+    }
+  }
+}
