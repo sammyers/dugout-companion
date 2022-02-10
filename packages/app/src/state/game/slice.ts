@@ -244,6 +244,7 @@ const { actions: gameActions, reducer } = createSlice({
         state.gameId = action.payload.gameId;
         state.timeStarted = action.payload.time;
         const awayTeam = getTeamWithRole(state.teams, TeamRole.AWAY);
+        const homeTeam = getTeamWithRole(state.teams, TeamRole.HOME);
         state.gameState = {
           id: action.payload.stateId,
           inning: 1,
@@ -256,9 +257,9 @@ const { actions: gameActions, reducer } = createSlice({
             : getCurrentLineup(awayTeam)[0].playerId,
           lineups: getCurrentLineupsFromTeams(state.teams),
         };
-        state.upNextHalfInning = getCurrentLineup(
-          getTeamWithRole(state.teams, TeamRole.HOME)
-        )[0].playerId;
+        state.upNextHalfInning = homeTeam.soloModeOpponent
+          ? state.soloModeOpponentBatterId
+          : getCurrentLineup(homeTeam)[0].playerId;
         state.status = GameStatus.IN_PROGRESS;
       },
     },
