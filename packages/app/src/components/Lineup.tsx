@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, ChangeEvent } from 'react';
-import { Box, Text, TextInput, TextInputProps } from 'grommet';
+import { Box, Button, Text, TextInput, TextInputProps } from 'grommet';
 import _ from 'lodash';
 import { Droppable } from 'react-beautiful-dnd';
 
@@ -9,6 +9,7 @@ import {
   useAddPlayerToGroupMutation,
 } from '@sammyers/dc-shared';
 
+import ShuffleIcon from './prompts/util/ShuffleIcon';
 import LineupEditControls from './LineupEditControls';
 import LineupPlayer from './LineupPlayer';
 
@@ -148,13 +149,21 @@ const Lineup = ({ teamRole }: Props) => {
     ]
   );
 
+  const handleShuffleLineup = useCallback(() => {
+    dispatch(gameActions.shuffleLineup(teamRole));
+  }, [dispatch, teamRole]);
+
   return (
     <Box flex>
       <Box margin={{ bottom: 'medium' }}>
         {soloMode ? (
           <Box direction="row" justify="between" align="center">
             <Text weight="bold">{teamName} Lineup</Text>
-            {inProgress && <LineupEditControls />}
+            {inProgress ? (
+              <LineupEditControls />
+            ) : (
+              <Button plain={false} icon={<ShuffleIcon />} onClick={handleShuffleLineup} />
+            )}
           </Box>
         ) : (
           <Box width="medium" alignSelf="center">
