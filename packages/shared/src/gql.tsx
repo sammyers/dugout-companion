@@ -1939,6 +1939,16 @@ export type DeleteGroupByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
+/** All input for the `deleteGroupByUrlSlug` mutation. */
+export type DeleteGroupByUrlSlugInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  urlSlug: Scalars['String'];
+};
+
 /** All input for the `deleteGroup` mutation. */
 export type DeleteGroupInput = {
   /**
@@ -2707,6 +2717,7 @@ export type FakePublicCareerStatsForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -2725,17 +2736,23 @@ export type FakePublicCareerStatsForeignKey2Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<CareerStatOnCareerStatForFakePublicCareerStatsForeignKey2NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -2940,6 +2957,7 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -2958,17 +2976,23 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey2Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<CareerStatsQualifiedBatterOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -3786,6 +3810,7 @@ export type FakePublicLegacySeasonStatsForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -3804,17 +3829,23 @@ export type FakePublicLegacySeasonStatsForeignKey2Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<LegacySeasonStatOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -4107,6 +4138,7 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2GroupCreateIn
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4125,17 +4157,23 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<SeasonStatsAllTimeQualifiedBatterOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -4340,6 +4378,7 @@ export type FakePublicSeasonStatsForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4358,17 +4397,23 @@ export type FakePublicSeasonStatsForeignKey2Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<SeasonStatOnSeasonStatForFakePublicSeasonStatsForeignKey2NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -4573,6 +4618,7 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey2GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4591,17 +4637,23 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey2Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<SeasonStatsQualifiedBatterOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -4649,6 +4701,7 @@ export type FakePublicUnifiedGamesForeignKey0GroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4667,17 +4720,23 @@ export type FakePublicUnifiedGamesForeignKey0Input = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<UnifiedGameOnUnifiedGameForFakePublicUnifiedGamesForeignKey0NodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -6661,6 +6720,7 @@ export type GameGroupIdFkeyGroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -6679,17 +6739,23 @@ export type GameGroupIdFkeyInput = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnGameForGameGroupIdFkeyUsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnGameForGameGroupIdFkeyUsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnGameForGameGroupIdFkeyUsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<GameOnGameForGameGroupIdFkeyNodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -7413,6 +7479,7 @@ export type Group = Node & {
   name: Scalars['String'];
   notes: Maybe<Scalars['String']>;
   soloMode: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   /** Reads and enables pagination through a set of `Game`. */
   games: Array<Game>;
   /** Reads and enables pagination through a set of `PlayerGroupMembership`. */
@@ -7530,6 +7597,8 @@ export type GroupCondition = {
   notes?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `soloMode` field. */
   soloMode?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `urlSlug` field. */
+  urlSlug?: Maybe<Scalars['String']>;
 };
 
 /** The fields on `group` to look up the row to connect. */
@@ -7552,12 +7621,23 @@ export type GroupGroupPkeyDelete = {
   id: Scalars['UUID'];
 };
 
+/** The fields on `group` to look up the row to connect. */
+export type GroupGroupUrlSlugKeyConnect = {
+  urlSlug: Scalars['String'];
+};
+
+/** The fields on `group` to look up the row to delete. */
+export type GroupGroupUrlSlugKeyDelete = {
+  urlSlug: Scalars['String'];
+};
+
 /** An input for mutations affecting `Group` */
 export type GroupInput = {
   id?: Maybe<Scalars['UUID']>;
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -7596,6 +7676,13 @@ export type GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupPkeyUp
 };
 
 /** The fields on `group` to look up the row to update. */
+export type GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch;
+  urlSlug: Scalars['String'];
+};
+
+/** The fields on `group` to look up the row to update. */
 export type GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupNameKeyUpdate = {
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2Patch;
@@ -7607,6 +7694,13 @@ export type GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBa
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2Patch;
   id: Scalars['UUID'];
+};
+
+/** The fields on `group` to look up the row to update. */
+export type GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2Patch;
+  urlSlug: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -7632,6 +7726,13 @@ export type GroupOnGameForGameGroupIdFkeyUsingGroupPkeyUpdate = {
 };
 
 /** The fields on `group` to look up the row to update. */
+export type GroupOnGameForGameGroupIdFkeyUsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnGameForGameGroupIdFkeyPatch;
+  urlSlug: Scalars['String'];
+};
+
+/** The fields on `group` to look up the row to update. */
 export type GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupNameKeyUpdate = {
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patch;
@@ -7643,6 +7744,13 @@ export type GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Usin
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patch;
   id: Scalars['UUID'];
+};
+
+/** The fields on `group` to look up the row to update. */
+export type GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patch;
+  urlSlug: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -7668,6 +7776,13 @@ export type GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsing
 };
 
 /** The fields on `group` to look up the row to update. */
+export type GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch;
+  urlSlug: Scalars['String'];
+};
+
+/** The fields on `group` to look up the row to update. */
 export type GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupNameKeyUpdate = {
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch;
@@ -7679,6 +7794,13 @@ export type GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupPkeyUp
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch;
   id: Scalars['UUID'];
+};
+
+/** The fields on `group` to look up the row to update. */
+export type GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch;
+  urlSlug: Scalars['String'];
 };
 
 /** The fields on `group` to look up the row to update. */
@@ -7696,6 +7818,13 @@ export type GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllT
 };
 
 /** The fields on `group` to look up the row to update. */
+export type GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2Patch;
+  urlSlug: Scalars['String'];
+};
+
+/** The fields on `group` to look up the row to update. */
 export type GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupNameKeyUpdate = {
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2Patch;
@@ -7707,6 +7836,13 @@ export type GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBa
   /** An object where the defined keys will be set on the `group` being updated. */
   patch: UpdateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2Patch;
   id: Scalars['UUID'];
+};
+
+/** The fields on `group` to look up the row to update. */
+export type GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2Patch;
+  urlSlug: Scalars['String'];
 };
 
 /** The fields on `group` to look up the row to update. */
@@ -7723,12 +7859,20 @@ export type GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupPkey
   id: Scalars['UUID'];
 };
 
+/** The fields on `group` to look up the row to update. */
+export type GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupUrlSlugKeyUpdate = {
+  /** An object where the defined keys will be set on the `group` being updated. */
+  patch: UpdateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch;
+  urlSlug: Scalars['String'];
+};
+
 /** Represents an update to a `Group`. Fields that are set will be updated. */
 export type GroupPatch = {
   id?: Maybe<Scalars['UUID']>;
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -7751,6 +7895,8 @@ export enum GroupsOrderBy {
   NOTES_DESC = 'NOTES_DESC',
   SOLO_MODE_ASC = 'SOLO_MODE_ASC',
   SOLO_MODE_DESC = 'SOLO_MODE_DESC',
+  URL_SLUG_ASC = 'URL_SLUG_ASC',
+  URL_SLUG_DESC = 'URL_SLUG_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -10170,6 +10316,8 @@ export type Mutation = {
   updateGroup: Maybe<UpdateGroupPayload>;
   /** Updates a single `Group` using a unique key and a patch. */
   updateGroupByName: Maybe<UpdateGroupPayload>;
+  /** Updates a single `Group` using a unique key and a patch. */
+  updateGroupByUrlSlug: Maybe<UpdateGroupPayload>;
   /** Updates a single `Lineup` using its globally unique id and a patch. */
   updateLineupByNodeId: Maybe<UpdateLineupPayload>;
   /** Updates a single `Lineup` using a unique key and a patch. */
@@ -10268,6 +10416,8 @@ export type Mutation = {
   deleteGroup: Maybe<DeleteGroupPayload>;
   /** Deletes a single `Group` using a unique key. */
   deleteGroupByName: Maybe<DeleteGroupPayload>;
+  /** Deletes a single `Group` using a unique key. */
+  deleteGroupByUrlSlug: Maybe<DeleteGroupPayload>;
   /** Deletes a single `Lineup` using its globally unique id. */
   deleteLineupByNodeId: Maybe<DeleteLineupPayload>;
   /** Deletes a single `Lineup` using a unique key. */
@@ -10602,6 +10752,12 @@ export type MutationUpdateGroupByNameArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateGroupByUrlSlugArgs = {
+  input: UpdateGroupByUrlSlugInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLineupByNodeIdArgs = {
   input: UpdateLineupByNodeIdInput;
 };
@@ -10892,6 +11048,12 @@ export type MutationDeleteGroupArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteGroupByNameArgs = {
   input: DeleteGroupByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteGroupByUrlSlugArgs = {
+  input: DeleteGroupByUrlSlugInput;
 };
 
 
@@ -11551,7 +11713,6 @@ export type Player = Node & {
   gamesPlayed: Maybe<Scalars['Int']>;
   /** sortable */
   gamesPlayedThisYear: Maybe<Scalars['Int']>;
-  traditionalStats: Maybe<TraditionalStatLine>;
 };
 
 
@@ -11696,12 +11857,6 @@ export type PlayerGamesPlayedArgs = {
   afterDate?: Maybe<Scalars['Datetime']>;
 };
 
-
-export type PlayerTraditionalStatsArgs = {
-  beforeDate?: Maybe<Scalars['Datetime']>;
-  afterDate?: Maybe<Scalars['Datetime']>;
-};
-
 /** A condition to be used against `Player` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type PlayerCondition = {
   /** Checks for equality with the object’s `id` field. */
@@ -11749,6 +11904,7 @@ export type PlayerGroupMembershipGroupIdFkeyGroupCreateInput = {
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug: Scalars['String'];
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -11767,17 +11923,23 @@ export type PlayerGroupMembershipGroupIdFkeyInput = {
   /** The primary key(s) for `group` for the far side of the relationship. */
   connectByName?: Maybe<GroupGroupNameKeyConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  connectByUrlSlug?: Maybe<GroupGroupUrlSlugKeyConnect>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   connectByNodeId?: Maybe<GroupNodeIdConnect>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteById?: Maybe<GroupGroupPkeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByName?: Maybe<GroupGroupNameKeyDelete>;
   /** The primary key(s) for `group` for the far side of the relationship. */
+  deleteByUrlSlug?: Maybe<GroupGroupUrlSlugKeyDelete>;
+  /** The primary key(s) for `group` for the far side of the relationship. */
   deleteByNodeId?: Maybe<GroupNodeIdDelete>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateById?: Maybe<GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupPkeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByName?: Maybe<GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupNameKeyUpdate>;
+  /** The primary key(s) and patch data for `group` for the far side of the relationship. */
+  updateByUrlSlug?: Maybe<GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupUrlSlugKeyUpdate>;
   /** The primary key(s) and patch data for `group` for the far side of the relationship. */
   updateByNodeId?: Maybe<PlayerGroupMembershipOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyNodeIdUpdate>;
   /** A `GroupInput` object that will be created and connected to this object. */
@@ -12565,6 +12727,7 @@ export type Query = Node & {
   gameState: Maybe<GameState>;
   group: Maybe<Group>;
   groupByName: Maybe<Group>;
+  groupByUrlSlug: Maybe<Group>;
   legacyField: Maybe<LegacyField>;
   legacyGame: Maybe<LegacyGame>;
   legacyGameBattingLine: Maybe<LegacyGameBattingLine>;
@@ -13130,6 +13293,12 @@ export type QueryGroupByNameArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryGroupByUrlSlugArgs = {
+  urlSlug: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLegacyFieldArgs = {
   fieldId: Scalars['Int'];
 };
@@ -13331,6 +13500,7 @@ export type QueryGetPlateAppearancesArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryGetRunsScoredArgs = {
+  groupId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
   batterId?: Maybe<Scalars['UUID']>;
   runnerId?: Maybe<Scalars['UUID']>;
@@ -15466,6 +15636,18 @@ export type UpdateGroupByNodeIdInput = {
   patch: GroupPatch;
 };
 
+/** All input for the `updateGroupByUrlSlug` mutation. */
+export type UpdateGroupByUrlSlugInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Group` being updated. */
+  patch: GroupPatch;
+  urlSlug: Scalars['String'];
+};
+
 /** All input for the `updateGroup` mutation. */
 export type UpdateGroupInput = {
   /**
@@ -16585,6 +16767,7 @@ export type UpdateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16602,6 +16785,7 @@ export type UpdateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQuali
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16619,6 +16803,7 @@ export type UpdateGroupOnGameForGameGroupIdFkeyPatch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16636,6 +16821,7 @@ export type UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKe
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16653,6 +16839,7 @@ export type UpdateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFke
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16670,6 +16857,7 @@ export type UpdateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch = {
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16687,6 +16875,7 @@ export type UpdateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonSta
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16704,6 +16893,7 @@ export type UpdateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQuali
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -16721,6 +16911,7 @@ export type UpdateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch = 
   name?: Maybe<Scalars['String']>;
   notes?: Maybe<Scalars['String']>;
   soloMode?: Maybe<Scalars['Boolean']>;
+  urlSlug?: Maybe<Scalars['String']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -18001,7 +18192,7 @@ export type GetAllGroupsQuery = (
   { __typename?: 'Query' }
   & { groups: Maybe<Array<(
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'soloMode'>
+    & Pick<Group, 'id' | 'name' | 'soloMode' | 'urlSlug'>
   )>> }
 );
 
@@ -18288,6 +18479,7 @@ export type GetGameSummaryQuery = (
   { __typename?: 'Query' }
   & { game: Maybe<(
     { __typename?: 'Game' }
+    & Pick<Game, 'id'>
     & { lineScore: Maybe<Array<Maybe<(
       { __typename?: 'LineScoreCell' }
       & Pick<LineScoreCell, 'inning' | 'halfInning' | 'hits' | 'runs'>
@@ -18307,7 +18499,7 @@ export type GetGameTitleQuery = (
   { __typename?: 'Query' }
   & { game: Maybe<(
     { __typename?: 'Game' }
-    & Pick<Game, 'name' | 'timeStarted'>
+    & Pick<Game, 'id' | 'name' | 'timeStarted'>
   )> }
 );
 
@@ -18337,7 +18529,7 @@ export type GetLegacyGameDetailsQuery = (
   { __typename?: 'Query' }
   & { legacyGame: Maybe<(
     { __typename?: 'LegacyGame' }
-    & Pick<LegacyGame, 'gameTitle' | 'gameDate' | 'gameStartTime' | 'gameEndTime'>
+    & Pick<LegacyGame, 'gameId' | 'gameTitle' | 'gameDate' | 'gameStartTime' | 'gameEndTime'>
     & { team1: Maybe<(
       { __typename?: 'LegacyTeam' }
       & Pick<LegacyTeam, 'teamId' | 'teamName'>
@@ -18367,7 +18559,7 @@ export type GetLegacyGameTitleQuery = (
   { __typename?: 'Query' }
   & { legacyGame: Maybe<(
     { __typename?: 'LegacyGame' }
-    & Pick<LegacyGame, 'gameTitle' | 'gameDate'>
+    & Pick<LegacyGame, 'gameId' | 'gameTitle' | 'gameDate'>
   )> }
 );
 
@@ -18381,8 +18573,11 @@ export type GetPlayerProfileQuery = (
   { __typename?: 'Query' }
   & { player: Maybe<(
     { __typename?: 'Player' }
-    & Pick<Player, 'fullName' | 'debut'>
-    & { careerStats: Array<(
+    & Pick<Player, 'id' | 'fullName' | 'debut'>
+    & { groups: Array<(
+      { __typename?: 'PlayerGroupMembership' }
+      & Pick<PlayerGroupMembership, 'groupId'>
+    )>, careerStats: Array<(
       { __typename?: 'CareerStat' }
       & Pick<CareerStat, 'games' | 'plateAppearances' | 'atBats' | 'hits' | 'runs' | 'doubles' | 'triples' | 'homeruns' | 'walks' | 'strikeouts' | 'sacFlies' | 'gidp' | 'rbi' | 'battingAverage' | 'onBasePct' | 'sluggingPct' | 'ops'>
     )>, seasonStats: Array<(
@@ -18932,6 +19127,7 @@ export const GetAllGroupsDocument = gql`
     id
     name
     soloMode
+    urlSlug
   }
 }
     `;
@@ -19526,6 +19722,7 @@ export type GetGameSummariesQueryResult = Apollo.QueryResult<GetGameSummariesQue
 export const GetGameSummaryDocument = gql`
     query GetGameSummary($gameId: UUID!) {
   game(id: $gameId) {
+    id
     lineScore {
       inning
       halfInning
@@ -19570,6 +19767,7 @@ export type GetGameSummaryQueryResult = Apollo.QueryResult<GetGameSummaryQuery, 
 export const GetGameTitleDocument = gql`
     query GetGameTitle($gameId: UUID!) {
   game(id: $gameId) {
+    id
     name
     timeStarted
   }
@@ -19647,6 +19845,7 @@ export type GetLatestGameSummaryQueryResult = Apollo.QueryResult<GetLatestGameSu
 export const GetLegacyGameDetailsDocument = gql`
     query GetLegacyGameDetails($id: Int!) {
   legacyGame(gameId: $id) {
+    gameId
     gameTitle
     gameDate
     gameStartTime
@@ -19716,6 +19915,7 @@ export type GetLegacyGameDetailsQueryResult = Apollo.QueryResult<GetLegacyGameDe
 export const GetLegacyGameTitleDocument = gql`
     query GetLegacyGameTitle($id: Int!) {
   legacyGame(gameId: $id) {
+    gameId
     gameTitle
     gameDate
   }
@@ -19750,8 +19950,12 @@ export type GetLegacyGameTitleQueryResult = Apollo.QueryResult<GetLegacyGameTitl
 export const GetPlayerProfileDocument = gql`
     query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
   player(id: $playerId) {
+    id
     fullName
     debut
+    groups: playerGroupMemberships {
+      groupId
+    }
     careerStats(condition: {groupId: $groupId}) {
       games
       plateAppearances

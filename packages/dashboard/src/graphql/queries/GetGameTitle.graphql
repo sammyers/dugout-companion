@@ -1,5 +1,6 @@
 query GetGameTitle($gameId: UUID!) {
   game(id: $gameId) {
+    id
     name
     timeStarted
   }

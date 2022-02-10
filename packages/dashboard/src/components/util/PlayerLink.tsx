@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { Text } from 'grommet';
+import { useMatch } from 'react-router-dom';
 
 import { AnchorLink } from '@sammyers/dc-shared';
 
@@ -10,11 +11,16 @@ interface Props extends PlayerRecord {
 }
 
 const PlayerLink: FC<Props> = ({ color = 'accent-3', ...props }) => {
+  const homePageMatch = useMatch({ path: '/g/:groupSlug', end: true });
   const name = extractPlayerName(props);
   if (props.player) {
     return (
       <Text>
-        <AnchorLink to={`/player/${props.player.id}`} defaultColor={color} weight="bold">
+        <AnchorLink
+          to={`${homePageMatch ? '' : '../'}player/${props.player.id}`}
+          defaultColor={color}
+          weight="bold"
+        >
           {name}
         </AnchorLink>
       </Text>

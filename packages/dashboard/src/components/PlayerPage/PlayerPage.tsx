@@ -1,12 +1,13 @@
 import React from 'react';
+import { format, parse } from 'date-fns';
 import { Box, Heading, Text } from 'grommet';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 import { groupIdOptions, useGetPlayerProfileQuery } from '@sammyers/dc-shared';
 
 import PageBlock from '../util/PageBlock';
 import PlayerSeasonStats from './PlayerSeasonStats';
-import { format, parse } from 'date-fns';
+
 import { useCurrentGroupId } from '../context';
 
 const formatDate = (dateStr: string) => {
@@ -16,11 +17,16 @@ const formatDate = (dateStr: string) => {
 
 const PlayerPage = () => {
   const { id } = useParams();
+
   const groupId = useCurrentGroupId();
   const { data } = useGetPlayerProfileQuery(groupIdOptions(groupId, { playerId: id! }));
 
   if (!data) {
     return null;
+  }
+
+  if (!data.player?.groups.some(group => group.groupId === groupId)) {
+    return <Navigate to=".." />;
   }
 
   return (

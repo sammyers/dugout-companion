@@ -759,6 +759,7 @@ type Query implements Node {
   gameState(id: UUID!): GameState
   group(id: UUID!): Group
   groupByName(name: String!): Group
+  groupByUrlSlug(urlSlug: String!): Group
   legacyField(fieldId: Int!): LegacyField
   legacyGame(gameId: Int!): LegacyGame
   legacyGameBattingLine(legacyPlayerId: Int!, legacyGameId: Int!): LegacyGameBattingLine
@@ -800,6 +801,20 @@ type Query implements Node {
     """Skip the first `n` values."""
     offset: Int
   ): [GetPlateAppearancesRecord]
+  getRunsScored(
+    groupId: UUID
+    gameId: UUID
+    batterId: UUID
+    runnerId: UUID
+    beforeDate: Datetime
+    afterDate: Datetime
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+  ): [GetRunsScoredRecord]
   getSlg(totalBases: Int, atBats: Int): Float
   getTb(singles: Int, doubles: Int, triples: Int, homeruns: Int): Int
   getTeamForPlayer(playerId: UUID, gameId: UUID): UUID
@@ -1299,6 +1314,7 @@ type Group implements Node {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
 
   """Reads and enables pagination through a set of `Game`."""
   games(
@@ -4888,6 +4904,8 @@ enum GroupsOrderBy {
   NOTES_DESC
   SOLO_MODE_ASC
   SOLO_MODE_DESC
+  URL_SLUG_ASC
+  URL_SLUG_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -4907,6 +4925,9 @@ input GroupCondition {
 
   """Checks for equality with the object’s `soloMode` field."""
   soloMode: Boolean
+
+  """Checks for equality with the object’s `urlSlug` field."""
+  urlSlug: String
 }
 
 type LegacyField implements Node {
@@ -5449,6 +5470,13 @@ type GetPlateAppearancesRecord {
   gameEventRecordId: UUID
 }
 
+"""The return type of our `getRunsScoredConnection` query."""
+type GetRunsScoredRecord {
+  batterId: UUID
+  runnerId: UUID
+  battedIn: Boolean
+}
+
 """
 The root mutation type which contains root level fields which mutate data.
 """
@@ -5817,6 +5845,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: UpdateGroupByNameInput!
+  ): UpdateGroupPayload
+
+  """Updates a single `Group` using a unique key and a patch."""
+  updateGroupByUrlSlug(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateGroupByUrlSlugInput!
   ): UpdateGroupPayload
 
   """Updates a single `Lineup` using its globally unique id and a patch."""
@@ -6231,6 +6267,14 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: DeleteGroupByNameInput!
+  ): DeleteGroupPayload
+
+  """Deletes a single `Group` using a unique key."""
+  deleteGroupByUrlSlug(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteGroupByUrlSlugInput!
   ): DeleteGroupPayload
 
   """Deletes a single `Lineup` using its globally unique id."""
@@ -6735,6 +6779,9 @@ input GameGroupIdFkeyInput {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -6742,6 +6789,9 @@ input GameGroupIdFkeyInput {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -6755,6 +6805,11 @@ input GameGroupIdFkeyInput {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnGameForGameGroupIdFkeyUsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnGameForGameGroupIdFkeyUsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -6777,6 +6832,11 @@ input GroupGroupNameKeyConnect {
   name: String!
 }
 
+"""The fields on `group` to look up the row to connect."""
+input GroupGroupUrlSlugKeyConnect {
+  urlSlug: String!
+}
+
 """The globally unique `ID` look up for the row to connect."""
 input GroupNodeIdConnect {
   """
@@ -6793,6 +6853,11 @@ input GroupGroupPkeyDelete {
 """The fields on `group` to look up the row to delete."""
 input GroupGroupNameKeyDelete {
   name: String!
+}
+
+"""The fields on `group` to look up the row to delete."""
+input GroupGroupUrlSlugKeyDelete {
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to delete."""
@@ -6820,6 +6885,7 @@ input updateGroupOnGameForGameGroupIdFkeyPatch {
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13496,6 +13562,9 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -13503,6 +13572,9 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -13516,6 +13588,11 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -13545,6 +13622,7 @@ input updateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBa
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13631,6 +13709,9 @@ input PlayerGroupMembershipGroupIdFkeyInput {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -13638,6 +13719,9 @@ input PlayerGroupMembershipGroupIdFkeyInput {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -13651,6 +13735,11 @@ input PlayerGroupMembershipGroupIdFkeyInput {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -13680,6 +13769,7 @@ input updateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13741,6 +13831,9 @@ input FakePublicCareerStatsForeignKey2Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -13748,6 +13841,9 @@ input FakePublicCareerStatsForeignKey2Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -13761,6 +13857,11 @@ input FakePublicCareerStatsForeignKey2Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -13790,6 +13891,7 @@ input updateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch {
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13851,6 +13953,9 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -13858,6 +13963,9 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -13871,6 +13979,11 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -13900,6 +14013,7 @@ input updateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBa
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -13961,6 +14075,9 @@ input FakePublicLegacySeasonStatsForeignKey2Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -13968,6 +14085,9 @@ input FakePublicLegacySeasonStatsForeignKey2Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -13981,6 +14101,11 @@ input FakePublicLegacySeasonStatsForeignKey2Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -14010,6 +14135,7 @@ input updateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patc
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14071,6 +14197,9 @@ input FakePublicSeasonStatsForeignKey2Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -14078,6 +14207,9 @@ input FakePublicSeasonStatsForeignKey2Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -14091,6 +14223,11 @@ input FakePublicSeasonStatsForeignKey2Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -14120,6 +14257,7 @@ input updateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch {
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14183,6 +14321,9 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -14190,6 +14331,9 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -14203,6 +14347,11 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -14232,6 +14381,7 @@ input updateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllT
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14313,6 +14463,9 @@ input FakePublicUnifiedGamesForeignKey0Input {
   connectByName: GroupGroupNameKeyConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
+  connectByUrlSlug: GroupGroupUrlSlugKeyConnect
+
+  """The primary key(s) for `group` for the far side of the relationship."""
   connectByNodeId: GroupNodeIdConnect
 
   """The primary key(s) for `group` for the far side of the relationship."""
@@ -14320,6 +14473,9 @@ input FakePublicUnifiedGamesForeignKey0Input {
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByName: GroupGroupNameKeyDelete
+
+  """The primary key(s) for `group` for the far side of the relationship."""
+  deleteByUrlSlug: GroupGroupUrlSlugKeyDelete
 
   """The primary key(s) for `group` for the far side of the relationship."""
   deleteByNodeId: GroupNodeIdDelete
@@ -14333,6 +14489,11 @@ input FakePublicUnifiedGamesForeignKey0Input {
   The primary key(s) and patch data for `group` for the far side of the relationship.
   """
   updateByName: GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `group` for the far side of the relationship.
+  """
+  updateByUrlSlug: GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupUrlSlugKeyUpdate
 
   """
   The primary key(s) and patch data for `group` for the far side of the relationship.
@@ -14362,6 +14523,7 @@ input updateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch {
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14380,6 +14542,15 @@ input GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupNameKeyUpd
   """
   patch: updateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch!
   name: String!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch!
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -14403,6 +14574,7 @@ input GroupPatch {
   name: String
   notes: String
   soloMode: Boolean
+  urlSlug: String
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14420,6 +14592,7 @@ input FakePublicUnifiedGamesForeignKey0GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15879,6 +16052,15 @@ input GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQua
   name: String!
 }
 
+"""The fields on `group` to look up the row to update."""
+input GroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2Patch!
+  urlSlug: String!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input SeasonStatsAllTimeQualifiedBatterOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2NodeIdUpdate {
   """
@@ -15898,6 +16080,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15916,6 +16099,15 @@ input GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupNameKeyUpdat
   """
   patch: updateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch!
   name: String!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnSeasonStatForFakePublicSeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch!
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -15937,6 +16129,7 @@ input FakePublicSeasonStatsForeignKey2GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15955,6 +16148,15 @@ input GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroup
   """
   patch: updateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patch!
   name: String!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patch!
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -15976,6 +16178,7 @@ input FakePublicLegacySeasonStatsForeignKey2GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15994,6 +16197,15 @@ input GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersF
   """
   patch: updateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2Patch!
   name: String!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBattersForeignKey2Patch!
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -16015,6 +16227,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16033,6 +16246,15 @@ input GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupNameKeyUpdat
   """
   patch: updateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch!
   name: String!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnCareerStatForFakePublicCareerStatsForeignKey2UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch!
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -16054,6 +16276,7 @@ input FakePublicCareerStatsForeignKey2GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16072,6 +16295,15 @@ input GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupN
   """
   patch: updateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch!
   name: String!
+}
+
+"""The fields on `group` to look up the row to update."""
+input GroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyUsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch!
+  urlSlug: String!
 }
 
 """The globally unique `ID` look up for the row to update."""
@@ -16093,6 +16325,7 @@ input PlayerGroupMembershipGroupIdFkeyGroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16143,6 +16376,15 @@ input GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersF
   name: String!
 }
 
+"""The fields on `group` to look up the row to update."""
+input GroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2UsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2Patch!
+  urlSlug: String!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input SeasonStatsQualifiedBatterOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBattersForeignKey2NodeIdUpdate {
   """
@@ -16162,6 +16404,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2GroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -19181,6 +19424,15 @@ input GroupOnGameForGameGroupIdFkeyUsingGroupNameKeyUpdate {
   name: String!
 }
 
+"""The fields on `group` to look up the row to update."""
+input GroupOnGameForGameGroupIdFkeyUsingGroupUrlSlugKeyUpdate {
+  """
+  An object where the defined keys will be set on the `group` being updated.
+  """
+  patch: updateGroupOnGameForGameGroupIdFkeyPatch!
+  urlSlug: String!
+}
+
 """The globally unique `ID` look up for the row to update."""
 input GameOnGameForGameGroupIdFkeyNodeIdUpdate {
   """
@@ -19200,6 +19452,7 @@ input GameGroupIdFkeyGroupCreateInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -19827,6 +20080,7 @@ input GroupInput {
   name: String!
   notes: String
   soloMode: Boolean
+  urlSlug: String!
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -20928,6 +21182,21 @@ input UpdateGroupByNameInput {
   """
   patch: GroupPatch!
   name: String!
+}
+
+"""All input for the `updateGroupByUrlSlug` mutation."""
+input UpdateGroupByUrlSlugInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `Group` being updated.
+  """
+  patch: GroupPatch!
+  urlSlug: String!
 }
 
 """The output of our update `Lineup` mutation."""
@@ -22157,6 +22426,16 @@ input DeleteGroupByNameInput {
   """
   clientMutationId: String
   name: String!
+}
+
+"""All input for the `deleteGroupByUrlSlug` mutation."""
+input DeleteGroupByUrlSlugInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  urlSlug: String!
 }
 
 """The output of our delete `Lineup` mutation."""

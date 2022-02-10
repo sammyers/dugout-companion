@@ -15,5 +15,7 @@ export const groupContext = createContext<GroupContext>({
   setCurrentGroup: () => {},
 });
 
-export const useCurrentGroupId = () => useContext(groupContext).currentGroup?.id;
-export const useCurrentGroupName = () => useContext(groupContext).currentGroup?.name;
+export const useGroupContext = () => useContext(groupContext);
+export const useAllGroups = () => useGroupContext().groups;
+export const useCurrentGroupId = () => useGroupContext().currentGroup?.id;
+export const useCurrentGroupName = () => useGroupContext().currentGroup?.name;

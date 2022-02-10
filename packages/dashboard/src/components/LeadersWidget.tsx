@@ -69,7 +69,7 @@ const LeadersWidget = () => {
         <Button
           plain={false}
           color="accent-2"
-          onClick={() => navigate(`/leaders?season=${currentSeason}`)}
+          onClick={() => navigate(`leaders?season=${currentSeason}`)}
         >
           All Leaders
         </Button>

@@ -82,7 +82,6 @@ const App = () => {
   const [online, setOnline] = useState(false);
   useEffect(() => {
     const handleNetworkChange = () => {
-      console.log('online', navigator.onLine);
       setOnline(navigator.onLine);
     };
     handleNetworkChange();

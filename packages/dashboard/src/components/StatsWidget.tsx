@@ -116,7 +116,7 @@ const StatsWidget = () => {
         <Button
           plain={false}
           color="accent-2"
-          onClick={() => navigate(`/stats?season=${currentSeason}`)}
+          onClick={() => navigate(`stats?season=${currentSeason}`)}
         >
           All Stats
         </Button>

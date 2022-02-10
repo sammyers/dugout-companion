@@ -78,10 +78,10 @@ const GameWidget = () => {
             margin={{ top: 'small', horizontal: 'small' }}
             flex={{ shrink: 0 }}
           >
-            <Button plain={false} color="accent-2" onClick={() => navigate(`/game/${game?.id}`)}>
+            <Button plain={false} color="accent-2" onClick={() => navigate(`game/${game?.id}`)}>
               More Details
             </Button>
-            <Button plain={false} color="accent-2" onClick={() => navigate('/games')}>
+            <Button plain={false} color="accent-2" onClick={() => navigate('games')}>
               More Games
             </Button>
           </Box>

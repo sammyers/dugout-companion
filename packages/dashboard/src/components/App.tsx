@@ -2,14 +2,10 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Grommet } from 'grommet';
 import { Route, Routes } from 'react-router';
 
-import {
-  DASHBOARD_DEFAULT_GROUP,
-  SOLO_MODE_OPPONENT_GROUP,
-  useGetAllGroupsQuery,
-} from '@sammyers/dc-shared';
+import { SOLO_MODE_OPPONENT_GROUP, useGetAllGroupsQuery } from '@sammyers/dc-shared';
 
 import TopBar from './TopBar';
-import Dashboard from './Dashboard';
+import GroupDashboard from './Dashboard';
 import GamesPage, { GamesPageTitle } from './GamesPage';
 import GamePage, { GamePageTitle } from './GamePage';
 import StatsPage, { StatsPageTitle } from './StatsPage';
@@ -19,6 +15,8 @@ import LegacyGamePage, { LegacyGamePageTitle } from './GamePage/LegacyGamePage';
 
 import theme from '../theme';
 import { Group, groupContext } from './context';
+import GroupManager from './GroupManager';
+import LandingPage from './LandingPage';
 
 const DefaultTitle = () => <>{'Dugout Companion Dashboard'}</>;
 
@@ -34,7 +32,7 @@ const App = () => {
   );
 
   const currentGroup = useMemo(
-    () => groups.find(group => group.id === currentGroupId) ?? groups[0],
+    () => groups.find(group => group.id === currentGroupId),
     [groups, currentGroupId]
   );
 
@@ -43,7 +41,6 @@ const App = () => {
   useEffect(() => {
     if (data?.groups) {
       setGroups(data.groups.filter(group => group.name !== SOLO_MODE_OPPONENT_GROUP));
-      setCurrentGroupId(data.groups.find(group => group.name === DASHBOARD_DEFAULT_GROUP)?.id);
     }
   }, [data]);
 
@@ -55,7 +52,7 @@ const App = () => {
       >
         <Box flex>
           <Routes>
-            <Route path="/" element={<TopBar />}>
+            <Route path="/g/:groupSlug" element={<TopBar />}>
               <Route path="" element={<DefaultTitle />} />
               <Route path="games" element={<GamesPageTitle />} />
               <Route path="game/legacy/:id" element={<LegacyGamePageTitle />} />
@@ -67,13 +64,18 @@ const App = () => {
           </Routes>
           <Box flex>
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/games" element={<GamesPage />} />
-              <Route path="game/legacy/:id" element={<LegacyGamePage />} />
-              <Route path="/game/:id" element={<GamePage />} />
-              <Route path="/stats" element={<StatsPage />} />
-              <Route path="/leaders" element={<LeadersPage />} />
-              <Route path="/player/:id" element={<PlayerPage />} />
+              <Route path="/g/:groupSlug" element={<GroupManager />}>
+                <Route path="" element={<GroupDashboard />} />
+                <Route path="games" element={<GamesPage />} />
+                <Route path="game/legacy/:id" element={<LegacyGamePage />} />
+                <Route path="game/:id" element={<GamePage />} />
+                <Route path="stats" element={<StatsPage />} />
+                <Route path="leaders" element={<LeadersPage />} />
+                <Route path="player/:id" element={<PlayerPage />} />
+              </Route>
+              <Route path="/">
+                <Route path="" element={<LandingPage />} />
+              </Route>
             </Routes>
           </Box>
         </Box>

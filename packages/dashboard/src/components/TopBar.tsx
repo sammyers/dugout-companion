@@ -1,30 +1,41 @@
-import React, { useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Avatar, Box, Button, DropButton, Heading, Select, Text } from 'grommet';
 import { Home, User } from 'grommet-icons';
-import { Outlet, useLocation, useNavigate } from 'react-router';
-import { groupContext } from './context';
+import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
+
+import { useAllGroups } from './context';
 
 const GroupSelector = () => {
-  const { currentGroup, groups, setCurrentGroup } = useContext(groupContext);
+  const { groupSlug } = useParams();
+  const navigate = useNavigate();
+
+  const groups = useAllGroups();
+
+  const setGroup = useCallback(
+    (newGroupSlug: string) => {
+      navigate(`/g/${newGroupSlug}`);
+    },
+    [navigate]
+  );
 
   return (
     <Select
       options={groups}
       labelKey="name"
-      valueKey={{ key: 'id', reduce: true }}
-      value={currentGroup?.id}
-      onChange={({ value }) => setCurrentGroup(value)}
+      valueKey={{ key: 'urlSlug', reduce: true }}
+      value={groupSlug}
+      onChange={({ value }) => setGroup(value)}
     />
   );
 };
 
 const TopBar = () => {
-  const location = useLocation();
   const navigate = useNavigate();
+  const match = useMatch({ path: '/g/:groupSlug', end: true });
 
   return (
     <Box direction="row" justify="between" align="center" pad="small">
-      {location.pathname !== '/' && <Button icon={<Home />} onClick={() => navigate('/')} />}
+      {!match && <Button icon={<Home />} onClick={() => navigate('')} />}
       <Heading level={3} margin={{ horizontal: 'small', vertical: 'none' }}>
         <Outlet />
       </Heading>

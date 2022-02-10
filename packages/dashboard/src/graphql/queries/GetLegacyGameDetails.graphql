@@ -1,5 +1,6 @@
 query GetLegacyGameDetails($id: Int!) {
   legacyGame(gameId: $id) {
+    gameId
     gameTitle
     gameDate
     gameStartTime

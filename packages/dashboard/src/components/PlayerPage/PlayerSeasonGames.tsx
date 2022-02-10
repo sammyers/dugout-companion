@@ -26,7 +26,7 @@ const getGameName = (row: GameRow | LegacyGameRow) => {
 };
 
 const getLinkToGame = (row: GameRow | LegacyGameRow) =>
-  'game' in row ? `/game/${row.game!.id}` : `/game/legacy/${row.legacyGame!.gameId}`;
+  'game' in row ? `../game/${row.game!.id}` : `../game/legacy/${row.legacyGame!.gameId}`;
 
 const columnDefs: ColumnConfig<GameRow | LegacyGameRow>[] = [
   {

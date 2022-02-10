@@ -1,7 +1,11 @@
 query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
   player(id: $playerId) {
+    id
     fullName
     debut
+    groups: playerGroupMemberships {
+      groupId
+    }
     careerStats(condition: { groupId: $groupId }) {
       games
       plateAppearances

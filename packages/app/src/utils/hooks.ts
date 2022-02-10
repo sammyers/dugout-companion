@@ -21,7 +21,6 @@ export const useSyncAllPlayers = () => {
   const [addPlayerToGroup] = useAddPlayerToGroupMutation();
 
   const syncAllPlayers = useCallback(async () => {
-    console.log('syncing players');
     const unsyncedPlayers = getUnsyncedPlayers(getState());
     const unsyncedMemberships = getUnsyncedMemberships(getState());
     if (_.size(unsyncedPlayers)) {

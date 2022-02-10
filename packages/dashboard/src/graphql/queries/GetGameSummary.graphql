@@ -1,5 +1,6 @@
 query GetGameSummary($gameId: UUID!) {
   game(id: $gameId) {
+    id
     lineScore {
       inning
       halfInning

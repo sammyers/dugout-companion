@@ -49,7 +49,7 @@ const areas = {
   ],
 };
 
-const Dashboard = () => {
+const GroupDashboard = () => {
   const size = useContext(ResponsiveContext);
   return (
     <Box flex="grow">
@@ -69,4 +69,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default GroupDashboard;

@@ -3,5 +3,6 @@ query GetAllGroups {
     id
     name
     soloMode
+    urlSlug
   }
 }
