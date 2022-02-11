@@ -85,7 +85,18 @@ const Lineup = ({ teamRole }: Props) => {
           </Box>
         )}
       </Box>
-      {editable && <AddPlayer onSelect={handleAddPlayer} />}
+      {editable && (
+        <Box
+          direction={teamRole === TeamRole.AWAY ? 'row' : 'row-reverse'}
+          align="center"
+          gap="small"
+        >
+          {!soloMode && !inProgress && (
+            <Button plain={false} icon={<ShuffleIcon />} onClick={handleShuffleLineup} />
+          )}
+          <AddPlayer onSelect={handleAddPlayer} />
+        </Box>
+      )}
       <Box direction="row" margin={{ top: 'small' }}>
         <Box width="24px">
           {_.range(1, Math.max(9, players.length) + 1).map(lineupSpot => (
