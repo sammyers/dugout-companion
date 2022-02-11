@@ -1,11 +1,11 @@
 import React, { useCallback, FC, useMemo } from 'react';
 import { Box, Text, Button, Select, ThemeContext, Stack } from 'grommet';
-import { Close } from 'grommet-icons';
+import { Close, PowerCycle } from 'grommet-icons';
 import { Draggable } from 'react-beautiful-dnd';
 
 import { FieldingPosition, getPositionAbbreviation, TeamRole } from '@sammyers/dc-shared';
 
-import { getAvailablePositions, getPlayerPosition } from 'state/game/selectors';
+import { getAvailablePositions, getPlayerPosition, isGameInProgress } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { getPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
@@ -18,13 +18,23 @@ interface Props extends LineupSpot {
   editable: boolean;
   atBat: boolean;
   upNextInning: boolean;
+  onSubstitute: () => void;
 }
 
-const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat, upNextInning }) => {
+const LineupPlayer: FC<Props> = ({
+  playerId,
+  index,
+  team,
+  editable,
+  atBat,
+  upNextInning,
+  onSubstitute,
+}) => {
   const dispatch = useAppDispatch();
 
   const name = useAppSelector(state => getPlayerName(state, playerId));
   const position = useAppSelector(state => getPlayerPosition(state, playerId));
+  const gameInProgress = useAppSelector(isGameInProgress);
 
   const availablePositions = useAppSelector(state => getAvailablePositions(state, team));
   const positionOptions = useMemo(
@@ -50,7 +60,7 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat, upNex
   );
 
   return (
-    <Draggable draggableId={playerId} index={index} isDragDisabled={!editable}>
+    <Draggable draggableId={playerId} index={index} isDragDisabled={!editable || gameInProgress}>
       {({ innerRef, draggableProps, dragHandleProps }) => (
         <Box
           ref={innerRef}
@@ -60,6 +70,7 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat, upNex
           height="xxsmall"
           align="center"
           justify="between"
+          margin={{ vertical: '2px' }}
         >
           <Stack anchor="top-left" margin={editable ? { right: 'auto' } : undefined}>
             <Box
@@ -94,23 +105,38 @@ const LineupPlayer: FC<Props> = ({ playerId, index, team, editable, atBat, upNex
           </Stack>
           {editable ? (
             <>
-              <ThemeContext.Extend value={{ global: { size: { xsmall: '108px' } } }}>
-                <Box width="xsmall" margin={{ right: 'small' }}>
+              <ThemeContext.Extend
+                value={{
+                  global: { size: { xsmall: '108px' }, edgeSize: { small: '8px' } },
+                  button: { border: { radius: '50%' } },
+                }}
+              >
+                <Box width="xsmall">
                   <Select
                     value={position ?? ''}
                     options={positionOptions}
                     labelKey="label"
                     valueKey={{ key: 'position', reduce: true }}
                     onChange={handleChangePosition}
+                    margin={{ right: 'small' }}
                   />
                 </Box>
+                {gameInProgress && (
+                  <Button
+                    plain={false}
+                    icon={<PowerCycle color="accent-2" />}
+                    color="accent-2"
+                    margin={{ right: 'small' }}
+                    onClick={onSubstitute}
+                  />
+                )}
+                <Button
+                  plain={false}
+                  icon={<Close color="status-critical" />}
+                  color="status-critical"
+                  onClick={handleRemove}
+                />
               </ThemeContext.Extend>
-              <Button
-                plain={false}
-                icon={<Close size="small" color="status-critical" />}
-                color="status-critical"
-                onClick={handleRemove}
-              />
             </>
           ) : (
             <Text

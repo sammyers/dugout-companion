@@ -71,21 +71,18 @@ export const changePlayerPosition = (
 export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
   const fourOutfielders = lineup.length > 9;
   const takenPositions = _.countBy(lineup, 'position');
-  const positionsNotTaken = getAvailablePositionsForLineup(lineup).filter(
+  let positionsNotTaken = getAvailablePositionsForLineup(lineup).filter(
     position => !takenPositions[position]
   );
   return _.map(lineup, ({ playerId, position }) => {
     if (fourOutfielders && position === FieldingPosition.CENTER_FIELD) {
       const newPosition = _.find(
-        [
-          FieldingPosition.LEFT_CENTER,
-          FieldingPosition.RIGHT_CENTER,
-          getNextAvailablePosition(lineup),
-        ],
+        [FieldingPosition.LEFT_CENTER, FieldingPosition.RIGHT_CENTER, _.last(positionsNotTaken)],
         pos => !(pos! in takenPositions)
       )!;
       if (newPosition) {
         takenPositions[newPosition] = 1;
+        positionsNotTaken = positionsNotTaken.filter(pos => pos !== newPosition);
       }
       return {
         playerId,
@@ -98,11 +95,12 @@ export const updatePositions = (lineup: LineupSpot[]): LineupSpot[] => {
       )
     ) {
       const newPosition = _.find(
-        [FieldingPosition.CENTER_FIELD, getNextAvailablePosition(lineup)],
+        [FieldingPosition.CENTER_FIELD, _.last(positionsNotTaken)],
         pos => !(pos! in takenPositions)
       )!;
       if (newPosition) {
         takenPositions[newPosition] = 1;
+        positionsNotTaken = positionsNotTaken.filter(pos => pos !== newPosition);
       }
       return {
         playerId,

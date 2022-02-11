@@ -142,9 +142,10 @@ export const getPlayerPosition = (state: AppState, playerId: string) => {
   }
 };
 
-export const getLineups = createSelector(getTeams, teams => teams.map(getCurrentLineup));
 export const getLineupToEdit = (state: AppState, teamRole: TeamRole) =>
   partialSelectors.getLineupToEdit(getPresent(state), teamRole);
+
+export const getLineups = createSelector(getPresent, partialSelectors.getLineups);
 
 export const getAvailablePositions = (state: AppState, role: TeamRole) => {
   const lineup = getLineupToEdit(state, role);

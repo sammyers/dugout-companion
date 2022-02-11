@@ -34,7 +34,7 @@ const columnDefs: ColumnConfig<GameRow | LegacyGameRow>[] = [
     header: 'Game',
     render: row => (
       <Text>
-        <AnchorLink to={getLinkToGame(row)} defaultColor="accent-2" weight="bold">
+        <AnchorLink to={getLinkToGame(row)} defaultColor="neutral-1" weight="bold">
           {getGameName(row)}
         </AnchorLink>
       </Text>

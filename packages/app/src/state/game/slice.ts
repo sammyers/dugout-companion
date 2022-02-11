@@ -184,13 +184,26 @@ const { actions: gameActions, reducer } = createSlice({
       }
     },
     removePlayerFromGame(state, { payload }: PayloadAction<string>) {
-      const team = state.teams.find(team =>
+      const { role } = state.teams.find(team =>
         _.some(getLineupToEdit(state, team.role), { playerId: payload })
       )!;
       const newLineup = updatePositions(
-        getLineupToEdit(state, team.role).filter(spot => spot.playerId !== payload)
+        getLineupToEdit(state, role).filter(spot => spot.playerId !== payload)
       );
-      changeLineup(state, team.role, newLineup);
+      changeLineup(state, role, newLineup);
+    },
+    substitutePlayer(
+      state,
+      { payload }: PayloadAction<{ newPlayerId: string; oldPlayerId: string }>
+    ) {
+      const { role } = state.teams.find(team =>
+        _.some(getLineupToEdit(state, team.role), { playerId: payload.oldPlayerId })
+      )!;
+      const newLineup = getLineupToEdit(state, role).map(({ playerId, position }) => ({
+        position,
+        playerId: playerId === payload.oldPlayerId ? payload.newPlayerId : playerId,
+      }));
+      changeLineup(state, role, newLineup);
     },
     changePlayerPosition(state, { payload }: PayloadAction<ChangePlayerPositionPayload>) {
       const team = state.teams.find(team =>
@@ -408,18 +421,12 @@ const { actions: gameActions, reducer } = createSlice({
       cleanUpAfterGameEvent(state);
     },
     resetGame: state => {
-      // If we're in solo mode make sure the opponent starts as the away team
-      if (state.teams[1].soloModeOpponent) {
-        state.teams.reverse();
-        state.teams[0].role = TeamRole.AWAY;
-        state.teams[1].role = TeamRole.HOME;
-      }
-
       const newState = {
         ...initialState,
         soloModeOpponentBatterId: state.soloModeOpponentBatterId,
         teams: state.teams.map(team => ({
           ...makeInitialTeamState(team.role),
+          soloModeOpponent: team.soloModeOpponent,
           lineups: team.soloModeOpponent
             ? []
             : [
@@ -430,6 +437,12 @@ const { actions: gameActions, reducer } = createSlice({
               ],
         })),
       };
+      // If we're in solo mode make sure the opponent starts as the away team
+      if (newState.teams[1].soloModeOpponent) {
+        newState.teams.reverse();
+        newState.teams[0].role = TeamRole.AWAY;
+        newState.teams[1].role = TeamRole.HOME;
+      }
       initStateForSoloMode(
         newState,
         state.soloMode,

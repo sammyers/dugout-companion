@@ -68,6 +68,9 @@ export const getLineupToEdit = (state: AppGameState, teamRole: TeamRole) =>
   isEditingLineups(state)
     ? getDraftLineup(state, teamRole)
     : getCurrentLineup(getTeam(state, teamRole));
+
+export const getLineups = (state: AppGameState) =>
+  getTeams(state).map(({ role }) => getLineupToEdit(state, role));
 export const isSoloModeActive = (state: AppGameState) => state.soloMode;
 export const getSoloModeOpponentPositions = (state: AppGameState) =>
   state.soloModeOpponentPositions;
