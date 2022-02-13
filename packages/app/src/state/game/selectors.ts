@@ -20,7 +20,7 @@ import {
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
-import { getCurrentGroupId, getCurrentGroupName } from 'state/groups/selectors';
+import { getCurrentGroup, getCurrentGroupId, getCurrentGroupName } from 'state/groups/selectors';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -325,6 +325,11 @@ export const canReorderPlayer = (state: AppState, teamRole: TeamRole, lineupInde
   if (score[1] > 0 || outs > 0 || runners.length > 0) return false;
   return true;
 };
+
+export const canSkipAtBats = createSelector(
+  getCurrentGroup,
+  group => group?.allowSkippingAtBats ?? false
+);
 
 export const getGameForMutation = createSelector(
   getGameId,

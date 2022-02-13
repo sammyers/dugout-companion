@@ -4,5 +4,6 @@ query GetAllGroups {
     name
     soloMode
     urlSlug
+    allowSkippingAtBats
   }
 }

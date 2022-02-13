@@ -51,6 +51,9 @@ fragment UnpackedGame_Game on Game {
       soloModeOpponentInning {
         runsScored
       }
+      atBatSkip {
+        batterId
+      }
     }
     scoredRunners {
       runnerId

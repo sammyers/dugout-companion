@@ -25,6 +25,7 @@ import {
   makeGameEvent,
   applySoloModeInning,
   initStateForSoloMode,
+  applyAtBatSkip,
 } from './stateHelpers';
 import {
   getAvailablePositionsForLineup,
@@ -282,6 +283,9 @@ const { actions: gameActions, reducer } = createSlice({
     recordSoloModeOpponentInning(state, { payload }: PayloadAction<SoloModeInning>) {
       applySoloModeInning(state, payload);
     },
+    skipCurrentAtBat(state) {
+      applyAtBatSkip(state);
+    },
     editLineup(state) {
       state.editingLineups = true;
       state.teams.forEach(team => {
@@ -476,6 +480,11 @@ const { actions: gameActions, reducer } = createSlice({
 
 export { gameActions };
 
+const gameEventActions = [
+  gameActions.recordPlateAppearance,
+  gameActions.recordSoloModeOpponentInning,
+  gameActions.skipCurrentAtBat,
+];
 const lineupEditActions = [
   gameActions.editLineup,
   gameActions.addPlayerToGame,
@@ -486,10 +495,7 @@ const lineupEditActions = [
 ].map(action => action.type);
 export default undoable(reducer, {
   filter: (action, state) => {
-    if (action.type === gameActions.recordPlateAppearance.type) {
-      return true;
-    }
-    if (action.type === gameActions.recordSoloModeOpponentInning.type) {
+    if (gameEventActions.includes(action.type)) {
       return true;
     }
     if (lineupEditActions.includes(action.type) && state.status === GameStatus.IN_PROGRESS) {

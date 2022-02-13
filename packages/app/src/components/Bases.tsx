@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Grid, Box, Text, Button } from 'grommet';
-import { Blank, Edit, Redo, Undo } from 'grommet-icons';
+import { Blank, ChapterNext, Edit, Redo, Undo } from 'grommet-icons';
 import { Navigate } from 'react-router-dom';
 import { ActionCreators } from 'redux-undo';
 
@@ -19,12 +19,14 @@ import {
   isUndoPossible,
   isRedoPossible,
   isOpponentTeamBatting,
+  canSkipAtBats,
 } from 'state/game/selectors';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
 import { ReactComponent as BaseIcon } from 'graphics/base.svg';
 import { ReactComponent as HomeIcon } from 'graphics/home.svg';
 import OpponentScoreReporter from './OpponentScoreReporter';
+import { gameActions } from 'state/game/slice';
 
 const Base = ({ occupied }: { occupied?: boolean }) => (
   <Blank
@@ -56,6 +58,7 @@ const Bases = () => {
   const inTheHole = useAppSelector(getInTheHoleBatterName);
   const undoPossible = useAppSelector(isUndoPossible);
   const redoPossible = useAppSelector(isRedoPossible);
+  const skippableAtBats = useAppSelector(canSkipAtBats);
 
   const undo = useCallback(() => {
     dispatch(ActionCreators.undo());
@@ -63,6 +66,10 @@ const Bases = () => {
 
   const redo = useCallback(() => {
     dispatch(ActionCreators.redo());
+  }, [dispatch]);
+
+  const skipAtBat = useCallback(() => {
+    dispatch(gameActions.skipCurrentAtBat());
   }, [dispatch]);
 
   const boxRef = useRef<HTMLDivElement | null>(null);
@@ -84,7 +91,7 @@ const Bases = () => {
           areas={[
             ['undo-redo', 'second-base', 'fielder-change'],
             ['third-base', 'reporter', 'first-base'],
-            ['.', 'home-plate', '.'],
+            ['.', 'home-plate', 'extra-options'],
           ]}
         >
           <style scoped>{`
@@ -96,7 +103,7 @@ const Bases = () => {
             <Button icon={<Undo />} disabled={!undoPossible} onClick={undo} />
             <Button icon={<Redo />} disabled={!redoPossible} onClick={redo} />
           </Box>
-          <Box gridArea="fielder-change" margin="medium" align="end">
+          <Box gridArea="fielder-change" margin="medium" align="end" justify="center">
             <Button
               size="small"
               icon={<Edit />}
@@ -105,6 +112,17 @@ const Bases = () => {
               onClick={() => setShowFielderChangeUI(true)}
             />
           </Box>
+          {skippableAtBats && (
+            <Box gridArea="extra-options" margin="medium" align="end" justify="center">
+              <Button
+                size="small"
+                plain={false}
+                icon={<ChapterNext />}
+                label="Skip At-Bat"
+                onClick={skipAtBat}
+              />
+            </Box>
+          )}
           {!opponentBatting && (
             <>
               <Box gridArea="first-base" direction="row" justify="end" align="center">

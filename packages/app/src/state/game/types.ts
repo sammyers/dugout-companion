@@ -22,6 +22,7 @@ export type PlateAppearance = NonNullable<GameEventContainer['plateAppearance']>
 export type LineupChange = NonNullable<GameEventContainer['lineupChange']>;
 export type StolenBaseAttempt = NonNullable<GameEventContainer['stolenBaseAttempt']>;
 export type SoloModeInning = NonNullable<GameEventContainer['soloModeOpponentInning']>;
+export type AtBatSkip = NonNullable<GameEventContainer['atBatSkip']>;
 
 export type HitType =
   | PlateAppearanceType.SINGLE

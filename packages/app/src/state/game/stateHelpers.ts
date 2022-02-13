@@ -167,11 +167,13 @@ export const makeGameEvent = ({
   stolenBaseAttempt = null,
   lineupChange = null,
   soloModeOpponentInning = null,
+  atBatSkip = null,
 }: Partial<GameEventContainer>): GameEventContainer => ({
   plateAppearance,
   stolenBaseAttempt,
   lineupChange,
   soloModeOpponentInning,
+  atBatSkip,
 });
 
 type RunnersScoredCallback = (
@@ -239,7 +241,7 @@ const recordAndApplyGameEvent = (
       team.winner = score[i] === winningScore;
     });
   } else {
-    cleanUpAfterGameEvent(state, !!gameEvent.plateAppearance);
+    cleanUpAfterGameEvent(state, !!(gameEvent.plateAppearance || gameEvent.atBatSkip));
   }
 };
 
@@ -335,6 +337,12 @@ export const applySoloModeInning = (
     recordRunnersScored({ runsScored: soloModeOpponentInning.runsScored });
     return makeGameEvent({ soloModeOpponentInning });
   });
+};
+
+export const applyAtBatSkip = (state: AppGameState) => {
+  recordAndApplyGameEvent(state, state =>
+    makeGameEvent({ atBatSkip: { batterId: state.playerAtBat } })
+  );
 };
 
 export const applyPlateAppearance = (state: AppGameState, plateAppearance: PlateAppearance) => {
