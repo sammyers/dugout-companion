@@ -13,6 +13,7 @@ import OptionSelector from './prompts/util/OptionSelector';
 import LineupEditControls from './LineupEditControls';
 
 import {
+  canReorderPlayer,
   getOpponentTeamName,
   getOpponentTeamSize,
   getProtagonistTeamRole,
@@ -21,6 +22,8 @@ import {
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { useStore } from 'react-redux';
+import { AppState } from 'state/store';
 
 const ButtonContainer = () => {
   const dispatch = useAppDispatch();
@@ -126,6 +129,7 @@ const SoloModeMenu = () => {
 
 const Teams = () => {
   const dispatch = useAppDispatch();
+  const store = useStore<AppState>();
 
   const inSoloMode = useAppSelector(isSoloModeActive);
   const protagonistRole = useAppSelector(getProtagonistTeamRole);
@@ -133,16 +137,25 @@ const Teams = () => {
   const handleDragEnd: DragDropContextProps['onDragEnd'] = useCallback(
     ({ source, destination }) => {
       if (!destination) return;
+      const state = store.getState();
+      const fromTeam = TeamRole[source.droppableId as keyof typeof TeamRole];
+      const toTeam = TeamRole[destination.droppableId as keyof typeof TeamRole];
+      if (
+        !canReorderPlayer(state, fromTeam, source.index) ||
+        !canReorderPlayer(state, toTeam, destination.index)
+      ) {
+        return;
+      }
       dispatch(
         gameActions.movePlayer({
-          fromTeam: TeamRole[source.droppableId as keyof typeof TeamRole],
-          toTeam: TeamRole[destination.droppableId as keyof typeof TeamRole],
+          fromTeam,
+          toTeam,
           startIndex: source.index,
           endIndex: destination.index,
         })
       );
     },
-    [dispatch]
+    [dispatch, store]
   );
 
   return (

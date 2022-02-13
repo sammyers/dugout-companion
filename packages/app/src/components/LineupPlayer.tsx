@@ -5,7 +5,12 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import { FieldingPosition, getPositionAbbreviation, TeamRole } from '@sammyers/dc-shared';
 
-import { getAvailablePositions, getPlayerPosition, isGameInProgress } from 'state/game/selectors';
+import {
+  canReorderPlayer,
+  getAvailablePositions,
+  getPlayerPosition,
+  isGameInProgress,
+} from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { getPlayerName } from 'state/players/selectors';
 import { useAppSelector, useAppDispatch } from 'utils/hooks';
@@ -35,6 +40,7 @@ const LineupPlayer: FC<Props> = ({
   const name = useAppSelector(state => getPlayerName(state, playerId));
   const position = useAppSelector(state => getPlayerPosition(state, playerId));
   const gameInProgress = useAppSelector(isGameInProgress);
+  const canReorder = useAppSelector(state => canReorderPlayer(state, team, index));
 
   const availablePositions = useAppSelector(state => getAvailablePositions(state, team));
   const positionOptions = useMemo(
@@ -60,7 +66,7 @@ const LineupPlayer: FC<Props> = ({
   );
 
   return (
-    <Draggable draggableId={playerId} index={index} isDragDisabled={!editable || gameInProgress}>
+    <Draggable draggableId={playerId} index={index} isDragDisabled={!canReorder}>
       {({ innerRef, draggableProps, dragHandleProps }) => (
         <Box
           ref={innerRef}

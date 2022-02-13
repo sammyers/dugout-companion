@@ -307,6 +307,25 @@ export const getPreviousHalfInning = createSelector(
   }
 );
 
+export const canReorderPlayer = (state: AppState, teamRole: TeamRole, lineupIndex: number) => {
+  const gameInProgress = isGameInProgress(state);
+  const lineupEditable = isEditingLineups(state);
+  const inning = getInning(state);
+  const halfInning = getHalfInning(state);
+  const score = getScore(state);
+  const outs = getNumOuts(state);
+  const runners = getRunners(state);
+
+  if (!gameInProgress) return true;
+  if (!lineupEditable) return false;
+  if (teamRole === TeamRole.AWAY) return false;
+  if (inning > 1) return false;
+  if (halfInning === HalfInning.TOP) return true;
+  if (lineupIndex === 0) return false;
+  if (score[1] > 0 || outs > 0 || runners.length > 0) return false;
+  return true;
+};
+
 export const getGameForMutation = createSelector(
   getGameId,
   getGameName,

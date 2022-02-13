@@ -59,12 +59,10 @@ const Lineup = ({ teamRole }: Props) => {
 
   return (
     <Box flex>
-      {
-        <SubstitutePlayerModal
-          oldPlayerId={playerToSubstitute}
-          onClose={() => setPlayerToSubstitute(undefined)}
-        />
-      }
+      <SubstitutePlayerModal
+        oldPlayerId={playerToSubstitute}
+        onClose={() => setPlayerToSubstitute(undefined)}
+      />
       <Box margin={{ bottom: 'medium' }}>
         {soloMode ? (
           <Box direction="row" justify="between" align="center">
@@ -108,7 +106,7 @@ const Lineup = ({ teamRole }: Props) => {
           ))}
         </Box>
         <Droppable
-          isDropDisabled={!editable}
+          isDropDisabled={(inProgress && teamRole === TeamRole.AWAY) || !editable}
           droppableId={teamRole === TeamRole.AWAY ? 'AWAY' : 'HOME'}
         >
           {({ innerRef, droppableProps, placeholder }) => (
