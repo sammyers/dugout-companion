@@ -26,6 +26,7 @@ import {
   applySoloModeInning,
   initStateForSoloMode,
   applyAtBatSkip,
+  applyStolenBaseAttempt,
 } from './stateHelpers';
 import {
   getAvailablePositionsForLineup,
@@ -47,6 +48,7 @@ import {
   AppGameState,
   PlateAppearance,
   SoloModeInning,
+  StolenBaseAttempt,
 } from './types';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
@@ -74,6 +76,7 @@ const initialState: AppGameState = {
   soloMode: false,
   soloModeOpponentPositions: [],
   soloModeOpponentBatterId: '',
+  allowSteals: false,
 };
 
 const { actions: gameActions, reducer } = createSlice({
@@ -280,6 +283,9 @@ const { actions: gameActions, reducer } = createSlice({
     recordPlateAppearance(state, { payload }: PayloadAction<PlateAppearance>) {
       applyPlateAppearance(state, payload);
     },
+    recordStolenBase(state, { payload }: PayloadAction<StolenBaseAttempt>) {
+      applyStolenBaseAttempt(state, payload);
+    },
     recordSoloModeOpponentInning(state, { payload }: PayloadAction<SoloModeInning>) {
       applySoloModeInning(state, payload);
     },
@@ -412,6 +418,9 @@ const { actions: gameActions, reducer } = createSlice({
     changeGameName(state, { payload }: PayloadAction<string>) {
       state.name = payload;
     },
+    setStealsAllowed(state, { payload }: PayloadAction<boolean>) {
+      state.allowSteals = payload;
+    },
     setTimeEnded(state, { payload }: PayloadAction<string>) {
       state.timeEnded = payload;
     },
@@ -475,6 +484,7 @@ const { actions: gameActions, reducer } = createSlice({
     builder.addCase(groupActions.setCurrentGroup, (state, { payload }) => {
       state.teams = state.teams.map(({ role }) => makeInitialTeamState(role));
       initStateForSoloMode(state, !!payload.soloMode, payload.name);
+      state.allowSteals = false;
     }),
 });
 
@@ -482,9 +492,10 @@ export { gameActions };
 
 const gameEventActions = [
   gameActions.recordPlateAppearance,
+  gameActions.recordStolenBase,
   gameActions.recordSoloModeOpponentInning,
   gameActions.skipCurrentAtBat,
-];
+].map(action => action.type);
 const lineupEditActions = [
   gameActions.editLineup,
   gameActions.addPlayerToGame,

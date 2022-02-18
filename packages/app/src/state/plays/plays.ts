@@ -62,7 +62,13 @@ const makeOutPhrase = (runnerId: string, base: BaseType | null) =>
 
 export const getPlayDescription = (
   {
-    gameEvent: { plateAppearance, stolenBaseAttempt, lineupChange, soloModeOpponentInning },
+    gameEvent: {
+      plateAppearance,
+      stolenBaseAttempt,
+      lineupChange,
+      soloModeOpponentInning,
+      atBatSkip,
+    },
     scoredRunners,
   }: GameEventRecord,
   gameStateBefore: GameState,
@@ -86,6 +92,9 @@ export const getPlayDescription = (
     );
     if (success) {
       sentences.push(`{${runnerId}} steals ${formatBaseName(endBase)}.`);
+      if (endBase === null) {
+        newScore = gameStateAfter.score;
+      }
     } else {
       sentences.push(`{${runnerId}} is caught stealing ${formatBaseName(endBase)}.`);
       newNumOuts = gameStateBefore.outs + 1;
@@ -101,6 +110,9 @@ export const getPlayDescription = (
     } else {
       sentences.push('Opponent is held scoreless.');
     }
+  } else if (atBatSkip) {
+    sentences.push(`{${atBatSkip.batterId}}'s at-bat is skipped.`);
+    playerIds.push(atBatSkip.batterId);
   } else if (plateAppearance) {
     const { playerAtBat, baseRunners, outs } = gameStateBefore;
     const runners = runnersToMap(baseRunners);

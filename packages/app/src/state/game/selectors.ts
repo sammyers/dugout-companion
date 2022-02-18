@@ -8,6 +8,7 @@ import {
   getAvailablePositionsForLineup,
   getCurrentLineup,
   getPlayerAtPositionFromTeams,
+  isNextBaseAvailable,
   previousHalfInning,
 } from './utils';
 
@@ -46,12 +47,17 @@ export const getPrevGameStates = createSelector(getPresent, partialSelectors.get
 
 export const getFirstBatterNextInning = createSelector(getPresent, state => state.upNextHalfInning);
 
-export const getGameStateGetter = createSelector(getPresent, state => (gameStateId: string) => {
-  if (state.gameState?.id === gameStateId) {
-    return state.gameState;
+export const getGameStateMap = createSelector(getPrevGameStates, states => _.keyBy(states, 'id'));
+export const getGameStateGetter = createSelector(
+  getPresent,
+  getGameStateMap,
+  (state, prevStates) => (gameStateId: string) => {
+    if (state.gameState?.id === gameStateId) {
+      return state.gameState;
+    }
+    return prevStates[gameStateId];
   }
-  return state.prevGameStates.find(({ id }) => id === gameStateId)!;
-});
+);
 
 export const isSoloModeActive = createSelector(getPresent, partialSelectors.isSoloModeActive);
 
@@ -307,29 +313,57 @@ export const getPreviousHalfInning = createSelector(
   }
 );
 
-export const canReorderPlayer = (state: AppState, teamRole: TeamRole, lineupIndex: number) => {
-  const gameInProgress = isGameInProgress(state);
-  const lineupEditable = isEditingLineups(state);
-  const inning = getInning(state);
-  const halfInning = getHalfInning(state);
-  const score = getScore(state);
-  const outs = getNumOuts(state);
-  const runners = getRunners(state);
+export const getAllPlayersThatHaveBatted = createSelector(
+  getGameHistory,
+  getGameStateGetter,
+  (events, getGameState) =>
+    new Set(
+      events
+        .filter(({ gameEvent }) => gameEvent.plateAppearance || gameEvent.atBatSkip)
+        .map(event => getGameState(event.gameStateBeforeId).playerAtBat)
+    )
+);
 
-  if (!gameInProgress) return true;
-  if (!lineupEditable) return false;
-  if (teamRole === TeamRole.AWAY) return false;
-  if (inning > 1) return false;
-  if (halfInning === HalfInning.TOP) return true;
-  if (lineupIndex === 0) return false;
-  if (score[1] > 0 || outs > 0 || runners.length > 0) return false;
-  return true;
+export const canReorderLineup = (state: AppState, teamRole: TeamRole) => {
+  if (!isGameInProgress(state)) return true;
+  if (!isEditingLineups(state)) return false;
+
+  const allPreviousBatters = getAllPlayersThatHaveBatted(state);
+  const playerAtBat = getCurrentBatter(state);
+  const lineup = getLineupToEdit(state, teamRole);
+  return lineup.some(
+    ({ playerId }) => !allPreviousBatters.has(playerId) && playerId !== playerAtBat
+  );
+};
+
+export const canReorderPlayer = (state: AppState, teamRole: TeamRole, lineupIndex: number) => {
+  if (!isGameInProgress(state)) return true;
+  if (!isEditingLineups(state)) return false;
+
+  const lineup = getLineupToEdit(state, teamRole);
+  // Adding to the end, not moving an existing player
+  if (lineupIndex >= lineup.length) return true;
+
+  const { playerId } = lineup[lineupIndex];
+  const allPreviousBatters = getAllPlayersThatHaveBatted(state);
+  const playerAtBat = getCurrentBatter(state);
+
+  return !allPreviousBatters.has(playerId) && playerId !== playerAtBat;
 };
 
 export const canSkipAtBats = createSelector(
   getCurrentGroup,
   group => group?.allowSkippingAtBats ?? false
 );
+
+export const canConfigureSteals = createSelector(
+  getCurrentGroup,
+  group => group?.allowSteals ?? false
+);
+export const canStealBases = createSelector(getPresent, state => state.allowSteals);
+
+export const canRunnerStealBase = (state: AppState, runnerId: string) =>
+  isNextBaseAvailable(runnerId, getRunnerMap(state));
 
 export const getGameForMutation = createSelector(
   getGameId,
@@ -429,9 +463,13 @@ export const getGameForMutation = createSelector(
           } else if (gameEvent.soloModeOpponentInning) {
             event = {
               soloModeOpponentInning: {
-                create: {
-                  ...gameEvent.soloModeOpponentInning,
-                },
+                create: gameEvent.soloModeOpponentInning,
+              },
+            };
+          } else if (gameEvent.atBatSkip) {
+            event = {
+              atBatSkip: {
+                create: gameEvent.atBatSkip,
               },
             };
           }

@@ -2972,6 +2972,7 @@ export type FakePublicCareerStatsForeignKey2GroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -3214,6 +3215,7 @@ export type FakePublicCareerStatsQualifiedBattersForeignKey2GroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4071,6 +4073,7 @@ export type FakePublicLegacySeasonStatsForeignKey2GroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4402,6 +4405,7 @@ export type FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2GroupCreateIn
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4644,6 +4648,7 @@ export type FakePublicSeasonStatsForeignKey2GroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4886,6 +4891,7 @@ export type FakePublicSeasonStatsQualifiedBattersForeignKey2GroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -4970,6 +4976,7 @@ export type FakePublicUnifiedGamesForeignKey0GroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -7087,6 +7094,7 @@ export type GameGroupIdFkeyGroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -7848,6 +7856,7 @@ export type Group = Node & {
   soloMode: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats: Maybe<Scalars['Boolean']>;
+  allowSteals: Maybe<Scalars['Boolean']>;
   /** Reads and enables pagination through a set of `Game`. */
   games: Array<Game>;
   /** Reads and enables pagination through a set of `PlayerGroupMembership`. */
@@ -7969,6 +7978,8 @@ export type GroupCondition = {
   urlSlug?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `allowSkippingAtBats` field. */
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `allowSteals` field. */
+  allowSteals?: Maybe<Scalars['Boolean']>;
 };
 
 /** The fields on `group` to look up the row to connect. */
@@ -8009,6 +8020,7 @@ export type GroupInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -8245,6 +8257,7 @@ export type GroupPatch = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -8271,6 +8284,8 @@ export enum GroupsOrderBy {
   URL_SLUG_DESC = 'URL_SLUG_DESC',
   ALLOW_SKIPPING_AT_BATS_ASC = 'ALLOW_SKIPPING_AT_BATS_ASC',
   ALLOW_SKIPPING_AT_BATS_DESC = 'ALLOW_SKIPPING_AT_BATS_DESC',
+  ALLOW_STEALS_ASC = 'ALLOW_STEALS_ASC',
+  ALLOW_STEALS_DESC = 'ALLOW_STEALS_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -12332,6 +12347,7 @@ export type PlayerGroupMembershipGroupIdFkeyGroupCreateInput = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug: Scalars['String'];
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17334,6 +17350,7 @@ export type UpdateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17353,6 +17370,7 @@ export type UpdateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQuali
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17372,6 +17390,7 @@ export type UpdateGroupOnGameForGameGroupIdFkeyPatch = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17391,6 +17410,7 @@ export type UpdateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKe
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17410,6 +17430,7 @@ export type UpdateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFke
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17429,6 +17450,7 @@ export type UpdateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch = {
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17448,6 +17470,7 @@ export type UpdateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonSta
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17467,6 +17490,7 @@ export type UpdateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQuali
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -17486,6 +17510,7 @@ export type UpdateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch = 
   soloMode?: Maybe<Scalars['Boolean']>;
   urlSlug?: Maybe<Scalars['String']>;
   allowSkippingAtBats?: Maybe<Scalars['Boolean']>;
+  allowSteals?: Maybe<Scalars['Boolean']>;
   games?: Maybe<GameGroupIdFkeyInverseInput>;
   playerGroupMemberships?: Maybe<PlayerGroupMembershipGroupIdFkeyInverseInput>;
   careerStats?: Maybe<FakePublicCareerStatsForeignKey2InverseInput>;
@@ -18817,7 +18842,7 @@ export type GetAllGroupsQuery = (
   { __typename?: 'Query' }
   & { groups: Maybe<Array<(
     { __typename?: 'Group' }
-    & Pick<Group, 'id' | 'name' | 'soloMode' | 'urlSlug' | 'allowSkippingAtBats'>
+    & Pick<Group, 'id' | 'name' | 'soloMode' | 'urlSlug' | 'allowSkippingAtBats' | 'allowSteals'>
   )>> }
 );
 
@@ -19757,6 +19782,7 @@ export const GetAllGroupsDocument = gql`
     soloMode
     urlSlug
     allowSkippingAtBats
+    allowSteals
   }
 }
     `;

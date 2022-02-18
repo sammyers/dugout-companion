@@ -109,6 +109,14 @@ export const getNewBase = (currentBase: BaseType, numAdvanced: number = 1) => {
   return BaseType.SECOND;
 };
 
+export const isNextBaseAvailable = (runnerId: string, runners: BaseRunnerMap) => {
+  const base = getBaseForRunner(runners, runnerId);
+  const nextBase = getNewBase(base);
+  if (!nextBase) return true;
+  if (nextBase in runners) return false;
+  return true;
+};
+
 export const getNumBasesForPlateAppearance = (paType: PlateAppearanceType) => {
   switch (paType) {
     case PlateAppearanceType.HOMERUN:

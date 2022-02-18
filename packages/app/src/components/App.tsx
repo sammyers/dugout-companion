@@ -11,7 +11,7 @@ import {
 
 import GameOver from './GameOver';
 import TopBar from './TopBar';
-import Bases from './Bases';
+import Scorekeeper from './Scorekeeper';
 import Teams from './Teams';
 import BoxScore from './BoxScore';
 import Plays from './plays/Plays';
@@ -19,6 +19,7 @@ import Plays from './plays/Plays';
 import theme from 'theme';
 import { isGameOver } from 'state/game/selectors';
 import { getCurrentGroupId } from 'state/groups/selectors';
+import { gameActions } from 'state/game/slice';
 import { groupActions } from 'state/groups/slice';
 import { playerActions } from 'state/players/slice';
 import { historyActions } from 'state/history/slice';
@@ -27,7 +28,6 @@ import { networkStatusContext } from 'utils/network';
 
 import { Game } from 'state/game/types';
 import { Player } from 'state/players/types';
-import { gameActions } from 'state/game/slice';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -109,7 +109,7 @@ const App = () => {
             <Routes>
               <Route path="/game-over" element={<GameOver />} />
               <Route path="/teams" element={<Teams />} />
-              <Route path="/field" element={<Bases />} />
+              <Route path="/field" element={<Scorekeeper />} />
               <Route path="/box-score" element={<BoxScore />} />
               <Route path="/plays" element={<Plays />} />
               <Route path="/" element={<Navigate to="/teams" />} />

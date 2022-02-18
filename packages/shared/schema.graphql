@@ -1624,6 +1624,7 @@ type Group implements Node {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
 
   """Reads and enables pagination through a set of `Game`."""
   games(
@@ -4994,6 +4995,8 @@ enum GroupsOrderBy {
   URL_SLUG_DESC
   ALLOW_SKIPPING_AT_BATS_ASC
   ALLOW_SKIPPING_AT_BATS_DESC
+  ALLOW_STEALS_ASC
+  ALLOW_STEALS_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -5019,6 +5022,9 @@ input GroupCondition {
 
   """Checks for equality with the object’s `allowSkippingAtBats` field."""
   allowSkippingAtBats: Boolean
+
+  """Checks for equality with the object’s `allowSteals` field."""
+  allowSteals: Boolean
 }
 
 type LegacyField implements Node {
@@ -7363,6 +7369,7 @@ input updateGroupOnGameForGameGroupIdFkeyPatch {
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14083,6 +14090,7 @@ input updateGroupOnSeasonStatsQualifiedBatterForFakePublicSeasonStatsQualifiedBa
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14231,6 +14239,7 @@ input updateGroupOnPlayerGroupMembershipForPlayerGroupMembershipGroupIdFkeyPatch
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14354,6 +14363,7 @@ input updateGroupOnCareerStatForFakePublicCareerStatsForeignKey2Patch {
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14477,6 +14487,7 @@ input updateGroupOnCareerStatsQualifiedBatterForFakePublicCareerStatsQualifiedBa
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14600,6 +14611,7 @@ input updateGroupOnLegacySeasonStatForFakePublicLegacySeasonStatsForeignKey2Patc
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14723,6 +14735,7 @@ input updateGroupOnSeasonStatForFakePublicSeasonStatsForeignKey2Patch {
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14848,6 +14861,7 @@ input updateGroupOnSeasonStatsAllTimeQualifiedBatterForFakePublicSeasonStatsAllT
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -14991,6 +15005,7 @@ input updateGroupOnUnifiedGameForFakePublicUnifiedGamesForeignKey0Patch {
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15043,6 +15058,7 @@ input GroupPatch {
   soloMode: Boolean
   urlSlug: String
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -15062,6 +15078,7 @@ input FakePublicUnifiedGamesForeignKey0GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16551,6 +16568,7 @@ input FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16601,6 +16619,7 @@ input FakePublicSeasonStatsForeignKey2GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16651,6 +16670,7 @@ input FakePublicLegacySeasonStatsForeignKey2GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16701,6 +16721,7 @@ input FakePublicCareerStatsQualifiedBattersForeignKey2GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16751,6 +16772,7 @@ input FakePublicCareerStatsForeignKey2GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16801,6 +16823,7 @@ input PlayerGroupMembershipGroupIdFkeyGroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -16881,6 +16904,7 @@ input FakePublicSeasonStatsQualifiedBattersForeignKey2GroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -19953,6 +19977,7 @@ input GameGroupIdFkeyGroupCreateInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput
@@ -20771,6 +20796,7 @@ input GroupInput {
   soloMode: Boolean
   urlSlug: String!
   allowSkippingAtBats: Boolean
+  allowSteals: Boolean
   games: GameGroupIdFkeyInverseInput
   playerGroupMemberships: PlayerGroupMembershipGroupIdFkeyInverseInput
   careerStats: FakePublicCareerStatsForeignKey2InverseInput

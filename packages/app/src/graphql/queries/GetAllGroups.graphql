@@ -5,5 +5,6 @@ query GetAllGroups {
     soloMode
     urlSlug
     allowSkippingAtBats
+    allowSteals
   }
 }

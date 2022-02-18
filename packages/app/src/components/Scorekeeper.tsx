@@ -6,12 +6,13 @@ import { ActionCreators } from 'redux-undo';
 
 import { BaseType } from '@sammyers/dc-shared';
 
+import Base from './Base';
 import EventReporter from './EventReporter';
-import PlayNotification from './PlayNotification';
 import FielderChange from './FielderChange';
+import OpponentScoreReporter from './OpponentScoreReporter';
+import PlayNotification from './PlayNotification';
 
 import {
-  getRunnerNames,
   getBatterName,
   getOnDeckBatterName,
   getInTheHoleBatterName,
@@ -21,38 +22,22 @@ import {
   isOpponentTeamBatting,
   canSkipAtBats,
 } from 'state/game/selectors';
+import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 
-import { ReactComponent as BaseIcon } from 'graphics/base.svg';
 import { ReactComponent as HomeIcon } from 'graphics/home.svg';
-import OpponentScoreReporter from './OpponentScoreReporter';
-import { gameActions } from 'state/game/slice';
 
-const Base = ({ occupied }: { occupied?: boolean }) => (
-  <Blank
-    size="large"
-    color={occupied ? 'accent-4' : undefined}
-    fillOpacity={occupied ? 1 : undefined}
-  >
-    <BaseIcon />
-  </Blank>
-);
 const HomePlate = () => (
   <Blank size="large">
     <HomeIcon />
   </Blank>
 );
 
-const Bases = () => {
+const Scorekeeper = () => {
   const dispatch = useAppDispatch();
 
   const gameInProgress = useAppSelector(isGameInProgress);
   const opponentBatting = useAppSelector(isOpponentTeamBatting);
-  const {
-    [BaseType.FIRST]: firstBaseRunner,
-    [BaseType.SECOND]: secondBaseRunner,
-    [BaseType.THIRD]: thirdBaseRunner,
-  } = useAppSelector(getRunnerNames);
   const batter = useAppSelector(getBatterName);
   const onDeck = useAppSelector(getOnDeckBatterName);
   const inTheHole = useAppSelector(getInTheHoleBatterName);
@@ -126,16 +111,13 @@ const Bases = () => {
           {!opponentBatting && (
             <>
               <Box gridArea="first-base" direction="row" justify="end" align="center">
-                <Text textAlign="center">{firstBaseRunner}</Text>
-                <Base occupied={!!firstBaseRunner} />
+                <Base base={BaseType.FIRST} />
               </Box>
               <Box gridArea="second-base" align="center">
-                <Base occupied={!!secondBaseRunner} />
-                <Text>{secondBaseRunner}</Text>
+                <Base base={BaseType.SECOND} />
               </Box>
               <Box gridArea="third-base" direction="row" align="center">
-                <Base occupied={!!thirdBaseRunner} />
-                <Text textAlign="center">{thirdBaseRunner}</Text>
+                <Base base={BaseType.THIRD} />
               </Box>
               <Box
                 gridArea="home-plate"
@@ -180,4 +162,4 @@ const Bases = () => {
   );
 };
 
-export default Bases;
+export default Scorekeeper;

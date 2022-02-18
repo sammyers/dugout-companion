@@ -1,15 +1,20 @@
 import React, { useCallback } from 'react';
-import { Box, Button, DropButton, Heading, Select, Text } from 'grommet';
+import { Box, Button, CheckBox, DropButton, Heading, Select, Text } from 'grommet';
 import { Erase, PowerReset } from 'grommet-icons';
 import { PURGE } from 'redux-persist';
 
 import GameLengthSelector from './GameLengthSelector';
 
-import { isGameInProgress, isSoloModeActive } from 'state/game/selectors';
+import {
+  canConfigureSteals,
+  canStealBases,
+  isGameInProgress,
+  isSoloModeActive,
+} from 'state/game/selectors';
+import { groupActions } from 'state/groups/slice';
 import { getAllGroups, getCurrentGroup } from 'state/groups/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
-import { groupActions } from 'state/groups/slice';
 
 const GroupSelector = () => {
   const dispatch = useAppDispatch();
@@ -72,8 +77,12 @@ const PurgeConfirm = () => {
 };
 
 const SettingsMenu = () => {
+  const dispatch = useAppDispatch();
+
   const inProgress = useAppSelector(isGameInProgress);
   const soloMode = useAppSelector(isSoloModeActive);
+  const showSteals = useAppSelector(canConfigureSteals);
+  const stealsAllowed = useAppSelector(canStealBases);
 
   return (
     <Box
@@ -82,6 +91,7 @@ const SettingsMenu = () => {
       background="white"
       border={{ color: 'dark-3', side: 'all' }}
       round="xsmall"
+      style={{ minWidth: 300 }}
     >
       <Box>
         {!inProgress && (
@@ -93,6 +103,16 @@ const SettingsMenu = () => {
           </>
         )}
         {!soloMode && <GameLengthSelector />}
+        {showSteals && (
+          <Box alignSelf="center" margin={{ vertical: 'small' }}>
+            <CheckBox
+              toggle
+              label="Allow Stolen Bases"
+              checked={stealsAllowed}
+              onChange={e => dispatch(gameActions.setStealsAllowed(e.target.checked))}
+            />
+          </Box>
+        )}
       </Box>
       {inProgress && (
         <DropButton

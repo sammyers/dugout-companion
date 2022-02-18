@@ -9,6 +9,7 @@ import LineupEditControls from './LineupEditControls';
 import LineupPlayer from './LineupPlayer';
 
 import {
+  canReorderLineup,
   getCurrentBatter,
   getFirstBatterNextInning,
   getLineupToEdit,
@@ -37,6 +38,7 @@ const Lineup = ({ teamRole }: Props) => {
   const teamName = useAppSelector(state => getTeamName(state, teamRole));
   const playerAtBat = useAppSelector(getCurrentBatter);
   const batterUpNextInning = useAppSelector(getFirstBatterNextInning);
+  const canReorder = useAppSelector(state => canReorderLineup(state, teamRole));
 
   const handleNameChange = useCallback(
     ({ currentTarget }: ChangeEvent<HTMLInputElement>) =>
@@ -106,7 +108,7 @@ const Lineup = ({ teamRole }: Props) => {
           ))}
         </Box>
         <Droppable
-          isDropDisabled={(inProgress && teamRole === TeamRole.AWAY) || !editable}
+          isDropDisabled={!canReorder}
           droppableId={teamRole === TeamRole.AWAY ? 'AWAY' : 'HOME'}
         >
           {({ innerRef, droppableProps, placeholder }) => (
