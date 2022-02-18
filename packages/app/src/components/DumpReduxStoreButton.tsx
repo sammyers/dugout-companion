@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Spinner } from 'grommet';
-import { StatusGood } from 'grommet-icons';
+import { Box, Button, DropButton, Spinner } from 'grommet';
+import { Bug, StatusGood } from 'grommet-icons';
 import { useStore } from 'react-redux';
 
 import { useDumpReduxStoreMutation } from '@sammyers/dc-shared';
@@ -22,15 +22,27 @@ const DumpReduxStoreButton = () => {
   }, [store, saveReduxDump]);
 
   return (
-    <Button
-      color="accent-2"
-      plain={false}
-      primary={success}
-      disabled={success}
-      icon={success ? <StatusGood /> : loading ? <Spinner /> : undefined}
-      label="Dump Redux Store"
-      onClick={handleClick}
-    />
+    <Box style={{ position: 'absolute', bottom: 0, right: 0 }} margin="small">
+      <DropButton
+        icon={<Bug />}
+        plain={false}
+        color="accent-2"
+        dropContent={
+          <Box pad="small" background="white">
+            <Button
+              color="accent-2"
+              plain={false}
+              primary={success}
+              disabled={success}
+              icon={success ? <StatusGood /> : loading ? <Spinner /> : undefined}
+              label="Dump Redux Store (for debug only)"
+              onClick={handleClick}
+            />
+          </Box>
+        }
+        dropProps={{ align: { bottom: 'top' } }}
+      />
+    </Box>
   );
 };
 

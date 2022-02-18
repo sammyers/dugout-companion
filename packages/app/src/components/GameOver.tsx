@@ -32,6 +32,7 @@ import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
 
 import { GameStatus } from 'state/game/types';
+import DumpReduxStoreButton from './DumpReduxStoreButton';
 
 const GameOver = () => {
   const dispatch = useAppDispatch();
@@ -202,6 +203,7 @@ const GameOver = () => {
             onClick={() => setShowConfirmExtendGame(true)}
           />
         )}
+        <DumpReduxStoreButton />
       </Box>
     </Main>
   );
