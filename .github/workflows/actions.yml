@@ -17,8 +17,12 @@ jobs:
       - run: yarn
       - name: Build shared package
         run: yarn shared build
-      - name: Build GQL server
+      - name: Build utils
+        run: yarn utils build
+      - name: Build Postgraphile server
         run: yarn server build
+      - name: Build Graphile Worker
+        run: yarn worker build
       - name: Build tablet app
         run: yarn app build
       - name: Build stats dashboard
