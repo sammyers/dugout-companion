@@ -9,6 +9,8 @@
     "dashboard": "yarn workspace @sammyers/dc-dashboard",
     "db": "yarn workspace @sammyers/dc-db",
     "server": "yarn workspace @sammyers/dc-server",
-    "shared": "yarn workspace @sammyers/dc-shared"
+    "shared": "yarn workspace @sammyers/dc-shared",
+    "utils": "yarn workspace @sammyers/dc-utils",
+    "worker": "yarn workspace @sammyers/dc-worker"
   }
 }

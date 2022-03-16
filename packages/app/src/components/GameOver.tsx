@@ -11,8 +11,18 @@ import {
   Text,
   TextInput,
 } from 'grommet';
+import { Login, Refresh, Resume } from 'grommet-icons';
 import { Navigate } from 'react-router-dom';
 
+import {
+  GroupPermissionType,
+  LoginModal,
+  LogOutButton,
+  useCurrentUser,
+  usePermission,
+} from '@sammyers/dc-shared';
+
+import DumpReduxStoreButton from './DumpReduxStoreButton';
 import SaveGameButton from './SaveGameButton';
 
 import {
@@ -26,18 +36,21 @@ import {
   wasGameSaved,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
+import { getCurrentGroupId } from 'state/groups/selectors';
 import { getNumUnsavedGames } from 'state/unsavedGames/selectors';
 import { stashCurrentGameToSaveLater } from 'state/unsavedGames/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
 
 import { GameStatus } from 'state/game/types';
-import DumpReduxStoreButton from './DumpReduxStoreButton';
 
 const GameOver = () => {
   const dispatch = useAppDispatch();
 
+  const groupId = useAppSelector(getCurrentGroupId)!;
   const online = useNetworkStatus();
+  const { currentUser } = useCurrentUser();
+  const canSaveGames = usePermission(GroupPermissionType.SAVE_GAMES, groupId);
 
   const gameStatus = useAppSelector(getGameStatus);
   const winningTeamName = useAppSelector(getWinningTeamName);
@@ -63,6 +76,7 @@ const GameOver = () => {
     [dispatch]
   );
 
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showConfirmNewGame, setShowConfirmNewGame] = useState(false);
   const [showConfirmExtendGame, setShowConfirmExtendGame] = useState(false);
 
@@ -150,6 +164,7 @@ const GameOver = () => {
           </Box>
         </Layer>
       )}
+      <LoginModal visible={showLoginModal} onClose={() => setShowLoginModal(false)} />
       <Box align="center">
         <Heading level={2} margin={{ bottom: 'small' }}>
           {winningTeamName} wins!
@@ -167,7 +182,16 @@ const GameOver = () => {
               placeholder="Title this game"
             />
           )}
-          <SaveGameButton />
+          {online &&
+            (!currentUser ? (
+              <>
+                <Notification status="critical" title="You must be logged in to save this game." />
+                <Button icon={<Login />} label="Log In" onClick={() => setShowLoginModal(true)} />
+              </>
+            ) : !canSaveGames ? (
+              <Notification status="critical" title="You do not have permission to save games." />
+            ) : null)}
+          <SaveGameButton disabled={!currentUser || !canSaveGames} />
           {online && numUnsavedGames > 0 && (
             <Notification
               status="normal"
@@ -180,6 +204,7 @@ const GameOver = () => {
         <Box gap="xsmall">
           <Box direction="row" gap="small" justify="stretch">
             <Button
+              icon={<Refresh />}
               style={{ flex: 1 }}
               color="status-ok"
               plain={false}
@@ -196,6 +221,7 @@ const GameOver = () => {
         </Box>
         {gameLength < maxGameLength && (
           <Button
+            icon={<Resume />}
             color="light-1"
             plain={false}
             disabled={saved}
@@ -203,7 +229,15 @@ const GameOver = () => {
             onClick={() => setShowConfirmExtendGame(true)}
           />
         )}
-        <DumpReduxStoreButton />
+        <Box
+          style={{ position: 'absolute', bottom: 0, right: 0 }}
+          margin="small"
+          direction="row"
+          gap="small"
+        >
+          {!!currentUser && <LogOutButton color="status-critical" />}
+          <DumpReduxStoreButton />
+        </Box>
       </Box>
     </Main>
   );

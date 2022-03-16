@@ -1,34 +1,32 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import {
-  ApolloClient,
-  ApolloProvider,
-  HttpLink,
-  InMemoryCache,
-} from "@apollo/client";
-import { BrowserRouter } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ApolloProvider } from '@apollo/client';
+import { CookiesProvider } from 'react-cookie';
+import { BrowserRouter } from 'react-router-dom';
 
-import App from "./components/App";
+import { createApolloClient, CurrentUserProvider } from '@sammyers/dc-shared';
 
-import reportWebVitals from "./reportWebVitals";
+import App from './components/App';
 
-import "./index.css";
+import reportWebVitals from './reportWebVitals';
 
-const httpLink = new HttpLink({ uri: "/graphql" });
-const apolloClient = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
+import './index.css';
+
+const apolloClient = createApolloClient();
 
 ReactDOM.render(
-  <ApolloProvider client={apolloClient}>
-    <BrowserRouter>
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    </BrowserRouter>
-  </ApolloProvider>,
-  document.getElementById("root")
+  <CookiesProvider>
+    <ApolloProvider client={apolloClient}>
+      <CurrentUserProvider>
+        <BrowserRouter>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </BrowserRouter>
+      </CurrentUserProvider>
+    </ApolloProvider>
+  </CookiesProvider>,
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

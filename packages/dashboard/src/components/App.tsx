@@ -12,11 +12,12 @@ import StatsPage, { StatsPageTitle } from './StatsPage';
 import LeadersPage, { LeadersPageTitle } from './LeadersPage';
 import PlayerPage, { PlayerPageTitle } from './PlayerPage';
 import LegacyGamePage, { LegacyGamePageTitle } from './GamePage/LegacyGamePage';
+import GroupManager from './GroupManager';
+import LandingPage from './LandingPage';
+import NewAccountPage from './NewAccountPage';
 
 import theme from '../theme';
 import { Group, groupContext } from './context';
-import GroupManager from './GroupManager';
-import LandingPage from './LandingPage';
 
 const DefaultTitle = () => <>{'Dugout Companion Dashboard'}</>;
 
@@ -75,6 +76,7 @@ const App = () => {
               </Route>
               <Route path="/">
                 <Route path="" element={<LandingPage />} />
+                <Route path="new-account" element={<NewAccountPage />} />
               </Route>
             </Routes>
           </Box>

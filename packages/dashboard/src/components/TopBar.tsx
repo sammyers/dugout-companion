@@ -4,6 +4,7 @@ import { Home, User } from 'grommet-icons';
 import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 
 import { useAllGroups } from './context';
+import { ManageCurrentUser } from '@sammyers/dc-shared';
 
 const GroupSelector = () => {
   const { groupSlug } = useParams();
@@ -44,6 +45,7 @@ const TopBar = () => {
         dropProps={{ margin: { top: 'xsmall' } }}
         dropContent={
           <Box pad="small" background="light-2" border={{ color: 'light-4' }}>
+            <ManageCurrentUser />
             <Text textAlign="center">Current Group</Text>
             <GroupSelector />
           </Box>

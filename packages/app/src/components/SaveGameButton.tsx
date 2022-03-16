@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import { Button } from 'grommet';
-import { StatusGood, WifiNone } from 'grommet-icons';
+import { Save, StatusGood, WifiNone } from 'grommet-icons';
 import _ from 'lodash';
 import { useStore } from 'react-redux';
 
@@ -15,7 +15,11 @@ import { useNetworkStatus } from 'utils/network';
 
 import { AppState } from 'state/store';
 
-const SaveGameButton = () => {
+interface Props {
+  disabled?: boolean;
+}
+
+const SaveGameButton: FC<Props> = ({ disabled }) => {
   const dispatch = useAppDispatch();
 
   const online = useNetworkStatus();
@@ -26,10 +30,20 @@ const SaveGameButton = () => {
   const saved = useAppSelector(wasGameSaved);
   const gameName = useAppSelector(getGameName);
 
-  const [createGame, { loading: createGameLoading }] = useCreateGameMutation({
-    onCompleted: () => setSuccess(true),
-  });
+  const [createGame, { loading: createGameLoading, error: createGameError }] =
+    useCreateGameMutation({
+      onCompleted: result => {
+        if (result.createGame?.game) {
+          setSuccess(true);
+        }
+      },
+      errorPolicy: 'all',
+    });
   const syncAllPlayers = useSyncAllPlayers();
+
+  if (createGameError) {
+    console.log(createGameError);
+  }
 
   const handleClick = useCallback(async () => {
     await syncAllPlayers();
@@ -52,7 +66,7 @@ const SaveGameButton = () => {
       color="light-2"
       plain={false}
       primary={success || saved}
-      disabled={!online || success || saved || !gameName}
+      disabled={disabled || !online || success || saved || !gameName}
       icon={
         success || saved ? (
           <StatusGood />
@@ -60,7 +74,9 @@ const SaveGameButton = () => {
           <Spinner />
         ) : !online ? (
           <WifiNone />
-        ) : undefined
+        ) : (
+          <Save />
+        )
       }
       label="Save Game"
       onClick={handleClick}

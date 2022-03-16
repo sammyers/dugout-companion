@@ -3,6 +3,7 @@ schema: 'schema.graphql'
 documents:
   - '../app/src/**/*.graphql'
   - '../dashboard/src/**/*.graphql'
+  - './src/**/*.graphql'
 generates:
   src/gql.tsx:
     plugins:

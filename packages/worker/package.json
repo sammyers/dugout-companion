@@ -1,0 +1,30 @@
+{
+  "name": "@sammyers/dc-worker",
+  "version": "0.0.1",
+  "description": "Graphile Worker for Dugout Companion",
+  "main": "main.ts",
+  "repository": "https://github.com/sammyers/dugout-companion",
+  "author": "Sam Myers <sammyers.dev@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start:dev": "NODE_ENV=development yarn run build:dev",
+    "build:dev": "tsc-watch -b --onSuccess 'yarn run start'",
+    "build": "tsc -b",
+    "start": "env $(node node_modules/.bin/dc-env) node build/main.js"
+  },
+  "dependencies": {
+    "@sammyers/dc-config": "0.0.2",
+    "@sammyers/dc-shared": "^0.0.3",
+    "@sammyers/dc-utils": "0.0.1",
+    "googleapis": "^95.0.0",
+    "graphile-worker": "^0.12.2",
+    "nodemailer": "^6.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.10",
+    "@types/nodemailer": "^6.4.4",
+    "ts-node": "^9.0.0",
+    "tsc-watch": "^4.2.9",
+    "typescript": "4.0.3"
+  }
+}

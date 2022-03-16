@@ -35,6 +35,7 @@ fragment UnpackedGame_Game on Game {
         success
       }
       plateAppearance {
+        batterId
         type
         contact
         fieldedBy

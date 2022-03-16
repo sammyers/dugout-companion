@@ -22,27 +22,25 @@ const DumpReduxStoreButton = () => {
   }, [store, saveReduxDump]);
 
   return (
-    <Box style={{ position: 'absolute', bottom: 0, right: 0 }} margin="small">
-      <DropButton
-        icon={<Bug />}
-        plain={false}
-        color="accent-2"
-        dropContent={
-          <Box pad="small" background="white">
-            <Button
-              color="accent-2"
-              plain={false}
-              primary={success}
-              disabled={success}
-              icon={success ? <StatusGood /> : loading ? <Spinner /> : undefined}
-              label="Dump Redux Store (for debug only)"
-              onClick={handleClick}
-            />
-          </Box>
-        }
-        dropProps={{ align: { bottom: 'top' } }}
-      />
-    </Box>
+    <DropButton
+      icon={<Bug />}
+      plain={false}
+      color="accent-2"
+      dropContent={
+        <Box pad="small" background="white">
+          <Button
+            color="accent-2"
+            plain={false}
+            primary={success}
+            disabled={success}
+            icon={success ? <StatusGood /> : loading ? <Spinner /> : undefined}
+            label="Dump Redux Store (for debug only)"
+            onClick={handleClick}
+          />
+        </Box>
+      }
+      dropProps={{ align: { bottom: 'top' } }}
+    />
   );
 };
 

@@ -68,6 +68,17 @@ services:
       - network
     ports:
       - 5434:5434
+  worker:
+    restart: always
+    image: sam4core/dc-worker
+    build:
+      context: ./packages/worker
+    env_file:
+      - ./prod.env
+    depends_on:
+      - db
+    networks:
+      - network
   app:
     restart: always
     image: sam4core/dc-app

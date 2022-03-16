@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
+import { getCurrentGroup, getCurrentGroupId, getCurrentGroupName } from 'state/groups/selectors';
 import { getAllPlayersList, getPlayerGetter } from 'state/players/selectors';
 import { formatShortName } from 'state/players/utils';
 import * as partialSelectors from './partialSelectors';
@@ -21,7 +22,6 @@ import {
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
-import { getCurrentGroup, getCurrentGroupId, getCurrentGroupName } from 'state/groups/selectors';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -378,7 +378,7 @@ export const getGameForMutation = createSelector(
   getGameHistory,
   isSoloModeActive,
   (
-    id,
+    gameId,
     name,
     groupId,
     timeStarted,
@@ -390,7 +390,7 @@ export const getGameForMutation = createSelector(
     gameEventRecords,
     soloMode
   ): GameInput => ({
-    id,
+    id: gameId,
     name,
     groupId,
     timeStarted: timeStarted!,
@@ -409,8 +409,13 @@ export const getGameForMutation = createSelector(
           : {
               create: lineups.map(({ id, lineupSpots }) => ({
                 id,
+                gameId,
                 lineupSpots: {
-                  create: lineupSpots.map((spot, battingOrder) => ({ battingOrder, ...spot })),
+                  create: lineupSpots.map((spot, battingOrder) => ({
+                    gameId,
+                    battingOrder,
+                    ...spot,
+                  })),
                 },
               })),
             },
@@ -423,10 +428,10 @@ export const getGameForMutation = createSelector(
           gameStateIndex: i,
           ..._.omit(gameState, 'lineups'),
           lineupForGameStates: {
-            create: gameState.lineups!.map(({ id }) => ({ lineupId: id })),
+            create: gameState.lineups!.map(({ id }) => ({ gameId, lineupId: id })),
           },
           baseRunners: {
-            create: gameState.baseRunners,
+            create: gameState.baseRunners.map(runner => ({ gameId, ...runner })),
           },
         })),
     },
@@ -437,25 +442,32 @@ export const getGameForMutation = createSelector(
           if (gameEvent.lineupChange) {
             event = {
               lineupChange: {
-                create: gameEvent.lineupChange,
+                create: { gameId, ...gameEvent.lineupChange },
               },
             };
           } else if (gameEvent.stolenBaseAttempt) {
             event = {
               stolenBaseAttempt: {
-                create: gameEvent.stolenBaseAttempt,
+                create: { gameId, ...gameEvent.stolenBaseAttempt },
               },
             };
           } else if (gameEvent.plateAppearance) {
             event = {
               plateAppearance: {
                 create: {
+                  gameId,
                   ...gameEvent.plateAppearance,
                   basepathMovements: {
-                    create: gameEvent.plateAppearance.basepathMovements,
+                    create: gameEvent.plateAppearance.basepathMovements.map(movement => ({
+                      gameId,
+                      ...movement,
+                    })),
                   },
                   outOnPlayRunners: {
-                    create: gameEvent.plateAppearance.outOnPlayRunners,
+                    create: gameEvent.plateAppearance.outOnPlayRunners.map(runner => ({
+                      gameId,
+                      ...runner,
+                    })),
                   },
                 },
               },
@@ -463,23 +475,23 @@ export const getGameForMutation = createSelector(
           } else if (gameEvent.soloModeOpponentInning) {
             event = {
               soloModeOpponentInning: {
-                create: gameEvent.soloModeOpponentInning,
+                create: { gameId, ...gameEvent.soloModeOpponentInning },
               },
             };
           } else if (gameEvent.atBatSkip) {
             event = {
               atBatSkip: {
-                create: gameEvent.atBatSkip,
+                create: { gameId, ...gameEvent.atBatSkip },
               },
             };
           }
 
           return {
             eventIndex,
-            gameEvent: { create: event },
+            gameEvent: { create: { gameId, ...event } },
             gameStateBeforeId,
             gameStateAfterId,
-            scoredRunners: { create: scoredRunners },
+            scoredRunners: { create: scoredRunners.map(runner => ({ gameId, ...runner })) },
           };
         }
       ),

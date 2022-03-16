@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format, parse } from 'date-fns';
-import { Box, Heading, Text } from 'grommet';
+import { Box, Button, Heading, Text } from 'grommet';
 import { Navigate, useParams } from 'react-router-dom';
 
-import { groupIdOptions, useGetPlayerProfileQuery } from '@sammyers/dc-shared';
+import { groupIdOptions, useCurrentUser, useGetPlayerProfileQuery } from '@sammyers/dc-shared';
 
 import PageBlock from '../util/PageBlock';
 import PlayerSeasonStats from './PlayerSeasonStats';
 
 import { useCurrentGroupId } from '../context';
+import ClaimAccountModal from './ClaimAccountModal';
+import _ from 'lodash';
 
 const formatDate = (dateStr: string) => {
   const date = parse(dateStr, 'yyyy-MM-dd', new Date());
@@ -19,7 +21,10 @@ const PlayerPage = () => {
   const { id } = useParams();
 
   const groupId = useCurrentGroupId();
+  const { currentUser } = useCurrentUser();
   const { data } = useGetPlayerProfileQuery(groupIdOptions(groupId, { playerId: id! }));
+
+  const [claimModalVisible, setClaimModalVisible] = useState(false);
 
   if (!data) {
     return null;
@@ -31,7 +36,12 @@ const PlayerPage = () => {
 
   return (
     <Box>
-      <PageBlock direction="row" justify="between" pad="small" wrap>
+      <ClaimAccountModal
+        visible={claimModalVisible}
+        onClose={() => setClaimModalVisible(false)}
+        player={_.pick(data.player, ['id', 'fullName'])}
+      />
+      <PageBlock pad="small" direction="row" justify="between" wrap>
         <Text margin="small" size="16px">
           Name:{' '}
           <Text weight="bold" size="inherit">
@@ -44,6 +54,13 @@ const PlayerPage = () => {
             {formatDate(data.player!.debut!)}
           </Text>
         </Text>
+        {!currentUser && !data.player.claimed && (
+          <Button
+            label="Claim Account"
+            alignSelf="center"
+            onClick={() => setClaimModalVisible(true)}
+          />
+        )}
       </PageBlock>
       <Heading level={4} margin={{ horizontal: 'medium', top: 'small', bottom: 'xsmall' }}>
         Seasons

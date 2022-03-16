@@ -3,6 +3,7 @@ query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
     id
     fullName
     debut
+    claimed
     groups: playerGroupMemberships {
       groupId
     }

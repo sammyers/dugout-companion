@@ -57,6 +57,7 @@
     "rdndmb-html5-to-touch": "^7.0.0-alpha.1",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
+    "react-cookie": "^4.1.1",
     "react-dnd": "^14.0.4",
     "react-dnd-multi-backend": "^7.0.0-alpha.4",
     "react-dom": "^17.0.1",

@@ -118,8 +118,18 @@ export const getPlateAppearanceResult = createSelector(
   getSelectedOutOnPlayOptions,
   getSelectedSacFlyRunsScored,
   getAllRunnerChoices,
-  (type, contact, fielder, outsOnPlay, runsScoredOnSacFly, runnerChoices): PlateAppearance => ({
+  getCurrentBatter,
+  (
+    type,
+    contact,
+    fielder,
+    outsOnPlay,
+    runsScoredOnSacFly,
+    runnerChoices,
+    batterId
+  ): PlateAppearance => ({
     type: type!,
+    batterId,
     contact: contact?.contactType ?? null,
     fieldedBy: fielder?.position ?? null,
     outOnPlayRunners: outsOnPlay.map(runnerId => ({ runnerId })),

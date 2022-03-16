@@ -1,0 +1,5 @@
+mutation ClaimPlayerAccount($playerId: UUID!, $email: String!) {
+  initiatePlayerClaim(input: { playerId: $playerId, email: $email }) {
+    success: boolean
+  }
+}

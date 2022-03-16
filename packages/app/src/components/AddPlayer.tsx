@@ -2,14 +2,22 @@ import React, { ChangeEvent, FC, useCallback, useMemo, useState } from 'react';
 import _ from 'lodash';
 import { Box, Text, TextInput, TextInputProps } from 'grommet';
 
-import { useAddPlayerToGroupMutation, useCreatePlayerMutation } from '@sammyers/dc-shared';
+import {
+  GroupPermissionType,
+  PermissionType,
+  useAddPlayerToGroupMutation,
+  useCreatePlayerMutation,
+  usePermission,
+} from '@sammyers/dc-shared';
 
 import { getPlayersNotInGame } from 'state/game/selectors';
 import { getCurrentGroupId } from 'state/groups/selectors';
+import { getAllPlayersList } from 'state/players/selectors';
 import { playerActions } from 'state/players/slice';
 import { formatName, getNameParts } from 'state/players/utils';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
 import { useNetworkStatus } from 'utils/network';
+import { Player } from 'state/players/types';
 
 const NEW_PLAYER_ID = 'new-player';
 
@@ -22,6 +30,7 @@ const AddPlayer: FC<Props> = ({ onSelect, placeholder = 'Add Player' }) => {
   const online = useNetworkStatus();
   const dispatch = useAppDispatch();
 
+  const allPlayers = useAppSelector(getAllPlayersList);
   const availablePlayers = useAppSelector(getPlayersNotInGame);
   const groupId = useAppSelector(getCurrentGroupId)!;
 
@@ -30,26 +39,47 @@ const AddPlayer: FC<Props> = ({ onSelect, placeholder = 'Add Player' }) => {
   const [createPlayer] = useCreatePlayerMutation();
   const [addPlayerToGroup] = useAddPlayerToGroupMutation();
 
+  const canAddPlayersToGroup = usePermission(GroupPermissionType.ADD_PLAYERS_TO_GROUP, groupId);
+  const canCreatePlayers = usePermission(PermissionType.ADD_NEW_PLAYERS);
+
   const suggestions = useMemo(() => {
     if (!searchValue.length) return [];
 
-    const existingSuggestions = availablePlayers
-      .filter(player => formatName(player).toLowerCase().startsWith(searchValue.toLowerCase()))
-      .map(player => ({
+    const playerInGroup = (player: Player) =>
+      _.some(player.groups, group => group.groupId === groupId);
+
+    const existingSuggestions = _.orderBy(
+      availablePlayers
+        .filter(player => canAddPlayersToGroup || playerInGroup(player))
+        .filter(player => formatName(player).toLowerCase().startsWith(searchValue.toLowerCase())),
+      playerInGroup,
+      ['desc']
+    ).map(player => {
+      const name = formatName(player);
+      const inGroup = playerInGroup(player);
+
+      return {
         value: player.id,
         label: (
-          <Box pad="small">
+          <Box pad="small" border={!inGroup ? { color: 'status-warning', size: '1px' } : undefined}>
             <Text>
-              {player.firstName} {player.lastName}
+              {name}
+              {inGroup ? '' : ` (not in group)`}
             </Text>
           </Box>
         ),
-      }));
+      };
+    });
 
-    if (searchValue.length > 2) {
+    const playerNameTaken = _.some(
+      allPlayers,
+      player => formatName(player).toLowerCase() === searchValue.trim().toLowerCase()
+    );
+
+    if (searchValue.length > 2 && !playerNameTaken && canCreatePlayers) {
       return existingSuggestions.concat({
         label: (
-          <Box border={{ color: 'status-ok', size: '2px' }} pad="small">
+          <Box pad="small" border={{ color: 'status-ok', size: '2px' }}>
             <Text>Add new player "{searchValue}"</Text>
           </Box>
         ),
@@ -57,7 +87,7 @@ const AddPlayer: FC<Props> = ({ onSelect, placeholder = 'Add Player' }) => {
       });
     }
     return existingSuggestions;
-  }, [availablePlayers, searchValue]);
+  }, [availablePlayers, allPlayers, searchValue, canAddPlayersToGroup, canCreatePlayers, groupId]);
 
   const handleSearchChange = useCallback(
     ({ currentTarget }: ChangeEvent<HTMLInputElement>) => setSearchValue(currentTarget.value),
@@ -69,7 +99,7 @@ const AddPlayer: FC<Props> = ({ onSelect, placeholder = 'Add Player' }) => {
       if (suggestion) {
         let playerId = suggestion.value;
         if (playerId === NEW_PLAYER_ID) {
-          const nameParts = getNameParts(searchValue);
+          const nameParts = getNameParts(searchValue.trim());
           if (online) {
             const { data } = await createPlayer({
               variables: {

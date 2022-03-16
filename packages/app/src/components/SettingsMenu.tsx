@@ -3,6 +3,8 @@ import { Box, Button, CheckBox, DropButton, Heading, Select, Text } from 'gromme
 import { Erase, PowerReset } from 'grommet-icons';
 import { PURGE } from 'redux-persist';
 
+import { ManageCurrentUser } from '@sammyers/dc-shared';
+
 import GameLengthSelector from './GameLengthSelector';
 
 import {
@@ -94,6 +96,7 @@ const SettingsMenu = () => {
       style={{ minWidth: 300 }}
     >
       <Box>
+        <ManageCurrentUser />
         {!inProgress && (
           <>
             <Heading level={5} alignSelf="center" margin="none">

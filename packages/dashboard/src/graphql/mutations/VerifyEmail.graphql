@@ -1,0 +1,5 @@
+mutation VerifyEmail($email: String!, $code: String!) {
+  verifyEmail(input: { email: $email, code: $code }) {
+    success: boolean
+  }
+}

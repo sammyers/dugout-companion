@@ -136,12 +136,7 @@ const LineupPlayer: FC<Props> = ({
                     onClick={onSubstitute}
                   />
                 )}
-                <Button
-                  plain={false}
-                  icon={<Close color="status-critical" />}
-                  color="status-critical"
-                  onClick={handleRemove}
-                />
+                <Button icon={<Close color="status-critical" />} onClick={handleRemove} />
               </ThemeContext.Extend>
             </>
           ) : (
