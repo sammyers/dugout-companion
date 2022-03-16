@@ -17,6 +17,7 @@ import { groupActions } from 'state/groups/slice';
 import { getAllGroups, getCurrentGroup } from 'state/groups/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { useNetworkStatus } from 'utils/network';
 
 const GroupSelector = () => {
   const dispatch = useAppDispatch();
@@ -80,6 +81,7 @@ const PurgeConfirm = () => {
 
 const SettingsMenu = () => {
   const dispatch = useAppDispatch();
+  const online = useNetworkStatus();
 
   const inProgress = useAppSelector(isGameInProgress);
   const soloMode = useAppSelector(isSoloModeActive);
@@ -96,7 +98,13 @@ const SettingsMenu = () => {
       style={{ minWidth: 300 }}
     >
       <Box>
-        <ManageCurrentUser />
+        {online ? (
+          <ManageCurrentUser />
+        ) : (
+          <Box alignSelf="center" margin="small">
+            <Text color="dark-4">Offline</Text>
+          </Box>
+        )}
         {!inProgress && (
           <>
             <Heading level={5} alignSelf="center" margin="none">

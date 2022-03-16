@@ -235,7 +235,7 @@ const GameOver = () => {
           direction="row"
           gap="small"
         >
-          {!!currentUser && <LogOutButton color="status-critical" />}
+          {!!currentUser && online && <LogOutButton color="status-critical" />}
           <DumpReduxStoreButton />
         </Box>
       </Box>
