@@ -2,13 +2,21 @@ import React, { useCallback, useState } from 'react';
 import { Box, Button, Heading, Text } from 'grommet';
 import { Add, Subtract } from 'grommet-icons';
 
+import EndGameNowButton from './EndGameNowButton';
+
 import { gameActions } from 'state/game/slice';
-import { useAppDispatch } from 'utils/hooks';
+import { useAppDispatch, useAppSelector } from 'utils/hooks';
+import { getHalfInning, getScoreAfterSoloModeInning } from 'state/game/selectors';
+import { _shouldShowEndGameNowButton } from 'state/game/stateHelpers';
 
 const OpponentScoreReporter = () => {
   const dispatch = useAppDispatch();
 
   const [runsScored, setRunsScored] = useState(0);
+
+  const halfInning = useAppSelector(getHalfInning);
+  const newScore = useAppSelector(state => getScoreAfterSoloModeInning(state, runsScored));
+  const showEndGameNowButton = _shouldShowEndGameNowButton(halfInning, newScore);
 
   const handleEndInning = useCallback(() => {
     dispatch(gameActions.recordSoloModeOpponentInning({ runsScored }));
@@ -29,9 +37,12 @@ const OpponentScoreReporter = () => {
           <Button icon={<Add />} onClick={() => setRunsScored(runs => runs + 1)} />
         </Box>
       </Box>
-      <Button plain={false} onClick={handleEndInning}>
-        End Inning
-      </Button>
+      <Box gap="medium">
+        <Button plain={false} onClick={handleEndInning}>
+          End Inning
+        </Button>
+        {showEndGameNowButton && <EndGameNowButton opponentRunsScored={runsScored} />}
+      </Box>
     </Box>
   );
 };

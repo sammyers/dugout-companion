@@ -11,8 +11,9 @@ import {
   Text,
   TextInput,
 } from 'grommet';
-import { Login, Refresh, Resume } from 'grommet-icons';
+import { Login, Refresh, Resume, Undo } from 'grommet-icons';
 import { Navigate } from 'react-router-dom';
+import { ActionCreators } from 'redux-undo';
 
 import {
   GroupPermissionType,
@@ -97,6 +98,10 @@ const GameOver = () => {
     setShowConfirmExtendGame(false);
   }, [dispatch]);
 
+  const undo = useCallback(() => {
+    dispatch(ActionCreators.undo());
+  }, [dispatch]);
+
   if (gameStatus === GameStatus.IN_PROGRESS) {
     return <Navigate to="/field" />;
   }
@@ -167,7 +172,9 @@ const GameOver = () => {
       <LoginModal visible={showLoginModal} onClose={() => setShowLoginModal(false)} />
       <Box align="center">
         <Heading level={2} margin={{ bottom: 'small' }}>
-          {winningTeamName} wins!
+          {winningTeamName
+            ? `${winningTeamName} win${winningTeamName.endsWith('s') ? '' : 's'}!`
+            : 'Tie game!'}
         </Heading>
         <Heading margin={{ bottom: 'large' }}>
           {awayScore} - {homeScore}
@@ -228,6 +235,11 @@ const GameOver = () => {
             label="Play another inning"
             onClick={() => setShowConfirmExtendGame(true)}
           />
+        )}
+        {!saved && (
+          <Box style={{ position: 'absolute', top: '72px', left: 0 }} margin="small">
+            <Button icon={<Undo />} onClick={undo} label="Undo Last Play" />
+          </Box>
         )}
         <Box
           style={{ position: 'absolute', bottom: 0, right: 0 }}

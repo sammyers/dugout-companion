@@ -76,7 +76,7 @@ const AddPlayer: FC<Props> = ({ onSelect, placeholder = 'Add Player' }) => {
       player => formatName(player).toLowerCase() === searchValue.trim().toLowerCase()
     );
 
-    if (searchValue.length > 2 && !playerNameTaken && canCreatePlayers) {
+    if (searchValue.length > 2 && !playerNameTaken && canCreatePlayers && canAddPlayersToGroup) {
       return existingSuggestions.concat({
         label: (
           <Box pad="small" border={{ color: 'status-ok', size: '2px' }}>

@@ -8,6 +8,7 @@ import { ManageCurrentUser } from '@sammyers/dc-shared';
 import GameLengthSelector from './GameLengthSelector';
 
 import {
+  areTiesAllowed,
   canConfigureSteals,
   canStealBases,
   isGameInProgress,
@@ -87,6 +88,7 @@ const SettingsMenu = () => {
   const soloMode = useAppSelector(isSoloModeActive);
   const showSteals = useAppSelector(canConfigureSteals);
   const stealsAllowed = useAppSelector(canStealBases);
+  const tiesAllowed = useAppSelector(areTiesAllowed);
 
   return (
     <Box
@@ -124,6 +126,14 @@ const SettingsMenu = () => {
             />
           </Box>
         )}
+        <Box alignSelf="center" margin={{ vertical: 'small' }}>
+          <CheckBox
+            toggle
+            label="Allow Tie Game"
+            checked={tiesAllowed}
+            onChange={e => dispatch(gameActions.setTiesAllowed(e.target.checked))}
+          />
+        </Box>
       </Box>
       {inProgress && (
         <DropButton

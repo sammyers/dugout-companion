@@ -33,6 +33,7 @@ import {
   ContactQuality,
   PlateAppearanceType,
   BaseType,
+  EarlyGameEndReason,
 } from '@sammyers/dc-shared';
 import {
   LineupSpot,
@@ -168,12 +169,14 @@ export const makeGameEvent = ({
   lineupChange = null,
   soloModeOpponentInning = null,
   atBatSkip = null,
+  earlyGameEnd = null,
 }: Partial<GameEventContainer>): GameEventContainer => ({
   plateAppearance,
   stolenBaseAttempt,
   lineupChange,
   soloModeOpponentInning,
   atBatSkip,
+  earlyGameEnd,
 });
 
 type RunnersScoredCallback = (
@@ -222,23 +225,28 @@ const recordAndApplyGameEvent = (
     gameStateAfterId: state.gameState!.id,
   });
 
+  const { allowTies } = state;
   const { score, outs, halfInning, inning } = state.gameState!;
   const [awayScore, homeScore] = score;
-  const homeLeadingAfterTop = outs === 3 && halfInning === HalfInning.TOP && awayScore < homeScore;
+  const inningOver = outs === 3;
+  const homeLeadingAfterTop = inningOver && halfInning === HalfInning.TOP && awayScore < homeScore;
   const awayLeadingAfterBottom =
-    outs === 3 && halfInning === HalfInning.BOTTOM && awayScore > homeScore;
+    inningOver && halfInning === HalfInning.BOTTOM && awayScore > homeScore;
+  const tieGameAfterBottom = inningOver && halfInning === HalfInning.BOTTOM && allowTies;
 
   if (
-    inning >= state.gameLength &&
-    (homeLeadingAfterTop ||
-      awayLeadingAfterBottom ||
-      (halfInning === HalfInning.BOTTOM && homeScore > awayScore))
+    gameEvent.earlyGameEnd ||
+    (inning >= state.gameLength &&
+      ((halfInning === HalfInning.BOTTOM && homeScore > awayScore) || // walk off
+        homeLeadingAfterTop ||
+        awayLeadingAfterBottom ||
+        tieGameAfterBottom))
   ) {
     state.prevGameStates.push(state.gameState!);
     state.status = GameStatus.FINISHED;
-    const winningScore = _.max(score)!;
+    const losingScore = _.min(score)!;
     state.teams.forEach((team, i) => {
-      team.winner = score[i] === winningScore;
+      team.winner = score[i] > losingScore;
     });
   } else {
     cleanUpAfterGameEvent(state, !!(gameEvent.plateAppearance || gameEvent.atBatSkip));
@@ -258,6 +266,10 @@ const getNextPlayerAfterLineupChange = (
     return newLineup[0].playerId;
   }
   return newLineup[lineupIndex].playerId;
+};
+
+export const applyEarlyGameEnd = (state: AppGameState, reason: EarlyGameEndReason) => {
+  recordAndApplyGameEvent(state, () => makeGameEvent({ earlyGameEnd: { reason } }));
 };
 
 export const applyMidGameLineupChange = (
@@ -448,9 +460,25 @@ export const initStateForSoloMode = (state: AppGameState, soloMode: boolean, tea
       FieldingPosition.MIDDLE_INFIELD,
     ]);
     state.gameLength = 7;
+    state.allowTies = true;
   } else {
     state.soloModeOpponentPositions = [];
     state.gameLength = DEFAULT_GAME_LENGTH;
+    state.allowTies = false;
   }
   state.soloMode = soloMode;
+};
+
+export const _shouldShowEndGameNowButton = (
+  halfInning: HalfInning,
+  [awayScore, homeScore]: number[]
+) => {
+  if (awayScore === homeScore) return false;
+  if (halfInning === HalfInning.TOP && awayScore < homeScore) {
+    return false;
+  }
+  if (halfInning === HalfInning.BOTTOM && homeScore < awayScore) {
+    return false;
+  }
+  return true;
 };

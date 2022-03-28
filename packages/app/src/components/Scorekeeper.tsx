@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Grid, Box, Text, Button } from 'grommet';
+import { Grid, Box, Text, Button, CheckBox } from 'grommet';
 import { Blank, ChapterNext, Edit, Redo, Undo } from 'grommet-icons';
 import { Navigate } from 'react-router-dom';
 import { ActionCreators } from 'redux-undo';
@@ -7,6 +7,7 @@ import { ActionCreators } from 'redux-undo';
 import { BaseType } from '@sammyers/dc-shared';
 
 import Base from './Base';
+import EndGameNowButton from './EndGameNowButton';
 import EventReporter from './EventReporter';
 import FielderChange from './FielderChange';
 import OpponentScoreReporter from './OpponentScoreReporter';
@@ -21,6 +22,9 @@ import {
   isRedoPossible,
   isOpponentTeamBatting,
   canSkipAtBats,
+  hasGameTimeExpired,
+  shouldShowTimeLimitExpiredToggle,
+  shouldShowEndGameNowButton,
 } from 'state/game/selectors';
 import { gameActions } from 'state/game/slice';
 import { useAppDispatch, useAppSelector } from 'utils/hooks';
@@ -44,6 +48,9 @@ const Scorekeeper = () => {
   const undoPossible = useAppSelector(isUndoPossible);
   const redoPossible = useAppSelector(isRedoPossible);
   const skippableAtBats = useAppSelector(canSkipAtBats);
+  const timeExpired = useAppSelector(hasGameTimeExpired);
+  const showTimeLimitExpiredToggle = useAppSelector(shouldShowTimeLimitExpiredToggle);
+  const showEndGameNowButton = useAppSelector(shouldShowEndGameNowButton);
 
   const undo = useCallback(() => {
     dispatch(ActionCreators.undo());
@@ -71,7 +78,7 @@ const Scorekeeper = () => {
       <Box flex ref={boxRef}>
         <Grid
           fill
-          rows={['xsmall', 'auto', 'xsmall']}
+          rows={['xsmall', 'flex', 'auto']}
           columns={['240px', 'auto', '240px']}
           areas={[
             ['undo-redo', 'second-base', 'fielder-change'],
@@ -97,8 +104,8 @@ const Scorekeeper = () => {
               onClick={() => setShowFielderChangeUI(true)}
             />
           </Box>
-          {skippableAtBats && (
-            <Box gridArea="extra-options" margin="medium" align="end" justify="center">
+          <Box gridArea="extra-options" margin="medium" align="end" justify="center" gap="small">
+            {skippableAtBats && (
               <Button
                 size="small"
                 plain={false}
@@ -106,8 +113,22 @@ const Scorekeeper = () => {
                 label="Skip At-Bat"
                 onClick={skipAtBat}
               />
-            </Box>
-          )}
+            )}
+            {showTimeLimitExpiredToggle && (
+              <CheckBox
+                color="status-critical"
+                toggle
+                label={
+                  <Text color={timeExpired ? 'status-critical' : undefined}>
+                    Time Limit Expired
+                  </Text>
+                }
+                checked={timeExpired}
+                onChange={e => dispatch(gameActions.setGameTimeExpired(e.target.checked))}
+              />
+            )}
+            {showEndGameNowButton && !opponentBatting && <EndGameNowButton />}
+          </Box>
           {!opponentBatting && (
             <>
               <Box gridArea="first-base" direction="row" justify="end" align="center">
@@ -123,9 +144,10 @@ const Scorekeeper = () => {
                 gridArea="home-plate"
                 justify="end"
                 align="center"
+                alignSelf="end"
                 background="neutral-2"
                 round="small"
-                pad={{ horizontal: 'small' }}
+                pad="small"
                 margin={{ bottom: 'xsmall' }}
                 style={{ justifySelf: 'center' }}
               >

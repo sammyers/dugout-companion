@@ -102,6 +102,23 @@ type Query implements Node {
     condition: CareerStatsQualifiedBatterCondition
   ): [CareerStatsQualifiedBatter!]
 
+  """Reads a set of `EarlyGameEnd`."""
+  earlyGameEnds(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EarlyGameEnd`."""
+    orderBy: [EarlyGameEndsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EarlyGameEndCondition
+  ): [EarlyGameEnd!]
+
   """Reads a set of `Field`."""
   fields(
     """Only read the first `n` values of the set."""
@@ -767,6 +784,7 @@ type Query implements Node {
   atBatSkip(id: UUID!): AtBatSkip
   baseRunner(gameStateId: UUID!, runnerId: UUID!): BaseRunner
   basepathMovement(plateAppearanceId: UUID!, runnerId: UUID!): BasepathMovement
+  earlyGameEnd(id: UUID!): EarlyGameEnd
   field(id: UUID!): Field
   game(id: UUID!): Game
   gameByGroupIdAndName(groupId: UUID!, name: String!): Game
@@ -880,6 +898,14 @@ type Query implements Node {
     """
     nodeId: ID!
   ): BasepathMovement
+
+  """Reads a single `EarlyGameEnd` using its globally unique `ID`."""
+  earlyGameEndByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `EarlyGameEnd`.
+    """
+    nodeId: ID!
+  ): EarlyGameEnd
 
   """Reads a single `Field` using its globally unique `ID`."""
   fieldByNodeId(
@@ -2126,6 +2152,23 @@ type Game implements Node {
     condition: AtBatSkipCondition
   ): [AtBatSkip!]!
 
+  """Reads and enables pagination through a set of `EarlyGameEnd`."""
+  earlyGameEnds(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `EarlyGameEnd`."""
+    orderBy: [EarlyGameEndsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: EarlyGameEndCondition
+  ): [EarlyGameEnd!]!
+
   """Reads and enables pagination through a set of `GameBattingLine`."""
   gameBattingLines(
     """Only read the first `n` values of the set."""
@@ -2788,6 +2831,7 @@ type GameEvent implements Node {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID!
+  earlyGameEndId: UUID
 
   """Reads a single `PlateAppearance` that is related to this `GameEvent`."""
   plateAppearance: PlateAppearance
@@ -2810,6 +2854,9 @@ type GameEvent implements Node {
 
   """Reads a single `Game` that is related to this `GameEvent`."""
   game: Game
+
+  """Reads a single `EarlyGameEnd` that is related to this `GameEvent`."""
+  earlyGameEnd: EarlyGameEnd
 
   """Reads and enables pagination through a set of `GameEventRecord`."""
   gameEventRecords(
@@ -3046,6 +3093,18 @@ type SoloModeOpponentInning implements Node {
   """
   Reads a single `Game` that is related to this `SoloModeOpponentInning`.
   """
+  game: Game
+}
+
+type EarlyGameEnd implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: UUID!
+  gameId: UUID!
+
+  """Reads a single `Game` that is related to this `EarlyGameEnd`."""
   game: Game
 }
 
@@ -3416,6 +3475,29 @@ input AtBatSkipCondition {
 
   """Checks for equality with the object’s `batterId` field."""
   batterId: UUID
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: UUID
+}
+
+"""Methods to use when ordering `EarlyGameEnd`."""
+enum EarlyGameEndsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `EarlyGameEnd` object types. All fields are
+tested for equality and combined with a logical ‘and.’
+"""
+input EarlyGameEndCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: UUID
 
   """Checks for equality with the object’s `gameId` field."""
   gameId: UUID
@@ -5403,6 +5485,8 @@ enum GameEventsOrderBy {
   AT_BAT_SKIP_ID_DESC
   GAME_ID_ASC
   GAME_ID_DESC
+  EARLY_GAME_END_ID_ASC
+  EARLY_GAME_END_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -5434,6 +5518,9 @@ input GameEventCondition {
 
   """Checks for equality with the object’s `gameId` field."""
   gameId: UUID
+
+  """Checks for equality with the object’s `earlyGameEndId` field."""
+  earlyGameEndId: UUID
 }
 
 """Methods to use when ordering `Group`."""
@@ -6008,6 +6095,14 @@ type Mutation {
     input: CreateBasepathMovementInput!
   ): CreateBasepathMovementPayload
 
+  """Creates a single `EarlyGameEnd`."""
+  createEarlyGameEnd(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateEarlyGameEndInput!
+  ): CreateEarlyGameEndPayload
+
   """Creates a single `Field`."""
   createField(
     """
@@ -6251,6 +6346,24 @@ type Mutation {
     """
     input: UpdateBasepathMovementInput!
   ): UpdateBasepathMovementPayload
+
+  """
+  Updates a single `EarlyGameEnd` using its globally unique id and a patch.
+  """
+  updateEarlyGameEndByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEarlyGameEndByNodeIdInput!
+  ): UpdateEarlyGameEndPayload
+
+  """Updates a single `EarlyGameEnd` using a unique key and a patch."""
+  updateEarlyGameEnd(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateEarlyGameEndInput!
+  ): UpdateEarlyGameEndPayload
 
   """Updates a single `Field` using its globally unique id and a patch."""
   updateFieldByNodeId(
@@ -6691,6 +6804,22 @@ type Mutation {
     """
     input: DeleteBasepathMovementInput!
   ): DeleteBasepathMovementPayload
+
+  """Deletes a single `EarlyGameEnd` using its globally unique id."""
+  deleteEarlyGameEndByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEarlyGameEndByNodeIdInput!
+  ): DeleteEarlyGameEndPayload
+
+  """Deletes a single `EarlyGameEnd` using a unique key."""
+  deleteEarlyGameEnd(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteEarlyGameEndInput!
+  ): DeleteEarlyGameEndPayload
 
   """Deletes a single `Field` using its globally unique id."""
   deleteFieldByNodeId(
@@ -7712,6 +7841,7 @@ input updateGameOnTeamForTeamGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -7931,6 +8061,7 @@ input updateGameOnGameForGameGroupIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -8096,6 +8227,7 @@ input updateGameOnGameForGameFieldIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -8694,6 +8826,7 @@ input updateGameOnLineupForLineupGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -9124,6 +9257,7 @@ input updateGameOnPlateAppearanceForPlateAppearanceGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -9310,6 +9444,7 @@ input updateGameOnLineupSpotForLineupSpotGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -10473,6 +10608,7 @@ input updateGameOnGameStateForGameStateGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -10629,6 +10765,7 @@ input updateGameOnBasepathMovementForBasepathMovementGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -10783,6 +10920,7 @@ input updateGameOnOutOnPlayRunnerForOutOnPlayRunnerGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -10937,6 +11075,7 @@ input updateGameOnStolenBaseAttemptForStolenBaseAttemptGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -11239,6 +11378,7 @@ input updateGameOnLineupChangeForLineupChangeGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -11333,12 +11473,14 @@ input updateGameEventOnGameEventForGameEventGameIdFkeyPatch {
   lineupChangeId: UUID
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -11474,12 +11616,14 @@ input updateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -11609,12 +11753,14 @@ input updateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -11744,12 +11890,14 @@ input updateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -11923,6 +12071,7 @@ input updateGameOnSoloModeOpponentInningForSoloModeOpponentInningGameIdFkeyPatch
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -12706,6 +12855,7 @@ input updateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -12861,6 +13011,7 @@ input updateGameOnBaseRunnerForBaseRunnerGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -13402,6 +13553,7 @@ input updateGameOnLineupForGameStateForLineupForGameStateGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -13862,12 +14014,14 @@ input updateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPatch {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -14042,6 +14196,7 @@ input updateGameOnAtBatSkipForAtBatSkipGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -14510,12 +14665,14 @@ input updateGameEventOnGameEventForGameEventAtBatSkipIdFkeyPatch {
   lineupChangeId: UUID
   soloModeOpponentInningId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -14603,6 +14760,7 @@ input updateGameOnGameEventForGameEventGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -14735,12 +14893,425 @@ input updateGameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyPatch {
   lineupChangeId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
+  gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `earlyGameEnd` in the `GameEventInput` mutation.
+"""
+input GameEventEarlyGameEndIdFkeyInput {
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  connectById: EarlyGameEndEarlyGameEndPkeyConnect
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  connectByNodeId: EarlyGameEndNodeIdConnect
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  deleteById: EarlyGameEndEarlyGameEndPkeyDelete
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  deleteByNodeId: EarlyGameEndNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship.
+  """
+  updateById: EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyUsingEarlyGameEndPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship.
+  """
+  updateByNodeId: GameEventOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate
+
+  """
+  A `EarlyGameEndInput` object that will be created and connected to this object.
+  """
+  create: GameEventEarlyGameEndIdFkeyEarlyGameEndCreateInput
+}
+
+"""The fields on `earlyGameEnd` to look up the row to connect."""
+input EarlyGameEndEarlyGameEndPkeyConnect {
+  id: UUID!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input EarlyGameEndNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `earlyGameEnd` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `earlyGameEnd` to look up the row to delete."""
+input EarlyGameEndEarlyGameEndPkeyDelete {
+  id: UUID!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input EarlyGameEndNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `earlyGameEnd` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `earlyGameEnd` to look up the row to update."""
+input EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyUsingEarlyGameEndPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `earlyGameEnd` being updated.
+  """
+  patch: updateEarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `earlyGameEnd` being updated.
+"""
+input updateEarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyPatch {
+  id: UUID
+  gameId: UUID
+  game: EarlyGameEndGameIdFkeyInput
+  gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `game` in the `EarlyGameEndInput` mutation.
+"""
+input EarlyGameEndGameIdFkeyInput {
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectById: GameGamePkeyConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByGroupIdAndName: GameGameNameUniqPerGroupConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  connectByNodeId: GameNodeIdConnect
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteById: GameGamePkeyDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByGroupIdAndName: GameGameNameUniqPerGroupDelete
+
+  """The primary key(s) for `game` for the far side of the relationship."""
+  deleteByNodeId: GameNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateById: GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGamePkeyUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByGroupIdAndName: GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGameNameUniqPerGroupUpdate
+
+  """
+  The primary key(s) and patch data for `game` for the far side of the relationship.
+  """
+  updateByNodeId: EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate
+
+  """
+  A `GameInput` object that will be created and connected to this object.
+  """
+  create: EarlyGameEndGameIdFkeyGameCreateInput
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGamePkeyUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `game` being updated.
+"""
+input updateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch {
+  id: UUID
+  groupId: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]
+  gameLength: Int
+  timeStarted: Datetime
+  timeEnded: Datetime
+  timeSaved: Datetime
+  soloMode: Boolean
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  lineups: LineupGameIdFkeyInverseInput
+  lineupSpots: LineupSpotGameIdFkeyInverseInput
+  plateAppearances: PlateAppearanceGameIdFkeyInverseInput
+  basepathMovements: BasepathMovementGameIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerGameIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptGameIdFkeyInverseInput
+  lineupChanges: LineupChangeGameIdFkeyInverseInput
+  gameEvents: GameEventGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  baseRunners: BaseRunnerGameIdFkeyInverseInput
+  lineupForGameStates: LineupForGameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  scoredRunners: ScoredRunnerGameIdFkeyInverseInput
+  soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
+  atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
+  unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
+}
+
+"""
+Input for the nested mutation of `atBatSkip` in the `GameInput` mutation.
+"""
+input AtBatSkipGameIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `atBatSkip` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `atBatSkip` for the far side of the relationship.
+  """
+  connectById: [AtBatSkipAtBatSkipPkeyConnect!]
+
+  """
+  The primary key(s) for `atBatSkip` for the far side of the relationship.
+  """
+  connectByNodeId: [AtBatSkipNodeIdConnect!]
+
+  """
+  The primary key(s) for `atBatSkip` for the far side of the relationship.
+  """
+  deleteById: [AtBatSkipAtBatSkipPkeyDelete!]
+
+  """
+  The primary key(s) for `atBatSkip` for the far side of the relationship.
+  """
+  deleteByNodeId: [AtBatSkipNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `atBatSkip` for the far side of the relationship.
+  """
+  updateById: [AtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyUsingAtBatSkipPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `atBatSkip` for the far side of the relationship.
+  """
+  updateByNodeId: [GameOnAtBatSkipForAtBatSkipGameIdFkeyNodeIdUpdate!]
+
+  """
+  A `AtBatSkipInput` object that will be created and connected to this object.
+  """
+  create: [AtBatSkipGameIdFkeyAtBatSkipCreateInput!]
+}
+
+"""The fields on `atBatSkip` to look up the row to update."""
+input AtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyUsingAtBatSkipPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `atBatSkip` being updated.
+  """
+  patch: updateAtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `atBatSkip` being updated.
+"""
+input updateAtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyPatch {
+  id: UUID
+  batterId: UUID
+  player: AtBatSkipBatterIdFkeyInput
+  game: AtBatSkipGameIdFkeyInput
+  gameEvents: GameEventAtBatSkipIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameOnAtBatSkipForAtBatSkipGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `atBatSkip` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `atBatSkip` being updated.
+  """
+  patch: AtBatSkipPatch!
+}
+
+"""
+Represents an update to a `AtBatSkip`. Fields that are set will be updated.
+"""
+input AtBatSkipPatch {
+  id: UUID
+  batterId: UUID
+  gameId: UUID
+  player: AtBatSkipBatterIdFkeyInput
+  game: AtBatSkipGameIdFkeyInput
+  gameEvents: GameEventAtBatSkipIdFkeyInverseInput
+}
+
+"""The `atBatSkip` to be created by this mutation."""
+input AtBatSkipGameIdFkeyAtBatSkipCreateInput {
+  id: UUID
+  batterId: UUID
+  player: AtBatSkipBatterIdFkeyInput
+  game: AtBatSkipGameIdFkeyInput
+  gameEvents: GameEventAtBatSkipIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `earlyGameEnd` in the `GameInput` mutation.
+"""
+input EarlyGameEndGameIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `earlyGameEnd` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  connectById: [EarlyGameEndEarlyGameEndPkeyConnect!]
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  connectByNodeId: [EarlyGameEndNodeIdConnect!]
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  deleteById: [EarlyGameEndEarlyGameEndPkeyDelete!]
+
+  """
+  The primary key(s) for `earlyGameEnd` for the far side of the relationship.
+  """
+  deleteByNodeId: [EarlyGameEndNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship.
+  """
+  updateById: [EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingEarlyGameEndPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship.
+  """
+  updateByNodeId: [GameOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate!]
+
+  """
+  A `EarlyGameEndInput` object that will be created and connected to this object.
+  """
+  create: [EarlyGameEndGameIdFkeyEarlyGameEndCreateInput!]
+}
+
+"""The fields on `earlyGameEnd` to look up the row to update."""
+input EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingEarlyGameEndPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `earlyGameEnd` being updated.
+  """
+  patch: updateEarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `earlyGameEnd` being updated.
+"""
+input updateEarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch {
+  id: UUID
+  game: EarlyGameEndGameIdFkeyInput
+  gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `gameEvent` in the `EarlyGameEndInput` mutation.
+"""
+input GameEventEarlyGameEndIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `gameEvent` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  connectById: [GameEventGameEventPkeyConnect!]
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  connectByNodeId: [GameEventNodeIdConnect!]
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  deleteById: [GameEventGameEventPkeyDelete!]
+
+  """
+  The primary key(s) for `gameEvent` for the far side of the relationship.
+  """
+  deleteByNodeId: [GameEventNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `gameEvent` for the far side of the relationship.
+  """
+  updateById: [GameEventOnGameEventForGameEventEarlyGameEndIdFkeyUsingGameEventPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `gameEvent` for the far side of the relationship.
+  """
+  updateByNodeId: [EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate!]
+
+  """
+  A `GameEventInput` object that will be created and connected to this object.
+  """
+  create: [GameEventEarlyGameEndIdFkeyGameEventCreateInput!]
+}
+
+"""The fields on `gameEvent` to look up the row to update."""
+input GameEventOnGameEventForGameEventEarlyGameEndIdFkeyUsingGameEventPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `gameEvent` being updated.
+  """
+  patch: updateGameEventOnGameEventForGameEventEarlyGameEndIdFkeyPatch!
+  id: UUID!
+}
+
+"""
+An object where the defined keys will be set on the `gameEvent` being updated.
+"""
+input updateGameEventOnGameEventForGameEventEarlyGameEndIdFkeyPatch {
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
+  atBatSkipId: UUID
+  gameId: UUID
+  plateAppearance: GameEventPlateAppearanceIdFkeyInput
+  stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
+  lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
+  atBatSkip: GameEventAtBatSkipIdFkeyInput
+  game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -14981,107 +15552,9 @@ input updateGameOnScoredRunnerForScoredRunnerGameIdFkeyPatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
-}
-
-"""
-Input for the nested mutation of `atBatSkip` in the `GameInput` mutation.
-"""
-input AtBatSkipGameIdFkeyInverseInput {
-  """
-  Flag indicating whether all other `atBatSkip` records that match this relationship should be removed.
-  """
-  deleteOthers: Boolean
-
-  """
-  The primary key(s) for `atBatSkip` for the far side of the relationship.
-  """
-  connectById: [AtBatSkipAtBatSkipPkeyConnect!]
-
-  """
-  The primary key(s) for `atBatSkip` for the far side of the relationship.
-  """
-  connectByNodeId: [AtBatSkipNodeIdConnect!]
-
-  """
-  The primary key(s) for `atBatSkip` for the far side of the relationship.
-  """
-  deleteById: [AtBatSkipAtBatSkipPkeyDelete!]
-
-  """
-  The primary key(s) for `atBatSkip` for the far side of the relationship.
-  """
-  deleteByNodeId: [AtBatSkipNodeIdDelete!]
-
-  """
-  The primary key(s) and patch data for `atBatSkip` for the far side of the relationship.
-  """
-  updateById: [AtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyUsingAtBatSkipPkeyUpdate!]
-
-  """
-  The primary key(s) and patch data for `atBatSkip` for the far side of the relationship.
-  """
-  updateByNodeId: [GameOnAtBatSkipForAtBatSkipGameIdFkeyNodeIdUpdate!]
-
-  """
-  A `AtBatSkipInput` object that will be created and connected to this object.
-  """
-  create: [AtBatSkipGameIdFkeyAtBatSkipCreateInput!]
-}
-
-"""The fields on `atBatSkip` to look up the row to update."""
-input AtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyUsingAtBatSkipPkeyUpdate {
-  """
-  An object where the defined keys will be set on the `atBatSkip` being updated.
-  """
-  patch: updateAtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyPatch!
-  id: UUID!
-}
-
-"""
-An object where the defined keys will be set on the `atBatSkip` being updated.
-"""
-input updateAtBatSkipOnAtBatSkipForAtBatSkipGameIdFkeyPatch {
-  id: UUID
-  batterId: UUID
-  player: AtBatSkipBatterIdFkeyInput
-  game: AtBatSkipGameIdFkeyInput
-  gameEvents: GameEventAtBatSkipIdFkeyInverseInput
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input GameOnAtBatSkipForAtBatSkipGameIdFkeyNodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `atBatSkip` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `atBatSkip` being updated.
-  """
-  patch: AtBatSkipPatch!
-}
-
-"""
-Represents an update to a `AtBatSkip`. Fields that are set will be updated.
-"""
-input AtBatSkipPatch {
-  id: UUID
-  batterId: UUID
-  gameId: UUID
-  player: AtBatSkipBatterIdFkeyInput
-  game: AtBatSkipGameIdFkeyInput
-  gameEvents: GameEventAtBatSkipIdFkeyInverseInput
-}
-
-"""The `atBatSkip` to be created by this mutation."""
-input AtBatSkipGameIdFkeyAtBatSkipCreateInput {
-  id: UUID
-  batterId: UUID
-  player: AtBatSkipBatterIdFkeyInput
-  game: AtBatSkipGameIdFkeyInput
-  gameEvents: GameEventAtBatSkipIdFkeyInverseInput
 }
 
 """
@@ -15994,6 +16467,7 @@ input updateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1Patch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -18284,6 +18758,7 @@ input updateGameOnUnifiedGameForFakePublicUnifiedGamesForeignKey1Patch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -18341,6 +18816,7 @@ input GamePatch {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -18375,6 +18851,7 @@ input FakePublicUnifiedGamesForeignKey1GameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -20426,6 +20903,7 @@ input FakePublicGameBattingLinesForeignKey1GameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -20865,6 +21343,7 @@ input ScoredRunnerGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -20962,7 +21441,7 @@ input GameEventRecordGameEventIdFkeyGameEventRecordCreateInput {
 }
 
 """The globally unique `ID` look up for the row to update."""
-input SoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyNodeIdUpdate {
+input EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate {
   """
   The globally unique `ID` which identifies a single `gameEvent` to be connected.
   """
@@ -20985,13 +21464,156 @@ input GameEventPatch {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
+}
+
+"""The `gameEvent` to be created by this mutation."""
+input GameEventEarlyGameEndIdFkeyGameEventCreateInput {
+  id: UUID
+  plateAppearanceId: UUID
+  stolenBaseAttemptId: UUID
+  lineupChangeId: UUID
+  soloModeOpponentInningId: UUID
+  atBatSkipId: UUID
+  gameId: UUID
+  plateAppearance: GameEventPlateAppearanceIdFkeyInput
+  stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
+  lineupChange: GameEventLineupChangeIdFkeyInput
+  soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
+  atBatSkip: GameEventAtBatSkipIdFkeyInput
+  game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
+  gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `earlyGameEnd` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `earlyGameEnd` being updated.
+  """
+  patch: EarlyGameEndPatch!
+}
+
+"""
+Represents an update to a `EarlyGameEnd`. Fields that are set will be updated.
+"""
+input EarlyGameEndPatch {
+  id: UUID
+  gameId: UUID
+  game: EarlyGameEndGameIdFkeyInput
+  gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
+}
+
+"""The `earlyGameEnd` to be created by this mutation."""
+input EarlyGameEndGameIdFkeyEarlyGameEndCreateInput {
+  id: UUID
+  game: EarlyGameEndGameIdFkeyInput
+  gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
+}
+
+"""The fields on `game` to look up the row to update."""
+input GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGameNameUniqPerGroupUpdate {
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: updateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch!
+  groupId: UUID!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `game` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `game` being updated.
+  """
+  patch: GamePatch!
+}
+
+"""The `game` to be created by this mutation."""
+input EarlyGameEndGameIdFkeyGameCreateInput {
+  id: UUID
+  groupId: UUID
+  name: String
+  fieldId: UUID
+  score: [Int]!
+  gameLength: Int
+  timeStarted: Datetime!
+  timeEnded: Datetime!
+  timeSaved: Datetime
+  soloMode: Boolean
+  group: GameGroupIdFkeyInput
+  field: GameFieldIdFkeyInput
+  teams: TeamGameIdFkeyInverseInput
+  lineups: LineupGameIdFkeyInverseInput
+  lineupSpots: LineupSpotGameIdFkeyInverseInput
+  plateAppearances: PlateAppearanceGameIdFkeyInverseInput
+  basepathMovements: BasepathMovementGameIdFkeyInverseInput
+  outOnPlayRunners: OutOnPlayRunnerGameIdFkeyInverseInput
+  stolenBaseAttempts: StolenBaseAttemptGameIdFkeyInverseInput
+  lineupChanges: LineupChangeGameIdFkeyInverseInput
+  gameEvents: GameEventGameIdFkeyInverseInput
+  gameStates: GameStateGameIdFkeyInverseInput
+  baseRunners: BaseRunnerGameIdFkeyInverseInput
+  lineupForGameStates: LineupForGameStateGameIdFkeyInverseInput
+  gameEventRecords: GameEventRecordGameIdFkeyInverseInput
+  scoredRunners: ScoredRunnerGameIdFkeyInverseInput
+  soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
+  atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
+  gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
+  unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input GameEventOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `earlyGameEnd` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `earlyGameEnd` being updated.
+  """
+  patch: EarlyGameEndPatch!
+}
+
+"""The `earlyGameEnd` to be created by this mutation."""
+input GameEventEarlyGameEndIdFkeyEarlyGameEndCreateInput {
+  id: UUID
+  gameId: UUID
+  game: EarlyGameEndGameIdFkeyInput
+  gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input SoloModeOpponentInningOnGameEventForGameEventSoloModeOpponentInningIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `gameEvent` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `gameEvent` being updated.
+  """
+  patch: GameEventPatch!
 }
 
 """The `gameEvent` to be created by this mutation."""
@@ -21002,12 +21624,14 @@ input GameEventSoloModeOpponentInningIdFkeyGameEventCreateInput {
   lineupChangeId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -21096,6 +21720,7 @@ input GameEventGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -21121,12 +21746,14 @@ input GameEventAtBatSkipIdFkeyGameEventCreateInput {
   lineupChangeId: UUID
   soloModeOpponentInningId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -21362,6 +21989,7 @@ input AtBatSkipGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -21411,12 +22039,14 @@ input GameEventRecordGameEventIdFkeyGameEventCreateInput {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -21669,6 +22299,7 @@ input LineupForGameStateGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -21876,6 +22507,7 @@ input BaseRunnerGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -21969,6 +22601,7 @@ input GameEventRecordGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -22309,6 +22942,7 @@ input SoloModeOpponentInningGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -22356,12 +22990,14 @@ input GameEventLineupChangeIdFkeyGameEventCreateInput {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -22410,12 +23046,14 @@ input GameEventStolenBaseAttemptIdFkeyGameEventCreateInput {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -22477,12 +23115,14 @@ input GameEventPlateAppearanceIdFkeyGameEventCreateInput {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -22556,12 +23196,14 @@ input GameEventGameIdFkeyGameEventCreateInput {
   lineupChangeId: UUID
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -22618,6 +23260,7 @@ input LineupChangeGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -22747,6 +23390,7 @@ input StolenBaseAttemptGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -22827,6 +23471,7 @@ input OutOnPlayRunnerGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -22918,6 +23563,7 @@ input BasepathMovementGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -23013,6 +23659,7 @@ input GameStateGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -23532,6 +24179,7 @@ input LineupSpotGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -23647,6 +24295,7 @@ input PlateAppearanceGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -23859,6 +24508,7 @@ input LineupGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -24154,6 +24804,7 @@ input GameFieldIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -24241,6 +24892,7 @@ input GameGroupIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -24349,6 +25001,7 @@ input TeamGameIdFkeyGameCreateInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -24631,6 +25284,46 @@ input BasepathMovementInput {
   plateAppearance: BasepathMovementPlateAppearanceIdFkeyInput
   player: BasepathMovementRunnerIdFkeyInput
   game: BasepathMovementGameIdFkeyInput
+}
+
+"""The output of our create `EarlyGameEnd` mutation."""
+type CreateEarlyGameEndPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EarlyGameEnd` that was created by this mutation."""
+  earlyGameEnd: EarlyGameEnd
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Game` that is related to this `EarlyGameEnd`."""
+  game: Game
+}
+
+"""All input for the create `EarlyGameEnd` mutation."""
+input CreateEarlyGameEndInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `EarlyGameEnd` to be created by this mutation."""
+  earlyGameEnd: EarlyGameEndInput!
+}
+
+"""An input for mutations affecting `EarlyGameEnd`"""
+input EarlyGameEndInput {
+  id: UUID
+  gameId: UUID
+  game: EarlyGameEndGameIdFkeyInput
+  gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
 }
 
 """The output of our create `Field` mutation."""
@@ -24933,6 +25626,7 @@ input GameInput {
   scoredRunners: ScoredRunnerGameIdFkeyInverseInput
   soloModeOpponentInnings: SoloModeOpponentInningGameIdFkeyInverseInput
   atBatSkips: AtBatSkipGameIdFkeyInverseInput
+  earlyGameEnds: EarlyGameEndGameIdFkeyInverseInput
   gameBattingLines: FakePublicGameBattingLinesForeignKey1InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey1InverseInput
 }
@@ -24974,6 +25668,9 @@ type CreateGameEventPayload {
 
   """Reads a single `Game` that is related to this `GameEvent`."""
   game: Game
+
+  """Reads a single `EarlyGameEnd` that is related to this `GameEvent`."""
+  earlyGameEnd: EarlyGameEnd
 }
 
 """All input for the create `GameEvent` mutation."""
@@ -24997,12 +25694,14 @@ input GameEventInput {
   soloModeOpponentInningId: UUID
   atBatSkipId: UUID
   gameId: UUID
+  earlyGameEndId: UUID
   plateAppearance: GameEventPlateAppearanceIdFkeyInput
   stolenBaseAttempt: GameEventStolenBaseAttemptIdFkeyInput
   lineupChange: GameEventLineupChangeIdFkeyInput
   soloModeOpponentInning: GameEventSoloModeOpponentInningIdFkeyInput
   atBatSkip: GameEventAtBatSkipIdFkeyInput
   game: GameEventGameIdFkeyInput
+  earlyGameEnd: GameEventEarlyGameEndIdFkeyInput
   gameEventRecords: GameEventRecordGameEventIdFkeyInverseInput
 }
 
@@ -25983,6 +26682,60 @@ input UpdateBasepathMovementInput {
   runnerId: UUID!
 }
 
+"""The output of our update `EarlyGameEnd` mutation."""
+type UpdateEarlyGameEndPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EarlyGameEnd` that was updated by this mutation."""
+  earlyGameEnd: EarlyGameEnd
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Game` that is related to this `EarlyGameEnd`."""
+  game: Game
+}
+
+"""All input for the `updateEarlyGameEndByNodeId` mutation."""
+input UpdateEarlyGameEndByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `EarlyGameEnd` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `EarlyGameEnd` being updated.
+  """
+  patch: EarlyGameEndPatch!
+}
+
+"""All input for the `updateEarlyGameEnd` mutation."""
+input UpdateEarlyGameEndInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `EarlyGameEnd` being updated.
+  """
+  patch: EarlyGameEndPatch!
+  id: UUID!
+}
+
 """The output of our update `Field` mutation."""
 type UpdateFieldPayload {
   """
@@ -26144,6 +26897,9 @@ type UpdateGameEventPayload {
 
   """Reads a single `Game` that is related to this `GameEvent`."""
   game: Game
+
+  """Reads a single `EarlyGameEnd` that is related to this `GameEvent`."""
+  earlyGameEnd: EarlyGameEnd
 }
 
 """All input for the `updateGameEventByNodeId` mutation."""
@@ -27389,6 +28145,51 @@ input DeleteBasepathMovementInput {
   runnerId: UUID!
 }
 
+"""The output of our delete `EarlyGameEnd` mutation."""
+type DeleteEarlyGameEndPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `EarlyGameEnd` that was deleted by this mutation."""
+  earlyGameEnd: EarlyGameEnd
+  deletedEarlyGameEndNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """Reads a single `Game` that is related to this `EarlyGameEnd`."""
+  game: Game
+}
+
+"""All input for the `deleteEarlyGameEndByNodeId` mutation."""
+input DeleteEarlyGameEndByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `EarlyGameEnd` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteEarlyGameEnd` mutation."""
+input DeleteEarlyGameEndInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: UUID!
+}
+
 """The output of our delete `Field` mutation."""
 type DeleteFieldPayload {
   """
@@ -27528,6 +28329,9 @@ type DeleteGameEventPayload {
 
   """Reads a single `Game` that is related to this `GameEvent`."""
   game: Game
+
+  """Reads a single `EarlyGameEnd` that is related to this `GameEvent`."""
+  earlyGameEnd: EarlyGameEnd
 }
 
 """All input for the `deleteGameEventByNodeId` mutation."""

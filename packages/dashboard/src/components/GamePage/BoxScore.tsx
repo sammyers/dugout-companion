@@ -120,6 +120,8 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
     }));
   }, [teams, boxScoreLines]);
 
+  const tieGame = !_.some(teams, team => team.winner);
+
   return (
     <Box direction="row" justify="stretch" wrap>
       {teamBoxScores.map(team => (
@@ -133,7 +135,11 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
           round="small"
           height="min-content"
         >
-          <Heading level={4} margin="small" color={team.winner ? 'status-ok' : 'status-critical'}>
+          <Heading
+            level={4}
+            margin="small"
+            color={tieGame ? 'accent-4' : team.winner ? 'status-ok' : 'status-critical'}
+          >
             {team.name}
           </Heading>
           <DataTable

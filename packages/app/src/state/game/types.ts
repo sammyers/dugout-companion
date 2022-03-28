@@ -59,6 +59,8 @@ export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords
   soloModeOpponentPositions: FieldingPosition[];
   soloModeOpponentBatterId: string;
   allowSteals: boolean;
+  allowTies: boolean;
+  gameTimeExpired: boolean;
 };
 
 export interface AddPlayerPayload {

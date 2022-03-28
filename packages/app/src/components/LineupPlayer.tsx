@@ -129,7 +129,6 @@ const LineupPlayer: FC<Props> = ({
                 </Box>
                 {gameInProgress && (
                   <Button
-                    plain={false}
                     icon={<PowerCycle color="accent-2" />}
                     color="accent-2"
                     margin={{ right: 'small' }}

@@ -27,6 +27,7 @@ import {
   initStateForSoloMode,
   applyAtBatSkip,
   applyStolenBaseAttempt,
+  applyEarlyGameEnd,
 } from './stateHelpers';
 import {
   getAvailablePositionsForLineup,
@@ -38,7 +39,13 @@ import {
   DEFAULT_GAME_LENGTH,
 } from './utils';
 
-import { FieldingPosition, HalfInning, Maybe, TeamRole } from '@sammyers/dc-shared';
+import {
+  EarlyGameEndReason,
+  FieldingPosition,
+  HalfInning,
+  Maybe,
+  TeamRole,
+} from '@sammyers/dc-shared';
 import {
   Team,
   AddPlayerPayload,
@@ -77,6 +84,8 @@ const initialState: AppGameState = {
   soloModeOpponentPositions: [],
   soloModeOpponentBatterId: '',
   allowSteals: false,
+  allowTies: false,
+  gameTimeExpired: false,
 };
 
 const { actions: gameActions, reducer } = createSlice({
@@ -289,6 +298,9 @@ const { actions: gameActions, reducer } = createSlice({
     recordSoloModeOpponentInning(state, { payload }: PayloadAction<SoloModeInning>) {
       applySoloModeInning(state, payload);
     },
+    recordEarlyGameEnd(state, { payload }: PayloadAction<EarlyGameEndReason>) {
+      applyEarlyGameEnd(state, payload);
+    },
     skipCurrentAtBat(state) {
       applyAtBatSkip(state);
     },
@@ -420,6 +432,19 @@ const { actions: gameActions, reducer } = createSlice({
     },
     setStealsAllowed(state, { payload }: PayloadAction<boolean>) {
       state.allowSteals = payload;
+    },
+    setTiesAllowed(state, { payload }: PayloadAction<boolean>) {
+      state.allowTies = payload;
+      // If we don't allow ties, game time is irrelevant
+      if (!payload) {
+        state.gameTimeExpired = false;
+      }
+    },
+    setGameTimeExpired(state, { payload }: PayloadAction<boolean>) {
+      state.gameTimeExpired = payload;
+      if (payload) {
+        state.gameLength = state.gameState!.inning;
+      }
     },
     setTimeEnded(state, { payload }: PayloadAction<string>) {
       state.timeEnded = payload;

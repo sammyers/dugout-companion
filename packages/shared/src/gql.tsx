@@ -200,6 +200,7 @@ export type AtBatSkipGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -421,6 +422,7 @@ export type BaseRunnerGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -813,6 +815,7 @@ export type BasepathMovementGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -1542,6 +1545,33 @@ export type CreateBasepathMovementPayload = {
   game: Maybe<Game>;
 };
 
+/** All input for the create `EarlyGameEnd` mutation. */
+export type CreateEarlyGameEndInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `EarlyGameEnd` to be created by this mutation. */
+  earlyGameEnd: EarlyGameEndInput;
+};
+
+/** The output of our create `EarlyGameEnd` mutation. */
+export type CreateEarlyGameEndPayload = {
+  __typename?: 'CreateEarlyGameEndPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `EarlyGameEnd` that was created by this mutation. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `EarlyGameEnd`. */
+  game: Maybe<Game>;
+};
+
 /** All input for the create `Field` mutation. */
 export type CreateFieldInput = {
   /**
@@ -1727,6 +1757,8 @@ export type CreateGameEventPayload = {
   atBatSkip: Maybe<AtBatSkip>;
   /** Reads a single `Game` that is related to this `GameEvent`. */
   game: Maybe<Game>;
+  /** Reads a single `EarlyGameEnd` that is related to this `GameEvent`. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
 };
 
 /** All input for the create `GameEventRecord` mutation. */
@@ -2352,6 +2384,44 @@ export type DeleteBasepathMovementPayload = {
   game: Maybe<Game>;
 };
 
+/** All input for the `deleteEarlyGameEndByNodeId` mutation. */
+export type DeleteEarlyGameEndByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `EarlyGameEnd` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteEarlyGameEnd` mutation. */
+export type DeleteEarlyGameEndInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `EarlyGameEnd` mutation. */
+export type DeleteEarlyGameEndPayload = {
+  __typename?: 'DeleteEarlyGameEndPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `EarlyGameEnd` that was deleted by this mutation. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
+  deletedEarlyGameEndNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `EarlyGameEnd`. */
+  game: Maybe<Game>;
+};
+
 /** All input for the `deleteFieldByNodeId` mutation. */
 export type DeleteFieldByNodeIdInput = {
   /**
@@ -2456,6 +2526,8 @@ export type DeleteGameEventPayload = {
   atBatSkip: Maybe<AtBatSkip>;
   /** Reads a single `Game` that is related to this `GameEvent`. */
   game: Maybe<Game>;
+  /** Reads a single `EarlyGameEnd` that is related to this `GameEvent`. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
 };
 
 /** All input for the `deleteGameEventRecordByGameIdAndEventIndex` mutation. */
@@ -3209,6 +3281,206 @@ export type DeleteTeamPayload = {
   captain: Maybe<Player>;
 };
 
+export type EarlyGameEnd = Node & {
+  __typename?: 'EarlyGameEnd';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['UUID'];
+  reason: EarlyGameEndReason;
+  gameId: Scalars['UUID'];
+  /** Reads a single `Game` that is related to this `EarlyGameEnd`. */
+  game: Maybe<Game>;
+};
+
+/**
+ * A condition to be used against `EarlyGameEnd` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type EarlyGameEndCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `reason` field. */
+  reason?: Maybe<EarlyGameEndReason>;
+  /** Checks for equality with the object’s `gameId` field. */
+  gameId?: Maybe<Scalars['UUID']>;
+};
+
+/** The fields on `earlyGameEnd` to look up the row to connect. */
+export type EarlyGameEndEarlyGameEndPkeyConnect = {
+  id: Scalars['UUID'];
+};
+
+/** The fields on `earlyGameEnd` to look up the row to delete. */
+export type EarlyGameEndEarlyGameEndPkeyDelete = {
+  id: Scalars['UUID'];
+};
+
+/** The `earlyGameEnd` to be created by this mutation. */
+export type EarlyGameEndGameIdFkeyEarlyGameEndCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  reason: EarlyGameEndReason;
+  game?: Maybe<EarlyGameEndGameIdFkeyInput>;
+  gameEvents?: Maybe<GameEventEarlyGameEndIdFkeyInverseInput>;
+};
+
+/** The `game` to be created by this mutation. */
+export type EarlyGameEndGameIdFkeyGameCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  soloMode?: Maybe<Scalars['Boolean']>;
+  group?: Maybe<GameGroupIdFkeyInput>;
+  field?: Maybe<GameFieldIdFkeyInput>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  lineups?: Maybe<LineupGameIdFkeyInverseInput>;
+  lineupSpots?: Maybe<LineupSpotGameIdFkeyInverseInput>;
+  plateAppearances?: Maybe<PlateAppearanceGameIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementGameIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerGameIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptGameIdFkeyInverseInput>;
+  lineupChanges?: Maybe<LineupChangeGameIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventGameIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerGameIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
+  soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
+  atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
+  unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
+};
+
+/** Input for the nested mutation of `game` in the `EarlyGameEndInput` mutation. */
+export type EarlyGameEndGameIdFkeyInput = {
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectById?: Maybe<GameGamePkeyConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByGroupIdAndName?: Maybe<GameGameNameUniqPerGroupConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameNodeIdConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteById?: Maybe<GameGamePkeyDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByGroupIdAndName?: Maybe<GameGameNameUniqPerGroupDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameNodeIdDelete>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateById?: Maybe<GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGamePkeyUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByGroupIdAndName?: Maybe<GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGameNameUniqPerGroupUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByNodeId?: Maybe<EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate>;
+  /** A `GameInput` object that will be created and connected to this object. */
+  create?: Maybe<EarlyGameEndGameIdFkeyGameCreateInput>;
+};
+
+/** Input for the nested mutation of `earlyGameEnd` in the `GameInput` mutation. */
+export type EarlyGameEndGameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `earlyGameEnd` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  connectById?: Maybe<Array<EarlyGameEndEarlyGameEndPkeyConnect>>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<EarlyGameEndNodeIdConnect>>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  deleteById?: Maybe<Array<EarlyGameEndEarlyGameEndPkeyDelete>>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<EarlyGameEndNodeIdDelete>>;
+  /** The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship. */
+  updateById?: Maybe<Array<EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingEarlyGameEndPkeyUpdate>>;
+  /** The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<GameOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate>>;
+  /** A `EarlyGameEndInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<EarlyGameEndGameIdFkeyEarlyGameEndCreateInput>>;
+};
+
+/** An input for mutations affecting `EarlyGameEnd` */
+export type EarlyGameEndInput = {
+  id?: Maybe<Scalars['UUID']>;
+  reason: EarlyGameEndReason;
+  gameId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<EarlyGameEndGameIdFkeyInput>;
+  gameEvents?: Maybe<GameEventEarlyGameEndIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type EarlyGameEndNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `earlyGameEnd` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type EarlyGameEndNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `earlyGameEnd` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `game` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: GamePatch;
+};
+
+/** The fields on `earlyGameEnd` to look up the row to update. */
+export type EarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingEarlyGameEndPkeyUpdate = {
+  /** An object where the defined keys will be set on the `earlyGameEnd` being updated. */
+  patch: UpdateEarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `gameEvent` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: GameEventPatch;
+};
+
+/** The fields on `earlyGameEnd` to look up the row to update. */
+export type EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyUsingEarlyGameEndPkeyUpdate = {
+  /** An object where the defined keys will be set on the `earlyGameEnd` being updated. */
+  patch: UpdateEarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** Represents an update to a `EarlyGameEnd`. Fields that are set will be updated. */
+export type EarlyGameEndPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  reason?: Maybe<EarlyGameEndReason>;
+  gameId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<EarlyGameEndGameIdFkeyInput>;
+  gameEvents?: Maybe<GameEventEarlyGameEndIdFkeyInverseInput>;
+};
+
+export enum EarlyGameEndReason {
+  MERCY_RULE = 'MERCY_RULE',
+  TIME_EXPIRED = 'TIME_EXPIRED',
+  OTHER = 'OTHER'
+}
+
+/** Methods to use when ordering `EarlyGameEnd`. */
+export enum EarlyGameEndsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  REASON_ASC = 'REASON_ASC',
+  REASON_DESC = 'REASON_DESC',
+  GAME_ID_ASC = 'GAME_ID_ASC',
+  GAME_ID_DESC = 'GAME_ID_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
 /** The `careerStat` to be created by this mutation. */
 export type FakePublicCareerStatsForeignKey0CareerStatsCreateInput = {
   groupId?: Maybe<Scalars['UUID']>;
@@ -3865,6 +4137,7 @@ export type FakePublicGameBattingLinesForeignKey1GameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -5545,6 +5818,7 @@ export type FakePublicUnifiedGamesForeignKey1GameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -6094,6 +6368,8 @@ export type Game = Node & {
   soloModeOpponentInnings: Array<SoloModeOpponentInning>;
   /** Reads and enables pagination through a set of `AtBatSkip`. */
   atBatSkips: Array<AtBatSkip>;
+  /** Reads and enables pagination through a set of `EarlyGameEnd`. */
+  earlyGameEnds: Array<EarlyGameEnd>;
   /** Reads and enables pagination through a set of `GameBattingLine`. */
   gameBattingLines: Array<GameBattingLine>;
   /** Reads and enables pagination through a set of `UnifiedGame`. */
@@ -6222,6 +6498,14 @@ export type GameAtBatSkipsArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<AtBatSkipsOrderBy>>;
   condition?: Maybe<AtBatSkipCondition>;
+};
+
+
+export type GameEarlyGameEndsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<EarlyGameEndsOrderBy>>;
+  condition?: Maybe<EarlyGameEndCondition>;
 };
 
 
@@ -6505,6 +6789,7 @@ export type GameEvent = Node & {
   soloModeOpponentInningId: Maybe<Scalars['UUID']>;
   atBatSkipId: Maybe<Scalars['UUID']>;
   gameId: Scalars['UUID'];
+  earlyGameEndId: Maybe<Scalars['UUID']>;
   /** Reads a single `PlateAppearance` that is related to this `GameEvent`. */
   plateAppearance: Maybe<PlateAppearance>;
   /** Reads a single `StolenBaseAttempt` that is related to this `GameEvent`. */
@@ -6517,6 +6802,8 @@ export type GameEvent = Node & {
   atBatSkip: Maybe<AtBatSkip>;
   /** Reads a single `Game` that is related to this `GameEvent`. */
   game: Maybe<Game>;
+  /** Reads a single `EarlyGameEnd` that is related to this `GameEvent`. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
   /** Reads and enables pagination through a set of `GameEventRecord`. */
   gameEventRecords: Array<GameEventRecord>;
 };
@@ -6547,12 +6834,14 @@ export type GameEventAtBatSkipIdFkeyGameEventCreateInput = {
   lineupChangeId?: Maybe<Scalars['UUID']>;
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -6613,6 +6902,74 @@ export type GameEventCondition = {
   atBatSkipId?: Maybe<Scalars['UUID']>;
   /** Checks for equality with the object’s `gameId` field. */
   gameId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `earlyGameEndId` field. */
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
+};
+
+/** The `earlyGameEnd` to be created by this mutation. */
+export type GameEventEarlyGameEndIdFkeyEarlyGameEndCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  reason: EarlyGameEndReason;
+  gameId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<EarlyGameEndGameIdFkeyInput>;
+  gameEvents?: Maybe<GameEventEarlyGameEndIdFkeyInverseInput>;
+};
+
+/** The `gameEvent` to be created by this mutation. */
+export type GameEventEarlyGameEndIdFkeyGameEventCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  plateAppearanceId?: Maybe<Scalars['UUID']>;
+  stolenBaseAttemptId?: Maybe<Scalars['UUID']>;
+  lineupChangeId?: Maybe<Scalars['UUID']>;
+  soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
+  atBatSkipId?: Maybe<Scalars['UUID']>;
+  gameId?: Maybe<Scalars['UUID']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
+  atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
+  game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `earlyGameEnd` in the `GameEventInput` mutation. */
+export type GameEventEarlyGameEndIdFkeyInput = {
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  connectById?: Maybe<EarlyGameEndEarlyGameEndPkeyConnect>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  connectByNodeId?: Maybe<EarlyGameEndNodeIdConnect>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  deleteById?: Maybe<EarlyGameEndEarlyGameEndPkeyDelete>;
+  /** The primary key(s) for `earlyGameEnd` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<EarlyGameEndNodeIdDelete>;
+  /** The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship. */
+  updateById?: Maybe<EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyUsingEarlyGameEndPkeyUpdate>;
+  /** The primary key(s) and patch data for `earlyGameEnd` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameEventOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate>;
+  /** A `EarlyGameEndInput` object that will be created and connected to this object. */
+  create?: Maybe<GameEventEarlyGameEndIdFkeyEarlyGameEndCreateInput>;
+};
+
+/** Input for the nested mutation of `gameEvent` in the `EarlyGameEndInput` mutation. */
+export type GameEventEarlyGameEndIdFkeyInverseInput = {
+  /** Flag indicating whether all other `gameEvent` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectById?: Maybe<Array<GameEventGameEventPkeyConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<GameEventNodeIdConnect>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteById?: Maybe<Array<GameEventGameEventPkeyDelete>>;
+  /** The primary key(s) for `gameEvent` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<GameEventNodeIdDelete>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateById?: Maybe<Array<GameEventOnGameEventForGameEventEarlyGameEndIdFkeyUsingGameEventPkeyUpdate>>;
+  /** The primary key(s) and patch data for `gameEvent` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<EarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate>>;
+  /** A `GameEventInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameEventEarlyGameEndIdFkeyGameEventCreateInput>>;
 };
 
 /** The fields on `gameEvent` to look up the row to connect. */
@@ -6655,6 +7012,7 @@ export type GameEventGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -6667,12 +7025,14 @@ export type GameEventGameIdFkeyGameEventCreateInput = {
   lineupChangeId?: Maybe<Scalars['UUID']>;
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -6729,12 +7089,14 @@ export type GameEventInput = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -6746,12 +7108,14 @@ export type GameEventLineupChangeIdFkeyGameEventCreateInput = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -6828,6 +7192,21 @@ export type GameEventOnGameEventForGameEventAtBatSkipIdFkeyNodeIdUpdate = {
 export type GameEventOnGameEventForGameEventAtBatSkipIdFkeyUsingGameEventPkeyUpdate = {
   /** An object where the defined keys will be set on the `gameEvent` being updated. */
   patch: UpdateGameEventOnGameEventForGameEventAtBatSkipIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameEventOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `earlyGameEnd` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `earlyGameEnd` being updated. */
+  patch: EarlyGameEndPatch;
+};
+
+/** The fields on `gameEvent` to look up the row to update. */
+export type GameEventOnGameEventForGameEventEarlyGameEndIdFkeyUsingGameEventPkeyUpdate = {
+  /** An object where the defined keys will be set on the `gameEvent` being updated. */
+  patch: UpdateGameEventOnGameEventForGameEventEarlyGameEndIdFkeyPatch;
   id: Scalars['UUID'];
 };
 
@@ -6930,12 +7309,14 @@ export type GameEventPatch = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -6947,12 +7328,14 @@ export type GameEventPlateAppearanceIdFkeyGameEventCreateInput = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -7072,12 +7455,14 @@ export type GameEventRecordGameEventIdFkeyGameEventCreateInput = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -7192,6 +7577,7 @@ export type GameEventRecordGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -7603,12 +7989,14 @@ export type GameEventSoloModeOpponentInningIdFkeyGameEventCreateInput = {
   lineupChangeId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -7667,12 +8055,14 @@ export type GameEventStolenBaseAttemptIdFkeyGameEventCreateInput = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -7742,6 +8132,8 @@ export enum GameEventsOrderBy {
   AT_BAT_SKIP_ID_DESC = 'AT_BAT_SKIP_ID_DESC',
   GAME_ID_ASC = 'GAME_ID_ASC',
   GAME_ID_DESC = 'GAME_ID_DESC',
+  EARLY_GAME_END_ID_ASC = 'EARLY_GAME_END_ID_ASC',
+  EARLY_GAME_END_ID_DESC = 'EARLY_GAME_END_ID_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -7783,6 +8175,7 @@ export type GameFieldIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -7882,6 +8275,7 @@ export type GameGroupIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -7992,6 +8386,7 @@ export type GameInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -8074,6 +8469,29 @@ export type GameOnBasepathMovementForBasepathMovementGameIdFkeyUsingGameNameUniq
 export type GameOnBasepathMovementForBasepathMovementGameIdFkeyUsingGamePkeyUpdate = {
   /** An object where the defined keys will be set on the `game` being updated. */
   patch: UpdateGameOnBasepathMovementForBasepathMovementGameIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameOnEarlyGameEndForEarlyGameEndGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `earlyGameEnd` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `earlyGameEnd` being updated. */
+  patch: EarlyGameEndPatch;
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGameNameUniqPerGroupUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch;
+  groupId: Scalars['UUID'];
+  name: Scalars['String'];
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnEarlyGameEndForEarlyGameEndGameIdFkeyUsingGamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch;
   id: Scalars['UUID'];
 };
 
@@ -8490,6 +8908,7 @@ export type GamePatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -8613,6 +9032,7 @@ export type GameStateGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -10782,6 +11202,7 @@ export type LineupChangeGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -11110,6 +11531,7 @@ export type LineupForGameStateGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -11427,6 +11849,7 @@ export type LineupGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -11682,6 +12105,7 @@ export type LineupSpotGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -12360,6 +12784,8 @@ export type Mutation = {
   createBaseRunner: Maybe<CreateBaseRunnerPayload>;
   /** Creates a single `BasepathMovement`. */
   createBasepathMovement: Maybe<CreateBasepathMovementPayload>;
+  /** Creates a single `EarlyGameEnd`. */
+  createEarlyGameEnd: Maybe<CreateEarlyGameEndPayload>;
   /** Creates a single `Field`. */
   createField: Maybe<CreateFieldPayload>;
   /** Creates a single `ForeignDbField`. */
@@ -12420,6 +12846,10 @@ export type Mutation = {
   updateBasepathMovementByNodeId: Maybe<UpdateBasepathMovementPayload>;
   /** Updates a single `BasepathMovement` using a unique key and a patch. */
   updateBasepathMovement: Maybe<UpdateBasepathMovementPayload>;
+  /** Updates a single `EarlyGameEnd` using its globally unique id and a patch. */
+  updateEarlyGameEndByNodeId: Maybe<UpdateEarlyGameEndPayload>;
+  /** Updates a single `EarlyGameEnd` using a unique key and a patch. */
+  updateEarlyGameEnd: Maybe<UpdateEarlyGameEndPayload>;
   /** Updates a single `Field` using its globally unique id and a patch. */
   updateFieldByNodeId: Maybe<UpdateFieldPayload>;
   /** Updates a single `Field` using a unique key and a patch. */
@@ -12524,6 +12954,10 @@ export type Mutation = {
   deleteBasepathMovementByNodeId: Maybe<DeleteBasepathMovementPayload>;
   /** Deletes a single `BasepathMovement` using a unique key. */
   deleteBasepathMovement: Maybe<DeleteBasepathMovementPayload>;
+  /** Deletes a single `EarlyGameEnd` using its globally unique id. */
+  deleteEarlyGameEndByNodeId: Maybe<DeleteEarlyGameEndPayload>;
+  /** Deletes a single `EarlyGameEnd` using a unique key. */
+  deleteEarlyGameEnd: Maybe<DeleteEarlyGameEndPayload>;
   /** Deletes a single `Field` using its globally unique id. */
   deleteFieldByNodeId: Maybe<DeleteFieldPayload>;
   /** Deletes a single `Field` using a unique key. */
@@ -12639,6 +13073,12 @@ export type MutationCreateBaseRunnerArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateBasepathMovementArgs = {
   input: CreateBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateEarlyGameEndArgs = {
+  input: CreateEarlyGameEndInput;
 };
 
 
@@ -12819,6 +13259,18 @@ export type MutationUpdateBasepathMovementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateBasepathMovementArgs = {
   input: UpdateBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEarlyGameEndByNodeIdArgs = {
+  input: UpdateEarlyGameEndByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateEarlyGameEndArgs = {
+  input: UpdateEarlyGameEndInput;
 };
 
 
@@ -13131,6 +13583,18 @@ export type MutationDeleteBasepathMovementByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteBasepathMovementArgs = {
   input: DeleteBasepathMovementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEarlyGameEndByNodeIdArgs = {
+  input: DeleteEarlyGameEndByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteEarlyGameEndArgs = {
+  input: DeleteEarlyGameEndInput;
 };
 
 
@@ -13503,6 +13967,7 @@ export type OutOnPlayRunnerGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -14006,6 +14471,7 @@ export type PlateAppearanceGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -15312,6 +15778,8 @@ export type Query = Node & {
   careerStats: Maybe<Array<CareerStat>>;
   /** Reads a set of `CareerStatsQualifiedBatter`. */
   careerStatsQualifiedBatters: Maybe<Array<CareerStatsQualifiedBatter>>;
+  /** Reads a set of `EarlyGameEnd`. */
+  earlyGameEnds: Maybe<Array<EarlyGameEnd>>;
   /** Reads a set of `Field`. */
   fields: Maybe<Array<Field>>;
   /** Reads a set of `ForeignDbField`. */
@@ -15393,6 +15861,7 @@ export type Query = Node & {
   atBatSkip: Maybe<AtBatSkip>;
   baseRunner: Maybe<BaseRunner>;
   basepathMovement: Maybe<BasepathMovement>;
+  earlyGameEnd: Maybe<EarlyGameEnd>;
   field: Maybe<Field>;
   game: Maybe<Game>;
   gameByGroupIdAndName: Maybe<Game>;
@@ -15452,6 +15921,8 @@ export type Query = Node & {
   baseRunnerByNodeId: Maybe<BaseRunner>;
   /** Reads a single `BasepathMovement` using its globally unique `ID`. */
   basepathMovementByNodeId: Maybe<BasepathMovement>;
+  /** Reads a single `EarlyGameEnd` using its globally unique `ID`. */
+  earlyGameEndByNodeId: Maybe<EarlyGameEnd>;
   /** Reads a single `Field` using its globally unique `ID`. */
   fieldByNodeId: Maybe<Field>;
   /** Reads a single `Game` using its globally unique `ID`. */
@@ -15557,6 +16028,15 @@ export type QueryCareerStatsQualifiedBattersArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<CareerStatsQualifiedBattersOrderBy>>;
   condition?: Maybe<CareerStatsQualifiedBatterCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEarlyGameEndsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<EarlyGameEndsOrderBy>>;
+  condition?: Maybe<EarlyGameEndCondition>;
 };
 
 
@@ -15932,6 +16412,12 @@ export type QueryBasepathMovementArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryEarlyGameEndArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryFieldArgs = {
   id: Scalars['UUID'];
 };
@@ -16289,6 +16775,12 @@ export type QueryBaseRunnerByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryBasepathMovementByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryEarlyGameEndByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -16659,6 +17151,7 @@ export type ScoredRunnerGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -17483,6 +17976,7 @@ export type SoloModeOpponentInningGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -17681,6 +18175,7 @@ export type StolenBaseAttemptGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -18104,6 +18599,7 @@ export type TeamGameIdFkeyGameCreateInput = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -18555,6 +19051,47 @@ export type UpdateBasepathMovementPayload = {
   game: Maybe<Game>;
 };
 
+/** All input for the `updateEarlyGameEndByNodeId` mutation. */
+export type UpdateEarlyGameEndByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `EarlyGameEnd` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `EarlyGameEnd` being updated. */
+  patch: EarlyGameEndPatch;
+};
+
+/** All input for the `updateEarlyGameEnd` mutation. */
+export type UpdateEarlyGameEndInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `EarlyGameEnd` being updated. */
+  patch: EarlyGameEndPatch;
+  id: Scalars['UUID'];
+};
+
+/** The output of our update `EarlyGameEnd` mutation. */
+export type UpdateEarlyGameEndPayload = {
+  __typename?: 'UpdateEarlyGameEndPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `EarlyGameEnd` that was updated by this mutation. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `EarlyGameEnd`. */
+  game: Maybe<Game>;
+};
+
 /** All input for the `updateFieldByNodeId` mutation. */
 export type UpdateFieldByNodeIdInput = {
   /**
@@ -18669,6 +19206,8 @@ export type UpdateGameEventPayload = {
   atBatSkip: Maybe<AtBatSkip>;
   /** Reads a single `Game` that is related to this `GameEvent`. */
   game: Maybe<Game>;
+  /** Reads a single `EarlyGameEnd` that is related to this `GameEvent`. */
+  earlyGameEnd: Maybe<EarlyGameEnd>;
 };
 
 /** All input for the `updateGameEventRecordByGameIdAndEventIndex` mutation. */
@@ -19606,6 +20145,23 @@ export type UpdateBasepathMovementOnBasepathMovementForBasepathMovementRunnerIdF
   game?: Maybe<BasepathMovementGameIdFkeyInput>;
 };
 
+/** An object where the defined keys will be set on the `earlyGameEnd` being updated. */
+export type UpdateEarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  reason?: Maybe<EarlyGameEndReason>;
+  game?: Maybe<EarlyGameEndGameIdFkeyInput>;
+  gameEvents?: Maybe<GameEventEarlyGameEndIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `earlyGameEnd` being updated. */
+export type UpdateEarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  reason?: Maybe<EarlyGameEndReason>;
+  gameId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<EarlyGameEndGameIdFkeyInput>;
+  gameEvents?: Maybe<GameEventEarlyGameEndIdFkeyInverseInput>;
+};
+
 /** An object where the defined keys will be set on the `field` being updated. */
 export type UpdateFieldOnGameForGameFieldIdFkeyPatch = {
   id?: Maybe<Scalars['UUID']>;
@@ -19676,12 +20232,33 @@ export type UpdateGameEventOnGameEventForGameEventAtBatSkipIdFkeyPatch = {
   lineupChangeId?: Maybe<Scalars['UUID']>;
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `gameEvent` being updated. */
+export type UpdateGameEventOnGameEventForGameEventEarlyGameEndIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  plateAppearanceId?: Maybe<Scalars['UUID']>;
+  stolenBaseAttemptId?: Maybe<Scalars['UUID']>;
+  lineupChangeId?: Maybe<Scalars['UUID']>;
+  soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
+  atBatSkipId?: Maybe<Scalars['UUID']>;
+  gameId?: Maybe<Scalars['UUID']>;
+  plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
+  stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
+  lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
+  soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
+  atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
+  game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19693,12 +20270,14 @@ export type UpdateGameEventOnGameEventForGameEventGameIdFkeyPatch = {
   lineupChangeId?: Maybe<Scalars['UUID']>;
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19710,12 +20289,14 @@ export type UpdateGameEventOnGameEventForGameEventLineupChangeIdFkeyPatch = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19727,12 +20308,14 @@ export type UpdateGameEventOnGameEventForGameEventPlateAppearanceIdFkeyPatch = {
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19744,12 +20327,14 @@ export type UpdateGameEventOnGameEventForGameEventSoloModeOpponentInningIdFkeyPa
   lineupChangeId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19761,12 +20346,14 @@ export type UpdateGameEventOnGameEventForGameEventStolenBaseAttemptIdFkeyPatch =
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19779,12 +20366,14 @@ export type UpdateGameEventOnGameEventRecordForGameEventRecordGameEventIdFkeyPat
   soloModeOpponentInningId?: Maybe<Scalars['UUID']>;
   atBatSkipId?: Maybe<Scalars['UUID']>;
   gameId?: Maybe<Scalars['UUID']>;
+  earlyGameEndId?: Maybe<Scalars['UUID']>;
   plateAppearance?: Maybe<GameEventPlateAppearanceIdFkeyInput>;
   stolenBaseAttempt?: Maybe<GameEventStolenBaseAttemptIdFkeyInput>;
   lineupChange?: Maybe<GameEventLineupChangeIdFkeyInput>;
   soloModeOpponentInning?: Maybe<GameEventSoloModeOpponentInningIdFkeyInput>;
   atBatSkip?: Maybe<GameEventAtBatSkipIdFkeyInput>;
   game?: Maybe<GameEventGameIdFkeyInput>;
+  earlyGameEnd?: Maybe<GameEventEarlyGameEndIdFkeyInput>;
   gameEventRecords?: Maybe<GameEventRecordGameEventIdFkeyInverseInput>;
 };
 
@@ -19894,6 +20483,7 @@ export type UpdateGameOnAtBatSkipForAtBatSkipGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -19928,6 +20518,7 @@ export type UpdateGameOnBaseRunnerForBaseRunnerGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -19962,6 +20553,42 @@ export type UpdateGameOnBasepathMovementForBasepathMovementGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
+  unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
+};
+
+/** An object where the defined keys will be set on the `game` being updated. */
+export type UpdateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  soloMode?: Maybe<Scalars['Boolean']>;
+  group?: Maybe<GameGroupIdFkeyInput>;
+  field?: Maybe<GameFieldIdFkeyInput>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  lineups?: Maybe<LineupGameIdFkeyInverseInput>;
+  lineupSpots?: Maybe<LineupSpotGameIdFkeyInverseInput>;
+  plateAppearances?: Maybe<PlateAppearanceGameIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementGameIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerGameIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptGameIdFkeyInverseInput>;
+  lineupChanges?: Maybe<LineupChangeGameIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventGameIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerGameIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
+  soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
+  atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -19996,6 +20623,7 @@ export type UpdateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1P
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20030,6 +20658,7 @@ export type UpdateGameOnGameEventForGameEventGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20064,6 +20693,7 @@ export type UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20097,6 +20727,7 @@ export type UpdateGameOnGameForGameFieldIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20130,6 +20761,7 @@ export type UpdateGameOnGameForGameGroupIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20164,6 +20796,7 @@ export type UpdateGameOnGameStateForGameStateGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20198,6 +20831,7 @@ export type UpdateGameOnLineupChangeForLineupChangeGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20232,6 +20866,7 @@ export type UpdateGameOnLineupForGameStateForLineupForGameStateGameIdFkeyPatch =
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20266,6 +20901,7 @@ export type UpdateGameOnLineupForLineupGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20300,6 +20936,7 @@ export type UpdateGameOnLineupSpotForLineupSpotGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20334,6 +20971,7 @@ export type UpdateGameOnOutOnPlayRunnerForOutOnPlayRunnerGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20368,6 +21006,7 @@ export type UpdateGameOnPlateAppearanceForPlateAppearanceGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20402,6 +21041,7 @@ export type UpdateGameOnScoredRunnerForScoredRunnerGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20436,6 +21076,7 @@ export type UpdateGameOnSoloModeOpponentInningForSoloModeOpponentInningGameIdFke
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20470,6 +21111,7 @@ export type UpdateGameOnStolenBaseAttemptForStolenBaseAttemptGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20504,6 +21146,7 @@ export type UpdateGameOnTeamForTeamGameIdFkeyPatch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20538,6 +21181,7 @@ export type UpdateGameOnUnifiedGameForFakePublicUnifiedGamesForeignKey1Patch = {
   scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -22305,6 +22949,9 @@ export type UnpackedGame_GameFragment = (
       )>, atBatSkip: Maybe<(
         { __typename?: 'AtBatSkip' }
         & Pick<AtBatSkip, 'batterId'>
+      )>, earlyGameEnd: Maybe<(
+        { __typename?: 'EarlyGameEnd' }
+        & Pick<EarlyGameEnd, 'reason'>
       )> }
     )>, scoredRunners: Array<(
       { __typename?: 'ScoredRunner' }
@@ -23224,6 +23871,9 @@ export const UnpackedGame_GameFragmentDoc = gql`
       }
       atBatSkip {
         batterId
+      }
+      earlyGameEnd {
+        reason
       }
     }
     scoredRunners {

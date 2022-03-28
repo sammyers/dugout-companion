@@ -22,6 +22,7 @@ import {
 } from '@sammyers/dc-shared';
 import { AppState } from 'state/store';
 import { BaseRunnerMap, GameStatus, LineupSpot } from './types';
+import { _shouldShowEndGameNowButton } from './stateHelpers';
 
 const MIN_PLAYERS_TO_PLAY = 8;
 
@@ -104,6 +105,16 @@ export const getBattingTeam = createSelector(getPresent, partialSelectors.getBat
 export const getFieldingTeam = createSelector(getPresent, partialSelectors.getFieldingTeam);
 export const getBattingLineup = createSelector(getPresent, partialSelectors.getBattingLineup);
 export const getFieldingLineup = createSelector(getPresent, partialSelectors.getFieldingLineup);
+
+export const getScoreAfterSoloModeInning = (state: AppState, runsScored: number) => {
+  const halfInning = getHalfInning(state);
+  const [awayScore, homeScore] = getScore(state);
+  if (halfInning === HalfInning.TOP) {
+    return [awayScore + runsScored, homeScore];
+  } else {
+    return [awayScore, homeScore + runsScored];
+  }
+};
 
 export const getTeam = (state: AppState, role: TeamRole) =>
   partialSelectors.getTeam(getPresent(state), role);
@@ -225,26 +236,67 @@ export const getInTheHoleBatterName = createSelector(
   (batterId, getPlayer) => formatShortName(getPlayer(batterId))
 );
 
+export const areTiesAllowed = createSelector(getPresent, state => state.allowTies);
+export const hasGameTimeExpired = createSelector(getPresent, state => state.gameTimeExpired);
+export const isGameInLastInning = createSelector(
+  getInning,
+  getCurrentGameLength,
+  (inning, gameLength) => inning === gameLength
+);
+export const isGameInExtraInnings = createSelector(
+  getInning,
+  getCurrentGameLength,
+  (inning, gameLength) => inning > gameLength
+);
+
+export const shouldShowTimeLimitExpiredToggle = createSelector(
+  areTiesAllowed,
+  getScore,
+  getHalfInning,
+  isGameInLastInning,
+  (tiesAllowed, [awayScore, homeScore], halfInning, inLastInning) => {
+    if (!tiesAllowed) return false;
+    if (halfInning === HalfInning.BOTTOM) {
+      // If the home team is winning, the user should just press the end game button
+      return homeScore <= awayScore;
+    }
+    return true;
+  }
+);
+export const shouldShowEndGameNowButton = createSelector(
+  getHalfInning,
+  getScore,
+  _shouldShowEndGameNowButton
+);
+
 export const getMinGameLength = createSelector(
   getInning,
   getHalfInning,
   getScore,
   getCurrentGroupName,
   isSoloModeActive,
-  (inning, halfInning, [awayScore, homeScore], groupName, soloMode) => {
+  areTiesAllowed,
+  (inning, halfInning, [awayScore, homeScore], groupName, soloMode, tiesAllowed) => {
     const defaultMin = soloMode || groupName === 'Testing' ? 2 : 7;
-    if (halfInning === HalfInning.BOTTOM && homeScore > awayScore) {
+    if (halfInning === HalfInning.BOTTOM && homeScore > awayScore && !tiesAllowed) {
       return Math.max(defaultMin, inning + 1);
     }
     return Math.max(defaultMin, inning);
   }
 );
-export const getMaxGameLength = createSelector(isSoloModeActive, soloMode => (soloMode ? 9 : 12));
-
-export const isGameInExtraInnings = createSelector(
+export const getMaxGameLength = createSelector(
+  isSoloModeActive,
+  hasGameTimeExpired,
   getInning,
-  getCurrentGameLength,
-  (inning, gameLength) => inning > gameLength
+  (soloMode, gameTimeExpired, inning) => {
+    if (gameTimeExpired) {
+      return inning;
+    }
+    if (soloMode) {
+      return 9;
+    }
+    return 12;
+  }
 );
 
 export const wasGameSaved = createSelector(getPresent, game => game.saved);
@@ -259,6 +311,9 @@ export const getTimeEnded = createSelector(getPresent, game => game.timeEnded);
 
 export const getWinningTeamName = (state: AppState) => {
   const [awayScore, homeScore] = getScore(state);
+  if (awayScore === homeScore) {
+    return undefined;
+  }
   const role = awayScore > homeScore ? TeamRole.AWAY : TeamRole.HOME;
   const name = getTeamName(state, role);
   return name || `${_.capitalize(role)} Team`;
@@ -482,6 +537,12 @@ export const getGameForMutation = createSelector(
             event = {
               atBatSkip: {
                 create: { gameId, ...gameEvent.atBatSkip },
+              },
+            };
+          } else if (gameEvent.earlyGameEnd) {
+            event = {
+              earlyGameEnd: {
+                create: { gameId, ...gameEvent.earlyGameEnd },
               },
             };
           }

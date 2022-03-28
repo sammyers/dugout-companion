@@ -55,6 +55,9 @@ fragment UnpackedGame_Game on Game {
       atBatSkip {
         batterId
       }
+      earlyGameEnd {
+        reason
+      }
     }
     scoredRunners {
       runnerId
