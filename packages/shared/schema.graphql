@@ -3102,10 +3102,17 @@ type EarlyGameEnd implements Node {
   """
   nodeId: ID!
   id: UUID!
+  reason: EarlyGameEndReason!
   gameId: UUID!
 
   """Reads a single `Game` that is related to this `EarlyGameEnd`."""
   game: Game
+}
+
+enum EarlyGameEndReason {
+  MERCY_RULE
+  TIME_EXPIRED
+  OTHER
 }
 
 """Methods to use when ordering `GameEventRecord`."""
@@ -3485,6 +3492,8 @@ enum EarlyGameEndsOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
+  REASON_ASC
+  REASON_DESC
   GAME_ID_ASC
   GAME_ID_DESC
   PRIMARY_KEY_ASC
@@ -3498,6 +3507,9 @@ tested for equality and combined with a logical ‘and.’
 input EarlyGameEndCondition {
   """Checks for equality with the object’s `id` field."""
   id: UUID
+
+  """Checks for equality with the object’s `reason` field."""
+  reason: EarlyGameEndReason
 
   """Checks for equality with the object’s `gameId` field."""
   gameId: UUID
@@ -14984,6 +14996,7 @@ An object where the defined keys will be set on the `earlyGameEnd` being updated
 """
 input updateEarlyGameEndOnGameEventForGameEventEarlyGameEndIdFkeyPatch {
   id: UUID
+  reason: EarlyGameEndReason
   gameId: UUID
   game: EarlyGameEndGameIdFkeyInput
   gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
@@ -15236,6 +15249,7 @@ An object where the defined keys will be set on the `earlyGameEnd` being updated
 """
 input updateEarlyGameEndOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch {
   id: UUID
+  reason: EarlyGameEndReason
   game: EarlyGameEndGameIdFkeyInput
   gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
 }
@@ -21512,6 +21526,7 @@ Represents an update to a `EarlyGameEnd`. Fields that are set will be updated.
 """
 input EarlyGameEndPatch {
   id: UUID
+  reason: EarlyGameEndReason
   gameId: UUID
   game: EarlyGameEndGameIdFkeyInput
   gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
@@ -21520,6 +21535,7 @@ input EarlyGameEndPatch {
 """The `earlyGameEnd` to be created by this mutation."""
 input EarlyGameEndGameIdFkeyEarlyGameEndCreateInput {
   id: UUID
+  reason: EarlyGameEndReason!
   game: EarlyGameEndGameIdFkeyInput
   gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
 }
@@ -21598,6 +21614,7 @@ input GameEventOnGameEventForGameEventEarlyGameEndIdFkeyNodeIdUpdate {
 """The `earlyGameEnd` to be created by this mutation."""
 input GameEventEarlyGameEndIdFkeyEarlyGameEndCreateInput {
   id: UUID
+  reason: EarlyGameEndReason!
   gameId: UUID
   game: EarlyGameEndGameIdFkeyInput
   gameEvents: GameEventEarlyGameEndIdFkeyInverseInput
@@ -25321,6 +25338,7 @@ input CreateEarlyGameEndInput {
 """An input for mutations affecting `EarlyGameEnd`"""
 input EarlyGameEndInput {
   id: UUID
+  reason: EarlyGameEndReason!
   gameId: UUID
   game: EarlyGameEndGameIdFkeyInput
   gameEvents: GameEventEarlyGameEndIdFkeyInverseInput

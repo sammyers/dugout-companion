@@ -1,5 +1,5 @@
 --! Previous: sha1:b71a35add02d98084eb9ffe5c0e6bdff5cc4f1cf
---! Hash: sha1:db3f1072b1bb44db9a8d0555f1ef12047e73ec37
+--! Hash: sha1:bb8a9b9e756cc378a17156ec75959f38969563b0
 
 --! split: 1-current.sql
 drop type if exists early_game_end_reason cascade;
@@ -9,7 +9,9 @@ create type early_game_end_reason as enum (
   'OTHER'
 );
 
-create table if not exists early_game_end (
+alter table game_event drop column if exists early_game_end_id;
+drop table if exists early_game_end;
+create table early_game_end (
   id uuid primary key default gen_random_uuid(),
   reason early_game_end_reason not null,
   game_id uuid not null references game (id)
