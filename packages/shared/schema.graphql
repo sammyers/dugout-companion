@@ -374,6 +374,91 @@ type Query implements Node {
     condition: LegacyGameBattingLineCondition
   ): [LegacyGameBattingLine!]
 
+  """Reads a set of `LegacyMeetupFieldRaw`."""
+  legacyMeetupFieldRaws(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupFieldRaw`."""
+    orderBy: [LegacyMeetupFieldRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupFieldRawCondition
+  ): [LegacyMeetupFieldRaw!]
+
+  """Reads a set of `LegacyMeetupGameRaw`."""
+  legacyMeetupGameRaws(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupGameRaw`."""
+    orderBy: [LegacyMeetupGameRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupGameRawCondition
+  ): [LegacyMeetupGameRaw!]
+
+  """Reads a set of `LegacyMeetupPlayerRaw`."""
+  legacyMeetupPlayerRaws(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupPlayerRaw`."""
+    orderBy: [LegacyMeetupPlayerRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupPlayerRawCondition
+  ): [LegacyMeetupPlayerRaw!]
+
+  """Reads a set of `LegacyMeetupStatLineRaw`."""
+  legacyMeetupStatLineRaws(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupStatLineRaw`."""
+    orderBy: [LegacyMeetupStatLineRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupStatLineRawCondition
+  ): [LegacyMeetupStatLineRaw!]
+
+  """Reads a set of `LegacyMeetupTeamRaw`."""
+  legacyMeetupTeamRaws(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupTeamRaw`."""
+    orderBy: [LegacyMeetupTeamRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupTeamRawCondition
+  ): [LegacyMeetupTeamRaw!]
+
   """Reads a set of `LegacyPlayer`."""
   legacyPlayers(
     """Only read the first `n` values of the set."""
@@ -799,6 +884,15 @@ type Query implements Node {
   legacyField(fieldId: Int!): LegacyField
   legacyGame(gameId: Int!): LegacyGame
   legacyGameBattingLine(legacyPlayerId: Int!, legacyGameId: Int!): LegacyGameBattingLine
+  legacyMeetupFieldRaw(id: Int!): LegacyMeetupFieldRaw
+  legacyMeetupFieldRawByNameAndSubField(name: String!, subField: String!): LegacyMeetupFieldRaw
+  legacyMeetupGameRaw(id: Int!): LegacyMeetupGameRaw
+  legacyMeetupGameRawByName(name: String!): LegacyMeetupGameRaw
+  legacyMeetupPlayerRaw(id: Int!): LegacyMeetupPlayerRaw
+  legacyMeetupPlayerRawByName(name: String!): LegacyMeetupPlayerRaw
+  legacyMeetupStatLineRaw(id: Int!): LegacyMeetupStatLineRaw
+  legacyMeetupTeamRaw(id: Int!): LegacyMeetupTeamRaw
+  legacyMeetupTeamRawByName(name: String!): LegacyMeetupTeamRaw
   legacyPlayer(playerId: Int!): LegacyPlayer
   legacyStatLine(playerId: Int!, gameId: Int!, sbStatsTeam: Int!): LegacyStatLine
   legacyTeam(teamId: Int!): LegacyTeam
@@ -976,6 +1070,48 @@ type Query implements Node {
     """
     nodeId: ID!
   ): LegacyGameBattingLine
+
+  """Reads a single `LegacyMeetupFieldRaw` using its globally unique `ID`."""
+  legacyMeetupFieldRawByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyMeetupFieldRaw`.
+    """
+    nodeId: ID!
+  ): LegacyMeetupFieldRaw
+
+  """Reads a single `LegacyMeetupGameRaw` using its globally unique `ID`."""
+  legacyMeetupGameRawByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyMeetupGameRaw`.
+    """
+    nodeId: ID!
+  ): LegacyMeetupGameRaw
+
+  """Reads a single `LegacyMeetupPlayerRaw` using its globally unique `ID`."""
+  legacyMeetupPlayerRawByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyMeetupPlayerRaw`.
+    """
+    nodeId: ID!
+  ): LegacyMeetupPlayerRaw
+
+  """
+  Reads a single `LegacyMeetupStatLineRaw` using its globally unique `ID`.
+  """
+  legacyMeetupStatLineRawByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyMeetupStatLineRaw`.
+    """
+    nodeId: ID!
+  ): LegacyMeetupStatLineRaw
+
+  """Reads a single `LegacyMeetupTeamRaw` using its globally unique `ID`."""
+  legacyMeetupTeamRawByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `LegacyMeetupTeamRaw`.
+    """
+    nodeId: ID!
+  ): LegacyMeetupTeamRaw
 
   """Reads a single `LegacyPlayer` using its globally unique `ID`."""
   legacyPlayerByNodeId(
@@ -5217,6 +5353,7 @@ type ForeignDbField {
   fieldName: String!
   fieldAddress: String!
   fieldNumber: String
+  fieldRating: Int
 }
 
 """Methods to use when ordering `ForeignDbField`."""
@@ -5230,6 +5367,8 @@ enum ForeignDbFieldsOrderBy {
   FIELD_ADDRESS_DESC
   FIELD_NUMBER_ASC
   FIELD_NUMBER_DESC
+  FIELD_RATING_ASC
+  FIELD_RATING_DESC
 }
 
 """
@@ -5248,6 +5387,9 @@ input ForeignDbFieldCondition {
 
   """Checks for equality with the object’s `fieldNumber` field."""
   fieldNumber: String
+
+  """Checks for equality with the object’s `fieldRating` field."""
+  fieldRating: Int
 }
 
 type ForeignDbGame {
@@ -5259,6 +5401,13 @@ type ForeignDbGame {
   gameTeamId1: Int!
   gameTeamId2: Int!
   season: Int!
+  fieldId: Int
+  gamePicGallery: String
+  eventId: String
+  gameDateInsert: Date
+  gameDateUpdate: Date
+  gameAdv: Int
+  gameCnt: Int
 }
 
 """Methods to use when ordering `ForeignDbGame`."""
@@ -5280,6 +5429,20 @@ enum ForeignDbGamesOrderBy {
   GAME_TEAM_ID_2_DESC
   SEASON_ASC
   SEASON_DESC
+  FIELD_ID_ASC
+  FIELD_ID_DESC
+  GAME_PIC_GALLERY_ASC
+  GAME_PIC_GALLERY_DESC
+  EVENT_ID_ASC
+  EVENT_ID_DESC
+  GAME_DATE_INSERT_ASC
+  GAME_DATE_INSERT_DESC
+  GAME_DATE_UPDATE_ASC
+  GAME_DATE_UPDATE_DESC
+  GAME_ADV_ASC
+  GAME_ADV_DESC
+  GAME_CNT_ASC
+  GAME_CNT_DESC
 }
 
 """
@@ -5310,6 +5473,27 @@ input ForeignDbGameCondition {
 
   """Checks for equality with the object’s `season` field."""
   season: Int
+
+  """Checks for equality with the object’s `fieldId` field."""
+  fieldId: Int
+
+  """Checks for equality with the object’s `gamePicGallery` field."""
+  gamePicGallery: String
+
+  """Checks for equality with the object’s `eventId` field."""
+  eventId: String
+
+  """Checks for equality with the object’s `gameDateInsert` field."""
+  gameDateInsert: Date
+
+  """Checks for equality with the object’s `gameDateUpdate` field."""
+  gameDateUpdate: Date
+
+  """Checks for equality with the object’s `gameAdv` field."""
+  gameAdv: Int
+
+  """Checks for equality with the object’s `gameCnt` field."""
+  gameCnt: Int
 }
 
 type ForeignDbPlayer {
@@ -5317,6 +5501,21 @@ type ForeignDbPlayer {
   playerName: String!
   playerImage: String
   memberId: String
+  playerNickname: String
+  playerSelfNickname: String
+  playerGender: Int
+  playerBats: Int
+  playerThrows: Int
+  playerPosition1: Int
+  playerPosition2: Int
+  playerPosition3: Int
+  playerAdded: Datetime
+  playerFavTeam: String
+  playerHometown: String
+  playerSchools: String
+  playerSkill: Int
+  groupId: Int
+  playerDebut: String
 }
 
 """Methods to use when ordering `ForeignDbPlayer`."""
@@ -5330,6 +5529,36 @@ enum ForeignDbPlayersOrderBy {
   PLAYER_IMAGE_DESC
   MEMBER_ID_ASC
   MEMBER_ID_DESC
+  PLAYER_NICKNAME_ASC
+  PLAYER_NICKNAME_DESC
+  PLAYER_SELF_NICKNAME_ASC
+  PLAYER_SELF_NICKNAME_DESC
+  PLAYER_GENDER_ASC
+  PLAYER_GENDER_DESC
+  PLAYER_BATS_ASC
+  PLAYER_BATS_DESC
+  PLAYER_THROWS_ASC
+  PLAYER_THROWS_DESC
+  PLAYER_POSITION_1_ASC
+  PLAYER_POSITION_1_DESC
+  PLAYER_POSITION_2_ASC
+  PLAYER_POSITION_2_DESC
+  PLAYER_POSITION_3_ASC
+  PLAYER_POSITION_3_DESC
+  PLAYER_ADDED_ASC
+  PLAYER_ADDED_DESC
+  PLAYER_FAV_TEAM_ASC
+  PLAYER_FAV_TEAM_DESC
+  PLAYER_HOMETOWN_ASC
+  PLAYER_HOMETOWN_DESC
+  PLAYER_SCHOOLS_ASC
+  PLAYER_SCHOOLS_DESC
+  PLAYER_SKILL_ASC
+  PLAYER_SKILL_DESC
+  GROUP_ID_ASC
+  GROUP_ID_DESC
+  PLAYER_DEBUT_ASC
+  PLAYER_DEBUT_DESC
 }
 
 """
@@ -5348,6 +5577,51 @@ input ForeignDbPlayerCondition {
 
   """Checks for equality with the object’s `memberId` field."""
   memberId: String
+
+  """Checks for equality with the object’s `playerNickname` field."""
+  playerNickname: String
+
+  """Checks for equality with the object’s `playerSelfNickname` field."""
+  playerSelfNickname: String
+
+  """Checks for equality with the object’s `playerGender` field."""
+  playerGender: Int
+
+  """Checks for equality with the object’s `playerBats` field."""
+  playerBats: Int
+
+  """Checks for equality with the object’s `playerThrows` field."""
+  playerThrows: Int
+
+  """Checks for equality with the object’s `playerPosition1` field."""
+  playerPosition1: Int
+
+  """Checks for equality with the object’s `playerPosition2` field."""
+  playerPosition2: Int
+
+  """Checks for equality with the object’s `playerPosition3` field."""
+  playerPosition3: Int
+
+  """Checks for equality with the object’s `playerAdded` field."""
+  playerAdded: Datetime
+
+  """Checks for equality with the object’s `playerFavTeam` field."""
+  playerFavTeam: String
+
+  """Checks for equality with the object’s `playerHometown` field."""
+  playerHometown: String
+
+  """Checks for equality with the object’s `playerSchools` field."""
+  playerSchools: String
+
+  """Checks for equality with the object’s `playerSkill` field."""
+  playerSkill: Int
+
+  """Checks for equality with the object’s `groupId` field."""
+  groupId: Int
+
+  """Checks for equality with the object’s `playerDebut` field."""
+  playerDebut: String
 }
 
 type ForeignDbStatLine {
@@ -5366,6 +5640,20 @@ type ForeignDbStatLine {
   sbStatsBb: Int!
   sbStatsSo: Int!
   sbStatsSac: Int!
+  sbStatsS: Int
+  sbStatsP: Int
+  sbStatsPW: Int
+  sbStatsPL: Int
+  sbStatsPSv: Int
+  sbStatsPCg: Int
+  sbStatsPQs: Int
+  sbStatsPInnings: String
+  sbStatsPEr: String
+  sbStatsPTr: String
+  sbStatsPHits: String
+  sbStatsPHr: String
+  sbStatsPK: String
+  sbStatsPBb: String
 }
 
 """Methods to use when ordering `ForeignDbStatLine`."""
@@ -5401,6 +5689,34 @@ enum ForeignDbStatLinesOrderBy {
   SB_STATS_SO_DESC
   SB_STATS_SAC_ASC
   SB_STATS_SAC_DESC
+  SB_STATS_S_ASC
+  SB_STATS_S_DESC
+  SB_STATS_P_ASC
+  SB_STATS_P_DESC
+  SB_STATS_P_W_ASC
+  SB_STATS_P_W_DESC
+  SB_STATS_P_L_ASC
+  SB_STATS_P_L_DESC
+  SB_STATS_P_SV_ASC
+  SB_STATS_P_SV_DESC
+  SB_STATS_P_CG_ASC
+  SB_STATS_P_CG_DESC
+  SB_STATS_P_QS_ASC
+  SB_STATS_P_QS_DESC
+  SB_STATS_P_INNINGS_ASC
+  SB_STATS_P_INNINGS_DESC
+  SB_STATS_P_ER_ASC
+  SB_STATS_P_ER_DESC
+  SB_STATS_P_TR_ASC
+  SB_STATS_P_TR_DESC
+  SB_STATS_P_HITS_ASC
+  SB_STATS_P_HITS_DESC
+  SB_STATS_P_HR_ASC
+  SB_STATS_P_HR_DESC
+  SB_STATS_P_K_ASC
+  SB_STATS_P_K_DESC
+  SB_STATS_P_BB_ASC
+  SB_STATS_P_BB_DESC
 }
 
 """
@@ -5452,6 +5768,48 @@ input ForeignDbStatLineCondition {
 
   """Checks for equality with the object’s `sbStatsSac` field."""
   sbStatsSac: Int
+
+  """Checks for equality with the object’s `sbStatsS` field."""
+  sbStatsS: Int
+
+  """Checks for equality with the object’s `sbStatsP` field."""
+  sbStatsP: Int
+
+  """Checks for equality with the object’s `sbStatsPW` field."""
+  sbStatsPW: Int
+
+  """Checks for equality with the object’s `sbStatsPL` field."""
+  sbStatsPL: Int
+
+  """Checks for equality with the object’s `sbStatsPSv` field."""
+  sbStatsPSv: Int
+
+  """Checks for equality with the object’s `sbStatsPCg` field."""
+  sbStatsPCg: Int
+
+  """Checks for equality with the object’s `sbStatsPQs` field."""
+  sbStatsPQs: Int
+
+  """Checks for equality with the object’s `sbStatsPInnings` field."""
+  sbStatsPInnings: String
+
+  """Checks for equality with the object’s `sbStatsPEr` field."""
+  sbStatsPEr: String
+
+  """Checks for equality with the object’s `sbStatsPTr` field."""
+  sbStatsPTr: String
+
+  """Checks for equality with the object’s `sbStatsPHits` field."""
+  sbStatsPHits: String
+
+  """Checks for equality with the object’s `sbStatsPHr` field."""
+  sbStatsPHr: String
+
+  """Checks for equality with the object’s `sbStatsPK` field."""
+  sbStatsPK: String
+
+  """Checks for equality with the object’s `sbStatsPBb` field."""
+  sbStatsPBb: String
 }
 
 type ForeignDbTeam {
@@ -5624,6 +5982,663 @@ input LegacyFieldCondition {
 
   """Checks for equality with the object’s `fieldNumber` field."""
   fieldNumber: String
+}
+
+type LegacyMeetupFieldRaw implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+  subField: String
+  address: String!
+  rating: Int!
+
+  """Reads and enables pagination through a set of `LegacyMeetupGameRaw`."""
+  legacyMeetupGameRawsByFieldId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupGameRaw`."""
+    orderBy: [LegacyMeetupGameRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupGameRawCondition
+  ): [LegacyMeetupGameRaw!]!
+}
+
+type LegacyMeetupGameRaw implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+  season: Int!
+  date: Date!
+  timeStarted: Time!
+  timeEnded: Time!
+  winningTeamId: Int!
+  losingTeamId: Int!
+  fieldId: Int!
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean!
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  winningTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  losingTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  field: LegacyMeetupFieldRaw
+
+  """
+  Reads and enables pagination through a set of `LegacyMeetupStatLineRaw`.
+  """
+  legacyMeetupStatLineRawsByGameId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupStatLineRaw`."""
+    orderBy: [LegacyMeetupStatLineRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupStatLineRawCondition
+  ): [LegacyMeetupStatLineRaw!]!
+}
+
+type LegacyMeetupTeamRaw implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+
+  """Reads and enables pagination through a set of `LegacyMeetupGameRaw`."""
+  legacyMeetupGameRawsByWinningTeamId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupGameRaw`."""
+    orderBy: [LegacyMeetupGameRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupGameRawCondition
+  ): [LegacyMeetupGameRaw!]!
+
+  """Reads and enables pagination through a set of `LegacyMeetupGameRaw`."""
+  legacyMeetupGameRawsByLosingTeamId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupGameRaw`."""
+    orderBy: [LegacyMeetupGameRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupGameRawCondition
+  ): [LegacyMeetupGameRaw!]!
+
+  """
+  Reads and enables pagination through a set of `LegacyMeetupStatLineRaw`.
+  """
+  legacyMeetupStatLineRawsByTeamId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupStatLineRaw`."""
+    orderBy: [LegacyMeetupStatLineRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupStatLineRawCondition
+  ): [LegacyMeetupStatLineRaw!]!
+}
+
+"""Methods to use when ordering `LegacyMeetupGameRaw`."""
+enum LegacyMeetupGameRawsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  SEASON_ASC
+  SEASON_DESC
+  DATE_ASC
+  DATE_DESC
+  TIME_STARTED_ASC
+  TIME_STARTED_DESC
+  TIME_ENDED_ASC
+  TIME_ENDED_DESC
+  WINNING_TEAM_ID_ASC
+  WINNING_TEAM_ID_DESC
+  LOSING_TEAM_ID_ASC
+  LOSING_TEAM_ID_DESC
+  FIELD_ID_ASC
+  FIELD_ID_DESC
+  IMAGE_GALLERY_URL_ASC
+  IMAGE_GALLERY_URL_DESC
+  MEETUP_EVENT_ID_ASC
+  MEETUP_EVENT_ID_DESC
+  DATE_INSERTED_ASC
+  DATE_INSERTED_DESC
+  DATE_UPDATED_ASC
+  DATE_UPDATED_DESC
+  ADVANCED_ASC
+  ADVANCED_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyMeetupGameRaw` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input LegacyMeetupGameRawCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `season` field."""
+  season: Int
+
+  """Checks for equality with the object’s `date` field."""
+  date: Date
+
+  """Checks for equality with the object’s `timeStarted` field."""
+  timeStarted: Time
+
+  """Checks for equality with the object’s `timeEnded` field."""
+  timeEnded: Time
+
+  """Checks for equality with the object’s `winningTeamId` field."""
+  winningTeamId: Int
+
+  """Checks for equality with the object’s `losingTeamId` field."""
+  losingTeamId: Int
+
+  """Checks for equality with the object’s `fieldId` field."""
+  fieldId: Int
+
+  """Checks for equality with the object’s `imageGalleryUrl` field."""
+  imageGalleryUrl: String
+
+  """Checks for equality with the object’s `meetupEventId` field."""
+  meetupEventId: String
+
+  """Checks for equality with the object’s `dateInserted` field."""
+  dateInserted: Date
+
+  """Checks for equality with the object’s `dateUpdated` field."""
+  dateUpdated: Date
+
+  """Checks for equality with the object’s `advanced` field."""
+  advanced: Boolean
+}
+
+type LegacyMeetupStatLineRaw implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  playerId: Int!
+  gameId: Int!
+  teamId: Int!
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  stolenBases: Int!
+  pitched: Boolean!
+  pitcherWon: Boolean!
+  pitcherLost: Boolean!
+  pitcherSave: Boolean!
+  pitcherCompleteGame: Boolean!
+  pitcherQualityStart: Boolean!
+  inningsPitched: Int!
+  runsAllowed: Int!
+  earnedRunsAllowed: Int!
+  hitsAllowed: Int!
+  homerunsAllowed: Int!
+  pitcherStrikeouts: Int!
+  pitcherWalks: Int!
+
+  """
+  Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  player: LegacyMeetupPlayerRaw
+
+  """
+  Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  game: LegacyMeetupGameRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  team: LegacyMeetupTeamRaw
+}
+
+type LegacyMeetupPlayerRaw implements Node {
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  id: Int!
+  name: String!
+  gender: Gender!
+  nickname: String
+  selfNickname: String
+  bats: Handedness!
+  throws: Handedness!
+  imageUrl: String
+  meetupMemberId: String
+  skillLevel: Int
+  preferredPositionFirst: FieldingPosition!
+  preferredPositionSecond: FieldingPosition!
+  preferredPositionThird: FieldingPosition!
+  favoriteTeam: String
+  hometown: String
+  school: String
+  timeAdded: Datetime!
+  dateDebuted: Date
+
+  """
+  Reads and enables pagination through a set of `LegacyMeetupStatLineRaw`.
+  """
+  legacyMeetupStatLineRawsByPlayerId(
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `LegacyMeetupStatLineRaw`."""
+    orderBy: [LegacyMeetupStatLineRawsOrderBy!]
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: LegacyMeetupStatLineRawCondition
+  ): [LegacyMeetupStatLineRaw!]!
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Handedness {
+  LEFT
+  RIGHT
+  BOTH
+}
+
+"""Methods to use when ordering `LegacyMeetupStatLineRaw`."""
+enum LegacyMeetupStatLineRawsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  PLAYER_ID_ASC
+  PLAYER_ID_DESC
+  GAME_ID_ASC
+  GAME_ID_DESC
+  TEAM_ID_ASC
+  TEAM_ID_DESC
+  AT_BATS_ASC
+  AT_BATS_DESC
+  RUNS_ASC
+  RUNS_DESC
+  HITS_ASC
+  HITS_DESC
+  SINGLES_ASC
+  SINGLES_DESC
+  DOUBLES_ASC
+  DOUBLES_DESC
+  TRIPLES_ASC
+  TRIPLES_DESC
+  HOMERUNS_ASC
+  HOMERUNS_DESC
+  RBI_ASC
+  RBI_DESC
+  WALKS_ASC
+  WALKS_DESC
+  STRIKEOUTS_ASC
+  STRIKEOUTS_DESC
+  SAC_FLIES_ASC
+  SAC_FLIES_DESC
+  STOLEN_BASES_ASC
+  STOLEN_BASES_DESC
+  PITCHED_ASC
+  PITCHED_DESC
+  PITCHER_WON_ASC
+  PITCHER_WON_DESC
+  PITCHER_LOST_ASC
+  PITCHER_LOST_DESC
+  PITCHER_SAVE_ASC
+  PITCHER_SAVE_DESC
+  PITCHER_COMPLETE_GAME_ASC
+  PITCHER_COMPLETE_GAME_DESC
+  PITCHER_QUALITY_START_ASC
+  PITCHER_QUALITY_START_DESC
+  INNINGS_PITCHED_ASC
+  INNINGS_PITCHED_DESC
+  RUNS_ALLOWED_ASC
+  RUNS_ALLOWED_DESC
+  EARNED_RUNS_ALLOWED_ASC
+  EARNED_RUNS_ALLOWED_DESC
+  HITS_ALLOWED_ASC
+  HITS_ALLOWED_DESC
+  HOMERUNS_ALLOWED_ASC
+  HOMERUNS_ALLOWED_DESC
+  PITCHER_STRIKEOUTS_ASC
+  PITCHER_STRIKEOUTS_DESC
+  PITCHER_WALKS_ASC
+  PITCHER_WALKS_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyMeetupStatLineRaw` object types. All
+fields are tested for equality and combined with a logical ‘and.’
+"""
+input LegacyMeetupStatLineRawCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `playerId` field."""
+  playerId: Int
+
+  """Checks for equality with the object’s `gameId` field."""
+  gameId: Int
+
+  """Checks for equality with the object’s `teamId` field."""
+  teamId: Int
+
+  """Checks for equality with the object’s `atBats` field."""
+  atBats: Int
+
+  """Checks for equality with the object’s `runs` field."""
+  runs: Int
+
+  """Checks for equality with the object’s `hits` field."""
+  hits: Int
+
+  """Checks for equality with the object’s `singles` field."""
+  singles: Int
+
+  """Checks for equality with the object’s `doubles` field."""
+  doubles: Int
+
+  """Checks for equality with the object’s `triples` field."""
+  triples: Int
+
+  """Checks for equality with the object’s `homeruns` field."""
+  homeruns: Int
+
+  """Checks for equality with the object’s `rbi` field."""
+  rbi: Int
+
+  """Checks for equality with the object’s `walks` field."""
+  walks: Int
+
+  """Checks for equality with the object’s `strikeouts` field."""
+  strikeouts: Int
+
+  """Checks for equality with the object’s `sacFlies` field."""
+  sacFlies: Int
+
+  """Checks for equality with the object’s `stolenBases` field."""
+  stolenBases: Int
+
+  """Checks for equality with the object’s `pitched` field."""
+  pitched: Boolean
+
+  """Checks for equality with the object’s `pitcherWon` field."""
+  pitcherWon: Boolean
+
+  """Checks for equality with the object’s `pitcherLost` field."""
+  pitcherLost: Boolean
+
+  """Checks for equality with the object’s `pitcherSave` field."""
+  pitcherSave: Boolean
+
+  """Checks for equality with the object’s `pitcherCompleteGame` field."""
+  pitcherCompleteGame: Boolean
+
+  """Checks for equality with the object’s `pitcherQualityStart` field."""
+  pitcherQualityStart: Boolean
+
+  """Checks for equality with the object’s `inningsPitched` field."""
+  inningsPitched: Int
+
+  """Checks for equality with the object’s `runsAllowed` field."""
+  runsAllowed: Int
+
+  """Checks for equality with the object’s `earnedRunsAllowed` field."""
+  earnedRunsAllowed: Int
+
+  """Checks for equality with the object’s `hitsAllowed` field."""
+  hitsAllowed: Int
+
+  """Checks for equality with the object’s `homerunsAllowed` field."""
+  homerunsAllowed: Int
+
+  """Checks for equality with the object’s `pitcherStrikeouts` field."""
+  pitcherStrikeouts: Int
+
+  """Checks for equality with the object’s `pitcherWalks` field."""
+  pitcherWalks: Int
+}
+
+"""Methods to use when ordering `LegacyMeetupFieldRaw`."""
+enum LegacyMeetupFieldRawsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  SUB_FIELD_ASC
+  SUB_FIELD_DESC
+  ADDRESS_ASC
+  ADDRESS_DESC
+  RATING_ASC
+  RATING_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyMeetupFieldRaw` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input LegacyMeetupFieldRawCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `subField` field."""
+  subField: String
+
+  """Checks for equality with the object’s `address` field."""
+  address: String
+
+  """Checks for equality with the object’s `rating` field."""
+  rating: Int
+}
+
+"""Methods to use when ordering `LegacyMeetupPlayerRaw`."""
+enum LegacyMeetupPlayerRawsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  GENDER_ASC
+  GENDER_DESC
+  NICKNAME_ASC
+  NICKNAME_DESC
+  SELF_NICKNAME_ASC
+  SELF_NICKNAME_DESC
+  BATS_ASC
+  BATS_DESC
+  THROWS_ASC
+  THROWS_DESC
+  IMAGE_URL_ASC
+  IMAGE_URL_DESC
+  MEETUP_MEMBER_ID_ASC
+  MEETUP_MEMBER_ID_DESC
+  SKILL_LEVEL_ASC
+  SKILL_LEVEL_DESC
+  PREFERRED_POSITION_FIRST_ASC
+  PREFERRED_POSITION_FIRST_DESC
+  PREFERRED_POSITION_SECOND_ASC
+  PREFERRED_POSITION_SECOND_DESC
+  PREFERRED_POSITION_THIRD_ASC
+  PREFERRED_POSITION_THIRD_DESC
+  FAVORITE_TEAM_ASC
+  FAVORITE_TEAM_DESC
+  HOMETOWN_ASC
+  HOMETOWN_DESC
+  SCHOOL_ASC
+  SCHOOL_DESC
+  TIME_ADDED_ASC
+  TIME_ADDED_DESC
+  DATE_DEBUTED_ASC
+  DATE_DEBUTED_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyMeetupPlayerRaw` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input LegacyMeetupPlayerRawCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `gender` field."""
+  gender: Gender
+
+  """Checks for equality with the object’s `nickname` field."""
+  nickname: String
+
+  """Checks for equality with the object’s `selfNickname` field."""
+  selfNickname: String
+
+  """Checks for equality with the object’s `bats` field."""
+  bats: Handedness
+
+  """Checks for equality with the object’s `throws` field."""
+  throws: Handedness
+
+  """Checks for equality with the object’s `imageUrl` field."""
+  imageUrl: String
+
+  """Checks for equality with the object’s `meetupMemberId` field."""
+  meetupMemberId: String
+
+  """Checks for equality with the object’s `skillLevel` field."""
+  skillLevel: Int
+
+  """Checks for equality with the object’s `preferredPositionFirst` field."""
+  preferredPositionFirst: FieldingPosition
+
+  """Checks for equality with the object’s `preferredPositionSecond` field."""
+  preferredPositionSecond: FieldingPosition
+
+  """Checks for equality with the object’s `preferredPositionThird` field."""
+  preferredPositionThird: FieldingPosition
+
+  """Checks for equality with the object’s `favoriteTeam` field."""
+  favoriteTeam: String
+
+  """Checks for equality with the object’s `hometown` field."""
+  hometown: String
+
+  """Checks for equality with the object’s `school` field."""
+  school: String
+
+  """Checks for equality with the object’s `timeAdded` field."""
+  timeAdded: Datetime
+
+  """Checks for equality with the object’s `dateDebuted` field."""
+  dateDebuted: Date
+}
+
+"""Methods to use when ordering `LegacyMeetupTeamRaw`."""
+enum LegacyMeetupTeamRawsOrderBy {
+  NATURAL
+  ID_ASC
+  ID_DESC
+  NAME_ASC
+  NAME_DESC
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+}
+
+"""
+A condition to be used against `LegacyMeetupTeamRaw` object types. All fields
+are tested for equality and combined with a logical ‘and.’
+"""
+input LegacyMeetupTeamRawCondition {
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
 }
 
 """Methods to use when ordering `LegacyPlayer`."""
@@ -6203,6 +7218,46 @@ type Mutation {
     input: CreateGroupInput!
   ): CreateGroupPayload
 
+  """Creates a single `LegacyMeetupFieldRaw`."""
+  createLegacyMeetupFieldRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLegacyMeetupFieldRawInput!
+  ): CreateLegacyMeetupFieldRawPayload
+
+  """Creates a single `LegacyMeetupGameRaw`."""
+  createLegacyMeetupGameRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLegacyMeetupGameRawInput!
+  ): CreateLegacyMeetupGameRawPayload
+
+  """Creates a single `LegacyMeetupPlayerRaw`."""
+  createLegacyMeetupPlayerRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLegacyMeetupPlayerRawInput!
+  ): CreateLegacyMeetupPlayerRawPayload
+
+  """Creates a single `LegacyMeetupStatLineRaw`."""
+  createLegacyMeetupStatLineRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLegacyMeetupStatLineRawInput!
+  ): CreateLegacyMeetupStatLineRawPayload
+
+  """Creates a single `LegacyMeetupTeamRaw`."""
+  createLegacyMeetupTeamRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateLegacyMeetupTeamRawInput!
+  ): CreateLegacyMeetupTeamRawPayload
+
   """Creates a single `Lineup`."""
   createLineup(
     """
@@ -6506,6 +7561,138 @@ type Mutation {
     """
     input: UpdateGroupByUrlSlugInput!
   ): UpdateGroupPayload
+
+  """
+  Updates a single `LegacyMeetupFieldRaw` using its globally unique id and a patch.
+  """
+  updateLegacyMeetupFieldRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupFieldRawByNodeIdInput!
+  ): UpdateLegacyMeetupFieldRawPayload
+
+  """
+  Updates a single `LegacyMeetupFieldRaw` using a unique key and a patch.
+  """
+  updateLegacyMeetupFieldRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupFieldRawInput!
+  ): UpdateLegacyMeetupFieldRawPayload
+
+  """
+  Updates a single `LegacyMeetupFieldRaw` using a unique key and a patch.
+  """
+  updateLegacyMeetupFieldRawByNameAndSubField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupFieldRawByNameAndSubFieldInput!
+  ): UpdateLegacyMeetupFieldRawPayload
+
+  """
+  Updates a single `LegacyMeetupGameRaw` using its globally unique id and a patch.
+  """
+  updateLegacyMeetupGameRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupGameRawByNodeIdInput!
+  ): UpdateLegacyMeetupGameRawPayload
+
+  """Updates a single `LegacyMeetupGameRaw` using a unique key and a patch."""
+  updateLegacyMeetupGameRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupGameRawInput!
+  ): UpdateLegacyMeetupGameRawPayload
+
+  """Updates a single `LegacyMeetupGameRaw` using a unique key and a patch."""
+  updateLegacyMeetupGameRawByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupGameRawByNameInput!
+  ): UpdateLegacyMeetupGameRawPayload
+
+  """
+  Updates a single `LegacyMeetupPlayerRaw` using its globally unique id and a patch.
+  """
+  updateLegacyMeetupPlayerRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupPlayerRawByNodeIdInput!
+  ): UpdateLegacyMeetupPlayerRawPayload
+
+  """
+  Updates a single `LegacyMeetupPlayerRaw` using a unique key and a patch.
+  """
+  updateLegacyMeetupPlayerRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupPlayerRawInput!
+  ): UpdateLegacyMeetupPlayerRawPayload
+
+  """
+  Updates a single `LegacyMeetupPlayerRaw` using a unique key and a patch.
+  """
+  updateLegacyMeetupPlayerRawByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupPlayerRawByNameInput!
+  ): UpdateLegacyMeetupPlayerRawPayload
+
+  """
+  Updates a single `LegacyMeetupStatLineRaw` using its globally unique id and a patch.
+  """
+  updateLegacyMeetupStatLineRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupStatLineRawByNodeIdInput!
+  ): UpdateLegacyMeetupStatLineRawPayload
+
+  """
+  Updates a single `LegacyMeetupStatLineRaw` using a unique key and a patch.
+  """
+  updateLegacyMeetupStatLineRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupStatLineRawInput!
+  ): UpdateLegacyMeetupStatLineRawPayload
+
+  """
+  Updates a single `LegacyMeetupTeamRaw` using its globally unique id and a patch.
+  """
+  updateLegacyMeetupTeamRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupTeamRawByNodeIdInput!
+  ): UpdateLegacyMeetupTeamRawPayload
+
+  """Updates a single `LegacyMeetupTeamRaw` using a unique key and a patch."""
+  updateLegacyMeetupTeamRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupTeamRawInput!
+  ): UpdateLegacyMeetupTeamRawPayload
+
+  """Updates a single `LegacyMeetupTeamRaw` using a unique key and a patch."""
+  updateLegacyMeetupTeamRawByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateLegacyMeetupTeamRawByNameInput!
+  ): UpdateLegacyMeetupTeamRawPayload
 
   """Updates a single `Lineup` using its globally unique id and a patch."""
   updateLineupByNodeId(
@@ -6960,6 +8147,120 @@ type Mutation {
     """
     input: DeleteGroupByUrlSlugInput!
   ): DeleteGroupPayload
+
+  """Deletes a single `LegacyMeetupFieldRaw` using its globally unique id."""
+  deleteLegacyMeetupFieldRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupFieldRawByNodeIdInput!
+  ): DeleteLegacyMeetupFieldRawPayload
+
+  """Deletes a single `LegacyMeetupFieldRaw` using a unique key."""
+  deleteLegacyMeetupFieldRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupFieldRawInput!
+  ): DeleteLegacyMeetupFieldRawPayload
+
+  """Deletes a single `LegacyMeetupFieldRaw` using a unique key."""
+  deleteLegacyMeetupFieldRawByNameAndSubField(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupFieldRawByNameAndSubFieldInput!
+  ): DeleteLegacyMeetupFieldRawPayload
+
+  """Deletes a single `LegacyMeetupGameRaw` using its globally unique id."""
+  deleteLegacyMeetupGameRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupGameRawByNodeIdInput!
+  ): DeleteLegacyMeetupGameRawPayload
+
+  """Deletes a single `LegacyMeetupGameRaw` using a unique key."""
+  deleteLegacyMeetupGameRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupGameRawInput!
+  ): DeleteLegacyMeetupGameRawPayload
+
+  """Deletes a single `LegacyMeetupGameRaw` using a unique key."""
+  deleteLegacyMeetupGameRawByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupGameRawByNameInput!
+  ): DeleteLegacyMeetupGameRawPayload
+
+  """Deletes a single `LegacyMeetupPlayerRaw` using its globally unique id."""
+  deleteLegacyMeetupPlayerRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupPlayerRawByNodeIdInput!
+  ): DeleteLegacyMeetupPlayerRawPayload
+
+  """Deletes a single `LegacyMeetupPlayerRaw` using a unique key."""
+  deleteLegacyMeetupPlayerRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupPlayerRawInput!
+  ): DeleteLegacyMeetupPlayerRawPayload
+
+  """Deletes a single `LegacyMeetupPlayerRaw` using a unique key."""
+  deleteLegacyMeetupPlayerRawByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupPlayerRawByNameInput!
+  ): DeleteLegacyMeetupPlayerRawPayload
+
+  """
+  Deletes a single `LegacyMeetupStatLineRaw` using its globally unique id.
+  """
+  deleteLegacyMeetupStatLineRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupStatLineRawByNodeIdInput!
+  ): DeleteLegacyMeetupStatLineRawPayload
+
+  """Deletes a single `LegacyMeetupStatLineRaw` using a unique key."""
+  deleteLegacyMeetupStatLineRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupStatLineRawInput!
+  ): DeleteLegacyMeetupStatLineRawPayload
+
+  """Deletes a single `LegacyMeetupTeamRaw` using its globally unique id."""
+  deleteLegacyMeetupTeamRawByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupTeamRawByNodeIdInput!
+  ): DeleteLegacyMeetupTeamRawPayload
+
+  """Deletes a single `LegacyMeetupTeamRaw` using a unique key."""
+  deleteLegacyMeetupTeamRaw(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupTeamRawInput!
+  ): DeleteLegacyMeetupTeamRawPayload
+
+  """Deletes a single `LegacyMeetupTeamRaw` using a unique key."""
+  deleteLegacyMeetupTeamRawByName(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteLegacyMeetupTeamRawByNameInput!
+  ): DeleteLegacyMeetupTeamRawPayload
 
   """Deletes a single `Lineup` using its globally unique id."""
   deleteLineupByNodeId(
@@ -25416,6 +26717,7 @@ input ForeignDbFieldInput {
   fieldName: String!
   fieldAddress: String!
   fieldNumber: String
+  fieldRating: Int
 }
 
 """The output of our create `ForeignDbGame` mutation."""
@@ -25457,6 +26759,13 @@ input ForeignDbGameInput {
   gameTeamId1: Int!
   gameTeamId2: Int!
   season: Int!
+  fieldId: Int
+  gamePicGallery: String
+  eventId: String
+  gameDateInsert: Date
+  gameDateUpdate: Date
+  gameAdv: Int
+  gameCnt: Int
 }
 
 """The output of our create `ForeignDbPlayer` mutation."""
@@ -25494,6 +26803,21 @@ input ForeignDbPlayerInput {
   playerName: String!
   playerImage: String
   memberId: String
+  playerNickname: String
+  playerSelfNickname: String
+  playerGender: Int
+  playerBats: Int
+  playerThrows: Int
+  playerPosition1: Int
+  playerPosition2: Int
+  playerPosition3: Int
+  playerAdded: Datetime
+  playerFavTeam: String
+  playerHometown: String
+  playerSchools: String
+  playerSkill: Int
+  groupId: Int
+  playerDebut: String
 }
 
 """The output of our create `ForeignDbStatLine` mutation."""
@@ -25542,6 +26866,20 @@ input ForeignDbStatLineInput {
   sbStatsBb: Int!
   sbStatsSo: Int!
   sbStatsSac: Int!
+  sbStatsS: Int
+  sbStatsP: Int
+  sbStatsPW: Int
+  sbStatsPL: Int
+  sbStatsPSv: Int
+  sbStatsPCg: Int
+  sbStatsPQs: Int
+  sbStatsPInnings: String
+  sbStatsPEr: String
+  sbStatsPTr: String
+  sbStatsPHits: String
+  sbStatsPHr: String
+  sbStatsPK: String
+  sbStatsPBb: String
 }
 
 """The output of our create `ForeignDbTeam` mutation."""
@@ -25880,6 +27218,1962 @@ input GroupInput {
   seasonStatsAllTimeQualifiedBatters: FakePublicSeasonStatsAllTimeQualifiedBattersForeignKey2InverseInput
   seasonStatsQualifiedBatters: FakePublicSeasonStatsQualifiedBattersForeignKey2InverseInput
   unifiedGames: FakePublicUnifiedGamesForeignKey0InverseInput
+}
+
+"""The output of our create `LegacyMeetupFieldRaw` mutation."""
+type CreateLegacyMeetupFieldRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupFieldRaw` that was created by this mutation."""
+  legacyMeetupFieldRaw: LegacyMeetupFieldRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `LegacyMeetupFieldRaw` mutation."""
+input CreateLegacyMeetupFieldRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupFieldRaw` to be created by this mutation."""
+  legacyMeetupFieldRaw: LegacyMeetupFieldRawInput!
+}
+
+"""An input for mutations affecting `LegacyMeetupFieldRaw`"""
+input LegacyMeetupFieldRawInput {
+  id: Int!
+  name: String!
+  subField: String
+  address: String!
+  rating: Int!
+  legacyMeetupGameRaws: LegacyMeetupGameRawFieldIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupFieldRawInput` mutation.
+"""
+input LegacyMeetupGameRawFieldIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `legacyMeetupGameRaw` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectById: [LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByName: [LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyMeetupGameRawNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteById: [LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByName: [LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyMeetupGameRawNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateById: [LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByName: [LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate!]
+
+  """
+  A `LegacyMeetupGameRawInput` object that will be created and connected to this object.
+  """
+  create: [LegacyMeetupGameRawFieldIdFkeyLegacyMeetupGameRawCreateInput!]
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to connect."""
+input LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to connect."""
+input LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyMeetupGameRawNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to delete."""
+input LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to delete."""
+input LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyMeetupGameRawNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+"""
+input updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch {
+  id: Int
+  name: String
+  season: Int
+  date: Date
+  timeStarted: Time
+  timeEnded: Time
+  winningTeamId: Int
+  losingTeamId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupTeamRaw` in the `LegacyMeetupGameRawInput` mutation.
+"""
+input LegacyMeetupGameRawLosingTeamIdFkeyInput {
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  connectById: LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  connectByName: LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyMeetupTeamRawNodeIdConnect
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  deleteById: LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  deleteByName: LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyMeetupTeamRawNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  updateById: LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  updateByName: LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate
+
+  """
+  A `LegacyMeetupTeamRawInput` object that will be created and connected to this object.
+  """
+  create: LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupTeamRawCreateInput
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to connect."""
+input LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyConnect {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to connect."""
+input LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyConnect {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyMeetupTeamRawNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to delete."""
+input LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyDelete {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to delete."""
+input LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyDelete {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyMeetupTeamRawNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+  """
+  patch: updateLegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+"""
+input updateLegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch {
+  id: Int
+  name: String
+  legacyMeetupGameRawsToWinningTeamIdUsingId: LegacyMeetupGameRawWinningTeamIdFkeyInverseInput
+  legacyMeetupGameRawsToLosingTeamIdUsingId: LegacyMeetupGameRawLosingTeamIdFkeyInverseInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawTeamIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupTeamRawInput` mutation.
+"""
+input LegacyMeetupGameRawWinningTeamIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `legacyMeetupGameRaw` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectById: [LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByName: [LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyMeetupGameRawNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteById: [LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByName: [LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyMeetupGameRawNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateById: [LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByName: [LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyNodeIdUpdate!]
+
+  """
+  A `LegacyMeetupGameRawInput` object that will be created and connected to this object.
+  """
+  create: [LegacyMeetupGameRawWinningTeamIdFkeyLegacyMeetupGameRawCreateInput!]
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+"""
+input updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyPatch {
+  id: Int
+  name: String
+  season: Int
+  date: Date
+  timeStarted: Time
+  timeEnded: Time
+  losingTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupFieldRaw` in the `LegacyMeetupGameRawInput` mutation.
+"""
+input LegacyMeetupGameRawFieldIdFkeyInput {
+  """
+  The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  connectById: LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  connectByNameAndSubField: LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyMeetupFieldRawNodeIdConnect
+
+  """
+  The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  deleteById: LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  deleteByNameAndSubField: LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyMeetupFieldRawNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  updateById: LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  updateByNameAndSubField: LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawNameSubFieldKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupFieldRaw` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate
+
+  """
+  A `LegacyMeetupFieldRawInput` object that will be created and connected to this object.
+  """
+  create: LegacyMeetupGameRawFieldIdFkeyLegacyMeetupFieldRawCreateInput
+}
+
+"""The fields on `legacyMeetupFieldRaw` to look up the row to connect."""
+input LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyConnect {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupFieldRaw` to look up the row to connect."""
+input LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyConnect {
+  name: String!
+  subField: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyMeetupFieldRawNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupFieldRaw` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupFieldRaw` to look up the row to delete."""
+input LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyDelete {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupFieldRaw` to look up the row to delete."""
+input LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyDelete {
+  name: String!
+  subField: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyMeetupFieldRawNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupFieldRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupFieldRaw` to look up the row to update."""
+input LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated.
+  """
+  patch: updateLegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated.
+"""
+input updateLegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch {
+  id: Int
+  name: String
+  subField: String
+  address: String
+  rating: Int
+  legacyMeetupGameRaws: LegacyMeetupGameRawFieldIdFkeyInverseInput
+}
+
+"""The fields on `legacyMeetupFieldRaw` to look up the row to update."""
+input LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawNameSubFieldKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated.
+  """
+  patch: updateLegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch!
+  name: String!
+  subField: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupFieldRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated.
+  """
+  patch: LegacyMeetupFieldRawPatch!
+}
+
+"""
+Represents an update to a `LegacyMeetupFieldRaw`. Fields that are set will be updated.
+"""
+input LegacyMeetupFieldRawPatch {
+  id: Int
+  name: String
+  subField: String
+  address: String
+  rating: Int
+  legacyMeetupGameRaws: LegacyMeetupGameRawFieldIdFkeyInverseInput
+}
+
+"""The `legacyMeetupFieldRaw` to be created by this mutation."""
+input LegacyMeetupGameRawFieldIdFkeyLegacyMeetupFieldRawCreateInput {
+  id: Int!
+  name: String!
+  subField: String
+  address: String!
+  rating: Int!
+  legacyMeetupGameRaws: LegacyMeetupGameRawFieldIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupStatLineRaw` in the `LegacyMeetupGameRawInput` mutation.
+"""
+input LegacyMeetupStatLineRawGameIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `legacyMeetupStatLineRaw` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  connectById: [LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyMeetupStatLineRawNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  deleteById: [LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyMeetupStatLineRawNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  updateById: [LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate!]
+
+  """
+  A `LegacyMeetupStatLineRawInput` object that will be created and connected to this object.
+  """
+  create: [LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupStatLineRawCreateInput!]
+}
+
+"""The fields on `legacyMeetupStatLineRaw` to look up the row to connect."""
+input LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect {
+  id: Int!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyMeetupStatLineRawNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupStatLineRaw` to look up the row to delete."""
+input LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete {
+  id: Int!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyMeetupStatLineRawNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupStatLineRaw` to look up the row to update."""
+input LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+  """
+  patch: updateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+"""
+input updateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch {
+  id: Int
+  playerId: Int
+  teamId: Int
+  atBats: Int
+  runs: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  rbi: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  stolenBases: Int
+  pitched: Boolean
+  pitcherWon: Boolean
+  pitcherLost: Boolean
+  pitcherSave: Boolean
+  pitcherCompleteGame: Boolean
+  pitcherQualityStart: Boolean
+  inningsPitched: Int
+  runsAllowed: Int
+  earnedRunsAllowed: Int
+  hitsAllowed: Int
+  homerunsAllowed: Int
+  pitcherStrikeouts: Int
+  pitcherWalks: Int
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupPlayerRaw` in the `LegacyMeetupStatLineRawInput` mutation.
+"""
+input LegacyMeetupStatLineRawPlayerIdFkeyInput {
+  """
+  The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  connectById: LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  connectByName: LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyMeetupPlayerRawNodeIdConnect
+
+  """
+  The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  deleteById: LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  deleteByName: LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyMeetupPlayerRawNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  updateById: LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  updateByName: LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupPlayerRaw` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate
+
+  """
+  A `LegacyMeetupPlayerRawInput` object that will be created and connected to this object.
+  """
+  create: LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupPlayerRawCreateInput
+}
+
+"""The fields on `legacyMeetupPlayerRaw` to look up the row to connect."""
+input LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyConnect {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupPlayerRaw` to look up the row to connect."""
+input LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyConnect {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to connect."""
+input LegacyMeetupPlayerRawNodeIdConnect {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupPlayerRaw` to be connected.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupPlayerRaw` to look up the row to delete."""
+input LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyDelete {
+  id: Int!
+}
+
+"""The fields on `legacyMeetupPlayerRaw` to look up the row to delete."""
+input LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyDelete {
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to delete."""
+input LegacyMeetupPlayerRawNodeIdDelete {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupPlayerRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""The fields on `legacyMeetupPlayerRaw` to look up the row to update."""
+input LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated.
+  """
+  patch: updateLegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated.
+"""
+input updateLegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch {
+  id: Int
+  name: String
+  gender: Gender
+  nickname: String
+  selfNickname: String
+  bats: Handedness
+  throws: Handedness
+  imageUrl: String
+  meetupMemberId: String
+  skillLevel: Int
+  preferredPositionFirst: FieldingPosition
+  preferredPositionSecond: FieldingPosition
+  preferredPositionThird: FieldingPosition
+  favoriteTeam: String
+  hometown: String
+  school: String
+  timeAdded: Datetime
+  dateDebuted: Date
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawPlayerIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupStatLineRaw` in the `LegacyMeetupPlayerRawInput` mutation.
+"""
+input LegacyMeetupStatLineRawPlayerIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `legacyMeetupStatLineRaw` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  connectById: [LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyMeetupStatLineRawNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  deleteById: [LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyMeetupStatLineRawNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  updateById: [LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate!]
+
+  """
+  A `LegacyMeetupStatLineRawInput` object that will be created and connected to this object.
+  """
+  create: [LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupStatLineRawCreateInput!]
+}
+
+"""The fields on `legacyMeetupStatLineRaw` to look up the row to update."""
+input LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+  """
+  patch: updateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+"""
+input updateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch {
+  id: Int
+  gameId: Int
+  teamId: Int
+  atBats: Int
+  runs: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  rbi: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  stolenBases: Int
+  pitched: Boolean
+  pitcherWon: Boolean
+  pitcherLost: Boolean
+  pitcherSave: Boolean
+  pitcherCompleteGame: Boolean
+  pitcherQualityStart: Boolean
+  inningsPitched: Int
+  runsAllowed: Int
+  earnedRunsAllowed: Int
+  hitsAllowed: Int
+  homerunsAllowed: Int
+  pitcherStrikeouts: Int
+  pitcherWalks: Int
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupStatLineRawInput` mutation.
+"""
+input LegacyMeetupStatLineRawGameIdFkeyInput {
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectById: LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByName: LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyMeetupGameRawNodeIdConnect
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteById: LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByName: LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyMeetupGameRawNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateById: LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByName: LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate
+
+  """
+  A `LegacyMeetupGameRawInput` object that will be created and connected to this object.
+  """
+  create: LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupGameRawCreateInput
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+"""
+input updateLegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch {
+  id: Int
+  name: String
+  season: Int
+  date: Date
+  timeStarted: Time
+  timeEnded: Time
+  winningTeamId: Int
+  losingTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+}
+
+"""
+Represents an update to a `LegacyMeetupGameRaw`. Fields that are set will be updated.
+"""
+input LegacyMeetupGameRawPatch {
+  id: Int
+  name: String
+  season: Int
+  date: Date
+  timeStarted: Time
+  timeEnded: Time
+  winningTeamId: Int
+  losingTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""The `legacyMeetupGameRaw` to be created by this mutation."""
+input LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupGameRawCreateInput {
+  id: Int!
+  name: String!
+  season: Int!
+  date: Date!
+  timeStarted: Time!
+  timeEnded: Time!
+  winningTeamId: Int
+  losingTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean!
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupTeamRaw` in the `LegacyMeetupStatLineRawInput` mutation.
+"""
+input LegacyMeetupStatLineRawTeamIdFkeyInput {
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  connectById: LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  connectByName: LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyConnect
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  connectByNodeId: LegacyMeetupTeamRawNodeIdConnect
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  deleteById: LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  deleteByName: LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyDelete
+
+  """
+  The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: LegacyMeetupTeamRawNodeIdDelete
+
+  """
+  The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  updateById: LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  updateByName: LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate
+
+  """
+  The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship.
+  """
+  updateByNodeId: LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate
+
+  """
+  A `LegacyMeetupTeamRawInput` object that will be created and connected to this object.
+  """
+  create: LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupTeamRawCreateInput
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+  """
+  patch: updateLegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+"""
+input updateLegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch {
+  id: Int
+  name: String
+  legacyMeetupGameRawsToWinningTeamIdUsingId: LegacyMeetupGameRawWinningTeamIdFkeyInverseInput
+  legacyMeetupGameRawsToLosingTeamIdUsingId: LegacyMeetupGameRawLosingTeamIdFkeyInverseInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawTeamIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupTeamRawInput` mutation.
+"""
+input LegacyMeetupGameRawLosingTeamIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `legacyMeetupGameRaw` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectById: [LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByName: [LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyMeetupGameRawNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteById: [LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByName: [LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyMeetupGameRawNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateById: [LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByName: [LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate!]
+
+  """
+  A `LegacyMeetupGameRawInput` object that will be created and connected to this object.
+  """
+  create: [LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupGameRawCreateInput!]
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+"""
+input updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch {
+  id: Int
+  name: String
+  season: Int
+  date: Date
+  timeStarted: Time
+  timeEnded: Time
+  winningTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+}
+
+"""The `legacyMeetupGameRaw` to be created by this mutation."""
+input LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupGameRawCreateInput {
+  id: Int!
+  name: String!
+  season: Int!
+  date: Date!
+  timeStarted: Time!
+  timeEnded: Time!
+  winningTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean!
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""
+Input for the nested mutation of `legacyMeetupStatLineRaw` in the `LegacyMeetupTeamRawInput` mutation.
+"""
+input LegacyMeetupStatLineRawTeamIdFkeyInverseInput {
+  """
+  Flag indicating whether all other `legacyMeetupStatLineRaw` records that match this relationship should be removed.
+  """
+  deleteOthers: Boolean
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  connectById: [LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  connectByNodeId: [LegacyMeetupStatLineRawNodeIdConnect!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  deleteById: [LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete!]
+
+  """
+  The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  deleteByNodeId: [LegacyMeetupStatLineRawNodeIdDelete!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  updateById: [LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate!]
+
+  """
+  The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship.
+  """
+  updateByNodeId: [LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate!]
+
+  """
+  A `LegacyMeetupStatLineRawInput` object that will be created and connected to this object.
+  """
+  create: [LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupStatLineRawCreateInput!]
+}
+
+"""The fields on `legacyMeetupStatLineRaw` to look up the row to update."""
+input LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+  """
+  patch: updateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch!
+  id: Int!
+}
+
+"""
+An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+"""
+input updateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch {
+  id: Int
+  playerId: Int
+  gameId: Int
+  atBats: Int
+  runs: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  rbi: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  stolenBases: Int
+  pitched: Boolean
+  pitcherWon: Boolean
+  pitcherLost: Boolean
+  pitcherSave: Boolean
+  pitcherCompleteGame: Boolean
+  pitcherQualityStart: Boolean
+  inningsPitched: Int
+  runsAllowed: Int
+  earnedRunsAllowed: Int
+  hitsAllowed: Int
+  homerunsAllowed: Int
+  pitcherStrikeouts: Int
+  pitcherWalks: Int
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+  """
+  patch: LegacyMeetupStatLineRawPatch!
+}
+
+"""
+Represents an update to a `LegacyMeetupStatLineRaw`. Fields that are set will be updated.
+"""
+input LegacyMeetupStatLineRawPatch {
+  id: Int
+  playerId: Int
+  gameId: Int
+  teamId: Int
+  atBats: Int
+  runs: Int
+  hits: Int
+  singles: Int
+  doubles: Int
+  triples: Int
+  homeruns: Int
+  rbi: Int
+  walks: Int
+  strikeouts: Int
+  sacFlies: Int
+  stolenBases: Int
+  pitched: Boolean
+  pitcherWon: Boolean
+  pitcherLost: Boolean
+  pitcherSave: Boolean
+  pitcherCompleteGame: Boolean
+  pitcherQualityStart: Boolean
+  inningsPitched: Int
+  runsAllowed: Int
+  earnedRunsAllowed: Int
+  hitsAllowed: Int
+  homerunsAllowed: Int
+  pitcherStrikeouts: Int
+  pitcherWalks: Int
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""The `legacyMeetupStatLineRaw` to be created by this mutation."""
+input LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupStatLineRawCreateInput {
+  id: Int!
+  playerId: Int
+  gameId: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  stolenBases: Int!
+  pitched: Boolean!
+  pitcherWon: Boolean!
+  pitcherLost: Boolean!
+  pitcherSave: Boolean!
+  pitcherCompleteGame: Boolean!
+  pitcherQualityStart: Boolean!
+  inningsPitched: Int!
+  runsAllowed: Int!
+  earnedRunsAllowed: Int!
+  hitsAllowed: Int!
+  homerunsAllowed: Int!
+  pitcherStrikeouts: Int!
+  pitcherWalks: Int!
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+  """
+  patch: updateLegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+  """
+  patch: LegacyMeetupTeamRawPatch!
+}
+
+"""
+Represents an update to a `LegacyMeetupTeamRaw`. Fields that are set will be updated.
+"""
+input LegacyMeetupTeamRawPatch {
+  id: Int
+  name: String
+  legacyMeetupGameRawsToWinningTeamIdUsingId: LegacyMeetupGameRawWinningTeamIdFkeyInverseInput
+  legacyMeetupGameRawsToLosingTeamIdUsingId: LegacyMeetupGameRawLosingTeamIdFkeyInverseInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawTeamIdFkeyInverseInput
+}
+
+"""The `legacyMeetupTeamRaw` to be created by this mutation."""
+input LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupTeamRawCreateInput {
+  id: Int!
+  name: String!
+  legacyMeetupGameRawsToWinningTeamIdUsingId: LegacyMeetupGameRawWinningTeamIdFkeyInverseInput
+  legacyMeetupGameRawsToLosingTeamIdUsingId: LegacyMeetupGameRawLosingTeamIdFkeyInverseInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawTeamIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+  """
+  patch: LegacyMeetupStatLineRawPatch!
+}
+
+"""The `legacyMeetupStatLineRaw` to be created by this mutation."""
+input LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupStatLineRawCreateInput {
+  id: Int!
+  gameId: Int
+  teamId: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  stolenBases: Int!
+  pitched: Boolean!
+  pitcherWon: Boolean!
+  pitcherLost: Boolean!
+  pitcherSave: Boolean!
+  pitcherCompleteGame: Boolean!
+  pitcherQualityStart: Boolean!
+  inningsPitched: Int!
+  runsAllowed: Int!
+  earnedRunsAllowed: Int!
+  hitsAllowed: Int!
+  homerunsAllowed: Int!
+  pitcherStrikeouts: Int!
+  pitcherWalks: Int!
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""The fields on `legacyMeetupPlayerRaw` to look up the row to update."""
+input LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated.
+  """
+  patch: updateLegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupPlayerRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated.
+  """
+  patch: LegacyMeetupPlayerRawPatch!
+}
+
+"""
+Represents an update to a `LegacyMeetupPlayerRaw`. Fields that are set will be updated.
+"""
+input LegacyMeetupPlayerRawPatch {
+  id: Int
+  name: String
+  gender: Gender
+  nickname: String
+  selfNickname: String
+  bats: Handedness
+  throws: Handedness
+  imageUrl: String
+  meetupMemberId: String
+  skillLevel: Int
+  preferredPositionFirst: FieldingPosition
+  preferredPositionSecond: FieldingPosition
+  preferredPositionThird: FieldingPosition
+  favoriteTeam: String
+  hometown: String
+  school: String
+  timeAdded: Datetime
+  dateDebuted: Date
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawPlayerIdFkeyInverseInput
+}
+
+"""The `legacyMeetupPlayerRaw` to be created by this mutation."""
+input LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupPlayerRawCreateInput {
+  id: Int!
+  name: String!
+  gender: Gender!
+  nickname: String
+  selfNickname: String
+  bats: Handedness!
+  throws: Handedness!
+  imageUrl: String
+  meetupMemberId: String
+  skillLevel: Int
+  preferredPositionFirst: FieldingPosition!
+  preferredPositionSecond: FieldingPosition!
+  preferredPositionThird: FieldingPosition!
+  favoriteTeam: String
+  hometown: String
+  school: String
+  timeAdded: Datetime!
+  dateDebuted: Date
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawPlayerIdFkeyInverseInput
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated.
+  """
+  patch: LegacyMeetupStatLineRawPatch!
+}
+
+"""The `legacyMeetupStatLineRaw` to be created by this mutation."""
+input LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupStatLineRawCreateInput {
+  id: Int!
+  playerId: Int
+  teamId: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  stolenBases: Int!
+  pitched: Boolean!
+  pitcherWon: Boolean!
+  pitcherLost: Boolean!
+  pitcherSave: Boolean!
+  pitcherCompleteGame: Boolean!
+  pitcherQualityStart: Boolean!
+  inningsPitched: Int!
+  runsAllowed: Int!
+  earnedRunsAllowed: Int!
+  hitsAllowed: Int!
+  homerunsAllowed: Int!
+  pitcherStrikeouts: Int!
+  pitcherWalks: Int!
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+}
+
+"""The `legacyMeetupGameRaw` to be created by this mutation."""
+input LegacyMeetupGameRawWinningTeamIdFkeyLegacyMeetupGameRawCreateInput {
+  id: Int!
+  name: String!
+  season: Int!
+  date: Date!
+  timeStarted: Time!
+  timeEnded: Time!
+  losingTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean!
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""The fields on `legacyMeetupTeamRaw` to look up the row to update."""
+input LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+  """
+  patch: updateLegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated.
+  """
+  patch: LegacyMeetupTeamRawPatch!
+}
+
+"""The `legacyMeetupTeamRaw` to be created by this mutation."""
+input LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupTeamRawCreateInput {
+  id: Int!
+  name: String!
+  legacyMeetupGameRawsToWinningTeamIdUsingId: LegacyMeetupGameRawWinningTeamIdFkeyInverseInput
+  legacyMeetupGameRawsToLosingTeamIdUsingId: LegacyMeetupGameRawLosingTeamIdFkeyInverseInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawTeamIdFkeyInverseInput
+}
+
+"""The fields on `legacyMeetupGameRaw` to look up the row to update."""
+input LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate {
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: updateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch!
+  name: String!
+}
+
+"""The globally unique `ID` look up for the row to update."""
+input LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate {
+  """
+  The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+}
+
+"""The `legacyMeetupGameRaw` to be created by this mutation."""
+input LegacyMeetupGameRawFieldIdFkeyLegacyMeetupGameRawCreateInput {
+  id: Int!
+  name: String!
+  season: Int!
+  date: Date!
+  timeStarted: Time!
+  timeEnded: Time!
+  winningTeamId: Int
+  losingTeamId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean!
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""The output of our create `LegacyMeetupGameRaw` mutation."""
+type CreateLegacyMeetupGameRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupGameRaw` that was created by this mutation."""
+  legacyMeetupGameRaw: LegacyMeetupGameRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  winningTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  losingTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  field: LegacyMeetupFieldRaw
+}
+
+"""All input for the create `LegacyMeetupGameRaw` mutation."""
+input CreateLegacyMeetupGameRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupGameRaw` to be created by this mutation."""
+  legacyMeetupGameRaw: LegacyMeetupGameRawInput!
+}
+
+"""An input for mutations affecting `LegacyMeetupGameRaw`"""
+input LegacyMeetupGameRawInput {
+  id: Int!
+  name: String!
+  season: Int!
+  date: Date!
+  timeStarted: Time!
+  timeEnded: Time!
+  winningTeamId: Int
+  losingTeamId: Int
+  fieldId: Int
+  imageGalleryUrl: String
+  meetupEventId: String
+  dateInserted: Date
+  dateUpdated: Date
+  advanced: Boolean!
+  legacyMeetupTeamRaw: LegacyMeetupGameRawLosingTeamIdFkeyInput
+  legacyMeetupFieldRaw: LegacyMeetupGameRawFieldIdFkeyInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawGameIdFkeyInverseInput
+}
+
+"""The output of our create `LegacyMeetupPlayerRaw` mutation."""
+type CreateLegacyMeetupPlayerRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupPlayerRaw` that was created by this mutation."""
+  legacyMeetupPlayerRaw: LegacyMeetupPlayerRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `LegacyMeetupPlayerRaw` mutation."""
+input CreateLegacyMeetupPlayerRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupPlayerRaw` to be created by this mutation."""
+  legacyMeetupPlayerRaw: LegacyMeetupPlayerRawInput!
+}
+
+"""An input for mutations affecting `LegacyMeetupPlayerRaw`"""
+input LegacyMeetupPlayerRawInput {
+  id: Int!
+  name: String!
+  gender: Gender!
+  nickname: String
+  selfNickname: String
+  bats: Handedness!
+  throws: Handedness!
+  imageUrl: String
+  meetupMemberId: String
+  skillLevel: Int
+  preferredPositionFirst: FieldingPosition!
+  preferredPositionSecond: FieldingPosition!
+  preferredPositionThird: FieldingPosition!
+  favoriteTeam: String
+  hometown: String
+  school: String
+  timeAdded: Datetime!
+  dateDebuted: Date
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawPlayerIdFkeyInverseInput
+}
+
+"""The output of our create `LegacyMeetupStatLineRaw` mutation."""
+type CreateLegacyMeetupStatLineRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupStatLineRaw` that was created by this mutation."""
+  legacyMeetupStatLineRaw: LegacyMeetupStatLineRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  player: LegacyMeetupPlayerRaw
+
+  """
+  Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  game: LegacyMeetupGameRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  team: LegacyMeetupTeamRaw
+}
+
+"""All input for the create `LegacyMeetupStatLineRaw` mutation."""
+input CreateLegacyMeetupStatLineRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupStatLineRaw` to be created by this mutation."""
+  legacyMeetupStatLineRaw: LegacyMeetupStatLineRawInput!
+}
+
+"""An input for mutations affecting `LegacyMeetupStatLineRaw`"""
+input LegacyMeetupStatLineRawInput {
+  id: Int!
+  playerId: Int
+  gameId: Int
+  teamId: Int
+  atBats: Int!
+  runs: Int!
+  hits: Int!
+  singles: Int!
+  doubles: Int!
+  triples: Int!
+  homeruns: Int!
+  rbi: Int!
+  walks: Int!
+  strikeouts: Int!
+  sacFlies: Int!
+  stolenBases: Int!
+  pitched: Boolean!
+  pitcherWon: Boolean!
+  pitcherLost: Boolean!
+  pitcherSave: Boolean!
+  pitcherCompleteGame: Boolean!
+  pitcherQualityStart: Boolean!
+  inningsPitched: Int!
+  runsAllowed: Int!
+  earnedRunsAllowed: Int!
+  hitsAllowed: Int!
+  homerunsAllowed: Int!
+  pitcherStrikeouts: Int!
+  pitcherWalks: Int!
+  legacyMeetupPlayerRaw: LegacyMeetupStatLineRawPlayerIdFkeyInput
+  legacyMeetupGameRaw: LegacyMeetupStatLineRawGameIdFkeyInput
+  legacyMeetupTeamRaw: LegacyMeetupStatLineRawTeamIdFkeyInput
+}
+
+"""The output of our create `LegacyMeetupTeamRaw` mutation."""
+type CreateLegacyMeetupTeamRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupTeamRaw` that was created by this mutation."""
+  legacyMeetupTeamRaw: LegacyMeetupTeamRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the create `LegacyMeetupTeamRaw` mutation."""
+input CreateLegacyMeetupTeamRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupTeamRaw` to be created by this mutation."""
+  legacyMeetupTeamRaw: LegacyMeetupTeamRawInput!
+}
+
+"""An input for mutations affecting `LegacyMeetupTeamRaw`"""
+input LegacyMeetupTeamRawInput {
+  id: Int!
+  name: String!
+  legacyMeetupGameRawsToWinningTeamIdUsingId: LegacyMeetupGameRawWinningTeamIdFkeyInverseInput
+  legacyMeetupGameRawsToLosingTeamIdUsingId: LegacyMeetupGameRawLosingTeamIdFkeyInverseInput
+  legacyMeetupStatLineRaws: LegacyMeetupStatLineRawTeamIdFkeyInverseInput
 }
 
 """The output of our create `Lineup` mutation."""
@@ -27171,6 +30465,354 @@ input UpdateGroupByUrlSlugInput {
   """
   patch: GroupPatch!
   urlSlug: String!
+}
+
+"""The output of our update `LegacyMeetupFieldRaw` mutation."""
+type UpdateLegacyMeetupFieldRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupFieldRaw` that was updated by this mutation."""
+  legacyMeetupFieldRaw: LegacyMeetupFieldRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyMeetupFieldRawByNodeId` mutation."""
+input UpdateLegacyMeetupFieldRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupFieldRaw` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupFieldRaw` being updated.
+  """
+  patch: LegacyMeetupFieldRawPatch!
+}
+
+"""All input for the `updateLegacyMeetupFieldRaw` mutation."""
+input UpdateLegacyMeetupFieldRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupFieldRaw` being updated.
+  """
+  patch: LegacyMeetupFieldRawPatch!
+  id: Int!
+}
+
+"""
+All input for the `updateLegacyMeetupFieldRawByNameAndSubField` mutation.
+"""
+input UpdateLegacyMeetupFieldRawByNameAndSubFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupFieldRaw` being updated.
+  """
+  patch: LegacyMeetupFieldRawPatch!
+  name: String!
+  subField: String!
+}
+
+"""The output of our update `LegacyMeetupGameRaw` mutation."""
+type UpdateLegacyMeetupGameRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupGameRaw` that was updated by this mutation."""
+  legacyMeetupGameRaw: LegacyMeetupGameRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  winningTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  losingTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  field: LegacyMeetupFieldRaw
+}
+
+"""All input for the `updateLegacyMeetupGameRawByNodeId` mutation."""
+input UpdateLegacyMeetupGameRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupGameRaw` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+}
+
+"""All input for the `updateLegacyMeetupGameRaw` mutation."""
+input UpdateLegacyMeetupGameRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+  id: Int!
+}
+
+"""All input for the `updateLegacyMeetupGameRawByName` mutation."""
+input UpdateLegacyMeetupGameRawByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupGameRaw` being updated.
+  """
+  patch: LegacyMeetupGameRawPatch!
+  name: String!
+}
+
+"""The output of our update `LegacyMeetupPlayerRaw` mutation."""
+type UpdateLegacyMeetupPlayerRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupPlayerRaw` that was updated by this mutation."""
+  legacyMeetupPlayerRaw: LegacyMeetupPlayerRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyMeetupPlayerRawByNodeId` mutation."""
+input UpdateLegacyMeetupPlayerRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupPlayerRaw` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupPlayerRaw` being updated.
+  """
+  patch: LegacyMeetupPlayerRawPatch!
+}
+
+"""All input for the `updateLegacyMeetupPlayerRaw` mutation."""
+input UpdateLegacyMeetupPlayerRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupPlayerRaw` being updated.
+  """
+  patch: LegacyMeetupPlayerRawPatch!
+  id: Int!
+}
+
+"""All input for the `updateLegacyMeetupPlayerRawByName` mutation."""
+input UpdateLegacyMeetupPlayerRawByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupPlayerRaw` being updated.
+  """
+  patch: LegacyMeetupPlayerRawPatch!
+  name: String!
+}
+
+"""The output of our update `LegacyMeetupStatLineRaw` mutation."""
+type UpdateLegacyMeetupStatLineRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupStatLineRaw` that was updated by this mutation."""
+  legacyMeetupStatLineRaw: LegacyMeetupStatLineRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  player: LegacyMeetupPlayerRaw
+
+  """
+  Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  game: LegacyMeetupGameRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  team: LegacyMeetupTeamRaw
+}
+
+"""All input for the `updateLegacyMeetupStatLineRawByNodeId` mutation."""
+input UpdateLegacyMeetupStatLineRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupStatLineRaw` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupStatLineRaw` being updated.
+  """
+  patch: LegacyMeetupStatLineRawPatch!
+}
+
+"""All input for the `updateLegacyMeetupStatLineRaw` mutation."""
+input UpdateLegacyMeetupStatLineRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupStatLineRaw` being updated.
+  """
+  patch: LegacyMeetupStatLineRawPatch!
+  id: Int!
+}
+
+"""The output of our update `LegacyMeetupTeamRaw` mutation."""
+type UpdateLegacyMeetupTeamRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupTeamRaw` that was updated by this mutation."""
+  legacyMeetupTeamRaw: LegacyMeetupTeamRaw
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `updateLegacyMeetupTeamRawByNodeId` mutation."""
+input UpdateLegacyMeetupTeamRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupTeamRaw` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupTeamRaw` being updated.
+  """
+  patch: LegacyMeetupTeamRawPatch!
+}
+
+"""All input for the `updateLegacyMeetupTeamRaw` mutation."""
+input UpdateLegacyMeetupTeamRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupTeamRaw` being updated.
+  """
+  patch: LegacyMeetupTeamRawPatch!
+  id: Int!
+}
+
+"""All input for the `updateLegacyMeetupTeamRawByName` mutation."""
+input UpdateLegacyMeetupTeamRawByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  An object where the defined keys will be set on the `LegacyMeetupTeamRaw` being updated.
+  """
+  patch: LegacyMeetupTeamRawPatch!
+  name: String!
 }
 
 """The output of our update `Lineup` mutation."""
@@ -28551,6 +32193,289 @@ input DeleteGroupByUrlSlugInput {
   """
   clientMutationId: String
   urlSlug: String!
+}
+
+"""The output of our delete `LegacyMeetupFieldRaw` mutation."""
+type DeleteLegacyMeetupFieldRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupFieldRaw` that was deleted by this mutation."""
+  legacyMeetupFieldRaw: LegacyMeetupFieldRaw
+  deletedLegacyMeetupFieldRawNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyMeetupFieldRawByNodeId` mutation."""
+input DeleteLegacyMeetupFieldRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupFieldRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyMeetupFieldRaw` mutation."""
+input DeleteLegacyMeetupFieldRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""
+All input for the `deleteLegacyMeetupFieldRawByNameAndSubField` mutation.
+"""
+input DeleteLegacyMeetupFieldRawByNameAndSubFieldInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  name: String!
+  subField: String!
+}
+
+"""The output of our delete `LegacyMeetupGameRaw` mutation."""
+type DeleteLegacyMeetupGameRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupGameRaw` that was deleted by this mutation."""
+  legacyMeetupGameRaw: LegacyMeetupGameRaw
+  deletedLegacyMeetupGameRawNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  winningTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  losingTeam: LegacyMeetupTeamRaw
+
+  """
+  Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`.
+  """
+  field: LegacyMeetupFieldRaw
+}
+
+"""All input for the `deleteLegacyMeetupGameRawByNodeId` mutation."""
+input DeleteLegacyMeetupGameRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupGameRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyMeetupGameRaw` mutation."""
+input DeleteLegacyMeetupGameRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""All input for the `deleteLegacyMeetupGameRawByName` mutation."""
+input DeleteLegacyMeetupGameRawByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  name: String!
+}
+
+"""The output of our delete `LegacyMeetupPlayerRaw` mutation."""
+type DeleteLegacyMeetupPlayerRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupPlayerRaw` that was deleted by this mutation."""
+  legacyMeetupPlayerRaw: LegacyMeetupPlayerRaw
+  deletedLegacyMeetupPlayerRawNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyMeetupPlayerRawByNodeId` mutation."""
+input DeleteLegacyMeetupPlayerRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupPlayerRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyMeetupPlayerRaw` mutation."""
+input DeleteLegacyMeetupPlayerRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""All input for the `deleteLegacyMeetupPlayerRawByName` mutation."""
+input DeleteLegacyMeetupPlayerRawByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  name: String!
+}
+
+"""The output of our delete `LegacyMeetupStatLineRaw` mutation."""
+type DeleteLegacyMeetupStatLineRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupStatLineRaw` that was deleted by this mutation."""
+  legacyMeetupStatLineRaw: LegacyMeetupStatLineRaw
+  deletedLegacyMeetupStatLineRawNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+
+  """
+  Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  player: LegacyMeetupPlayerRaw
+
+  """
+  Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  game: LegacyMeetupGameRaw
+
+  """
+  Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`.
+  """
+  team: LegacyMeetupTeamRaw
+}
+
+"""All input for the `deleteLegacyMeetupStatLineRawByNodeId` mutation."""
+input DeleteLegacyMeetupStatLineRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupStatLineRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyMeetupStatLineRaw` mutation."""
+input DeleteLegacyMeetupStatLineRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""The output of our delete `LegacyMeetupTeamRaw` mutation."""
+type DeleteLegacyMeetupTeamRawPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `LegacyMeetupTeamRaw` that was deleted by this mutation."""
+  legacyMeetupTeamRaw: LegacyMeetupTeamRaw
+  deletedLegacyMeetupTeamRawNodeId: ID
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `deleteLegacyMeetupTeamRawByNodeId` mutation."""
+input DeleteLegacyMeetupTeamRawByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `LegacyMeetupTeamRaw` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteLegacyMeetupTeamRaw` mutation."""
+input DeleteLegacyMeetupTeamRawInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""All input for the `deleteLegacyMeetupTeamRawByName` mutation."""
+input DeleteLegacyMeetupTeamRawByNameInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  name: String!
 }
 
 """The output of our delete `Lineup` mutation."""
