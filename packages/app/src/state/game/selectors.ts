@@ -84,6 +84,11 @@ export const isOpponentTeamBatting = createSelector(
   partialSelectors.isOpponentTeamBatting
 );
 
+export const isBeforeGame = createSelector(
+  getGameStatus,
+  status => status === GameStatus.NOT_STARTED
+);
+
 export const isGameInProgress = createSelector(
   getGameStatus,
   status => status === GameStatus.IN_PROGRESS
@@ -105,6 +110,32 @@ export const getBattingTeam = createSelector(getPresent, partialSelectors.getBat
 export const getFieldingTeam = createSelector(getPresent, partialSelectors.getFieldingTeam);
 export const getBattingLineup = createSelector(getPresent, partialSelectors.getBattingLineup);
 export const getFieldingLineup = createSelector(getPresent, partialSelectors.getFieldingLineup);
+
+const shouldShowProtagonistFieldingWhileAwayTeam = createSelector(
+  isSoloModeActive,
+  isBeforeGame,
+  getFieldingTeamRole,
+  getProtagonistTeamRole,
+  (soloMode, preGame, fieldingRole, protagonistRole) =>
+    soloMode && preGame && protagonistRole !== fieldingRole
+);
+export const getRoleForFielderChange = createSelector(
+  shouldShowProtagonistFieldingWhileAwayTeam,
+  showProtagonistAwayLineup => (showProtagonistAwayLineup ? TeamRole.AWAY : TeamRole.HOME)
+);
+export const getFieldingLineupForFielderChange = createSelector(
+  getFieldingLineup,
+  getBattingLineup,
+  getRoleForFielderChange,
+  (fieldingLineup, battingLineup, fielderChangeRole) =>
+    fielderChangeRole === TeamRole.AWAY ? battingLineup : fieldingLineup
+);
+
+export const isProtagonistFielding = createSelector(
+  isOpponentTeamBatting,
+  shouldShowProtagonistFieldingWhileAwayTeam,
+  (opponentBatting, protagonistFielding) => opponentBatting || protagonistFielding
+);
 
 export const getScoreAfterSoloModeInning = (state: AppState, runsScored: number) => {
   const halfInning = getHalfInning(state);

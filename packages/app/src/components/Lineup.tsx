@@ -23,6 +23,8 @@ import { useAppSelector, useAppDispatch } from 'utils/hooks';
 
 import { TeamRole } from '@sammyers/dc-shared';
 import SubstitutePlayerModal from './SubstitutePlayerModal';
+import FielderChange from './FielderChange';
+import { Edit } from 'grommet-icons';
 
 interface Props {
   teamRole: TeamRole;
@@ -39,6 +41,7 @@ const Lineup = ({ teamRole }: Props) => {
   const playerAtBat = useAppSelector(getCurrentBatter);
   const batterUpNextInning = useAppSelector(getFirstBatterNextInning);
   const canReorder = useAppSelector(state => canReorderLineup(state, teamRole));
+  const [showFielderChangeUI, setShowFielderChangeUI] = useState(false);
 
   const handleNameChange = useCallback(
     ({ currentTarget }: ChangeEvent<HTMLInputElement>) =>
@@ -65,15 +68,25 @@ const Lineup = ({ teamRole }: Props) => {
         oldPlayerId={playerToSubstitute}
         onClose={() => setPlayerToSubstitute(undefined)}
       />
+      <FielderChange open={showFielderChangeUI} onClose={() => setShowFielderChangeUI(false)} />
       <Box margin={{ bottom: 'medium' }}>
         {soloMode ? (
           <Box direction="row" justify="between" align="center">
             <Text weight="bold">{teamName} Lineup</Text>
-            {inProgress ? (
-              <LineupEditControls />
-            ) : (
-              <Button plain={false} icon={<ShuffleIcon />} onClick={handleShuffleLineup} />
-            )}
+            <Box direction="row" gap="small">
+              <Button
+                size="small"
+                icon={<Edit />}
+                label="Edit Fielders"
+                plain={false}
+                onClick={() => setShowFielderChangeUI(true)}
+              />
+              {inProgress ? (
+                <LineupEditControls />
+              ) : (
+                <Button plain={false} icon={<ShuffleIcon />} onClick={handleShuffleLineup} />
+              )}
+            </Box>
           </Box>
         ) : (
           <Box width="medium" alignSelf="center">

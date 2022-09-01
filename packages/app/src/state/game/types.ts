@@ -1,6 +1,7 @@
 import {
   ContactQuality,
   FieldingPosition,
+  Maybe,
   PlateAppearanceType,
   SimplifyType,
   TeamRole,
@@ -78,4 +79,9 @@ export interface MovePlayerPayload {
 export interface ChangePlayerPositionPayload {
   playerId: string;
   position: FieldingPosition | null;
+}
+
+export interface ChangePositionsCurrentPayload {
+  newPositions: Record<string, Maybe<FieldingPosition>>;
+  role: TeamRole;
 }

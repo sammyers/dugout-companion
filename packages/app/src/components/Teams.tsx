@@ -14,6 +14,7 @@ import LineupEditControls from './LineupEditControls';
 
 import {
   canReorderPlayer,
+  getGameName,
   getOpponentTeamName,
   getOpponentTeamSize,
   getProtagonistTeamRole,
@@ -58,6 +59,7 @@ const ButtonContainer = () => {
 const SoloModeMenu = () => {
   const dispatch = useAppDispatch();
 
+  const gameName = useAppSelector(getGameName);
   const opponentName = useAppSelector(getOpponentTeamName);
   const opponentTeamSize = useAppSelector(getOpponentTeamSize);
   const teamRole = useAppSelector(getProtagonistTeamRole);
@@ -66,6 +68,12 @@ const SoloModeMenu = () => {
   const handleRoleChange = useCallback(() => {
     dispatch(gameActions.flipTeams());
   }, [dispatch]);
+
+  const handleChangeGameName = useCallback(
+    ({ currentTarget }: ChangeEvent<HTMLInputElement>) =>
+      dispatch(gameActions.changeGameName(currentTarget.value)),
+    [dispatch]
+  );
 
   const handleChangeOpponentTeamName = useCallback(
     ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -103,10 +111,22 @@ const SoloModeMenu = () => {
         </Box>
       )}
       <GameLengthSelector />
+      <Box gap="xsmall">
+        <Text alignSelf="center">Game Name</Text>
+        <TextInput
+          value={gameName!}
+          onChange={handleChangeGameName}
+          placeholder="Title this game"
+        />
+      </Box>
       <Box gap="small">
         <Box gap="xsmall">
-          <Text alignSelf="center">Opponent Name</Text>
-          <TextInput value={opponentName ?? ''} onChange={handleChangeOpponentTeamName} />
+          <Text alignSelf="center">Opponent</Text>
+          <TextInput
+            value={opponentName ?? ''}
+            onChange={handleChangeOpponentTeamName}
+            placeholder="Opponent team name"
+          />
         </Box>
         <Box gap="xsmall">
           <Text alignSelf="center">Opponent Team Size</Text>

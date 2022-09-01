@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import _ from 'lodash';
 
 import { HalfInning, TeamRole } from '@sammyers/dc-shared';
 
@@ -7,6 +8,7 @@ import {
   getCurrentLineup,
   getNextBatter,
   getTeamWithRole,
+  isHit,
   runnersToMap,
 } from './utils';
 
@@ -71,6 +73,57 @@ export const getLineupToEdit = (state: AppGameState, teamRole: TeamRole) =>
 
 export const getLineups = (state: AppGameState) =>
   getTeams(state).map(({ role }) => getLineupToEdit(state, role));
+
+const getPlateAppearances = createSelector(
+  getEventRecords,
+  getPrevGameStates,
+  (eventRecords, gameStates) =>
+    eventRecords
+      .filter(e => !!e.gameEvent.plateAppearance)
+      .map(({ gameEvent, gameStateBeforeId, scoredRunners }) => {
+        const { inning, halfInning } = gameStates.find(state => state.id === gameStateBeforeId)!;
+        return {
+          inning,
+          halfInning,
+          type: gameEvent.plateAppearance!.type,
+          runsScored: scoredRunners.length,
+        };
+      })
+);
+
+interface LineScoreCell {
+  inning: number;
+  halfInning: HalfInning;
+  runs: number;
+  hits: number;
+}
+export const getLineScore = createSelector(getPlateAppearances, plateAppearances => {
+  const grouped = _.mapValues(_.groupBy(plateAppearances, 'inning'), inning =>
+    _.reduce(
+      inning,
+      (acc, { type, runsScored, halfInning }) => {
+        if (isHit(type)) {
+          acc[halfInning].hits++;
+        }
+        acc[halfInning].runs += runsScored;
+        return acc;
+      },
+      { [HalfInning.TOP]: { hits: 0, runs: 0 }, [HalfInning.BOTTOM]: { hits: 0, runs: 0 } }
+    )
+  );
+  const cells = _.reduce(
+    grouped,
+    (acc, halfInnings, inning) => {
+      _.forEach(halfInnings, ({ runs, hits }, halfInning) => {
+        acc.push({ halfInning: halfInning as HalfInning, inning: Number(inning), runs, hits });
+      });
+      return acc;
+    },
+    [] as LineScoreCell[]
+  );
+  return cells;
+});
+
 export const isSoloModeActive = (state: AppGameState) => state.soloMode;
 export const getSoloModeOpponentPositions = (state: AppGameState) =>
   state.soloModeOpponentPositions;

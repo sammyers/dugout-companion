@@ -26,10 +26,11 @@ import {
 import { gameActions } from 'state/game/slice';
 import {
   getBattingLineup,
-  getFieldingLineup,
+  getFieldingLineupForFielderChange,
   getPreviousHalfInning,
+  getRoleForFielderChange,
   getSoloModeOpponentPositions,
-  isOpponentTeamBatting,
+  isProtagonistFielding,
   isRetroactiveFielderChangePossible,
   isSoloModeActive,
 } from 'state/game/selectors';
@@ -210,7 +211,8 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
   const dispatch = useAppDispatch();
 
   const soloMode = useAppSelector(isSoloModeActive);
-  const opponentBatting = useAppSelector(isOpponentTeamBatting);
+  const protagonistFielding = useAppSelector(isProtagonistFielding);
+  const fielderChangeRole = useAppSelector(getRoleForFielderChange);
   const canChangeFieldersRetroactively = useAppSelector(isRetroactiveFielderChangePossible);
   const previousHalfInning = useAppSelector(getPreviousHalfInning);
   const [selectedHalfInning, setSelectedHalfInning] = useState<'current' | 'previous'>('current');
@@ -219,10 +221,11 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
     setSelectedHalfInning('current');
   }, [setSelectedHalfInning]);
 
-  const editingSoloModeOpponent = soloMode && !opponentBatting && selectedHalfInning === 'current';
+  const editingSoloModeOpponent =
+    soloMode && !protagonistFielding && selectedHalfInning === 'current';
 
   const battingLineup = useAppSelector(getBattingLineup);
-  const fieldingLineup = useAppSelector(getFieldingLineup);
+  const fieldingLineup = useAppSelector(getFieldingLineupForFielderChange);
 
   const lineupToEdit = useMemo(
     () => (selectedHalfInning === 'previous' ? battingLineup : fieldingLineup),
@@ -299,12 +302,17 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
 
   const handleSave = useCallback(() => {
     if (selectedHalfInning === 'current') {
-      dispatch(gameActions.changePositionsCurrent(editedFielders));
+      dispatch(
+        gameActions.changePositionsCurrent({
+          newPositions: editedFielders,
+          role: fielderChangeRole,
+        })
+      );
     } else {
       dispatch(gameActions.changePositionsRetroactive(editedFielders));
     }
     onClose();
-  }, [selectedHalfInning, dispatch, editedFielders, onClose]);
+  }, [selectedHalfInning, dispatch, editedFielders, fielderChangeRole, onClose]);
 
   const handleChangeOpponentOutfielders = useCallback(() => {
     dispatch(gameActions.changeOpponentNumOutfielders(numOpponentOutfielders === 3 ? 4 : 3));
@@ -320,7 +328,7 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
         {!editingSoloModeOpponent && (
           <Text weight="bold">Drag players to update their positions.</Text>
         )}
-        {canChangeFieldersRetroactively && !(soloMode && opponentBatting) && (
+        {canChangeFieldersRetroactively && !(soloMode && protagonistFielding) && (
           <Box gap="small">
             <Box direction="row" gap="small" alignSelf="center">
               <Button
@@ -397,12 +405,15 @@ const FielderChange: FC<Props> = ({ open, onClose }) => {
           </fielderContext.Provider>
         </Box>
         {editingSoloModeOpponent && (
-          <Box margin="medium">
+          <Box direction="row" margin="medium" gap="small">
             <SwitchFieldingConfigurationButton
               numFielders={opponentPositions.length}
               numOutfielders={numOpponentOutfielders}
               onClick={handleChangeOpponentOutfielders}
             />
+            <Button primary plain={false} color="status-critical" onClick={onClose}>
+              Close
+            </Button>
           </Box>
         )}
         {!editingSoloModeOpponent && (

@@ -6,13 +6,7 @@ import { v4 as uuid4 } from 'uuid';
 
 import { groupActions } from 'state/groups/slice';
 import { reorderItemInList, moveItemBetweenLists } from 'utils/common';
-import {
-  getBattingTeamRole,
-  getFieldingLineup,
-  getFieldingTeamRole,
-  getLineupToEdit,
-  getTeam,
-} from './partialSelectors';
+import { getBattingTeamRole, getLineupToEdit, getTeam } from './partialSelectors';
 import {
   updatePositions,
   getNextAvailablePosition,
@@ -56,6 +50,7 @@ import {
   PlateAppearance,
   SoloModeInning,
   StolenBaseAttempt,
+  ChangePositionsCurrentPayload,
 } from './types';
 
 const makeInitialTeamState = (role: TeamRole): Team => ({
@@ -325,13 +320,14 @@ const { actions: gameActions, reducer } = createSlice({
       });
       state.lineupDrafts = initialState.lineupDrafts;
     },
-    changePositionsCurrent(
-      state,
-      { payload }: PayloadAction<Record<string, Maybe<FieldingPosition>>>
-    ) {
-      const currentLineup = getFieldingLineup(state);
-      const newLineup = getLineupWithNewPositions(currentLineup, payload);
-      applyMidGameLineupChange(state, getFieldingTeamRole(state), newLineup);
+    changePositionsCurrent(state, { payload }: PayloadAction<ChangePositionsCurrentPayload>) {
+      const currentLineup = getCurrentLineup(getTeamWithRole(state.teams, payload.role));
+      const newLineup = getLineupWithNewPositions(currentLineup, payload.newPositions);
+      if (state.status === GameStatus.NOT_STARTED) {
+        changeLineup(state, payload.role, newLineup);
+      } else {
+        applyMidGameLineupChange(state, payload.role, newLineup);
+      }
     },
     changePositionsRetroactive(
       state,
