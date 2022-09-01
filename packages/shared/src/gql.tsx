@@ -1451,7 +1451,8 @@ export enum ContactQuality {
   LAZY_FLY = 'LAZY_FLY',
   LONG_FLY = 'LONG_FLY',
   FOUL = 'FOUL',
-  DEAD_BALL = 'DEAD_BALL'
+  DEAD_BALL = 'DEAD_BALL',
+  INNING_ENDING_DEAD_BALL = 'INNING_ENDING_DEAD_BALL'
 }
 
 /** All input for the create `AtBatSkip` mutation. */
@@ -1873,6 +1874,143 @@ export type CreateGroupPayload = {
   clientMutationId: Maybe<Scalars['String']>;
   /** The `Group` that was created by this mutation. */
   group: Maybe<Group>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the create `LegacyMeetupFieldRaw` mutation. */
+export type CreateLegacyMeetupFieldRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupFieldRaw` to be created by this mutation. */
+  legacyMeetupFieldRaw: LegacyMeetupFieldRawInput;
+};
+
+/** The output of our create `LegacyMeetupFieldRaw` mutation. */
+export type CreateLegacyMeetupFieldRawPayload = {
+  __typename?: 'CreateLegacyMeetupFieldRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupFieldRaw` that was created by this mutation. */
+  legacyMeetupFieldRaw: Maybe<LegacyMeetupFieldRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the create `LegacyMeetupGameRaw` mutation. */
+export type CreateLegacyMeetupGameRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupGameRaw` to be created by this mutation. */
+  legacyMeetupGameRaw: LegacyMeetupGameRawInput;
+};
+
+/** The output of our create `LegacyMeetupGameRaw` mutation. */
+export type CreateLegacyMeetupGameRawPayload = {
+  __typename?: 'CreateLegacyMeetupGameRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupGameRaw` that was created by this mutation. */
+  legacyMeetupGameRaw: Maybe<LegacyMeetupGameRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  winningTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  losingTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`. */
+  field: Maybe<LegacyMeetupFieldRaw>;
+};
+
+/** All input for the create `LegacyMeetupPlayerRaw` mutation. */
+export type CreateLegacyMeetupPlayerRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupPlayerRaw` to be created by this mutation. */
+  legacyMeetupPlayerRaw: LegacyMeetupPlayerRawInput;
+};
+
+/** The output of our create `LegacyMeetupPlayerRaw` mutation. */
+export type CreateLegacyMeetupPlayerRawPayload = {
+  __typename?: 'CreateLegacyMeetupPlayerRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupPlayerRaw` that was created by this mutation. */
+  legacyMeetupPlayerRaw: Maybe<LegacyMeetupPlayerRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the create `LegacyMeetupStatLineRaw` mutation. */
+export type CreateLegacyMeetupStatLineRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupStatLineRaw` to be created by this mutation. */
+  legacyMeetupStatLineRaw: LegacyMeetupStatLineRawInput;
+};
+
+/** The output of our create `LegacyMeetupStatLineRaw` mutation. */
+export type CreateLegacyMeetupStatLineRawPayload = {
+  __typename?: 'CreateLegacyMeetupStatLineRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupStatLineRaw` that was created by this mutation. */
+  legacyMeetupStatLineRaw: Maybe<LegacyMeetupStatLineRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  player: Maybe<LegacyMeetupPlayerRaw>;
+  /** Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  game: Maybe<LegacyMeetupGameRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  team: Maybe<LegacyMeetupTeamRaw>;
+};
+
+/** All input for the create `LegacyMeetupTeamRaw` mutation. */
+export type CreateLegacyMeetupTeamRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupTeamRaw` to be created by this mutation. */
+  legacyMeetupTeamRaw: LegacyMeetupTeamRawInput;
+};
+
+/** The output of our create `LegacyMeetupTeamRaw` mutation. */
+export type CreateLegacyMeetupTeamRawPayload = {
+  __typename?: 'CreateLegacyMeetupTeamRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupTeamRaw` that was created by this mutation. */
+  legacyMeetupTeamRaw: Maybe<LegacyMeetupTeamRaw>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -2706,6 +2844,239 @@ export type DeleteGroupPayload = {
   /** The `Group` that was deleted by this mutation. */
   group: Maybe<Group>;
   deletedGroupNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `deleteLegacyMeetupFieldRawByNameAndSubField` mutation. */
+export type DeleteLegacyMeetupFieldRawByNameAndSubFieldInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+  subField: Scalars['String'];
+};
+
+/** All input for the `deleteLegacyMeetupFieldRawByNodeId` mutation. */
+export type DeleteLegacyMeetupFieldRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupFieldRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLegacyMeetupFieldRaw` mutation. */
+export type DeleteLegacyMeetupFieldRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LegacyMeetupFieldRaw` mutation. */
+export type DeleteLegacyMeetupFieldRawPayload = {
+  __typename?: 'DeleteLegacyMeetupFieldRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupFieldRaw` that was deleted by this mutation. */
+  legacyMeetupFieldRaw: Maybe<LegacyMeetupFieldRaw>;
+  deletedLegacyMeetupFieldRawNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `deleteLegacyMeetupGameRawByName` mutation. */
+export type DeleteLegacyMeetupGameRawByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+/** All input for the `deleteLegacyMeetupGameRawByNodeId` mutation. */
+export type DeleteLegacyMeetupGameRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupGameRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLegacyMeetupGameRaw` mutation. */
+export type DeleteLegacyMeetupGameRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LegacyMeetupGameRaw` mutation. */
+export type DeleteLegacyMeetupGameRawPayload = {
+  __typename?: 'DeleteLegacyMeetupGameRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupGameRaw` that was deleted by this mutation. */
+  legacyMeetupGameRaw: Maybe<LegacyMeetupGameRaw>;
+  deletedLegacyMeetupGameRawNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  winningTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  losingTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`. */
+  field: Maybe<LegacyMeetupFieldRaw>;
+};
+
+/** All input for the `deleteLegacyMeetupPlayerRawByName` mutation. */
+export type DeleteLegacyMeetupPlayerRawByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+/** All input for the `deleteLegacyMeetupPlayerRawByNodeId` mutation. */
+export type DeleteLegacyMeetupPlayerRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupPlayerRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLegacyMeetupPlayerRaw` mutation. */
+export type DeleteLegacyMeetupPlayerRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LegacyMeetupPlayerRaw` mutation. */
+export type DeleteLegacyMeetupPlayerRawPayload = {
+  __typename?: 'DeleteLegacyMeetupPlayerRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupPlayerRaw` that was deleted by this mutation. */
+  legacyMeetupPlayerRaw: Maybe<LegacyMeetupPlayerRaw>;
+  deletedLegacyMeetupPlayerRawNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `deleteLegacyMeetupStatLineRawByNodeId` mutation. */
+export type DeleteLegacyMeetupStatLineRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupStatLineRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLegacyMeetupStatLineRaw` mutation. */
+export type DeleteLegacyMeetupStatLineRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LegacyMeetupStatLineRaw` mutation. */
+export type DeleteLegacyMeetupStatLineRawPayload = {
+  __typename?: 'DeleteLegacyMeetupStatLineRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupStatLineRaw` that was deleted by this mutation. */
+  legacyMeetupStatLineRaw: Maybe<LegacyMeetupStatLineRaw>;
+  deletedLegacyMeetupStatLineRawNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  player: Maybe<LegacyMeetupPlayerRaw>;
+  /** Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  game: Maybe<LegacyMeetupGameRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  team: Maybe<LegacyMeetupTeamRaw>;
+};
+
+/** All input for the `deleteLegacyMeetupTeamRawByName` mutation. */
+export type DeleteLegacyMeetupTeamRawByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+/** All input for the `deleteLegacyMeetupTeamRawByNodeId` mutation. */
+export type DeleteLegacyMeetupTeamRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupTeamRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLegacyMeetupTeamRaw` mutation. */
+export type DeleteLegacyMeetupTeamRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LegacyMeetupTeamRaw` mutation. */
+export type DeleteLegacyMeetupTeamRawPayload = {
+  __typename?: 'DeleteLegacyMeetupTeamRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupTeamRaw` that was deleted by this mutation. */
+  legacyMeetupTeamRaw: Maybe<LegacyMeetupTeamRaw>;
+  deletedLegacyMeetupTeamRawNodeId: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query: Maybe<Query>;
 };
@@ -6028,6 +6399,7 @@ export type ForeignDbField = {
   fieldName: Scalars['String'];
   fieldAddress: Scalars['String'];
   fieldNumber: Maybe<Scalars['String']>;
+  fieldRating: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -6043,6 +6415,8 @@ export type ForeignDbFieldCondition = {
   fieldAddress?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `fieldNumber` field. */
   fieldNumber?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fieldRating` field. */
+  fieldRating?: Maybe<Scalars['Int']>;
 };
 
 /** An input for mutations affecting `ForeignDbField` */
@@ -6051,6 +6425,7 @@ export type ForeignDbFieldInput = {
   fieldName: Scalars['String'];
   fieldAddress: Scalars['String'];
   fieldNumber?: Maybe<Scalars['String']>;
+  fieldRating?: Maybe<Scalars['Int']>;
 };
 
 /** Methods to use when ordering `ForeignDbField`. */
@@ -6063,7 +6438,9 @@ export enum ForeignDbFieldsOrderBy {
   FIELD_ADDRESS_ASC = 'FIELD_ADDRESS_ASC',
   FIELD_ADDRESS_DESC = 'FIELD_ADDRESS_DESC',
   FIELD_NUMBER_ASC = 'FIELD_NUMBER_ASC',
-  FIELD_NUMBER_DESC = 'FIELD_NUMBER_DESC'
+  FIELD_NUMBER_DESC = 'FIELD_NUMBER_DESC',
+  FIELD_RATING_ASC = 'FIELD_RATING_ASC',
+  FIELD_RATING_DESC = 'FIELD_RATING_DESC'
 }
 
 export type ForeignDbGame = {
@@ -6076,6 +6453,13 @@ export type ForeignDbGame = {
   gameTeamId1: Scalars['Int'];
   gameTeamId2: Scalars['Int'];
   season: Scalars['Int'];
+  fieldId: Maybe<Scalars['Int']>;
+  gamePicGallery: Maybe<Scalars['String']>;
+  eventId: Maybe<Scalars['String']>;
+  gameDateInsert: Maybe<Scalars['Date']>;
+  gameDateUpdate: Maybe<Scalars['Date']>;
+  gameAdv: Maybe<Scalars['Int']>;
+  gameCnt: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -6099,6 +6483,20 @@ export type ForeignDbGameCondition = {
   gameTeamId2?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `season` field. */
   season?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `fieldId` field. */
+  fieldId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gamePicGallery` field. */
+  gamePicGallery?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `eventId` field. */
+  eventId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `gameDateInsert` field. */
+  gameDateInsert?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `gameDateUpdate` field. */
+  gameDateUpdate?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `gameAdv` field. */
+  gameAdv?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameCnt` field. */
+  gameCnt?: Maybe<Scalars['Int']>;
 };
 
 /** An input for mutations affecting `ForeignDbGame` */
@@ -6111,6 +6509,13 @@ export type ForeignDbGameInput = {
   gameTeamId1: Scalars['Int'];
   gameTeamId2: Scalars['Int'];
   season: Scalars['Int'];
+  fieldId?: Maybe<Scalars['Int']>;
+  gamePicGallery?: Maybe<Scalars['String']>;
+  eventId?: Maybe<Scalars['String']>;
+  gameDateInsert?: Maybe<Scalars['Date']>;
+  gameDateUpdate?: Maybe<Scalars['Date']>;
+  gameAdv?: Maybe<Scalars['Int']>;
+  gameCnt?: Maybe<Scalars['Int']>;
 };
 
 /** Methods to use when ordering `ForeignDbGame`. */
@@ -6131,7 +6536,21 @@ export enum ForeignDbGamesOrderBy {
   GAME_TEAM_ID_2_ASC = 'GAME_TEAM_ID_2_ASC',
   GAME_TEAM_ID_2_DESC = 'GAME_TEAM_ID_2_DESC',
   SEASON_ASC = 'SEASON_ASC',
-  SEASON_DESC = 'SEASON_DESC'
+  SEASON_DESC = 'SEASON_DESC',
+  FIELD_ID_ASC = 'FIELD_ID_ASC',
+  FIELD_ID_DESC = 'FIELD_ID_DESC',
+  GAME_PIC_GALLERY_ASC = 'GAME_PIC_GALLERY_ASC',
+  GAME_PIC_GALLERY_DESC = 'GAME_PIC_GALLERY_DESC',
+  EVENT_ID_ASC = 'EVENT_ID_ASC',
+  EVENT_ID_DESC = 'EVENT_ID_DESC',
+  GAME_DATE_INSERT_ASC = 'GAME_DATE_INSERT_ASC',
+  GAME_DATE_INSERT_DESC = 'GAME_DATE_INSERT_DESC',
+  GAME_DATE_UPDATE_ASC = 'GAME_DATE_UPDATE_ASC',
+  GAME_DATE_UPDATE_DESC = 'GAME_DATE_UPDATE_DESC',
+  GAME_ADV_ASC = 'GAME_ADV_ASC',
+  GAME_ADV_DESC = 'GAME_ADV_DESC',
+  GAME_CNT_ASC = 'GAME_CNT_ASC',
+  GAME_CNT_DESC = 'GAME_CNT_DESC'
 }
 
 export type ForeignDbPlayer = {
@@ -6140,6 +6559,21 @@ export type ForeignDbPlayer = {
   playerName: Scalars['String'];
   playerImage: Maybe<Scalars['String']>;
   memberId: Maybe<Scalars['String']>;
+  playerNickname: Maybe<Scalars['String']>;
+  playerSelfNickname: Maybe<Scalars['String']>;
+  playerGender: Maybe<Scalars['Int']>;
+  playerBats: Maybe<Scalars['Int']>;
+  playerThrows: Maybe<Scalars['Int']>;
+  playerPosition1: Maybe<Scalars['Int']>;
+  playerPosition2: Maybe<Scalars['Int']>;
+  playerPosition3: Maybe<Scalars['Int']>;
+  playerAdded: Maybe<Scalars['Datetime']>;
+  playerFavTeam: Maybe<Scalars['String']>;
+  playerHometown: Maybe<Scalars['String']>;
+  playerSchools: Maybe<Scalars['String']>;
+  playerSkill: Maybe<Scalars['Int']>;
+  groupId: Maybe<Scalars['Int']>;
+  playerDebut: Maybe<Scalars['String']>;
 };
 
 /**
@@ -6155,6 +6589,36 @@ export type ForeignDbPlayerCondition = {
   playerImage?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `memberId` field. */
   memberId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `playerNickname` field. */
+  playerNickname?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `playerSelfNickname` field. */
+  playerSelfNickname?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `playerGender` field. */
+  playerGender?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerBats` field. */
+  playerBats?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerThrows` field. */
+  playerThrows?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerPosition1` field. */
+  playerPosition1?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerPosition2` field. */
+  playerPosition2?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerPosition3` field. */
+  playerPosition3?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerAdded` field. */
+  playerAdded?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `playerFavTeam` field. */
+  playerFavTeam?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `playerHometown` field. */
+  playerHometown?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `playerSchools` field. */
+  playerSchools?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `playerSkill` field. */
+  playerSkill?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `groupId` field. */
+  groupId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerDebut` field. */
+  playerDebut?: Maybe<Scalars['String']>;
 };
 
 /** An input for mutations affecting `ForeignDbPlayer` */
@@ -6163,6 +6627,21 @@ export type ForeignDbPlayerInput = {
   playerName: Scalars['String'];
   playerImage?: Maybe<Scalars['String']>;
   memberId?: Maybe<Scalars['String']>;
+  playerNickname?: Maybe<Scalars['String']>;
+  playerSelfNickname?: Maybe<Scalars['String']>;
+  playerGender?: Maybe<Scalars['Int']>;
+  playerBats?: Maybe<Scalars['Int']>;
+  playerThrows?: Maybe<Scalars['Int']>;
+  playerPosition1?: Maybe<Scalars['Int']>;
+  playerPosition2?: Maybe<Scalars['Int']>;
+  playerPosition3?: Maybe<Scalars['Int']>;
+  playerAdded?: Maybe<Scalars['Datetime']>;
+  playerFavTeam?: Maybe<Scalars['String']>;
+  playerHometown?: Maybe<Scalars['String']>;
+  playerSchools?: Maybe<Scalars['String']>;
+  playerSkill?: Maybe<Scalars['Int']>;
+  groupId?: Maybe<Scalars['Int']>;
+  playerDebut?: Maybe<Scalars['String']>;
 };
 
 /** Methods to use when ordering `ForeignDbPlayer`. */
@@ -6175,7 +6654,37 @@ export enum ForeignDbPlayersOrderBy {
   PLAYER_IMAGE_ASC = 'PLAYER_IMAGE_ASC',
   PLAYER_IMAGE_DESC = 'PLAYER_IMAGE_DESC',
   MEMBER_ID_ASC = 'MEMBER_ID_ASC',
-  MEMBER_ID_DESC = 'MEMBER_ID_DESC'
+  MEMBER_ID_DESC = 'MEMBER_ID_DESC',
+  PLAYER_NICKNAME_ASC = 'PLAYER_NICKNAME_ASC',
+  PLAYER_NICKNAME_DESC = 'PLAYER_NICKNAME_DESC',
+  PLAYER_SELF_NICKNAME_ASC = 'PLAYER_SELF_NICKNAME_ASC',
+  PLAYER_SELF_NICKNAME_DESC = 'PLAYER_SELF_NICKNAME_DESC',
+  PLAYER_GENDER_ASC = 'PLAYER_GENDER_ASC',
+  PLAYER_GENDER_DESC = 'PLAYER_GENDER_DESC',
+  PLAYER_BATS_ASC = 'PLAYER_BATS_ASC',
+  PLAYER_BATS_DESC = 'PLAYER_BATS_DESC',
+  PLAYER_THROWS_ASC = 'PLAYER_THROWS_ASC',
+  PLAYER_THROWS_DESC = 'PLAYER_THROWS_DESC',
+  PLAYER_POSITION_1_ASC = 'PLAYER_POSITION_1_ASC',
+  PLAYER_POSITION_1_DESC = 'PLAYER_POSITION_1_DESC',
+  PLAYER_POSITION_2_ASC = 'PLAYER_POSITION_2_ASC',
+  PLAYER_POSITION_2_DESC = 'PLAYER_POSITION_2_DESC',
+  PLAYER_POSITION_3_ASC = 'PLAYER_POSITION_3_ASC',
+  PLAYER_POSITION_3_DESC = 'PLAYER_POSITION_3_DESC',
+  PLAYER_ADDED_ASC = 'PLAYER_ADDED_ASC',
+  PLAYER_ADDED_DESC = 'PLAYER_ADDED_DESC',
+  PLAYER_FAV_TEAM_ASC = 'PLAYER_FAV_TEAM_ASC',
+  PLAYER_FAV_TEAM_DESC = 'PLAYER_FAV_TEAM_DESC',
+  PLAYER_HOMETOWN_ASC = 'PLAYER_HOMETOWN_ASC',
+  PLAYER_HOMETOWN_DESC = 'PLAYER_HOMETOWN_DESC',
+  PLAYER_SCHOOLS_ASC = 'PLAYER_SCHOOLS_ASC',
+  PLAYER_SCHOOLS_DESC = 'PLAYER_SCHOOLS_DESC',
+  PLAYER_SKILL_ASC = 'PLAYER_SKILL_ASC',
+  PLAYER_SKILL_DESC = 'PLAYER_SKILL_DESC',
+  GROUP_ID_ASC = 'GROUP_ID_ASC',
+  GROUP_ID_DESC = 'GROUP_ID_DESC',
+  PLAYER_DEBUT_ASC = 'PLAYER_DEBUT_ASC',
+  PLAYER_DEBUT_DESC = 'PLAYER_DEBUT_DESC'
 }
 
 export type ForeignDbStatLine = {
@@ -6195,6 +6704,20 @@ export type ForeignDbStatLine = {
   sbStatsBb: Scalars['Int'];
   sbStatsSo: Scalars['Int'];
   sbStatsSac: Scalars['Int'];
+  sbStatsS: Maybe<Scalars['Int']>;
+  sbStatsP: Maybe<Scalars['Int']>;
+  sbStatsPW: Maybe<Scalars['Int']>;
+  sbStatsPL: Maybe<Scalars['Int']>;
+  sbStatsPSv: Maybe<Scalars['Int']>;
+  sbStatsPCg: Maybe<Scalars['Int']>;
+  sbStatsPQs: Maybe<Scalars['Int']>;
+  sbStatsPInnings: Maybe<Scalars['String']>;
+  sbStatsPEr: Maybe<Scalars['String']>;
+  sbStatsPTr: Maybe<Scalars['String']>;
+  sbStatsPHits: Maybe<Scalars['String']>;
+  sbStatsPHr: Maybe<Scalars['String']>;
+  sbStatsPK: Maybe<Scalars['String']>;
+  sbStatsPBb: Maybe<Scalars['String']>;
 };
 
 /**
@@ -6232,6 +6755,34 @@ export type ForeignDbStatLineCondition = {
   sbStatsSo?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sbStatsSac` field. */
   sbStatsSac?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsS` field. */
+  sbStatsS?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsP` field. */
+  sbStatsP?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsPW` field. */
+  sbStatsPW?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsPL` field. */
+  sbStatsPL?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsPSv` field. */
+  sbStatsPSv?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsPCg` field. */
+  sbStatsPCg?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsPQs` field. */
+  sbStatsPQs?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sbStatsPInnings` field. */
+  sbStatsPInnings?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sbStatsPEr` field. */
+  sbStatsPEr?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sbStatsPTr` field. */
+  sbStatsPTr?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sbStatsPHits` field. */
+  sbStatsPHits?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sbStatsPHr` field. */
+  sbStatsPHr?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sbStatsPK` field. */
+  sbStatsPK?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `sbStatsPBb` field. */
+  sbStatsPBb?: Maybe<Scalars['String']>;
 };
 
 /** An input for mutations affecting `ForeignDbStatLine` */
@@ -6251,6 +6802,20 @@ export type ForeignDbStatLineInput = {
   sbStatsBb: Scalars['Int'];
   sbStatsSo: Scalars['Int'];
   sbStatsSac: Scalars['Int'];
+  sbStatsS?: Maybe<Scalars['Int']>;
+  sbStatsP?: Maybe<Scalars['Int']>;
+  sbStatsPW?: Maybe<Scalars['Int']>;
+  sbStatsPL?: Maybe<Scalars['Int']>;
+  sbStatsPSv?: Maybe<Scalars['Int']>;
+  sbStatsPCg?: Maybe<Scalars['Int']>;
+  sbStatsPQs?: Maybe<Scalars['Int']>;
+  sbStatsPInnings?: Maybe<Scalars['String']>;
+  sbStatsPEr?: Maybe<Scalars['String']>;
+  sbStatsPTr?: Maybe<Scalars['String']>;
+  sbStatsPHits?: Maybe<Scalars['String']>;
+  sbStatsPHr?: Maybe<Scalars['String']>;
+  sbStatsPK?: Maybe<Scalars['String']>;
+  sbStatsPBb?: Maybe<Scalars['String']>;
 };
 
 /** Methods to use when ordering `ForeignDbStatLine`. */
@@ -6285,7 +6850,35 @@ export enum ForeignDbStatLinesOrderBy {
   SB_STATS_SO_ASC = 'SB_STATS_SO_ASC',
   SB_STATS_SO_DESC = 'SB_STATS_SO_DESC',
   SB_STATS_SAC_ASC = 'SB_STATS_SAC_ASC',
-  SB_STATS_SAC_DESC = 'SB_STATS_SAC_DESC'
+  SB_STATS_SAC_DESC = 'SB_STATS_SAC_DESC',
+  SB_STATS_S_ASC = 'SB_STATS_S_ASC',
+  SB_STATS_S_DESC = 'SB_STATS_S_DESC',
+  SB_STATS_P_ASC = 'SB_STATS_P_ASC',
+  SB_STATS_P_DESC = 'SB_STATS_P_DESC',
+  SB_STATS_P_W_ASC = 'SB_STATS_P_W_ASC',
+  SB_STATS_P_W_DESC = 'SB_STATS_P_W_DESC',
+  SB_STATS_P_L_ASC = 'SB_STATS_P_L_ASC',
+  SB_STATS_P_L_DESC = 'SB_STATS_P_L_DESC',
+  SB_STATS_P_SV_ASC = 'SB_STATS_P_SV_ASC',
+  SB_STATS_P_SV_DESC = 'SB_STATS_P_SV_DESC',
+  SB_STATS_P_CG_ASC = 'SB_STATS_P_CG_ASC',
+  SB_STATS_P_CG_DESC = 'SB_STATS_P_CG_DESC',
+  SB_STATS_P_QS_ASC = 'SB_STATS_P_QS_ASC',
+  SB_STATS_P_QS_DESC = 'SB_STATS_P_QS_DESC',
+  SB_STATS_P_INNINGS_ASC = 'SB_STATS_P_INNINGS_ASC',
+  SB_STATS_P_INNINGS_DESC = 'SB_STATS_P_INNINGS_DESC',
+  SB_STATS_P_ER_ASC = 'SB_STATS_P_ER_ASC',
+  SB_STATS_P_ER_DESC = 'SB_STATS_P_ER_DESC',
+  SB_STATS_P_TR_ASC = 'SB_STATS_P_TR_ASC',
+  SB_STATS_P_TR_DESC = 'SB_STATS_P_TR_DESC',
+  SB_STATS_P_HITS_ASC = 'SB_STATS_P_HITS_ASC',
+  SB_STATS_P_HITS_DESC = 'SB_STATS_P_HITS_DESC',
+  SB_STATS_P_HR_ASC = 'SB_STATS_P_HR_ASC',
+  SB_STATS_P_HR_DESC = 'SB_STATS_P_HR_DESC',
+  SB_STATS_P_K_ASC = 'SB_STATS_P_K_ASC',
+  SB_STATS_P_K_DESC = 'SB_STATS_P_K_DESC',
+  SB_STATS_P_BB_ASC = 'SB_STATS_P_BB_ASC',
+  SB_STATS_P_BB_DESC = 'SB_STATS_P_BB_DESC'
 }
 
 export type ForeignDbTeam = {
@@ -9391,6 +9984,11 @@ export enum GamesOrderBy {
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
 
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE'
+}
+
 /** The return type of our `getPlateAppearancesConnection` query. */
 export type GetPlateAppearancesRecord = {
   __typename?: 'GetPlateAppearancesRecord';
@@ -9868,6 +10466,12 @@ export enum GroupsOrderBy {
 export enum HalfInning {
   TOP = 'TOP',
   BOTTOM = 'BOTTOM'
+}
+
+export enum Handedness {
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+  BOTH = 'BOTH'
 }
 
 /** All input for the `initiatePasswordReset` mutation. */
@@ -10383,6 +10987,1585 @@ export enum LegacyGamesOrderBy {
   GAME_TEAM_ID_2_DESC = 'GAME_TEAM_ID_2_DESC',
   SEASON_ASC = 'SEASON_ASC',
   SEASON_DESC = 'SEASON_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type LegacyMeetupFieldRaw = Node & {
+  __typename?: 'LegacyMeetupFieldRaw';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  subField: Maybe<Scalars['String']>;
+  address: Scalars['String'];
+  rating: Scalars['Int'];
+  /** Reads and enables pagination through a set of `LegacyMeetupGameRaw`. */
+  legacyMeetupGameRawsByFieldId: Array<LegacyMeetupGameRaw>;
+};
+
+
+export type LegacyMeetupFieldRawLegacyMeetupGameRawsByFieldIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupGameRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupGameRawCondition>;
+};
+
+/**
+ * A condition to be used against `LegacyMeetupFieldRaw` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type LegacyMeetupFieldRawCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `subField` field. */
+  subField?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `address` field. */
+  address?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `rating` field. */
+  rating?: Maybe<Scalars['Int']>;
+};
+
+/** An input for mutations affecting `LegacyMeetupFieldRaw` */
+export type LegacyMeetupFieldRawInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  subField?: Maybe<Scalars['String']>;
+  address: Scalars['String'];
+  rating: Scalars['Int'];
+  legacyMeetupGameRaws?: Maybe<LegacyMeetupGameRawFieldIdFkeyInverseInput>;
+};
+
+/** The fields on `legacyMeetupFieldRaw` to look up the row to connect. */
+export type LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyConnect = {
+  name: Scalars['String'];
+  subField: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupFieldRaw` to look up the row to delete. */
+export type LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyDelete = {
+  name: Scalars['String'];
+  subField: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupFieldRaw` to look up the row to connect. */
+export type LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `legacyMeetupFieldRaw` to look up the row to delete. */
+export type LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LegacyMeetupFieldRawNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupFieldRaw` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LegacyMeetupFieldRawNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupFieldRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+};
+
+/** The fields on `legacyMeetupFieldRaw` to look up the row to update. */
+export type LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawNameSubFieldKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated. */
+  patch: UpdateLegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch;
+  name: Scalars['String'];
+  subField: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupFieldRaw` to look up the row to update. */
+export type LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated. */
+  patch: UpdateLegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `LegacyMeetupFieldRaw`. Fields that are set will be updated. */
+export type LegacyMeetupFieldRawPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  subField?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  rating?: Maybe<Scalars['Int']>;
+  legacyMeetupGameRaws?: Maybe<LegacyMeetupGameRawFieldIdFkeyInverseInput>;
+};
+
+/** Methods to use when ordering `LegacyMeetupFieldRaw`. */
+export enum LegacyMeetupFieldRawsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  SUB_FIELD_ASC = 'SUB_FIELD_ASC',
+  SUB_FIELD_DESC = 'SUB_FIELD_DESC',
+  ADDRESS_ASC = 'ADDRESS_ASC',
+  ADDRESS_DESC = 'ADDRESS_DESC',
+  RATING_ASC = 'RATING_ASC',
+  RATING_DESC = 'RATING_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type LegacyMeetupGameRaw = Node & {
+  __typename?: 'LegacyMeetupGameRaw';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  season: Scalars['Int'];
+  date: Scalars['Date'];
+  timeStarted: Scalars['Time'];
+  timeEnded: Scalars['Time'];
+  winningTeamId: Scalars['Int'];
+  losingTeamId: Scalars['Int'];
+  fieldId: Scalars['Int'];
+  imageGalleryUrl: Maybe<Scalars['String']>;
+  meetupEventId: Maybe<Scalars['String']>;
+  dateInserted: Maybe<Scalars['Date']>;
+  dateUpdated: Maybe<Scalars['Date']>;
+  advanced: Scalars['Boolean'];
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  winningTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  losingTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`. */
+  field: Maybe<LegacyMeetupFieldRaw>;
+  /** Reads and enables pagination through a set of `LegacyMeetupStatLineRaw`. */
+  legacyMeetupStatLineRawsByGameId: Array<LegacyMeetupStatLineRaw>;
+};
+
+
+export type LegacyMeetupGameRawLegacyMeetupStatLineRawsByGameIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupStatLineRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupStatLineRawCondition>;
+};
+
+/**
+ * A condition to be used against `LegacyMeetupGameRaw` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type LegacyMeetupGameRawCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `season` field. */
+  season?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `date` field. */
+  date?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `timeStarted` field. */
+  timeStarted?: Maybe<Scalars['Time']>;
+  /** Checks for equality with the object’s `timeEnded` field. */
+  timeEnded?: Maybe<Scalars['Time']>;
+  /** Checks for equality with the object’s `winningTeamId` field. */
+  winningTeamId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `losingTeamId` field. */
+  losingTeamId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `fieldId` field. */
+  fieldId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `imageGalleryUrl` field. */
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `meetupEventId` field. */
+  meetupEventId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dateInserted` field. */
+  dateInserted?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `dateUpdated` field. */
+  dateUpdated?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `advanced` field. */
+  advanced?: Maybe<Scalars['Boolean']>;
+};
+
+/** Input for the nested mutation of `legacyMeetupFieldRaw` in the `LegacyMeetupGameRawInput` mutation. */
+export type LegacyMeetupGameRawFieldIdFkeyInput = {
+  /** The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  connectById?: Maybe<LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyConnect>;
+  /** The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  connectByNameAndSubField?: Maybe<LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyConnect>;
+  /** The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LegacyMeetupFieldRawNodeIdConnect>;
+  /** The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  deleteById?: Maybe<LegacyMeetupFieldRawLegacyMeetupFieldRawPkeyDelete>;
+  /** The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  deleteByNameAndSubField?: Maybe<LegacyMeetupFieldRawLegacyMeetupFieldRawNameSubFieldKeyDelete>;
+  /** The primary key(s) for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LegacyMeetupFieldRawNodeIdDelete>;
+  /** The primary key(s) and patch data for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  updateById?: Maybe<LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawPkeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  updateByNameAndSubField?: Maybe<LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupFieldRawNameSubFieldKeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupFieldRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate>;
+  /** A `LegacyMeetupFieldRawInput` object that will be created and connected to this object. */
+  create?: Maybe<LegacyMeetupGameRawFieldIdFkeyLegacyMeetupFieldRawCreateInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupFieldRawInput` mutation. */
+export type LegacyMeetupGameRawFieldIdFkeyInverseInput = {
+  /** Flag indicating whether all other `legacyMeetupGameRaw` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectById?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByName?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LegacyMeetupGameRawNodeIdConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LegacyMeetupGameRawNodeIdDelete>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateById?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawPkeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByName?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate>>;
+  /** A `LegacyMeetupGameRawInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LegacyMeetupGameRawFieldIdFkeyLegacyMeetupGameRawCreateInput>>;
+};
+
+/** The `legacyMeetupFieldRaw` to be created by this mutation. */
+export type LegacyMeetupGameRawFieldIdFkeyLegacyMeetupFieldRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  subField?: Maybe<Scalars['String']>;
+  address: Scalars['String'];
+  rating: Scalars['Int'];
+  legacyMeetupGameRaws?: Maybe<LegacyMeetupGameRawFieldIdFkeyInverseInput>;
+};
+
+/** The `legacyMeetupGameRaw` to be created by this mutation. */
+export type LegacyMeetupGameRawFieldIdFkeyLegacyMeetupGameRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  season: Scalars['Int'];
+  date: Scalars['Date'];
+  timeStarted: Scalars['Time'];
+  timeEnded: Scalars['Time'];
+  winningTeamId?: Maybe<Scalars['Int']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced: Scalars['Boolean'];
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** An input for mutations affecting `LegacyMeetupGameRaw` */
+export type LegacyMeetupGameRawInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  season: Scalars['Int'];
+  date: Scalars['Date'];
+  timeStarted: Scalars['Time'];
+  timeEnded: Scalars['Time'];
+  winningTeamId?: Maybe<Scalars['Int']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced: Scalars['Boolean'];
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to connect. */
+export type LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect = {
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to delete. */
+export type LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete = {
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to connect. */
+export type LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to delete. */
+export type LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** Input for the nested mutation of `legacyMeetupTeamRaw` in the `LegacyMeetupGameRawInput` mutation. */
+export type LegacyMeetupGameRawLosingTeamIdFkeyInput = {
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  connectById?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyConnect>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  connectByName?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyConnect>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LegacyMeetupTeamRawNodeIdConnect>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  deleteById?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyDelete>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyDelete>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LegacyMeetupTeamRawNodeIdDelete>;
+  /** The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  updateById?: Maybe<LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  updateByName?: Maybe<LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate>;
+  /** A `LegacyMeetupTeamRawInput` object that will be created and connected to this object. */
+  create?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupTeamRawCreateInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupTeamRawInput` mutation. */
+export type LegacyMeetupGameRawLosingTeamIdFkeyInverseInput = {
+  /** Flag indicating whether all other `legacyMeetupGameRaw` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectById?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByName?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LegacyMeetupGameRawNodeIdConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LegacyMeetupGameRawNodeIdDelete>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateById?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByName?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate>>;
+  /** A `LegacyMeetupGameRawInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupGameRawCreateInput>>;
+};
+
+/** The `legacyMeetupGameRaw` to be created by this mutation. */
+export type LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupGameRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  season: Scalars['Int'];
+  date: Scalars['Date'];
+  timeStarted: Scalars['Time'];
+  timeEnded: Scalars['Time'];
+  winningTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced: Scalars['Boolean'];
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** The `legacyMeetupTeamRaw` to be created by this mutation. */
+export type LegacyMeetupGameRawLosingTeamIdFkeyLegacyMeetupTeamRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  legacyMeetupGameRawsToWinningTeamIdUsingId?: Maybe<LegacyMeetupGameRawWinningTeamIdFkeyInverseInput>;
+  legacyMeetupGameRawsToLosingTeamIdUsingId?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInverseInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LegacyMeetupGameRawNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LegacyMeetupGameRawNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupFieldRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated. */
+  patch: LegacyMeetupFieldRawPatch;
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyUsingLegacyMeetupGameRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+  patch: LegacyMeetupTeamRawPatch;
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+  patch: LegacyMeetupStatLineRawPatch;
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupGameRaw` to look up the row to update. */
+export type LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: UpdateLegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `LegacyMeetupGameRaw`. Fields that are set will be updated. */
+export type LegacyMeetupGameRawPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  season?: Maybe<Scalars['Int']>;
+  date?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Time']>;
+  timeEnded?: Maybe<Scalars['Time']>;
+  winningTeamId?: Maybe<Scalars['Int']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced?: Maybe<Scalars['Boolean']>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupTeamRawInput` mutation. */
+export type LegacyMeetupGameRawWinningTeamIdFkeyInverseInput = {
+  /** Flag indicating whether all other `legacyMeetupGameRaw` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectById?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByName?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LegacyMeetupGameRawNodeIdConnect>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<Array<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete>>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LegacyMeetupGameRawNodeIdDelete>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateById?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawPkeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByName?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyNodeIdUpdate>>;
+  /** A `LegacyMeetupGameRawInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LegacyMeetupGameRawWinningTeamIdFkeyLegacyMeetupGameRawCreateInput>>;
+};
+
+/** The `legacyMeetupGameRaw` to be created by this mutation. */
+export type LegacyMeetupGameRawWinningTeamIdFkeyLegacyMeetupGameRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  season: Scalars['Int'];
+  date: Scalars['Date'];
+  timeStarted: Scalars['Time'];
+  timeEnded: Scalars['Time'];
+  losingTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced: Scalars['Boolean'];
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** Methods to use when ordering `LegacyMeetupGameRaw`. */
+export enum LegacyMeetupGameRawsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  SEASON_ASC = 'SEASON_ASC',
+  SEASON_DESC = 'SEASON_DESC',
+  DATE_ASC = 'DATE_ASC',
+  DATE_DESC = 'DATE_DESC',
+  TIME_STARTED_ASC = 'TIME_STARTED_ASC',
+  TIME_STARTED_DESC = 'TIME_STARTED_DESC',
+  TIME_ENDED_ASC = 'TIME_ENDED_ASC',
+  TIME_ENDED_DESC = 'TIME_ENDED_DESC',
+  WINNING_TEAM_ID_ASC = 'WINNING_TEAM_ID_ASC',
+  WINNING_TEAM_ID_DESC = 'WINNING_TEAM_ID_DESC',
+  LOSING_TEAM_ID_ASC = 'LOSING_TEAM_ID_ASC',
+  LOSING_TEAM_ID_DESC = 'LOSING_TEAM_ID_DESC',
+  FIELD_ID_ASC = 'FIELD_ID_ASC',
+  FIELD_ID_DESC = 'FIELD_ID_DESC',
+  IMAGE_GALLERY_URL_ASC = 'IMAGE_GALLERY_URL_ASC',
+  IMAGE_GALLERY_URL_DESC = 'IMAGE_GALLERY_URL_DESC',
+  MEETUP_EVENT_ID_ASC = 'MEETUP_EVENT_ID_ASC',
+  MEETUP_EVENT_ID_DESC = 'MEETUP_EVENT_ID_DESC',
+  DATE_INSERTED_ASC = 'DATE_INSERTED_ASC',
+  DATE_INSERTED_DESC = 'DATE_INSERTED_DESC',
+  DATE_UPDATED_ASC = 'DATE_UPDATED_ASC',
+  DATE_UPDATED_DESC = 'DATE_UPDATED_DESC',
+  ADVANCED_ASC = 'ADVANCED_ASC',
+  ADVANCED_DESC = 'ADVANCED_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type LegacyMeetupPlayerRaw = Node & {
+  __typename?: 'LegacyMeetupPlayerRaw';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  gender: Gender;
+  nickname: Maybe<Scalars['String']>;
+  selfNickname: Maybe<Scalars['String']>;
+  bats: Handedness;
+  throws: Handedness;
+  imageUrl: Maybe<Scalars['String']>;
+  meetupMemberId: Maybe<Scalars['String']>;
+  skillLevel: Maybe<Scalars['Int']>;
+  preferredPositionFirst: FieldingPosition;
+  preferredPositionSecond: FieldingPosition;
+  preferredPositionThird: FieldingPosition;
+  favoriteTeam: Maybe<Scalars['String']>;
+  hometown: Maybe<Scalars['String']>;
+  school: Maybe<Scalars['String']>;
+  timeAdded: Scalars['Datetime'];
+  dateDebuted: Maybe<Scalars['Date']>;
+  /** Reads and enables pagination through a set of `LegacyMeetupStatLineRaw`. */
+  legacyMeetupStatLineRawsByPlayerId: Array<LegacyMeetupStatLineRaw>;
+};
+
+
+export type LegacyMeetupPlayerRawLegacyMeetupStatLineRawsByPlayerIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupStatLineRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupStatLineRawCondition>;
+};
+
+/**
+ * A condition to be used against `LegacyMeetupPlayerRaw` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type LegacyMeetupPlayerRawCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `gender` field. */
+  gender?: Maybe<Gender>;
+  /** Checks for equality with the object’s `nickname` field. */
+  nickname?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `selfNickname` field. */
+  selfNickname?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `bats` field. */
+  bats?: Maybe<Handedness>;
+  /** Checks for equality with the object’s `throws` field. */
+  throws?: Maybe<Handedness>;
+  /** Checks for equality with the object’s `imageUrl` field. */
+  imageUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `meetupMemberId` field. */
+  meetupMemberId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `skillLevel` field. */
+  skillLevel?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `preferredPositionFirst` field. */
+  preferredPositionFirst?: Maybe<FieldingPosition>;
+  /** Checks for equality with the object’s `preferredPositionSecond` field. */
+  preferredPositionSecond?: Maybe<FieldingPosition>;
+  /** Checks for equality with the object’s `preferredPositionThird` field. */
+  preferredPositionThird?: Maybe<FieldingPosition>;
+  /** Checks for equality with the object’s `favoriteTeam` field. */
+  favoriteTeam?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `hometown` field. */
+  hometown?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `school` field. */
+  school?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `timeAdded` field. */
+  timeAdded?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `dateDebuted` field. */
+  dateDebuted?: Maybe<Scalars['Date']>;
+};
+
+/** An input for mutations affecting `LegacyMeetupPlayerRaw` */
+export type LegacyMeetupPlayerRawInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  gender: Gender;
+  nickname?: Maybe<Scalars['String']>;
+  selfNickname?: Maybe<Scalars['String']>;
+  bats: Handedness;
+  throws: Handedness;
+  imageUrl?: Maybe<Scalars['String']>;
+  meetupMemberId?: Maybe<Scalars['String']>;
+  skillLevel?: Maybe<Scalars['Int']>;
+  preferredPositionFirst: FieldingPosition;
+  preferredPositionSecond: FieldingPosition;
+  preferredPositionThird: FieldingPosition;
+  favoriteTeam?: Maybe<Scalars['String']>;
+  hometown?: Maybe<Scalars['String']>;
+  school?: Maybe<Scalars['String']>;
+  timeAdded: Scalars['Datetime'];
+  dateDebuted?: Maybe<Scalars['Date']>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInverseInput>;
+};
+
+/** The fields on `legacyMeetupPlayerRaw` to look up the row to connect. */
+export type LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyConnect = {
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupPlayerRaw` to look up the row to delete. */
+export type LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyDelete = {
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupPlayerRaw` to look up the row to connect. */
+export type LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `legacyMeetupPlayerRaw` to look up the row to delete. */
+export type LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LegacyMeetupPlayerRawNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupPlayerRaw` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LegacyMeetupPlayerRawNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupPlayerRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+  patch: LegacyMeetupStatLineRawPatch;
+};
+
+/** The fields on `legacyMeetupPlayerRaw` to look up the row to update. */
+export type LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated. */
+  patch: UpdateLegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupPlayerRaw` to look up the row to update. */
+export type LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated. */
+  patch: UpdateLegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `LegacyMeetupPlayerRaw`. Fields that are set will be updated. */
+export type LegacyMeetupPlayerRawPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  gender?: Maybe<Gender>;
+  nickname?: Maybe<Scalars['String']>;
+  selfNickname?: Maybe<Scalars['String']>;
+  bats?: Maybe<Handedness>;
+  throws?: Maybe<Handedness>;
+  imageUrl?: Maybe<Scalars['String']>;
+  meetupMemberId?: Maybe<Scalars['String']>;
+  skillLevel?: Maybe<Scalars['Int']>;
+  preferredPositionFirst?: Maybe<FieldingPosition>;
+  preferredPositionSecond?: Maybe<FieldingPosition>;
+  preferredPositionThird?: Maybe<FieldingPosition>;
+  favoriteTeam?: Maybe<Scalars['String']>;
+  hometown?: Maybe<Scalars['String']>;
+  school?: Maybe<Scalars['String']>;
+  timeAdded?: Maybe<Scalars['Datetime']>;
+  dateDebuted?: Maybe<Scalars['Date']>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInverseInput>;
+};
+
+/** Methods to use when ordering `LegacyMeetupPlayerRaw`. */
+export enum LegacyMeetupPlayerRawsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  GENDER_ASC = 'GENDER_ASC',
+  GENDER_DESC = 'GENDER_DESC',
+  NICKNAME_ASC = 'NICKNAME_ASC',
+  NICKNAME_DESC = 'NICKNAME_DESC',
+  SELF_NICKNAME_ASC = 'SELF_NICKNAME_ASC',
+  SELF_NICKNAME_DESC = 'SELF_NICKNAME_DESC',
+  BATS_ASC = 'BATS_ASC',
+  BATS_DESC = 'BATS_DESC',
+  THROWS_ASC = 'THROWS_ASC',
+  THROWS_DESC = 'THROWS_DESC',
+  IMAGE_URL_ASC = 'IMAGE_URL_ASC',
+  IMAGE_URL_DESC = 'IMAGE_URL_DESC',
+  MEETUP_MEMBER_ID_ASC = 'MEETUP_MEMBER_ID_ASC',
+  MEETUP_MEMBER_ID_DESC = 'MEETUP_MEMBER_ID_DESC',
+  SKILL_LEVEL_ASC = 'SKILL_LEVEL_ASC',
+  SKILL_LEVEL_DESC = 'SKILL_LEVEL_DESC',
+  PREFERRED_POSITION_FIRST_ASC = 'PREFERRED_POSITION_FIRST_ASC',
+  PREFERRED_POSITION_FIRST_DESC = 'PREFERRED_POSITION_FIRST_DESC',
+  PREFERRED_POSITION_SECOND_ASC = 'PREFERRED_POSITION_SECOND_ASC',
+  PREFERRED_POSITION_SECOND_DESC = 'PREFERRED_POSITION_SECOND_DESC',
+  PREFERRED_POSITION_THIRD_ASC = 'PREFERRED_POSITION_THIRD_ASC',
+  PREFERRED_POSITION_THIRD_DESC = 'PREFERRED_POSITION_THIRD_DESC',
+  FAVORITE_TEAM_ASC = 'FAVORITE_TEAM_ASC',
+  FAVORITE_TEAM_DESC = 'FAVORITE_TEAM_DESC',
+  HOMETOWN_ASC = 'HOMETOWN_ASC',
+  HOMETOWN_DESC = 'HOMETOWN_DESC',
+  SCHOOL_ASC = 'SCHOOL_ASC',
+  SCHOOL_DESC = 'SCHOOL_DESC',
+  TIME_ADDED_ASC = 'TIME_ADDED_ASC',
+  TIME_ADDED_DESC = 'TIME_ADDED_DESC',
+  DATE_DEBUTED_ASC = 'DATE_DEBUTED_ASC',
+  DATE_DEBUTED_DESC = 'DATE_DEBUTED_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type LegacyMeetupStatLineRaw = Node & {
+  __typename?: 'LegacyMeetupStatLineRaw';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  playerId: Scalars['Int'];
+  gameId: Scalars['Int'];
+  teamId: Scalars['Int'];
+  atBats: Scalars['Int'];
+  runs: Scalars['Int'];
+  hits: Scalars['Int'];
+  singles: Scalars['Int'];
+  doubles: Scalars['Int'];
+  triples: Scalars['Int'];
+  homeruns: Scalars['Int'];
+  rbi: Scalars['Int'];
+  walks: Scalars['Int'];
+  strikeouts: Scalars['Int'];
+  sacFlies: Scalars['Int'];
+  stolenBases: Scalars['Int'];
+  pitched: Scalars['Boolean'];
+  pitcherWon: Scalars['Boolean'];
+  pitcherLost: Scalars['Boolean'];
+  pitcherSave: Scalars['Boolean'];
+  pitcherCompleteGame: Scalars['Boolean'];
+  pitcherQualityStart: Scalars['Boolean'];
+  inningsPitched: Scalars['Int'];
+  runsAllowed: Scalars['Int'];
+  earnedRunsAllowed: Scalars['Int'];
+  hitsAllowed: Scalars['Int'];
+  homerunsAllowed: Scalars['Int'];
+  pitcherStrikeouts: Scalars['Int'];
+  pitcherWalks: Scalars['Int'];
+  /** Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  player: Maybe<LegacyMeetupPlayerRaw>;
+  /** Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  game: Maybe<LegacyMeetupGameRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  team: Maybe<LegacyMeetupTeamRaw>;
+};
+
+/**
+ * A condition to be used against `LegacyMeetupStatLineRaw` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type LegacyMeetupStatLineRawCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `playerId` field. */
+  playerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `gameId` field. */
+  gameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `teamId` field. */
+  teamId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `atBats` field. */
+  atBats?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runs` field. */
+  runs?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `hits` field. */
+  hits?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `singles` field. */
+  singles?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `doubles` field. */
+  doubles?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `triples` field. */
+  triples?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `homeruns` field. */
+  homeruns?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `rbi` field. */
+  rbi?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `walks` field. */
+  walks?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `strikeouts` field. */
+  strikeouts?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sacFlies` field. */
+  sacFlies?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stolenBases` field. */
+  stolenBases?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pitched` field. */
+  pitched?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pitcherWon` field. */
+  pitcherWon?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pitcherLost` field. */
+  pitcherLost?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pitcherSave` field. */
+  pitcherSave?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pitcherCompleteGame` field. */
+  pitcherCompleteGame?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `pitcherQualityStart` field. */
+  pitcherQualityStart?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `inningsPitched` field. */
+  inningsPitched?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `runsAllowed` field. */
+  runsAllowed?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `earnedRunsAllowed` field. */
+  earnedRunsAllowed?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `hitsAllowed` field. */
+  hitsAllowed?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `homerunsAllowed` field. */
+  homerunsAllowed?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pitcherStrikeouts` field. */
+  pitcherStrikeouts?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `pitcherWalks` field. */
+  pitcherWalks?: Maybe<Scalars['Int']>;
+};
+
+/** Input for the nested mutation of `legacyMeetupGameRaw` in the `LegacyMeetupStatLineRawInput` mutation. */
+export type LegacyMeetupStatLineRawGameIdFkeyInput = {
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectById?: Maybe<LegacyMeetupGameRawLegacyMeetupGameRawPkeyConnect>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByName?: Maybe<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyConnect>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LegacyMeetupGameRawNodeIdConnect>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteById?: Maybe<LegacyMeetupGameRawLegacyMeetupGameRawPkeyDelete>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<LegacyMeetupGameRawLegacyMeetupGameRawNameKeyDelete>;
+  /** The primary key(s) for `legacyMeetupGameRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LegacyMeetupGameRawNodeIdDelete>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateById?: Maybe<LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawPkeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByName?: Maybe<LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupGameRawNameKeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupGameRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate>;
+  /** A `LegacyMeetupGameRawInput` object that will be created and connected to this object. */
+  create?: Maybe<LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupGameRawCreateInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupStatLineRaw` in the `LegacyMeetupGameRawInput` mutation. */
+export type LegacyMeetupStatLineRawGameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `legacyMeetupStatLineRaw` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  connectById?: Maybe<Array<LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LegacyMeetupStatLineRawNodeIdConnect>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LegacyMeetupStatLineRawNodeIdDelete>>;
+  /** The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  updateById?: Maybe<Array<LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate>>;
+  /** A `LegacyMeetupStatLineRawInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupStatLineRawCreateInput>>;
+};
+
+/** The `legacyMeetupGameRaw` to be created by this mutation. */
+export type LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupGameRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  season: Scalars['Int'];
+  date: Scalars['Date'];
+  timeStarted: Scalars['Time'];
+  timeEnded: Scalars['Time'];
+  winningTeamId?: Maybe<Scalars['Int']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced: Scalars['Boolean'];
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** The `legacyMeetupStatLineRaw` to be created by this mutation. */
+export type LegacyMeetupStatLineRawGameIdFkeyLegacyMeetupStatLineRawCreateInput = {
+  id: Scalars['Int'];
+  playerId?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  atBats: Scalars['Int'];
+  runs: Scalars['Int'];
+  hits: Scalars['Int'];
+  singles: Scalars['Int'];
+  doubles: Scalars['Int'];
+  triples: Scalars['Int'];
+  homeruns: Scalars['Int'];
+  rbi: Scalars['Int'];
+  walks: Scalars['Int'];
+  strikeouts: Scalars['Int'];
+  sacFlies: Scalars['Int'];
+  stolenBases: Scalars['Int'];
+  pitched: Scalars['Boolean'];
+  pitcherWon: Scalars['Boolean'];
+  pitcherLost: Scalars['Boolean'];
+  pitcherSave: Scalars['Boolean'];
+  pitcherCompleteGame: Scalars['Boolean'];
+  pitcherQualityStart: Scalars['Boolean'];
+  inningsPitched: Scalars['Int'];
+  runsAllowed: Scalars['Int'];
+  earnedRunsAllowed: Scalars['Int'];
+  hitsAllowed: Scalars['Int'];
+  homerunsAllowed: Scalars['Int'];
+  pitcherStrikeouts: Scalars['Int'];
+  pitcherWalks: Scalars['Int'];
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** An input for mutations affecting `LegacyMeetupStatLineRaw` */
+export type LegacyMeetupStatLineRawInput = {
+  id: Scalars['Int'];
+  playerId?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  atBats: Scalars['Int'];
+  runs: Scalars['Int'];
+  hits: Scalars['Int'];
+  singles: Scalars['Int'];
+  doubles: Scalars['Int'];
+  triples: Scalars['Int'];
+  homeruns: Scalars['Int'];
+  rbi: Scalars['Int'];
+  walks: Scalars['Int'];
+  strikeouts: Scalars['Int'];
+  sacFlies: Scalars['Int'];
+  stolenBases: Scalars['Int'];
+  pitched: Scalars['Boolean'];
+  pitcherWon: Scalars['Boolean'];
+  pitcherLost: Scalars['Boolean'];
+  pitcherSave: Scalars['Boolean'];
+  pitcherCompleteGame: Scalars['Boolean'];
+  pitcherQualityStart: Scalars['Boolean'];
+  inningsPitched: Scalars['Int'];
+  runsAllowed: Scalars['Int'];
+  earnedRunsAllowed: Scalars['Int'];
+  hitsAllowed: Scalars['Int'];
+  homerunsAllowed: Scalars['Int'];
+  pitcherStrikeouts: Scalars['Int'];
+  pitcherWalks: Scalars['Int'];
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** The fields on `legacyMeetupStatLineRaw` to look up the row to connect. */
+export type LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `legacyMeetupStatLineRaw` to look up the row to delete. */
+export type LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LegacyMeetupStatLineRawNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LegacyMeetupStatLineRawNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+};
+
+/** The fields on `legacyMeetupStatLineRaw` to look up the row to update. */
+export type LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+  patch: UpdateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupPlayerRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated. */
+  patch: LegacyMeetupPlayerRawPatch;
+};
+
+/** The fields on `legacyMeetupStatLineRaw` to look up the row to update. */
+export type LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+  patch: UpdateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+  patch: LegacyMeetupTeamRawPatch;
+};
+
+/** The fields on `legacyMeetupStatLineRaw` to look up the row to update. */
+export type LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+  patch: UpdateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `LegacyMeetupStatLineRaw`. Fields that are set will be updated. */
+export type LegacyMeetupStatLineRawPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerId?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  hits?: Maybe<Scalars['Int']>;
+  singles?: Maybe<Scalars['Int']>;
+  doubles?: Maybe<Scalars['Int']>;
+  triples?: Maybe<Scalars['Int']>;
+  homeruns?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  stolenBases?: Maybe<Scalars['Int']>;
+  pitched?: Maybe<Scalars['Boolean']>;
+  pitcherWon?: Maybe<Scalars['Boolean']>;
+  pitcherLost?: Maybe<Scalars['Boolean']>;
+  pitcherSave?: Maybe<Scalars['Boolean']>;
+  pitcherCompleteGame?: Maybe<Scalars['Boolean']>;
+  pitcherQualityStart?: Maybe<Scalars['Boolean']>;
+  inningsPitched?: Maybe<Scalars['Int']>;
+  runsAllowed?: Maybe<Scalars['Int']>;
+  earnedRunsAllowed?: Maybe<Scalars['Int']>;
+  hitsAllowed?: Maybe<Scalars['Int']>;
+  homerunsAllowed?: Maybe<Scalars['Int']>;
+  pitcherStrikeouts?: Maybe<Scalars['Int']>;
+  pitcherWalks?: Maybe<Scalars['Int']>;
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupPlayerRaw` in the `LegacyMeetupStatLineRawInput` mutation. */
+export type LegacyMeetupStatLineRawPlayerIdFkeyInput = {
+  /** The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  connectById?: Maybe<LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyConnect>;
+  /** The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  connectByName?: Maybe<LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyConnect>;
+  /** The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LegacyMeetupPlayerRawNodeIdConnect>;
+  /** The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  deleteById?: Maybe<LegacyMeetupPlayerRawLegacyMeetupPlayerRawPkeyDelete>;
+  /** The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<LegacyMeetupPlayerRawLegacyMeetupPlayerRawNameKeyDelete>;
+  /** The primary key(s) for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LegacyMeetupPlayerRawNodeIdDelete>;
+  /** The primary key(s) and patch data for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  updateById?: Maybe<LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawPkeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  updateByName?: Maybe<LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupPlayerRawNameKeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupPlayerRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate>;
+  /** A `LegacyMeetupPlayerRawInput` object that will be created and connected to this object. */
+  create?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupPlayerRawCreateInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupStatLineRaw` in the `LegacyMeetupPlayerRawInput` mutation. */
+export type LegacyMeetupStatLineRawPlayerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `legacyMeetupStatLineRaw` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  connectById?: Maybe<Array<LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LegacyMeetupStatLineRawNodeIdConnect>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LegacyMeetupStatLineRawNodeIdDelete>>;
+  /** The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  updateById?: Maybe<Array<LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyNodeIdUpdate>>;
+  /** A `LegacyMeetupStatLineRawInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupStatLineRawCreateInput>>;
+};
+
+/** The `legacyMeetupPlayerRaw` to be created by this mutation. */
+export type LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupPlayerRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  gender: Gender;
+  nickname?: Maybe<Scalars['String']>;
+  selfNickname?: Maybe<Scalars['String']>;
+  bats: Handedness;
+  throws: Handedness;
+  imageUrl?: Maybe<Scalars['String']>;
+  meetupMemberId?: Maybe<Scalars['String']>;
+  skillLevel?: Maybe<Scalars['Int']>;
+  preferredPositionFirst: FieldingPosition;
+  preferredPositionSecond: FieldingPosition;
+  preferredPositionThird: FieldingPosition;
+  favoriteTeam?: Maybe<Scalars['String']>;
+  hometown?: Maybe<Scalars['String']>;
+  school?: Maybe<Scalars['String']>;
+  timeAdded: Scalars['Datetime'];
+  dateDebuted?: Maybe<Scalars['Date']>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInverseInput>;
+};
+
+/** The `legacyMeetupStatLineRaw` to be created by this mutation. */
+export type LegacyMeetupStatLineRawPlayerIdFkeyLegacyMeetupStatLineRawCreateInput = {
+  id: Scalars['Int'];
+  gameId?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  atBats: Scalars['Int'];
+  runs: Scalars['Int'];
+  hits: Scalars['Int'];
+  singles: Scalars['Int'];
+  doubles: Scalars['Int'];
+  triples: Scalars['Int'];
+  homeruns: Scalars['Int'];
+  rbi: Scalars['Int'];
+  walks: Scalars['Int'];
+  strikeouts: Scalars['Int'];
+  sacFlies: Scalars['Int'];
+  stolenBases: Scalars['Int'];
+  pitched: Scalars['Boolean'];
+  pitcherWon: Scalars['Boolean'];
+  pitcherLost: Scalars['Boolean'];
+  pitcherSave: Scalars['Boolean'];
+  pitcherCompleteGame: Scalars['Boolean'];
+  pitcherQualityStart: Scalars['Boolean'];
+  inningsPitched: Scalars['Int'];
+  runsAllowed: Scalars['Int'];
+  earnedRunsAllowed: Scalars['Int'];
+  hitsAllowed: Scalars['Int'];
+  homerunsAllowed: Scalars['Int'];
+  pitcherStrikeouts: Scalars['Int'];
+  pitcherWalks: Scalars['Int'];
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupTeamRaw` in the `LegacyMeetupStatLineRawInput` mutation. */
+export type LegacyMeetupStatLineRawTeamIdFkeyInput = {
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  connectById?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyConnect>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  connectByName?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyConnect>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<LegacyMeetupTeamRawNodeIdConnect>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  deleteById?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyDelete>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  deleteByName?: Maybe<LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyDelete>;
+  /** The primary key(s) for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<LegacyMeetupTeamRawNodeIdDelete>;
+  /** The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  updateById?: Maybe<LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  updateByName?: Maybe<LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate>;
+  /** The primary key(s) and patch data for `legacyMeetupTeamRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate>;
+  /** A `LegacyMeetupTeamRawInput` object that will be created and connected to this object. */
+  create?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupTeamRawCreateInput>;
+};
+
+/** Input for the nested mutation of `legacyMeetupStatLineRaw` in the `LegacyMeetupTeamRawInput` mutation. */
+export type LegacyMeetupStatLineRawTeamIdFkeyInverseInput = {
+  /** Flag indicating whether all other `legacyMeetupStatLineRaw` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  connectById?: Maybe<Array<LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyConnect>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LegacyMeetupStatLineRawNodeIdConnect>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LegacyMeetupStatLineRawLegacyMeetupStatLineRawPkeyDelete>>;
+  /** The primary key(s) for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LegacyMeetupStatLineRawNodeIdDelete>>;
+  /** The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  updateById?: Maybe<Array<LegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupStatLineRawPkeyUpdate>>;
+  /** The primary key(s) and patch data for `legacyMeetupStatLineRaw` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate>>;
+  /** A `LegacyMeetupStatLineRawInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupStatLineRawCreateInput>>;
+};
+
+/** The `legacyMeetupStatLineRaw` to be created by this mutation. */
+export type LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupStatLineRawCreateInput = {
+  id: Scalars['Int'];
+  playerId?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  atBats: Scalars['Int'];
+  runs: Scalars['Int'];
+  hits: Scalars['Int'];
+  singles: Scalars['Int'];
+  doubles: Scalars['Int'];
+  triples: Scalars['Int'];
+  homeruns: Scalars['Int'];
+  rbi: Scalars['Int'];
+  walks: Scalars['Int'];
+  strikeouts: Scalars['Int'];
+  sacFlies: Scalars['Int'];
+  stolenBases: Scalars['Int'];
+  pitched: Scalars['Boolean'];
+  pitcherWon: Scalars['Boolean'];
+  pitcherLost: Scalars['Boolean'];
+  pitcherSave: Scalars['Boolean'];
+  pitcherCompleteGame: Scalars['Boolean'];
+  pitcherQualityStart: Scalars['Boolean'];
+  inningsPitched: Scalars['Int'];
+  runsAllowed: Scalars['Int'];
+  earnedRunsAllowed: Scalars['Int'];
+  hitsAllowed: Scalars['Int'];
+  homerunsAllowed: Scalars['Int'];
+  pitcherStrikeouts: Scalars['Int'];
+  pitcherWalks: Scalars['Int'];
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** The `legacyMeetupTeamRaw` to be created by this mutation. */
+export type LegacyMeetupStatLineRawTeamIdFkeyLegacyMeetupTeamRawCreateInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  legacyMeetupGameRawsToWinningTeamIdUsingId?: Maybe<LegacyMeetupGameRawWinningTeamIdFkeyInverseInput>;
+  legacyMeetupGameRawsToLosingTeamIdUsingId?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInverseInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInverseInput>;
+};
+
+/** Methods to use when ordering `LegacyMeetupStatLineRaw`. */
+export enum LegacyMeetupStatLineRawsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  PLAYER_ID_ASC = 'PLAYER_ID_ASC',
+  PLAYER_ID_DESC = 'PLAYER_ID_DESC',
+  GAME_ID_ASC = 'GAME_ID_ASC',
+  GAME_ID_DESC = 'GAME_ID_DESC',
+  TEAM_ID_ASC = 'TEAM_ID_ASC',
+  TEAM_ID_DESC = 'TEAM_ID_DESC',
+  AT_BATS_ASC = 'AT_BATS_ASC',
+  AT_BATS_DESC = 'AT_BATS_DESC',
+  RUNS_ASC = 'RUNS_ASC',
+  RUNS_DESC = 'RUNS_DESC',
+  HITS_ASC = 'HITS_ASC',
+  HITS_DESC = 'HITS_DESC',
+  SINGLES_ASC = 'SINGLES_ASC',
+  SINGLES_DESC = 'SINGLES_DESC',
+  DOUBLES_ASC = 'DOUBLES_ASC',
+  DOUBLES_DESC = 'DOUBLES_DESC',
+  TRIPLES_ASC = 'TRIPLES_ASC',
+  TRIPLES_DESC = 'TRIPLES_DESC',
+  HOMERUNS_ASC = 'HOMERUNS_ASC',
+  HOMERUNS_DESC = 'HOMERUNS_DESC',
+  RBI_ASC = 'RBI_ASC',
+  RBI_DESC = 'RBI_DESC',
+  WALKS_ASC = 'WALKS_ASC',
+  WALKS_DESC = 'WALKS_DESC',
+  STRIKEOUTS_ASC = 'STRIKEOUTS_ASC',
+  STRIKEOUTS_DESC = 'STRIKEOUTS_DESC',
+  SAC_FLIES_ASC = 'SAC_FLIES_ASC',
+  SAC_FLIES_DESC = 'SAC_FLIES_DESC',
+  STOLEN_BASES_ASC = 'STOLEN_BASES_ASC',
+  STOLEN_BASES_DESC = 'STOLEN_BASES_DESC',
+  PITCHED_ASC = 'PITCHED_ASC',
+  PITCHED_DESC = 'PITCHED_DESC',
+  PITCHER_WON_ASC = 'PITCHER_WON_ASC',
+  PITCHER_WON_DESC = 'PITCHER_WON_DESC',
+  PITCHER_LOST_ASC = 'PITCHER_LOST_ASC',
+  PITCHER_LOST_DESC = 'PITCHER_LOST_DESC',
+  PITCHER_SAVE_ASC = 'PITCHER_SAVE_ASC',
+  PITCHER_SAVE_DESC = 'PITCHER_SAVE_DESC',
+  PITCHER_COMPLETE_GAME_ASC = 'PITCHER_COMPLETE_GAME_ASC',
+  PITCHER_COMPLETE_GAME_DESC = 'PITCHER_COMPLETE_GAME_DESC',
+  PITCHER_QUALITY_START_ASC = 'PITCHER_QUALITY_START_ASC',
+  PITCHER_QUALITY_START_DESC = 'PITCHER_QUALITY_START_DESC',
+  INNINGS_PITCHED_ASC = 'INNINGS_PITCHED_ASC',
+  INNINGS_PITCHED_DESC = 'INNINGS_PITCHED_DESC',
+  RUNS_ALLOWED_ASC = 'RUNS_ALLOWED_ASC',
+  RUNS_ALLOWED_DESC = 'RUNS_ALLOWED_DESC',
+  EARNED_RUNS_ALLOWED_ASC = 'EARNED_RUNS_ALLOWED_ASC',
+  EARNED_RUNS_ALLOWED_DESC = 'EARNED_RUNS_ALLOWED_DESC',
+  HITS_ALLOWED_ASC = 'HITS_ALLOWED_ASC',
+  HITS_ALLOWED_DESC = 'HITS_ALLOWED_DESC',
+  HOMERUNS_ALLOWED_ASC = 'HOMERUNS_ALLOWED_ASC',
+  HOMERUNS_ALLOWED_DESC = 'HOMERUNS_ALLOWED_DESC',
+  PITCHER_STRIKEOUTS_ASC = 'PITCHER_STRIKEOUTS_ASC',
+  PITCHER_STRIKEOUTS_DESC = 'PITCHER_STRIKEOUTS_DESC',
+  PITCHER_WALKS_ASC = 'PITCHER_WALKS_ASC',
+  PITCHER_WALKS_DESC = 'PITCHER_WALKS_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type LegacyMeetupTeamRaw = Node & {
+  __typename?: 'LegacyMeetupTeamRaw';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  /** Reads and enables pagination through a set of `LegacyMeetupGameRaw`. */
+  legacyMeetupGameRawsByWinningTeamId: Array<LegacyMeetupGameRaw>;
+  /** Reads and enables pagination through a set of `LegacyMeetupGameRaw`. */
+  legacyMeetupGameRawsByLosingTeamId: Array<LegacyMeetupGameRaw>;
+  /** Reads and enables pagination through a set of `LegacyMeetupStatLineRaw`. */
+  legacyMeetupStatLineRawsByTeamId: Array<LegacyMeetupStatLineRaw>;
+};
+
+
+export type LegacyMeetupTeamRawLegacyMeetupGameRawsByWinningTeamIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupGameRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupGameRawCondition>;
+};
+
+
+export type LegacyMeetupTeamRawLegacyMeetupGameRawsByLosingTeamIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupGameRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupGameRawCondition>;
+};
+
+
+export type LegacyMeetupTeamRawLegacyMeetupStatLineRawsByTeamIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupStatLineRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupStatLineRawCondition>;
+};
+
+/**
+ * A condition to be used against `LegacyMeetupTeamRaw` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type LegacyMeetupTeamRawCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+};
+
+/** An input for mutations affecting `LegacyMeetupTeamRaw` */
+export type LegacyMeetupTeamRawInput = {
+  id: Scalars['Int'];
+  name: Scalars['String'];
+  legacyMeetupGameRawsToWinningTeamIdUsingId?: Maybe<LegacyMeetupGameRawWinningTeamIdFkeyInverseInput>;
+  legacyMeetupGameRawsToLosingTeamIdUsingId?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInverseInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInverseInput>;
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to connect. */
+export type LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyConnect = {
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to delete. */
+export type LegacyMeetupTeamRawLegacyMeetupTeamRawNameKeyDelete = {
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to connect. */
+export type LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to delete. */
+export type LegacyMeetupTeamRawLegacyMeetupTeamRawPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LegacyMeetupTeamRawNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LegacyMeetupTeamRawNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupTeamRaw` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+  patch: UpdateLegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+  patch: UpdateLegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupGameRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `legacyMeetupStatLineRaw` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+  patch: LegacyMeetupStatLineRawPatch;
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+  patch: UpdateLegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `legacyMeetupTeamRaw` to look up the row to update. */
+export type LegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyUsingLegacyMeetupTeamRawPkeyUpdate = {
+  /** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+  patch: UpdateLegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `LegacyMeetupTeamRaw`. Fields that are set will be updated. */
+export type LegacyMeetupTeamRawPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  legacyMeetupGameRawsToWinningTeamIdUsingId?: Maybe<LegacyMeetupGameRawWinningTeamIdFkeyInverseInput>;
+  legacyMeetupGameRawsToLosingTeamIdUsingId?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInverseInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInverseInput>;
+};
+
+/** Methods to use when ordering `LegacyMeetupTeamRaw`. */
+export enum LegacyMeetupTeamRawsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
@@ -12808,6 +14991,16 @@ export type Mutation = {
   createGameState: Maybe<CreateGameStatePayload>;
   /** Creates a single `Group`. */
   createGroup: Maybe<CreateGroupPayload>;
+  /** Creates a single `LegacyMeetupFieldRaw`. */
+  createLegacyMeetupFieldRaw: Maybe<CreateLegacyMeetupFieldRawPayload>;
+  /** Creates a single `LegacyMeetupGameRaw`. */
+  createLegacyMeetupGameRaw: Maybe<CreateLegacyMeetupGameRawPayload>;
+  /** Creates a single `LegacyMeetupPlayerRaw`. */
+  createLegacyMeetupPlayerRaw: Maybe<CreateLegacyMeetupPlayerRawPayload>;
+  /** Creates a single `LegacyMeetupStatLineRaw`. */
+  createLegacyMeetupStatLineRaw: Maybe<CreateLegacyMeetupStatLineRawPayload>;
+  /** Creates a single `LegacyMeetupTeamRaw`. */
+  createLegacyMeetupTeamRaw: Maybe<CreateLegacyMeetupTeamRawPayload>;
   /** Creates a single `Lineup`. */
   createLineup: Maybe<CreateLineupPayload>;
   /** Creates a single `LineupChange`. */
@@ -12882,6 +15075,34 @@ export type Mutation = {
   updateGroupByName: Maybe<UpdateGroupPayload>;
   /** Updates a single `Group` using a unique key and a patch. */
   updateGroupByUrlSlug: Maybe<UpdateGroupPayload>;
+  /** Updates a single `LegacyMeetupFieldRaw` using its globally unique id and a patch. */
+  updateLegacyMeetupFieldRawByNodeId: Maybe<UpdateLegacyMeetupFieldRawPayload>;
+  /** Updates a single `LegacyMeetupFieldRaw` using a unique key and a patch. */
+  updateLegacyMeetupFieldRaw: Maybe<UpdateLegacyMeetupFieldRawPayload>;
+  /** Updates a single `LegacyMeetupFieldRaw` using a unique key and a patch. */
+  updateLegacyMeetupFieldRawByNameAndSubField: Maybe<UpdateLegacyMeetupFieldRawPayload>;
+  /** Updates a single `LegacyMeetupGameRaw` using its globally unique id and a patch. */
+  updateLegacyMeetupGameRawByNodeId: Maybe<UpdateLegacyMeetupGameRawPayload>;
+  /** Updates a single `LegacyMeetupGameRaw` using a unique key and a patch. */
+  updateLegacyMeetupGameRaw: Maybe<UpdateLegacyMeetupGameRawPayload>;
+  /** Updates a single `LegacyMeetupGameRaw` using a unique key and a patch. */
+  updateLegacyMeetupGameRawByName: Maybe<UpdateLegacyMeetupGameRawPayload>;
+  /** Updates a single `LegacyMeetupPlayerRaw` using its globally unique id and a patch. */
+  updateLegacyMeetupPlayerRawByNodeId: Maybe<UpdateLegacyMeetupPlayerRawPayload>;
+  /** Updates a single `LegacyMeetupPlayerRaw` using a unique key and a patch. */
+  updateLegacyMeetupPlayerRaw: Maybe<UpdateLegacyMeetupPlayerRawPayload>;
+  /** Updates a single `LegacyMeetupPlayerRaw` using a unique key and a patch. */
+  updateLegacyMeetupPlayerRawByName: Maybe<UpdateLegacyMeetupPlayerRawPayload>;
+  /** Updates a single `LegacyMeetupStatLineRaw` using its globally unique id and a patch. */
+  updateLegacyMeetupStatLineRawByNodeId: Maybe<UpdateLegacyMeetupStatLineRawPayload>;
+  /** Updates a single `LegacyMeetupStatLineRaw` using a unique key and a patch. */
+  updateLegacyMeetupStatLineRaw: Maybe<UpdateLegacyMeetupStatLineRawPayload>;
+  /** Updates a single `LegacyMeetupTeamRaw` using its globally unique id and a patch. */
+  updateLegacyMeetupTeamRawByNodeId: Maybe<UpdateLegacyMeetupTeamRawPayload>;
+  /** Updates a single `LegacyMeetupTeamRaw` using a unique key and a patch. */
+  updateLegacyMeetupTeamRaw: Maybe<UpdateLegacyMeetupTeamRawPayload>;
+  /** Updates a single `LegacyMeetupTeamRaw` using a unique key and a patch. */
+  updateLegacyMeetupTeamRawByName: Maybe<UpdateLegacyMeetupTeamRawPayload>;
   /** Updates a single `Lineup` using its globally unique id and a patch. */
   updateLineupByNodeId: Maybe<UpdateLineupPayload>;
   /** Updates a single `Lineup` using a unique key and a patch. */
@@ -12990,6 +15211,34 @@ export type Mutation = {
   deleteGroupByName: Maybe<DeleteGroupPayload>;
   /** Deletes a single `Group` using a unique key. */
   deleteGroupByUrlSlug: Maybe<DeleteGroupPayload>;
+  /** Deletes a single `LegacyMeetupFieldRaw` using its globally unique id. */
+  deleteLegacyMeetupFieldRawByNodeId: Maybe<DeleteLegacyMeetupFieldRawPayload>;
+  /** Deletes a single `LegacyMeetupFieldRaw` using a unique key. */
+  deleteLegacyMeetupFieldRaw: Maybe<DeleteLegacyMeetupFieldRawPayload>;
+  /** Deletes a single `LegacyMeetupFieldRaw` using a unique key. */
+  deleteLegacyMeetupFieldRawByNameAndSubField: Maybe<DeleteLegacyMeetupFieldRawPayload>;
+  /** Deletes a single `LegacyMeetupGameRaw` using its globally unique id. */
+  deleteLegacyMeetupGameRawByNodeId: Maybe<DeleteLegacyMeetupGameRawPayload>;
+  /** Deletes a single `LegacyMeetupGameRaw` using a unique key. */
+  deleteLegacyMeetupGameRaw: Maybe<DeleteLegacyMeetupGameRawPayload>;
+  /** Deletes a single `LegacyMeetupGameRaw` using a unique key. */
+  deleteLegacyMeetupGameRawByName: Maybe<DeleteLegacyMeetupGameRawPayload>;
+  /** Deletes a single `LegacyMeetupPlayerRaw` using its globally unique id. */
+  deleteLegacyMeetupPlayerRawByNodeId: Maybe<DeleteLegacyMeetupPlayerRawPayload>;
+  /** Deletes a single `LegacyMeetupPlayerRaw` using a unique key. */
+  deleteLegacyMeetupPlayerRaw: Maybe<DeleteLegacyMeetupPlayerRawPayload>;
+  /** Deletes a single `LegacyMeetupPlayerRaw` using a unique key. */
+  deleteLegacyMeetupPlayerRawByName: Maybe<DeleteLegacyMeetupPlayerRawPayload>;
+  /** Deletes a single `LegacyMeetupStatLineRaw` using its globally unique id. */
+  deleteLegacyMeetupStatLineRawByNodeId: Maybe<DeleteLegacyMeetupStatLineRawPayload>;
+  /** Deletes a single `LegacyMeetupStatLineRaw` using a unique key. */
+  deleteLegacyMeetupStatLineRaw: Maybe<DeleteLegacyMeetupStatLineRawPayload>;
+  /** Deletes a single `LegacyMeetupTeamRaw` using its globally unique id. */
+  deleteLegacyMeetupTeamRawByNodeId: Maybe<DeleteLegacyMeetupTeamRawPayload>;
+  /** Deletes a single `LegacyMeetupTeamRaw` using a unique key. */
+  deleteLegacyMeetupTeamRaw: Maybe<DeleteLegacyMeetupTeamRawPayload>;
+  /** Deletes a single `LegacyMeetupTeamRaw` using a unique key. */
+  deleteLegacyMeetupTeamRawByName: Maybe<DeleteLegacyMeetupTeamRawPayload>;
   /** Deletes a single `Lineup` using its globally unique id. */
   deleteLineupByNodeId: Maybe<DeleteLineupPayload>;
   /** Deletes a single `Lineup` using a unique key. */
@@ -13145,6 +15394,36 @@ export type MutationCreateGameStateArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateGroupArgs = {
   input: CreateGroupInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLegacyMeetupFieldRawArgs = {
+  input: CreateLegacyMeetupFieldRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLegacyMeetupGameRawArgs = {
+  input: CreateLegacyMeetupGameRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLegacyMeetupPlayerRawArgs = {
+  input: CreateLegacyMeetupPlayerRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLegacyMeetupStatLineRawArgs = {
+  input: CreateLegacyMeetupStatLineRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLegacyMeetupTeamRawArgs = {
+  input: CreateLegacyMeetupTeamRawInput;
 };
 
 
@@ -13367,6 +15646,90 @@ export type MutationUpdateGroupByNameArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateGroupByUrlSlugArgs = {
   input: UpdateGroupByUrlSlugInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupFieldRawByNodeIdArgs = {
+  input: UpdateLegacyMeetupFieldRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupFieldRawArgs = {
+  input: UpdateLegacyMeetupFieldRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupFieldRawByNameAndSubFieldArgs = {
+  input: UpdateLegacyMeetupFieldRawByNameAndSubFieldInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupGameRawByNodeIdArgs = {
+  input: UpdateLegacyMeetupGameRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupGameRawArgs = {
+  input: UpdateLegacyMeetupGameRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupGameRawByNameArgs = {
+  input: UpdateLegacyMeetupGameRawByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupPlayerRawByNodeIdArgs = {
+  input: UpdateLegacyMeetupPlayerRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupPlayerRawArgs = {
+  input: UpdateLegacyMeetupPlayerRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupPlayerRawByNameArgs = {
+  input: UpdateLegacyMeetupPlayerRawByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupStatLineRawByNodeIdArgs = {
+  input: UpdateLegacyMeetupStatLineRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupStatLineRawArgs = {
+  input: UpdateLegacyMeetupStatLineRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupTeamRawByNodeIdArgs = {
+  input: UpdateLegacyMeetupTeamRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupTeamRawArgs = {
+  input: UpdateLegacyMeetupTeamRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLegacyMeetupTeamRawByNameArgs = {
+  input: UpdateLegacyMeetupTeamRawByNameInput;
 };
 
 
@@ -13691,6 +16054,90 @@ export type MutationDeleteGroupByNameArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteGroupByUrlSlugArgs = {
   input: DeleteGroupByUrlSlugInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupFieldRawByNodeIdArgs = {
+  input: DeleteLegacyMeetupFieldRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupFieldRawArgs = {
+  input: DeleteLegacyMeetupFieldRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupFieldRawByNameAndSubFieldArgs = {
+  input: DeleteLegacyMeetupFieldRawByNameAndSubFieldInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupGameRawByNodeIdArgs = {
+  input: DeleteLegacyMeetupGameRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupGameRawArgs = {
+  input: DeleteLegacyMeetupGameRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupGameRawByNameArgs = {
+  input: DeleteLegacyMeetupGameRawByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupPlayerRawByNodeIdArgs = {
+  input: DeleteLegacyMeetupPlayerRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupPlayerRawArgs = {
+  input: DeleteLegacyMeetupPlayerRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupPlayerRawByNameArgs = {
+  input: DeleteLegacyMeetupPlayerRawByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupStatLineRawByNodeIdArgs = {
+  input: DeleteLegacyMeetupStatLineRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupStatLineRawArgs = {
+  input: DeleteLegacyMeetupStatLineRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupTeamRawByNodeIdArgs = {
+  input: DeleteLegacyMeetupTeamRawByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupTeamRawArgs = {
+  input: DeleteLegacyMeetupTeamRawInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLegacyMeetupTeamRawByNameArgs = {
+  input: DeleteLegacyMeetupTeamRawByNameInput;
 };
 
 
@@ -15810,6 +18257,16 @@ export type Query = Node & {
   legacyGames: Maybe<Array<LegacyGame>>;
   /** Reads a set of `LegacyGameBattingLine`. */
   legacyGameBattingLines: Maybe<Array<LegacyGameBattingLine>>;
+  /** Reads a set of `LegacyMeetupFieldRaw`. */
+  legacyMeetupFieldRaws: Maybe<Array<LegacyMeetupFieldRaw>>;
+  /** Reads a set of `LegacyMeetupGameRaw`. */
+  legacyMeetupGameRaws: Maybe<Array<LegacyMeetupGameRaw>>;
+  /** Reads a set of `LegacyMeetupPlayerRaw`. */
+  legacyMeetupPlayerRaws: Maybe<Array<LegacyMeetupPlayerRaw>>;
+  /** Reads a set of `LegacyMeetupStatLineRaw`. */
+  legacyMeetupStatLineRaws: Maybe<Array<LegacyMeetupStatLineRaw>>;
+  /** Reads a set of `LegacyMeetupTeamRaw`. */
+  legacyMeetupTeamRaws: Maybe<Array<LegacyMeetupTeamRaw>>;
   /** Reads a set of `LegacyPlayer`. */
   legacyPlayers: Maybe<Array<LegacyPlayer>>;
   /** Reads a set of `LegacySeason`. */
@@ -15876,6 +18333,15 @@ export type Query = Node & {
   legacyField: Maybe<LegacyField>;
   legacyGame: Maybe<LegacyGame>;
   legacyGameBattingLine: Maybe<LegacyGameBattingLine>;
+  legacyMeetupFieldRaw: Maybe<LegacyMeetupFieldRaw>;
+  legacyMeetupFieldRawByNameAndSubField: Maybe<LegacyMeetupFieldRaw>;
+  legacyMeetupGameRaw: Maybe<LegacyMeetupGameRaw>;
+  legacyMeetupGameRawByName: Maybe<LegacyMeetupGameRaw>;
+  legacyMeetupPlayerRaw: Maybe<LegacyMeetupPlayerRaw>;
+  legacyMeetupPlayerRawByName: Maybe<LegacyMeetupPlayerRaw>;
+  legacyMeetupStatLineRaw: Maybe<LegacyMeetupStatLineRaw>;
+  legacyMeetupTeamRaw: Maybe<LegacyMeetupTeamRaw>;
+  legacyMeetupTeamRawByName: Maybe<LegacyMeetupTeamRaw>;
   legacyPlayer: Maybe<LegacyPlayer>;
   legacyStatLine: Maybe<LegacyStatLine>;
   legacyTeam: Maybe<LegacyTeam>;
@@ -15943,6 +18409,16 @@ export type Query = Node & {
   legacyGameByNodeId: Maybe<LegacyGame>;
   /** Reads a single `LegacyGameBattingLine` using its globally unique `ID`. */
   legacyGameBattingLineByNodeId: Maybe<LegacyGameBattingLine>;
+  /** Reads a single `LegacyMeetupFieldRaw` using its globally unique `ID`. */
+  legacyMeetupFieldRawByNodeId: Maybe<LegacyMeetupFieldRaw>;
+  /** Reads a single `LegacyMeetupGameRaw` using its globally unique `ID`. */
+  legacyMeetupGameRawByNodeId: Maybe<LegacyMeetupGameRaw>;
+  /** Reads a single `LegacyMeetupPlayerRaw` using its globally unique `ID`. */
+  legacyMeetupPlayerRawByNodeId: Maybe<LegacyMeetupPlayerRaw>;
+  /** Reads a single `LegacyMeetupStatLineRaw` using its globally unique `ID`. */
+  legacyMeetupStatLineRawByNodeId: Maybe<LegacyMeetupStatLineRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` using its globally unique `ID`. */
+  legacyMeetupTeamRawByNodeId: Maybe<LegacyMeetupTeamRaw>;
   /** Reads a single `LegacyPlayer` using its globally unique `ID`. */
   legacyPlayerByNodeId: Maybe<LegacyPlayer>;
   /** Reads a single `LegacyStatLine` using its globally unique `ID`. */
@@ -16172,6 +18648,51 @@ export type QueryLegacyGameBattingLinesArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<LegacyGameBattingLinesOrderBy>>;
   condition?: Maybe<LegacyGameBattingLineCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupFieldRawsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupFieldRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupFieldRawCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupGameRawsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupGameRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupGameRawCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupPlayerRawsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupPlayerRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupPlayerRawCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupStatLineRawsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupStatLineRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupStatLineRawCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupTeamRawsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<LegacyMeetupTeamRawsOrderBy>>;
+  condition?: Maybe<LegacyMeetupTeamRawCondition>;
 };
 
 
@@ -16502,6 +19023,61 @@ export type QueryLegacyGameArgs = {
 export type QueryLegacyGameBattingLineArgs = {
   legacyPlayerId: Scalars['Int'];
   legacyGameId: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupFieldRawArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupFieldRawByNameAndSubFieldArgs = {
+  name: Scalars['String'];
+  subField: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupGameRawArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupGameRawByNameArgs = {
+  name: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupPlayerRawArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupPlayerRawByNameArgs = {
+  name: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupStatLineRawArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupTeamRawArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupTeamRawByNameArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -16841,6 +19417,36 @@ export type QueryLegacyGameByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryLegacyGameBattingLineByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupFieldRawByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupGameRawByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupPlayerRawByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupStatLineRawByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLegacyMeetupTeamRawByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -19406,6 +22012,262 @@ export type UpdateGroupPayload = {
   query: Maybe<Query>;
 };
 
+/** All input for the `updateLegacyMeetupFieldRawByNameAndSubField` mutation. */
+export type UpdateLegacyMeetupFieldRawByNameAndSubFieldInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupFieldRaw` being updated. */
+  patch: LegacyMeetupFieldRawPatch;
+  name: Scalars['String'];
+  subField: Scalars['String'];
+};
+
+/** All input for the `updateLegacyMeetupFieldRawByNodeId` mutation. */
+export type UpdateLegacyMeetupFieldRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupFieldRaw` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LegacyMeetupFieldRaw` being updated. */
+  patch: LegacyMeetupFieldRawPatch;
+};
+
+/** All input for the `updateLegacyMeetupFieldRaw` mutation. */
+export type UpdateLegacyMeetupFieldRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupFieldRaw` being updated. */
+  patch: LegacyMeetupFieldRawPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LegacyMeetupFieldRaw` mutation. */
+export type UpdateLegacyMeetupFieldRawPayload = {
+  __typename?: 'UpdateLegacyMeetupFieldRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupFieldRaw` that was updated by this mutation. */
+  legacyMeetupFieldRaw: Maybe<LegacyMeetupFieldRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `updateLegacyMeetupGameRawByName` mutation. */
+export type UpdateLegacyMeetupGameRawByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+  name: Scalars['String'];
+};
+
+/** All input for the `updateLegacyMeetupGameRawByNodeId` mutation. */
+export type UpdateLegacyMeetupGameRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupGameRaw` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LegacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+};
+
+/** All input for the `updateLegacyMeetupGameRaw` mutation. */
+export type UpdateLegacyMeetupGameRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupGameRaw` being updated. */
+  patch: LegacyMeetupGameRawPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LegacyMeetupGameRaw` mutation. */
+export type UpdateLegacyMeetupGameRawPayload = {
+  __typename?: 'UpdateLegacyMeetupGameRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupGameRaw` that was updated by this mutation. */
+  legacyMeetupGameRaw: Maybe<LegacyMeetupGameRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  winningTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupGameRaw`. */
+  losingTeam: Maybe<LegacyMeetupTeamRaw>;
+  /** Reads a single `LegacyMeetupFieldRaw` that is related to this `LegacyMeetupGameRaw`. */
+  field: Maybe<LegacyMeetupFieldRaw>;
+};
+
+/** All input for the `updateLegacyMeetupPlayerRawByName` mutation. */
+export type UpdateLegacyMeetupPlayerRawByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupPlayerRaw` being updated. */
+  patch: LegacyMeetupPlayerRawPatch;
+  name: Scalars['String'];
+};
+
+/** All input for the `updateLegacyMeetupPlayerRawByNodeId` mutation. */
+export type UpdateLegacyMeetupPlayerRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupPlayerRaw` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LegacyMeetupPlayerRaw` being updated. */
+  patch: LegacyMeetupPlayerRawPatch;
+};
+
+/** All input for the `updateLegacyMeetupPlayerRaw` mutation. */
+export type UpdateLegacyMeetupPlayerRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupPlayerRaw` being updated. */
+  patch: LegacyMeetupPlayerRawPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LegacyMeetupPlayerRaw` mutation. */
+export type UpdateLegacyMeetupPlayerRawPayload = {
+  __typename?: 'UpdateLegacyMeetupPlayerRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupPlayerRaw` that was updated by this mutation. */
+  legacyMeetupPlayerRaw: Maybe<LegacyMeetupPlayerRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
+/** All input for the `updateLegacyMeetupStatLineRawByNodeId` mutation. */
+export type UpdateLegacyMeetupStatLineRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupStatLineRaw` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LegacyMeetupStatLineRaw` being updated. */
+  patch: LegacyMeetupStatLineRawPatch;
+};
+
+/** All input for the `updateLegacyMeetupStatLineRaw` mutation. */
+export type UpdateLegacyMeetupStatLineRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupStatLineRaw` being updated. */
+  patch: LegacyMeetupStatLineRawPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LegacyMeetupStatLineRaw` mutation. */
+export type UpdateLegacyMeetupStatLineRawPayload = {
+  __typename?: 'UpdateLegacyMeetupStatLineRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupStatLineRaw` that was updated by this mutation. */
+  legacyMeetupStatLineRaw: Maybe<LegacyMeetupStatLineRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `LegacyMeetupPlayerRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  player: Maybe<LegacyMeetupPlayerRaw>;
+  /** Reads a single `LegacyMeetupGameRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  game: Maybe<LegacyMeetupGameRaw>;
+  /** Reads a single `LegacyMeetupTeamRaw` that is related to this `LegacyMeetupStatLineRaw`. */
+  team: Maybe<LegacyMeetupTeamRaw>;
+};
+
+/** All input for the `updateLegacyMeetupTeamRawByName` mutation. */
+export type UpdateLegacyMeetupTeamRawByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupTeamRaw` being updated. */
+  patch: LegacyMeetupTeamRawPatch;
+  name: Scalars['String'];
+};
+
+/** All input for the `updateLegacyMeetupTeamRawByNodeId` mutation. */
+export type UpdateLegacyMeetupTeamRawByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LegacyMeetupTeamRaw` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LegacyMeetupTeamRaw` being updated. */
+  patch: LegacyMeetupTeamRawPatch;
+};
+
+/** All input for the `updateLegacyMeetupTeamRaw` mutation. */
+export type UpdateLegacyMeetupTeamRawInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LegacyMeetupTeamRaw` being updated. */
+  patch: LegacyMeetupTeamRawPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LegacyMeetupTeamRaw` mutation. */
+export type UpdateLegacyMeetupTeamRawPayload = {
+  __typename?: 'UpdateLegacyMeetupTeamRawPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `LegacyMeetupTeamRaw` that was updated by this mutation. */
+  legacyMeetupTeamRaw: Maybe<LegacyMeetupTeamRaw>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `updateLineupByNodeId` mutation. */
 export type UpdateLineupByNodeIdInput = {
   /**
@@ -21646,6 +24508,243 @@ export type UpdateLegacyGameOnUnifiedGameForFakePublicUnifiedGamesForeignKey2Pat
   legacyTeam?: Maybe<FakePublicLegacyGameForeignKey1Input>;
   legacyGameBattingLines?: Maybe<FakePublicLegacyGameBattingLinesForeignKey2InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey2InverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupFieldRaw` being updated. */
+export type UpdateLegacyMeetupFieldRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  subField?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+  rating?: Maybe<Scalars['Int']>;
+  legacyMeetupGameRaws?: Maybe<LegacyMeetupGameRawFieldIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+export type UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawFieldIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  season?: Maybe<Scalars['Int']>;
+  date?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Time']>;
+  timeEnded?: Maybe<Scalars['Time']>;
+  winningTeamId?: Maybe<Scalars['Int']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced?: Maybe<Scalars['Boolean']>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+export type UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  season?: Maybe<Scalars['Int']>;
+  date?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Time']>;
+  timeEnded?: Maybe<Scalars['Time']>;
+  winningTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced?: Maybe<Scalars['Boolean']>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+export type UpdateLegacyMeetupGameRawOnLegacyMeetupGameRawForLegacyMeetupGameRawWinningTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  season?: Maybe<Scalars['Int']>;
+  date?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Time']>;
+  timeEnded?: Maybe<Scalars['Time']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced?: Maybe<Scalars['Boolean']>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupGameRaw` being updated. */
+export type UpdateLegacyMeetupGameRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  season?: Maybe<Scalars['Int']>;
+  date?: Maybe<Scalars['Date']>;
+  timeStarted?: Maybe<Scalars['Time']>;
+  timeEnded?: Maybe<Scalars['Time']>;
+  winningTeamId?: Maybe<Scalars['Int']>;
+  losingTeamId?: Maybe<Scalars['Int']>;
+  fieldId?: Maybe<Scalars['Int']>;
+  imageGalleryUrl?: Maybe<Scalars['String']>;
+  meetupEventId?: Maybe<Scalars['String']>;
+  dateInserted?: Maybe<Scalars['Date']>;
+  dateUpdated?: Maybe<Scalars['Date']>;
+  advanced?: Maybe<Scalars['Boolean']>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInput>;
+  legacyMeetupFieldRaw?: Maybe<LegacyMeetupGameRawFieldIdFkeyInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupPlayerRaw` being updated. */
+export type UpdateLegacyMeetupPlayerRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  gender?: Maybe<Gender>;
+  nickname?: Maybe<Scalars['String']>;
+  selfNickname?: Maybe<Scalars['String']>;
+  bats?: Maybe<Handedness>;
+  throws?: Maybe<Handedness>;
+  imageUrl?: Maybe<Scalars['String']>;
+  meetupMemberId?: Maybe<Scalars['String']>;
+  skillLevel?: Maybe<Scalars['Int']>;
+  preferredPositionFirst?: Maybe<FieldingPosition>;
+  preferredPositionSecond?: Maybe<FieldingPosition>;
+  preferredPositionThird?: Maybe<FieldingPosition>;
+  favoriteTeam?: Maybe<Scalars['String']>;
+  hometown?: Maybe<Scalars['String']>;
+  school?: Maybe<Scalars['String']>;
+  timeAdded?: Maybe<Scalars['Datetime']>;
+  dateDebuted?: Maybe<Scalars['Date']>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+export type UpdateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawGameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerId?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  hits?: Maybe<Scalars['Int']>;
+  singles?: Maybe<Scalars['Int']>;
+  doubles?: Maybe<Scalars['Int']>;
+  triples?: Maybe<Scalars['Int']>;
+  homeruns?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  stolenBases?: Maybe<Scalars['Int']>;
+  pitched?: Maybe<Scalars['Boolean']>;
+  pitcherWon?: Maybe<Scalars['Boolean']>;
+  pitcherLost?: Maybe<Scalars['Boolean']>;
+  pitcherSave?: Maybe<Scalars['Boolean']>;
+  pitcherCompleteGame?: Maybe<Scalars['Boolean']>;
+  pitcherQualityStart?: Maybe<Scalars['Boolean']>;
+  inningsPitched?: Maybe<Scalars['Int']>;
+  runsAllowed?: Maybe<Scalars['Int']>;
+  earnedRunsAllowed?: Maybe<Scalars['Int']>;
+  hitsAllowed?: Maybe<Scalars['Int']>;
+  homerunsAllowed?: Maybe<Scalars['Int']>;
+  pitcherStrikeouts?: Maybe<Scalars['Int']>;
+  pitcherWalks?: Maybe<Scalars['Int']>;
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+export type UpdateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawPlayerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  teamId?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  hits?: Maybe<Scalars['Int']>;
+  singles?: Maybe<Scalars['Int']>;
+  doubles?: Maybe<Scalars['Int']>;
+  triples?: Maybe<Scalars['Int']>;
+  homeruns?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  stolenBases?: Maybe<Scalars['Int']>;
+  pitched?: Maybe<Scalars['Boolean']>;
+  pitcherWon?: Maybe<Scalars['Boolean']>;
+  pitcherLost?: Maybe<Scalars['Boolean']>;
+  pitcherSave?: Maybe<Scalars['Boolean']>;
+  pitcherCompleteGame?: Maybe<Scalars['Boolean']>;
+  pitcherQualityStart?: Maybe<Scalars['Boolean']>;
+  inningsPitched?: Maybe<Scalars['Int']>;
+  runsAllowed?: Maybe<Scalars['Int']>;
+  earnedRunsAllowed?: Maybe<Scalars['Int']>;
+  hitsAllowed?: Maybe<Scalars['Int']>;
+  homerunsAllowed?: Maybe<Scalars['Int']>;
+  pitcherStrikeouts?: Maybe<Scalars['Int']>;
+  pitcherWalks?: Maybe<Scalars['Int']>;
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupStatLineRaw` being updated. */
+export type UpdateLegacyMeetupStatLineRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  playerId?: Maybe<Scalars['Int']>;
+  gameId?: Maybe<Scalars['Int']>;
+  atBats?: Maybe<Scalars['Int']>;
+  runs?: Maybe<Scalars['Int']>;
+  hits?: Maybe<Scalars['Int']>;
+  singles?: Maybe<Scalars['Int']>;
+  doubles?: Maybe<Scalars['Int']>;
+  triples?: Maybe<Scalars['Int']>;
+  homeruns?: Maybe<Scalars['Int']>;
+  rbi?: Maybe<Scalars['Int']>;
+  walks?: Maybe<Scalars['Int']>;
+  strikeouts?: Maybe<Scalars['Int']>;
+  sacFlies?: Maybe<Scalars['Int']>;
+  stolenBases?: Maybe<Scalars['Int']>;
+  pitched?: Maybe<Scalars['Boolean']>;
+  pitcherWon?: Maybe<Scalars['Boolean']>;
+  pitcherLost?: Maybe<Scalars['Boolean']>;
+  pitcherSave?: Maybe<Scalars['Boolean']>;
+  pitcherCompleteGame?: Maybe<Scalars['Boolean']>;
+  pitcherQualityStart?: Maybe<Scalars['Boolean']>;
+  inningsPitched?: Maybe<Scalars['Int']>;
+  runsAllowed?: Maybe<Scalars['Int']>;
+  earnedRunsAllowed?: Maybe<Scalars['Int']>;
+  hitsAllowed?: Maybe<Scalars['Int']>;
+  homerunsAllowed?: Maybe<Scalars['Int']>;
+  pitcherStrikeouts?: Maybe<Scalars['Int']>;
+  pitcherWalks?: Maybe<Scalars['Int']>;
+  legacyMeetupPlayerRaw?: Maybe<LegacyMeetupStatLineRawPlayerIdFkeyInput>;
+  legacyMeetupGameRaw?: Maybe<LegacyMeetupStatLineRawGameIdFkeyInput>;
+  legacyMeetupTeamRaw?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+export type UpdateLegacyMeetupTeamRawOnLegacyMeetupGameRawForLegacyMeetupGameRawLosingTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  legacyMeetupGameRawsToWinningTeamIdUsingId?: Maybe<LegacyMeetupGameRawWinningTeamIdFkeyInverseInput>;
+  legacyMeetupGameRawsToLosingTeamIdUsingId?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInverseInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `legacyMeetupTeamRaw` being updated. */
+export type UpdateLegacyMeetupTeamRawOnLegacyMeetupStatLineRawForLegacyMeetupStatLineRawTeamIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  legacyMeetupGameRawsToWinningTeamIdUsingId?: Maybe<LegacyMeetupGameRawWinningTeamIdFkeyInverseInput>;
+  legacyMeetupGameRawsToLosingTeamIdUsingId?: Maybe<LegacyMeetupGameRawLosingTeamIdFkeyInverseInput>;
+  legacyMeetupStatLineRaws?: Maybe<LegacyMeetupStatLineRawTeamIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `legacyPlayer` being updated. */

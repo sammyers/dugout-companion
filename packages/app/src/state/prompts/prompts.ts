@@ -57,7 +57,13 @@ export const getAvailableBases = (currentBase: BaseType, nextRunner: BaseType | 
 };
 
 const inPlayContactOptions = _.values(ContactQuality).filter(
-  ct => ![ContactQuality.NONE, ContactQuality.DEAD_BALL, ContactQuality.FOUL].includes(ct)
+  ct =>
+    ![
+      ContactQuality.NONE,
+      ContactQuality.DEAD_BALL,
+      ContactQuality.INNING_ENDING_DEAD_BALL,
+      ContactQuality.FOUL,
+    ].includes(ct)
 ) as HitContactType[];
 const getContactOptionsForHit = (contactTypes: HitContactType[] = inPlayContactOptions) =>
   contactTypes.map((contactType, id) => ({
@@ -65,12 +71,21 @@ const getContactOptionsForHit = (contactTypes: HitContactType[] = inPlayContactO
     contactType,
     label: getHitLabelFromContact(contactType),
   }));
-const getContactOptionsForOut = (contactTypes: ContactQuality[] = _.values(ContactQuality)) =>
-  contactTypes.map((contactType, id) => ({
-    id,
-    contactType,
-    label: getOutLabelFromContact(contactType),
-  }));
+const getContactOptionsForOut = (
+  inningEndingDBOs: boolean,
+  contactTypes: ContactQuality[] = _.values(ContactQuality)
+) =>
+  contactTypes
+    .map((contactType, id) => ({
+      id,
+      contactType,
+      label: getOutLabelFromContact(contactType),
+    }))
+    .filter(({ contactType }) =>
+      inningEndingDBOs
+        ? contactType !== ContactQuality.DEAD_BALL
+        : contactType !== ContactQuality.INNING_ENDING_DEAD_BALL
+    );
 
 const infieldPositions = [
   FieldingPosition.PITCHER,
@@ -110,6 +125,7 @@ const getFielderOptionsForContactType = (
       positions = _.intersection(fieldingPositions, outfieldPositions);
       break;
     case ContactQuality.DEAD_BALL:
+    case ContactQuality.INNING_ENDING_DEAD_BALL:
       positions = outfieldPositions;
       break;
     case ContactQuality.LINE_DRIVE:
@@ -238,7 +254,8 @@ export const getPlateAppearanceDetailPrompt = (
   batterId: string,
   outs: number,
   runners: BaseRunnerMap,
-  fieldingPositions: FieldingPosition[]
+  fieldingPositions: FieldingPosition[],
+  inningEndingDBOs: boolean
 ): PlateAppearanceDetailOptions | void => {
   switch (paType) {
     case PlateAppearanceType.WALK:
@@ -260,7 +277,7 @@ export const getPlateAppearanceDetailPrompt = (
         kind: 'out',
         contactOptions: {
           required: true,
-          options: getContactOptionsForOut(),
+          options: getContactOptionsForOut(inningEndingDBOs),
         },
         getNextOptions: (contactType: ContactQuality) => {
           const newRunners = { ...runners };
@@ -270,6 +287,10 @@ export const getPlateAppearanceDetailPrompt = (
           const fielderOptions = {
             options: getFielderOptionsForContactType(contactType, false, fieldingPositions),
           };
+
+          if (contactType === ContactQuality.INNING_ENDING_DEAD_BALL) {
+            return { fielderOptions };
+          }
 
           if (outs === 2 || contactType === ContactQuality.DEAD_BALL) {
             return { fielderOptions };
@@ -345,7 +366,7 @@ export const getPlateAppearanceDetailPrompt = (
       return {
         kind: 'doublePlay',
         contactOptions: {
-          options: getContactOptionsForOut(inPlayContactOptions),
+          options: getContactOptionsForOut(inningEndingDBOs, inPlayContactOptions),
           required: true,
         },
         getNextOptions: contactType => {

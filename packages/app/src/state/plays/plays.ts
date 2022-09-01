@@ -38,6 +38,7 @@ const getContactVerb = (contactType: ContactQuality) =>
     [ContactQuality.POPUP]: 'pops',
     [ContactQuality.FOUL]: 'fouls',
     [ContactQuality.DEAD_BALL]: 'hits a dead ball',
+    [ContactQuality.INNING_ENDING_DEAD_BALL]: 'hits an inning-ending dead ball',
   }[contactType]);
 
 const getHitVerb = (hitType: HitType) =>
@@ -178,7 +179,11 @@ export const getPlayDescription = (
         break;
       case PlateAppearanceType.OUT: {
         const parts = [`{${playerAtBat}} ${getContactVerb(contact!)} out`];
-        if (contact === ContactQuality.DEAD_BALL && fieldedBy) {
+        if (
+          (contact === ContactQuality.DEAD_BALL ||
+            contact === ContactQuality.INNING_ENDING_DEAD_BALL) &&
+          fieldedBy
+        ) {
           parts.push(` to ${getPositionTitle(fieldedBy).slice(0, -2)}`);
         } else if (
           contact !== ContactQuality.NONE &&

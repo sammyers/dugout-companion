@@ -8,6 +8,7 @@ import { ManageCurrentUser } from '@sammyers/dc-shared';
 import GameLengthSelector from './GameLengthSelector';
 
 import {
+  areDBOsInningEnding,
   areTiesAllowed,
   canConfigureSteals,
   canStealBases,
@@ -89,6 +90,7 @@ const SettingsMenu = () => {
   const showSteals = useAppSelector(canConfigureSteals);
   const stealsAllowed = useAppSelector(canStealBases);
   const tiesAllowed = useAppSelector(areTiesAllowed);
+  const inningEndingDBOs = useAppSelector(areDBOsInningEnding);
 
   return (
     <Box
@@ -132,6 +134,14 @@ const SettingsMenu = () => {
             label="Allow Tie Game"
             checked={tiesAllowed}
             onChange={e => dispatch(gameActions.setTiesAllowed(e.target.checked))}
+          />
+        </Box>
+        <Box alignSelf="center" margin={{ vertical: 'small' }}>
+          <CheckBox
+            toggle
+            label="Inning-Ending DBOs"
+            checked={inningEndingDBOs}
+            onChange={e => dispatch(gameActions.setInningEndingDBOs(e.target.checked))}
           />
         </Box>
       </Box>

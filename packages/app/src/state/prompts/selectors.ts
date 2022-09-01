@@ -2,6 +2,7 @@ import { createNextState, createSelector } from '@reduxjs/toolkit';
 import _ from 'lodash';
 
 import {
+  areDBOsInningEnding,
   getCurrentBatter,
   getNumOuts,
   getOccupiedFieldingPositions,
@@ -177,8 +178,16 @@ export const getPrompt = createSelector(
   getNumOuts,
   getRunnerMap,
   getOccupiedFieldingPositions,
-  (paType, batterId, outs, runners, fieldingPositions) =>
-    getPlateAppearanceDetailPrompt(paType!, batterId!, outs, runners, fieldingPositions)
+  areDBOsInningEnding,
+  (paType, batterId, outs, runners, fieldingPositions, inningEndingDBOs) =>
+    getPlateAppearanceDetailPrompt(
+      paType!,
+      batterId!,
+      outs,
+      runners,
+      fieldingPositions,
+      inningEndingDBOs
+    )
 );
 
 export const getAllRunnersOut = createSelector(
@@ -216,5 +225,6 @@ export const wasHitOverFence = createSelector(
   getSelectedContactOption,
   (paType, contactOption) =>
     paType === PlateAppearanceType.HOMERUN ||
-    contactOption?.contactType === ContactQuality.DEAD_BALL
+    contactOption?.contactType === ContactQuality.DEAD_BALL ||
+    contactOption?.contactType === ContactQuality.INNING_ENDING_DEAD_BALL
 );

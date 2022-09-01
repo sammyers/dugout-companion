@@ -85,6 +85,7 @@ const initialState: AppGameState = {
   soloModeOpponentBatterId: '',
   allowSteals: false,
   allowTies: false,
+  inningEndingDBOs: false,
   gameTimeExpired: false,
 };
 
@@ -439,6 +440,9 @@ const { actions: gameActions, reducer } = createSlice({
       if (!payload) {
         state.gameTimeExpired = false;
       }
+    },
+    setInningEndingDBOs(state, { payload }: PayloadAction<boolean>) {
+      state.inningEndingDBOs = payload;
     },
     setGameTimeExpired(state, { payload }: PayloadAction<boolean>) {
       state.gameTimeExpired = payload;

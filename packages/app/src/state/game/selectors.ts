@@ -237,6 +237,7 @@ export const getInTheHoleBatterName = createSelector(
 );
 
 export const areTiesAllowed = createSelector(getPresent, state => state.allowTies);
+export const areDBOsInningEnding = createSelector(getPresent, state => state.inningEndingDBOs);
 export const hasGameTimeExpired = createSelector(getPresent, state => state.gameTimeExpired);
 export const isGameInLastInning = createSelector(
   getInning,

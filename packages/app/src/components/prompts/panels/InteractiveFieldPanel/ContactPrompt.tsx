@@ -13,13 +13,14 @@ const ContactPrompt: FC<ContactOptions> = ({ options, required }) => {
 
   const selectedOption = useAppSelector(getSelectedContactOption);
 
-  const formattedOptions = useMemo(() => options.map(({ label, id }) => ({ label, value: id })), [
-    options,
-  ]);
+  const formattedOptions = useMemo(
+    () => options.map(({ label, id }) => ({ label, value: id })),
+    [options]
+  );
 
   const handleChange = useCallback(
     (value: number) => {
-      dispatch(promptActions.setContactChoice(options[value]));
+      dispatch(promptActions.setContactChoice(options.find(o => o.id === value)!));
     },
     [dispatch, options]
   );

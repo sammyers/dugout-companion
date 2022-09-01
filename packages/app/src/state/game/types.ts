@@ -60,6 +60,7 @@ export type AppGameState = Pick<Game, 'gameLength' | 'teams' | 'gameEventRecords
   soloModeOpponentBatterId: string;
   allowSteals: boolean;
   allowTies: boolean;
+  inningEndingDBOs: boolean;
   gameTimeExpired: boolean;
 };
 

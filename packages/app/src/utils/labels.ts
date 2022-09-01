@@ -21,6 +21,7 @@ export const getOutLabelFromContact = (contactType: ContactQuality) =>
     [ContactQuality.NONE]: 'Strikeout',
     [ContactQuality.FOUL]: 'Foul Out',
     [ContactQuality.DEAD_BALL]: 'DBO',
+    [ContactQuality.INNING_ENDING_DEAD_BALL]: 'DBO',
   }[contactType]);
 
 export const getHitLabelFromContact = (contactType: HitContactType) =>
@@ -33,6 +34,7 @@ export const getHitLabelFromContact = (contactType: HitContactType) =>
     // These shouldn't show up
     [ContactQuality.FOUL]: '',
     [ContactQuality.DEAD_BALL]: '',
+    [ContactQuality.INNING_ENDING_DEAD_BALL]: '',
   }[contactType]);
 
 export const getRunnerOptionLabel = (option: BasepathOutcome) => {

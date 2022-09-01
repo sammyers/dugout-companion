@@ -417,6 +417,10 @@ export const applyPlateAppearance = (state: AppGameState, plateAppearance: Plate
         }
         break;
       case PlateAppearanceType.OUT:
+        if (plateAppearance.contact === ContactQuality.INNING_ENDING_DEAD_BALL) {
+          state.outs = 3;
+          break;
+        }
         if (plateAppearance.contact === ContactQuality.GROUNDER) {
           const runnersScored = moveRunnersOnGroundBall(runners);
           if (runnersScored.length && state.outs < 2) {

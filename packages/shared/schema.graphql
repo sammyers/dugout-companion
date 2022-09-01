@@ -3088,6 +3088,7 @@ enum ContactQuality {
   LONG_FLY
   FOUL
   DEAD_BALL
+  INNING_ENDING_DEAD_BALL
 }
 
 type BasepathMovement implements Node {
