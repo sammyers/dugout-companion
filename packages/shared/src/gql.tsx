@@ -201,6 +201,7 @@ export type AtBatSkipGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -423,6 +424,7 @@ export type BaseRunnerGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -816,6 +818,7 @@ export type BasepathMovementGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -1853,6 +1856,35 @@ export type CreateGameStatePayload = {
   playerByPlayerAtBat: Maybe<Player>;
 };
 
+/** All input for the create `GameTag` mutation. */
+export type CreateGameTagInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `GameTag` to be created by this mutation. */
+  gameTag: GameTagInput;
+};
+
+/** The output of our create `GameTag` mutation. */
+export type CreateGameTagPayload = {
+  __typename?: 'CreateGameTagPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `GameTag` that was created by this mutation. */
+  gameTag: Maybe<GameTag>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+  /** Reads a single `Game` that is related to this `GameTag`. */
+  game: Maybe<Game>;
+  /** Reads a single `Tag` that is related to this `GameTag`. */
+  tag: Maybe<Tag>;
+};
+
 /** All input for the create `Group` mutation. */
 export type CreateGroupInput = {
   /**
@@ -2363,6 +2395,31 @@ export type CreateStolenBaseAttemptPayload = {
   runner: Maybe<Player>;
   /** Reads a single `Game` that is related to this `StolenBaseAttempt`. */
   game: Maybe<Game>;
+};
+
+/** All input for the create `Tag` mutation. */
+export type CreateTagInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Tag` to be created by this mutation. */
+  tag: TagInput;
+};
+
+/** The output of our create `Tag` mutation. */
+export type CreateTagPayload = {
+  __typename?: 'CreateTagPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Tag` that was created by this mutation. */
+  tag: Maybe<Tag>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
 };
 
 /** All input for the create `Team` mutation. */
@@ -3601,6 +3658,52 @@ export type DeleteStolenBaseAttemptPayload = {
   game: Maybe<Game>;
 };
 
+/** All input for the `deleteTagByName` mutation. */
+export type DeleteTagByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
+/** All input for the `deleteTagByNodeId` mutation. */
+export type DeleteTagByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Tag` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTag` mutation. */
+export type DeleteTagInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['UUID'];
+};
+
+/** The output of our delete `Tag` mutation. */
+export type DeleteTagPayload = {
+  __typename?: 'DeleteTagPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Tag` that was deleted by this mutation. */
+  tag: Maybe<Tag>;
+  deletedTagNodeId: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `deleteTeamByGameIdAndRole` mutation. */
 export type DeleteTeamByGameIdAndRoleInput = {
   /**
@@ -3725,6 +3828,7 @@ export type EarlyGameEndGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -4509,6 +4613,7 @@ export type FakePublicGameBattingLinesForeignKey1GameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -6190,6 +6295,7 @@ export type FakePublicUnifiedGamesForeignKey1GameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -6963,6 +7069,8 @@ export type Game = Node & {
   atBatSkips: Array<AtBatSkip>;
   /** Reads and enables pagination through a set of `EarlyGameEnd`. */
   earlyGameEnds: Array<EarlyGameEnd>;
+  /** Reads and enables pagination through a set of `GameTag`. */
+  gameTags: Array<GameTag>;
   /** Reads and enables pagination through a set of `GameBattingLine`. */
   gameBattingLines: Array<GameBattingLine>;
   /** Reads and enables pagination through a set of `UnifiedGame`. */
@@ -7099,6 +7207,14 @@ export type GameEarlyGameEndsArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<EarlyGameEndsOrderBy>>;
   condition?: Maybe<EarlyGameEndCondition>;
+};
+
+
+export type GameGameTagsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameTagsOrderBy>>;
+  condition?: Maybe<GameTagCondition>;
 };
 
 
@@ -7606,6 +7722,7 @@ export type GameEventGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -8171,6 +8288,7 @@ export type GameEventRecordGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -8769,6 +8887,7 @@ export type GameFieldIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -8869,6 +8988,7 @@ export type GameGroupIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -8980,6 +9100,7 @@ export type GameInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -9223,6 +9344,21 @@ export type GameOnGameStateForGameStateGameIdFkeyUsingGameNameUniqPerGroupUpdate
 export type GameOnGameStateForGameStateGameIdFkeyUsingGamePkeyUpdate = {
   /** An object where the defined keys will be set on the `game` being updated. */
   patch: UpdateGameOnGameStateForGameStateGameIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnGameTagForGameTagGameIdFkeyUsingGameNameUniqPerGroupUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnGameTagForGameTagGameIdFkeyPatch;
+  groupId: Scalars['UUID'];
+  name: Scalars['String'];
+};
+
+/** The fields on `game` to look up the row to update. */
+export type GameOnGameTagForGameTagGameIdFkeyUsingGamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: UpdateGameOnGameTagForGameTagGameIdFkeyPatch;
   id: Scalars['UUID'];
 };
 
@@ -9502,6 +9638,7 @@ export type GamePatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -9626,6 +9763,7 @@ export type GameStateGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -9955,6 +10093,175 @@ export enum GameStatesOrderBy {
   SCORE_DESC = 'SCORE_DESC',
   PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
+export type GameTag = {
+  __typename?: 'GameTag';
+  gameId: Maybe<Scalars['UUID']>;
+  tagId: Maybe<Scalars['UUID']>;
+  /** Reads a single `Game` that is related to this `GameTag`. */
+  game: Maybe<Game>;
+  /** Reads a single `Tag` that is related to this `GameTag`. */
+  tag: Maybe<Tag>;
+};
+
+/** A condition to be used against `GameTag` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type GameTagCondition = {
+  /** Checks for equality with the object’s `gameId` field. */
+  gameId?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `tagId` field. */
+  tagId?: Maybe<Scalars['UUID']>;
+};
+
+/** The `game` to be created by this mutation. */
+export type GameTagGameIdFkeyGameCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
+  score: Array<Maybe<Scalars['Int']>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  timeStarted: Scalars['Datetime'];
+  timeEnded: Scalars['Datetime'];
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  soloMode?: Maybe<Scalars['Boolean']>;
+  group?: Maybe<GameGroupIdFkeyInput>;
+  field?: Maybe<GameFieldIdFkeyInput>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  lineups?: Maybe<LineupGameIdFkeyInverseInput>;
+  lineupSpots?: Maybe<LineupSpotGameIdFkeyInverseInput>;
+  plateAppearances?: Maybe<PlateAppearanceGameIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementGameIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerGameIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptGameIdFkeyInverseInput>;
+  lineupChanges?: Maybe<LineupChangeGameIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventGameIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerGameIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
+  soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
+  atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
+  gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
+  unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
+};
+
+/** The `gameTag` to be created by this mutation. */
+export type GameTagGameIdFkeyGameTagCreateInput = {
+  tagId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<GameTagGameIdFkeyInput>;
+  tag?: Maybe<GameTagTagIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `game` in the `GameTagInput` mutation. */
+export type GameTagGameIdFkeyInput = {
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectById?: Maybe<GameGamePkeyConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByGroupIdAndName?: Maybe<GameGameNameUniqPerGroupConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  connectByNodeId?: Maybe<GameNodeIdConnect>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteById?: Maybe<GameGamePkeyDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByGroupIdAndName?: Maybe<GameGameNameUniqPerGroupDelete>;
+  /** The primary key(s) for `game` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<GameNodeIdDelete>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateById?: Maybe<GameOnGameTagForGameTagGameIdFkeyUsingGamePkeyUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByGroupIdAndName?: Maybe<GameOnGameTagForGameTagGameIdFkeyUsingGameNameUniqPerGroupUpdate>;
+  /** The primary key(s) and patch data for `game` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameTagOnGameTagForGameTagGameIdFkeyNodeIdUpdate>;
+  /** A `GameInput` object that will be created and connected to this object. */
+  create?: Maybe<GameTagGameIdFkeyGameCreateInput>;
+};
+
+/** Input for the nested mutation of `gameTag` in the `GameInput` mutation. */
+export type GameTagGameIdFkeyInverseInput = {
+  /** A `GameTagInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameTagGameIdFkeyGameTagCreateInput>>;
+};
+
+/** An input for mutations affecting `GameTag` */
+export type GameTagInput = {
+  gameId?: Maybe<Scalars['UUID']>;
+  tagId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<GameTagGameIdFkeyInput>;
+  tag?: Maybe<GameTagTagIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameTagOnGameTagForGameTagGameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `game` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `game` being updated. */
+  patch: GamePatch;
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type GameTagOnGameTagForGameTagTagIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `tag` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `tag` being updated. */
+  patch: TagPatch;
+};
+
+/** The `gameTag` to be created by this mutation. */
+export type GameTagTagIdFkeyGameTagCreateInput = {
+  gameId?: Maybe<Scalars['UUID']>;
+  game?: Maybe<GameTagGameIdFkeyInput>;
+  tag?: Maybe<GameTagTagIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `tag` in the `GameTagInput` mutation. */
+export type GameTagTagIdFkeyInput = {
+  /** The primary key(s) for `tag` for the far side of the relationship. */
+  connectById?: Maybe<TagTagPkeyConnect>;
+  /** The primary key(s) for `tag` for the far side of the relationship. */
+  connectByName?: Maybe<TagTagNameKeyConnect>;
+  /** The primary key(s) for `tag` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TagNodeIdConnect>;
+  /** The primary key(s) for `tag` for the far side of the relationship. */
+  deleteById?: Maybe<TagTagPkeyDelete>;
+  /** The primary key(s) for `tag` for the far side of the relationship. */
+  deleteByName?: Maybe<TagTagNameKeyDelete>;
+  /** The primary key(s) for `tag` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TagNodeIdDelete>;
+  /** The primary key(s) and patch data for `tag` for the far side of the relationship. */
+  updateById?: Maybe<TagOnGameTagForGameTagTagIdFkeyUsingTagPkeyUpdate>;
+  /** The primary key(s) and patch data for `tag` for the far side of the relationship. */
+  updateByName?: Maybe<TagOnGameTagForGameTagTagIdFkeyUsingTagNameKeyUpdate>;
+  /** The primary key(s) and patch data for `tag` for the far side of the relationship. */
+  updateByNodeId?: Maybe<GameTagOnGameTagForGameTagTagIdFkeyNodeIdUpdate>;
+  /** A `TagInput` object that will be created and connected to this object. */
+  create?: Maybe<GameTagTagIdFkeyTagCreateInput>;
+};
+
+/** Input for the nested mutation of `gameTag` in the `TagInput` mutation. */
+export type GameTagTagIdFkeyInverseInput = {
+  /** A `GameTagInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<GameTagTagIdFkeyGameTagCreateInput>>;
+};
+
+/** The `tag` to be created by this mutation. */
+export type GameTagTagIdFkeyTagCreateInput = {
+  id?: Maybe<Scalars['UUID']>;
+  name: Scalars['String'];
+  type?: Maybe<TagType>;
+  gameTags?: Maybe<GameTagTagIdFkeyInverseInput>;
+};
+
+/** Methods to use when ordering `GameTag`. */
+export enum GameTagsOrderBy {
+  NATURAL = 'NATURAL',
+  GAME_ID_ASC = 'GAME_ID_ASC',
+  GAME_ID_DESC = 'GAME_ID_DESC',
+  TAG_ID_ASC = 'TAG_ID_ASC',
+  TAG_ID_DESC = 'TAG_ID_DESC'
 }
 
 /** Methods to use when ordering `Game`. */
@@ -13386,6 +13693,7 @@ export type LineupChangeGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -13715,6 +14023,7 @@ export type LineupForGameStateGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -14033,6 +14342,7 @@ export type LineupGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -14289,6 +14599,7 @@ export type LineupSpotGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -14989,6 +15300,8 @@ export type Mutation = {
   createGameEventRecord: Maybe<CreateGameEventRecordPayload>;
   /** Creates a single `GameState`. */
   createGameState: Maybe<CreateGameStatePayload>;
+  /** Creates a single `GameTag`. */
+  createGameTag: Maybe<CreateGameTagPayload>;
   /** Creates a single `Group`. */
   createGroup: Maybe<CreateGroupPayload>;
   /** Creates a single `LegacyMeetupFieldRaw`. */
@@ -15025,6 +15338,8 @@ export type Mutation = {
   createSoloModeOpponentInning: Maybe<CreateSoloModeOpponentInningPayload>;
   /** Creates a single `StolenBaseAttempt`. */
   createStolenBaseAttempt: Maybe<CreateStolenBaseAttemptPayload>;
+  /** Creates a single `Tag`. */
+  createTag: Maybe<CreateTagPayload>;
   /** Creates a single `Team`. */
   createTeam: Maybe<CreateTeamPayload>;
   /** Updates a single `AtBatSkip` using its globally unique id and a patch. */
@@ -15157,6 +15472,12 @@ export type Mutation = {
   updateStolenBaseAttemptByNodeId: Maybe<UpdateStolenBaseAttemptPayload>;
   /** Updates a single `StolenBaseAttempt` using a unique key and a patch. */
   updateStolenBaseAttempt: Maybe<UpdateStolenBaseAttemptPayload>;
+  /** Updates a single `Tag` using its globally unique id and a patch. */
+  updateTagByNodeId: Maybe<UpdateTagPayload>;
+  /** Updates a single `Tag` using a unique key and a patch. */
+  updateTag: Maybe<UpdateTagPayload>;
+  /** Updates a single `Tag` using a unique key and a patch. */
+  updateTagByName: Maybe<UpdateTagPayload>;
   /** Updates a single `Team` using its globally unique id and a patch. */
   updateTeamByNodeId: Maybe<UpdateTeamPayload>;
   /** Updates a single `Team` using a unique key and a patch. */
@@ -15293,6 +15614,12 @@ export type Mutation = {
   deleteStolenBaseAttemptByNodeId: Maybe<DeleteStolenBaseAttemptPayload>;
   /** Deletes a single `StolenBaseAttempt` using a unique key. */
   deleteStolenBaseAttempt: Maybe<DeleteStolenBaseAttemptPayload>;
+  /** Deletes a single `Tag` using its globally unique id. */
+  deleteTagByNodeId: Maybe<DeleteTagPayload>;
+  /** Deletes a single `Tag` using a unique key. */
+  deleteTag: Maybe<DeleteTagPayload>;
+  /** Deletes a single `Tag` using a unique key. */
+  deleteTagByName: Maybe<DeleteTagPayload>;
   /** Deletes a single `Team` using its globally unique id. */
   deleteTeamByNodeId: Maybe<DeleteTeamPayload>;
   /** Deletes a single `Team` using a unique key. */
@@ -15388,6 +15715,12 @@ export type MutationCreateGameEventRecordArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateGameStateArgs = {
   input: CreateGameStateInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateGameTagArgs = {
+  input: CreateGameTagInput;
 };
 
 
@@ -15496,6 +15829,12 @@ export type MutationCreateSoloModeOpponentInningArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateStolenBaseAttemptArgs = {
   input: CreateStolenBaseAttemptInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTagArgs = {
+  input: CreateTagInput;
 };
 
 
@@ -15892,6 +16231,24 @@ export type MutationUpdateStolenBaseAttemptByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateStolenBaseAttemptArgs = {
   input: UpdateStolenBaseAttemptInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTagByNodeIdArgs = {
+  input: UpdateTagByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTagArgs = {
+  input: UpdateTagInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTagByNameArgs = {
+  input: UpdateTagByNameInput;
 };
 
 
@@ -16304,6 +16661,24 @@ export type MutationDeleteStolenBaseAttemptArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTagByNodeIdArgs = {
+  input: DeleteTagByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTagArgs = {
+  input: DeleteTagInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTagByNameArgs = {
+  input: DeleteTagByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTeamByNodeIdArgs = {
   input: DeleteTeamByNodeIdInput;
 };
@@ -16415,6 +16790,7 @@ export type OutOnPlayRunnerGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -16919,6 +17295,7 @@ export type PlateAppearanceGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -18249,6 +18626,8 @@ export type Query = Node & {
   gameEventRecords: Maybe<Array<GameEventRecord>>;
   /** Reads a set of `GameState`. */
   gameStates: Maybe<Array<GameState>>;
+  /** Reads a set of `GameTag`. */
+  gameTags: Maybe<Array<GameTag>>;
   /** Reads a set of `Group`. */
   groups: Maybe<Array<Group>>;
   /** Reads a set of `LegacyField`. */
@@ -18311,6 +18690,8 @@ export type Query = Node & {
   soloModeOpponentInnings: Maybe<Array<SoloModeOpponentInning>>;
   /** Reads a set of `StolenBaseAttempt`. */
   stolenBaseAttempts: Maybe<Array<StolenBaseAttempt>>;
+  /** Reads a set of `Tag`. */
+  tags: Maybe<Array<Tag>>;
   /** Reads a set of `Team`. */
   teams: Maybe<Array<Team>>;
   /** Reads a set of `UnifiedGame`. */
@@ -18361,6 +18742,8 @@ export type Query = Node & {
   season: Maybe<Season>;
   soloModeOpponentInning: Maybe<SoloModeOpponentInning>;
   stolenBaseAttempt: Maybe<StolenBaseAttempt>;
+  tag: Maybe<Tag>;
+  tagByName: Maybe<Tag>;
   team: Maybe<Team>;
   teamByGameIdAndRole: Maybe<Team>;
   canUserSaveGameData: Maybe<Scalars['Boolean']>;
@@ -18451,6 +18834,8 @@ export type Query = Node & {
   soloModeOpponentInningByNodeId: Maybe<SoloModeOpponentInning>;
   /** Reads a single `StolenBaseAttempt` using its globally unique `ID`. */
   stolenBaseAttemptByNodeId: Maybe<StolenBaseAttempt>;
+  /** Reads a single `Tag` using its globally unique `ID`. */
+  tagByNodeId: Maybe<Tag>;
   /** Reads a single `Team` using its globally unique `ID`. */
   teamByNodeId: Maybe<Team>;
 };
@@ -18612,6 +18997,15 @@ export type QueryGameStatesArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<GameStatesOrderBy>>;
   condition?: Maybe<GameStateCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGameTagsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameTagsOrderBy>>;
+  condition?: Maybe<GameTagCondition>;
 };
 
 
@@ -18891,6 +19285,15 @@ export type QueryStolenBaseAttemptsArgs = {
   offset?: Maybe<Scalars['Int']>;
   orderBy?: Maybe<Array<StolenBaseAttemptsOrderBy>>;
   condition?: Maybe<StolenBaseAttemptCondition>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTagsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<TagsOrderBy>>;
+  condition?: Maybe<TagCondition>;
 };
 
 
@@ -19203,6 +19606,18 @@ export type QuerySoloModeOpponentInningArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryStolenBaseAttemptArgs = {
   id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTagArgs = {
+  id: Scalars['UUID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTagByNameArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -19548,6 +19963,12 @@ export type QueryStolenBaseAttemptByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTagByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTeamByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -19758,6 +20179,7 @@ export type ScoredRunnerGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20583,6 +21005,7 @@ export type SoloModeOpponentInningGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -20782,6 +21205,7 @@ export type StolenBaseAttemptGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -21032,6 +21456,117 @@ export enum StolenBaseAttemptsOrderBy {
   PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
 }
 
+export type Tag = Node & {
+  __typename?: 'Tag';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['UUID'];
+  name: Scalars['String'];
+  type: Maybe<TagType>;
+  /** Reads and enables pagination through a set of `GameTag`. */
+  gameTags: Array<GameTag>;
+};
+
+
+export type TagGameTagsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  orderBy?: Maybe<Array<GameTagsOrderBy>>;
+  condition?: Maybe<GameTagCondition>;
+};
+
+/** A condition to be used against `Tag` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type TagCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['UUID']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: Maybe<TagType>;
+};
+
+/** An input for mutations affecting `Tag` */
+export type TagInput = {
+  id?: Maybe<Scalars['UUID']>;
+  name: Scalars['String'];
+  type?: Maybe<TagType>;
+  gameTags?: Maybe<GameTagTagIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TagNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `tag` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TagNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `tag` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The fields on `tag` to look up the row to update. */
+export type TagOnGameTagForGameTagTagIdFkeyUsingTagNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `tag` being updated. */
+  patch: UpdateTagOnGameTagForGameTagTagIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `tag` to look up the row to update. */
+export type TagOnGameTagForGameTagTagIdFkeyUsingTagPkeyUpdate = {
+  /** An object where the defined keys will be set on the `tag` being updated. */
+  patch: UpdateTagOnGameTagForGameTagTagIdFkeyPatch;
+  id: Scalars['UUID'];
+};
+
+/** Represents an update to a `Tag`. Fields that are set will be updated. */
+export type TagPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+  gameTags?: Maybe<GameTagTagIdFkeyInverseInput>;
+};
+
+/** The fields on `tag` to look up the row to connect. */
+export type TagTagNameKeyConnect = {
+  name: Scalars['String'];
+};
+
+/** The fields on `tag` to look up the row to delete. */
+export type TagTagNameKeyDelete = {
+  name: Scalars['String'];
+};
+
+/** The fields on `tag` to look up the row to connect. */
+export type TagTagPkeyConnect = {
+  id: Scalars['UUID'];
+};
+
+/** The fields on `tag` to look up the row to delete. */
+export type TagTagPkeyDelete = {
+  id: Scalars['UUID'];
+};
+
+export enum TagType {
+  SEASON = 'SEASON',
+  TOURNAMENT = 'TOURNAMENT',
+  FIELD = 'FIELD',
+  TIME_OF_DAY = 'TIME_OF_DAY'
+}
+
+/** Methods to use when ordering `Tag`. */
+export enum TagsOrderBy {
+  NATURAL = 'NATURAL',
+  ID_ASC = 'ID_ASC',
+  ID_DESC = 'ID_DESC',
+  NAME_ASC = 'NAME_ASC',
+  NAME_DESC = 'NAME_DESC',
+  TYPE_ASC = 'TYPE_ASC',
+  TYPE_DESC = 'TYPE_DESC',
+  PRIMARY_KEY_ASC = 'PRIMARY_KEY_ASC',
+  PRIMARY_KEY_DESC = 'PRIMARY_KEY_DESC'
+}
+
 export type Team = Node & {
   __typename?: 'Team';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -21206,6 +21741,7 @@ export type TeamGameIdFkeyGameCreateInput = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -22830,6 +23366,57 @@ export type UpdateStolenBaseAttemptPayload = {
   game: Maybe<Game>;
 };
 
+/** All input for the `updateTagByName` mutation. */
+export type UpdateTagByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Tag` being updated. */
+  patch: TagPatch;
+  name: Scalars['String'];
+};
+
+/** All input for the `updateTagByNodeId` mutation. */
+export type UpdateTagByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Tag` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Tag` being updated. */
+  patch: TagPatch;
+};
+
+/** All input for the `updateTag` mutation. */
+export type UpdateTagInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Tag` being updated. */
+  patch: TagPatch;
+  id: Scalars['UUID'];
+};
+
+/** The output of our update `Tag` mutation. */
+export type UpdateTagPayload = {
+  __typename?: 'UpdateTagPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId: Maybe<Scalars['String']>;
+  /** The `Tag` that was updated by this mutation. */
+  tag: Maybe<Tag>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query: Maybe<Query>;
+};
+
 /** All input for the `updateTeamByGameIdAndRole` mutation. */
 export type UpdateTeamByGameIdAndRoleInput = {
   /**
@@ -23346,6 +23933,7 @@ export type UpdateGameOnAtBatSkipForAtBatSkipGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23381,6 +23969,7 @@ export type UpdateGameOnBaseRunnerForBaseRunnerGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23416,6 +24005,7 @@ export type UpdateGameOnBasepathMovementForBasepathMovementGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23451,6 +24041,7 @@ export type UpdateGameOnEarlyGameEndForEarlyGameEndGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23486,6 +24077,7 @@ export type UpdateGameOnGameBattingLineForFakePublicGameBattingLinesForeignKey1P
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23521,6 +24113,7 @@ export type UpdateGameOnGameEventForGameEventGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23556,6 +24149,7 @@ export type UpdateGameOnGameEventRecordForGameEventRecordGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23590,6 +24184,7 @@ export type UpdateGameOnGameForGameFieldIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23624,6 +24219,7 @@ export type UpdateGameOnGameForGameGroupIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23659,6 +24255,43 @@ export type UpdateGameOnGameStateForGameStateGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
+  gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
+  unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
+};
+
+/** An object where the defined keys will be set on the `game` being updated. */
+export type UpdateGameOnGameTagForGameTagGameIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  groupId?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  fieldId?: Maybe<Scalars['UUID']>;
+  score?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  gameLength?: Maybe<Scalars['Int']>;
+  timeStarted?: Maybe<Scalars['Datetime']>;
+  timeEnded?: Maybe<Scalars['Datetime']>;
+  timeSaved?: Maybe<Scalars['Datetime']>;
+  soloMode?: Maybe<Scalars['Boolean']>;
+  group?: Maybe<GameGroupIdFkeyInput>;
+  field?: Maybe<GameFieldIdFkeyInput>;
+  teams?: Maybe<TeamGameIdFkeyInverseInput>;
+  lineups?: Maybe<LineupGameIdFkeyInverseInput>;
+  lineupSpots?: Maybe<LineupSpotGameIdFkeyInverseInput>;
+  plateAppearances?: Maybe<PlateAppearanceGameIdFkeyInverseInput>;
+  basepathMovements?: Maybe<BasepathMovementGameIdFkeyInverseInput>;
+  outOnPlayRunners?: Maybe<OutOnPlayRunnerGameIdFkeyInverseInput>;
+  stolenBaseAttempts?: Maybe<StolenBaseAttemptGameIdFkeyInverseInput>;
+  lineupChanges?: Maybe<LineupChangeGameIdFkeyInverseInput>;
+  gameEvents?: Maybe<GameEventGameIdFkeyInverseInput>;
+  gameStates?: Maybe<GameStateGameIdFkeyInverseInput>;
+  baseRunners?: Maybe<BaseRunnerGameIdFkeyInverseInput>;
+  lineupForGameStates?: Maybe<LineupForGameStateGameIdFkeyInverseInput>;
+  gameEventRecords?: Maybe<GameEventRecordGameIdFkeyInverseInput>;
+  scoredRunners?: Maybe<ScoredRunnerGameIdFkeyInverseInput>;
+  soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
+  atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
+  earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23694,6 +24327,7 @@ export type UpdateGameOnLineupChangeForLineupChangeGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23729,6 +24363,7 @@ export type UpdateGameOnLineupForGameStateForLineupForGameStateGameIdFkeyPatch =
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23764,6 +24399,7 @@ export type UpdateGameOnLineupForLineupGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23799,6 +24435,7 @@ export type UpdateGameOnLineupSpotForLineupSpotGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23834,6 +24471,7 @@ export type UpdateGameOnOutOnPlayRunnerForOutOnPlayRunnerGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23869,6 +24507,7 @@ export type UpdateGameOnPlateAppearanceForPlateAppearanceGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23904,6 +24543,7 @@ export type UpdateGameOnScoredRunnerForScoredRunnerGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23939,6 +24579,7 @@ export type UpdateGameOnSoloModeOpponentInningForSoloModeOpponentInningGameIdFke
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -23974,6 +24615,7 @@ export type UpdateGameOnStolenBaseAttemptForStolenBaseAttemptGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -24009,6 +24651,7 @@ export type UpdateGameOnTeamForTeamGameIdFkeyPatch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -24044,6 +24687,7 @@ export type UpdateGameOnUnifiedGameForFakePublicUnifiedGamesForeignKey1Patch = {
   soloModeOpponentInnings?: Maybe<SoloModeOpponentInningGameIdFkeyInverseInput>;
   atBatSkips?: Maybe<AtBatSkipGameIdFkeyInverseInput>;
   earlyGameEnds?: Maybe<EarlyGameEndGameIdFkeyInverseInput>;
+  gameTags?: Maybe<GameTagGameIdFkeyInverseInput>;
   gameBattingLines?: Maybe<FakePublicGameBattingLinesForeignKey1InverseInput>;
   unifiedGames?: Maybe<FakePublicUnifiedGamesForeignKey1InverseInput>;
 };
@@ -25946,6 +26590,14 @@ export type UpdateStolenBaseAttemptOnStolenBaseAttemptForStolenBaseAttemptRunner
   player?: Maybe<StolenBaseAttemptRunnerIdFkeyInput>;
   game?: Maybe<StolenBaseAttemptGameIdFkeyInput>;
   gameEvents?: Maybe<GameEventStolenBaseAttemptIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `tag` being updated. */
+export type UpdateTagOnGameTagForGameTagTagIdFkeyPatch = {
+  id?: Maybe<Scalars['UUID']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<TagType>;
+  gameTags?: Maybe<GameTagTagIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `team` being updated. */
