@@ -7,8 +7,7 @@ create or replace function get_team_for_player(player_id uuid, game_id uuid) ret
   limit 1;
 $$ language sql stable;
 
-drop table if exists manual_entry_batting_line;
-create table manual_entry_batting_line (
+create table if not exists manual_entry_batting_line (
   game_id uuid references game (id) not null,
   team_id uuid references team (id) not null,
   player_id uuid references player (id) not null,
@@ -37,8 +36,7 @@ create policy insert_with_group_permission on manual_entry_batting_line for inse
 grant select on manual_entry_batting_line to :DATABASE_VISITOR, :DATABASE_USER, :DATABASE_ADMIN;
 grant insert on manual_entry_batting_line to :DATABASE_USER;
 
-drop table if exists manual_entry_pitching_line;
-create table manual_entry_pitching_line (
+create table if not exists manual_entry_pitching_line (
   game_id uuid references game (id) not null,
   team_id uuid references team (id) not null,
   player_id uuid references player (id) not null,
@@ -61,6 +59,22 @@ create policy insert_with_group_permission on manual_entry_pitching_line for ins
   with check (can_user_save_game_data(game_id));
 grant select on manual_entry_pitching_line to :DATABASE_VISITOR, :DATABASE_USER, :DATABASE_ADMIN;
 grant insert on manual_entry_pitching_line to :DATABASE_USER;
+
+create table if not exists manual_entry_line_score_cell (
+  game_id uuid references game (id) not null,
+  inning int not null,
+  half_inning int not null,
+  primary key (game_id, inning, half_inning),
+  runs int not null
+);
+alter table manual_entry_line_score_cell enable row level security;
+drop policy if exists select_all on manual_entry_line_score_cell;
+drop policy if exists insert_with_group_permission on manual_entry_line_score_cell;
+create policy select_all on manual_entry_line_score_cell for select using (true);
+create policy insert_with_group_permission on manual_entry_line_score_cell for insert to :DATABASE_USER
+  with check (can_user_save_game_data(game_id));
+grant select on manual_entry_line_score_cell to :DATABASE_VISITOR, :DATABASE_USER, :DATABASE_ADMIN;
+grant insert on manual_entry_line_score_cell to :DATABASE_USER;
 
 insert into manual_entry_batting_line (
   game_id,
