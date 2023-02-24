@@ -14,6 +14,7 @@ query GetGameDetails($gameId: UUID!) {
       hits
     }
     teams {
+      id
       name
       role
       winner
@@ -28,8 +29,9 @@ query GetGameDetails($gameId: UUID!) {
         }
       }
     }
-    boxScore {
+    boxScore: gameBattingStats {
       playerId
+      teamId
       plateAppearances
       atBats
       hits
@@ -42,8 +44,6 @@ query GetGameDetails($gameId: UUID!) {
       sacFlies
       gidp
       rbi
-      onBasePct
-      ops
     }
     gameStates(orderBy: GAME_STATE_INDEX_ASC) {
       id

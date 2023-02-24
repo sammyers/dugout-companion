@@ -18,20 +18,27 @@ const GamePage = () => {
     return null;
   }
 
-  const { gameLength, gameStates, gameEventRecords, boxScore, lineScore, teams } = data.game!;
+  const { gameLength, gameStates, gameEventRecords, boxScore, lineScore, teams, score } =
+    data.game!;
 
   return (
     <Box margin={{ horizontal: 'small', bottom: 'small' }}>
-      <Box
-        background="neutral-5"
-        round="small"
-        margin="small"
-        pad={{ vertical: 'xsmall', horizontal: 'small' }}
-        alignSelf="stretch"
-      >
-        <LineScore cells={lineScore!} teams={teams} />
-      </Box>
-      <BoxScore teams={teams} boxScoreLines={boxScore!} />
+      {!!lineScore?.length && (
+        <Box
+          background="neutral-5"
+          round="small"
+          margin="small"
+          pad={{ vertical: 'xsmall', horizontal: 'small' }}
+          alignSelf="stretch"
+        >
+          {<LineScore cells={lineScore} teams={teams} />}
+        </Box>
+      )}
+      <BoxScore
+        teams={teams}
+        boxScoreLines={boxScore!}
+        score={lineScore?.length ? undefined : (score as number[])}
+      />
       {/* <GameLog events={gameEventRecords} states={gameStates} /> */}
     </Box>
   );

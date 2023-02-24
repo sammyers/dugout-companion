@@ -11,7 +11,6 @@ import GamePage, { GamePageTitle } from './GamePage';
 import StatsPage, { StatsPageTitle } from './StatsPage';
 import LeadersPage, { LeadersPageTitle } from './LeadersPage';
 import PlayerPage, { PlayerPageTitle } from './PlayerPage';
-import LegacyGamePage, { LegacyGamePageTitle } from './GamePage/LegacyGamePage';
 import GroupManager from './GroupManager';
 import LandingPage from './LandingPage';
 import NewAccountPage from './NewAccountPage';
@@ -56,7 +55,6 @@ const App = () => {
             <Route path="/g/:groupSlug" element={<TopBar />}>
               <Route path="" element={<DefaultTitle />} />
               <Route path="games" element={<GamesPageTitle />} />
-              <Route path="game/legacy/:id" element={<LegacyGamePageTitle />} />
               <Route path="game/:id" element={<GamePageTitle />} />
               <Route path="stats" element={<StatsPageTitle />} />
               <Route path="leaders" element={<LeadersPageTitle />} />
@@ -68,7 +66,6 @@ const App = () => {
               <Route path="/g/:groupSlug" element={<GroupManager />}>
                 <Route path="" element={<GroupDashboard />} />
                 <Route path="games" element={<GamesPage />} />
-                <Route path="game/legacy/:id" element={<LegacyGamePage />} />
                 <Route path="game/:id" element={<GamePage />} />
                 <Route path="stats" element={<StatsPage />} />
                 <Route path="leaders" element={<LeadersPage />} />

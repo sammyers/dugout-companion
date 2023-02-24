@@ -1,14 +1,13 @@
 import React from 'react';
-import { format, getYear, parseISO } from 'date-fns';
+import { format, getYear } from 'date-fns';
 import { Box, Button, List, Text } from 'grommet';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-import { groupIdOptions, useGetGameSummariesQuery } from '@sammyers/dc-shared';
+import { useGetGameSummariesQuery } from '@sammyers/dc-shared';
 
 import { useCurrentGroupId } from './context';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
-import { parseLegacyDate } from '../utils';
 import SeasonSelector from './util/SeasonSelector';
 import _ from 'lodash';
 
@@ -35,29 +34,13 @@ const GamesPage = () => {
 
   const games = useMemo(
     () =>
-      data?.unifiedGames?.map(({ game, legacyGame }) => {
-        if (game) {
-          const { id, name, score, timeStarted, timeEnded } = game;
-          return {
-            id,
-            name,
-            score,
-            startTime: new Date(timeStarted),
-            endTime: new Date(timeEnded),
-            legacy: false,
-          };
-        } else {
-          const { gameId, gameTitle, score, gameDate, gameStartTime, gameEndTime } = legacyGame!;
-          return {
-            id: String(gameId),
-            name: gameTitle,
-            score,
-            startTime: parseLegacyDate(gameDate!, gameStartTime),
-            endTime: parseLegacyDate(gameDate!, gameEndTime),
-            legacy: true,
-          };
-        }
-      }),
+      data?.games?.map(({ id, name, score, timeStarted, timeEnded }) => ({
+        id,
+        name,
+        score,
+        startTime: new Date(timeStarted),
+        endTime: new Date(timeEnded),
+      })),
     [data]
   );
 
@@ -69,6 +52,7 @@ const GamesPage = () => {
     <Box flex>
       <SeasonSelector margin={{ horizontal: 'small' }} includeAll={false} />
       <List
+        itemKey="id"
         data={_.orderBy(games, 'startTime', 'desc')}
         defaultItemProps={{
           pad: 'medium',
@@ -94,13 +78,13 @@ const GamesPage = () => {
             </Text>
           );
         }}
-        action={({ id, legacy }) => (
+        action={({ id }) => (
           <Button
             key={id}
             alignSelf="center"
             plain={false}
             style={{ whiteSpace: 'nowrap' }}
-            onClick={() => navigate(`../game/${legacy ? 'legacy/' : ''}${id}`)}
+            onClick={() => navigate(`../game/${id}`)}
           >
             Game Details
           </Button>

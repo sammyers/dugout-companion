@@ -19,12 +19,12 @@ const SeasonLeaders: FC<{ season: number }> = ({ season }) => {
   return (
     <Box margin="small">
       <Grid columns="min(100%, max(240px, 30%))" gap="small">
-        <Leaderboard name="Batting Average" decimal leaders={data.battingAverageLeaders!} />
         <Leaderboard name="On Base Percentage" decimal leaders={data.onBasePctLeaders!} />
         <Leaderboard name="OPS" decimal leaders={data.opsLeaders!} />
-        <Leaderboard name="Hits" leaders={data.hitsLeaders!} />
-        <Leaderboard name="Walks" leaders={data.walksLeaders!} />
         <Leaderboard name="Home Runs" leaders={data.homerunsLeaders!} />
+        <Leaderboard name="Doubles" leaders={data.doublesLeaders!} />
+        <Leaderboard name="Walks" leaders={data.walksLeaders!} />
+        <Leaderboard name="RBI" leaders={data.rbiLeaders!} />
       </Grid>
     </Box>
   );

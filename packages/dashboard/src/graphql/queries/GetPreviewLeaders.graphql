@@ -1,16 +1,16 @@
 query GetPreviewLeaders($groupId: UUID!, $currentSeason: Int!) {
-  hits: seasonStats(
+  doubles: seasonBattingStats(
     condition: { groupId: $groupId, season: $currentSeason }
-    orderBy: HITS_DESC
+    orderBy: DOUBLES_DESC
     first: 1
   ) {
     player {
       id
       fullName
     }
-    value: hits
+    value: doubles
   }
-  homeruns: seasonStats(
+  homeruns: seasonBattingStats(
     condition: { groupId: $groupId, season: $currentSeason }
     orderBy: HOMERUNS_DESC
     first: 1
@@ -21,7 +21,7 @@ query GetPreviewLeaders($groupId: UUID!, $currentSeason: Int!) {
     }
     value: homeruns
   }
-  walks: seasonStats(
+  walks: seasonBattingStats(
     condition: { groupId: $groupId, season: $currentSeason }
     orderBy: WALKS_DESC
     first: 1
@@ -32,30 +32,32 @@ query GetPreviewLeaders($groupId: UUID!, $currentSeason: Int!) {
     }
     value: walks
   }
-  battingAverage: seasonStatsQualifiedBatters(
+  rbi: seasonBattingStats(
     condition: { groupId: $groupId, season: $currentSeason }
-    orderBy: BATTING_AVERAGE_DESC
+    orderBy: RBI_DESC
     first: 1
   ) {
     player {
       id
       fullName
     }
-    value: battingAverage
+    value: rbi
   }
-  onBasePct: seasonStatsQualifiedBatters(
+  onBasePct: seasonBattingStats(
     condition: { groupId: $groupId, season: $currentSeason }
-    orderBy: ON_BASE_PCT_DESC
+    filter: { qualified: { equalTo: true } }
+    orderBy: OBP_DESC
     first: 1
   ) {
     player {
       id
       fullName
     }
-    value: onBasePct
+    value: obp
   }
-  ops: seasonStatsQualifiedBatters(
+  ops: seasonBattingStats(
     condition: { groupId: $groupId, season: $currentSeason }
+    filter: { qualified: { equalTo: true } }
     orderBy: OPS_DESC
     first: 1
   ) {

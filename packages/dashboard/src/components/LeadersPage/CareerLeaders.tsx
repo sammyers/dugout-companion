@@ -5,12 +5,15 @@ import { groupIdOptions, useGetCareerStatLeadersQuery } from '@sammyers/dc-share
 
 import Leaderboard from './Leaderboard';
 
-import { useCurrentGroupId } from '../context';
+import { useCurrentGroupId, useCurrentGroupName } from '../context';
 
 const CareerLeaders: FC = () => {
   const groupId = useCurrentGroupId();
+  const groupName = useCurrentGroupName();
 
-  const { data } = useGetCareerStatLeadersQuery(groupIdOptions(groupId, {}));
+  const { data } = useGetCareerStatLeadersQuery(
+    groupIdOptions(groupId, { qualifyingPAs: groupName === 'SF Meetup' ? 400 : 100 })
+  );
 
   if (!data) {
     return null;
@@ -22,12 +25,12 @@ const CareerLeaders: FC = () => {
         Career Leaders
       </Heading>
       <Grid columns="min(100%, max(240px, 30%))" gap="small">
-        <Leaderboard name="Batting Average" decimal leaders={data.battingAverageLeaders!} />
         <Leaderboard name="On-Base Percentage" decimal leaders={data.onBasePctLeaders!} />
         <Leaderboard name="OPS" decimal leaders={data.opsLeaders!} />
-        <Leaderboard name="Hits" leaders={data.hitsLeaders!} />
-        <Leaderboard name="Walks" leaders={data.walksLeaders!} />
         <Leaderboard name="Home Runs" leaders={data.homerunsLeaders!} />
+        <Leaderboard name="Doubles" leaders={data.doublesLeaders!} />
+        <Leaderboard name="Walks" leaders={data.walksLeaders!} />
+        <Leaderboard name="RBI" leaders={data.rbiLeaders!} />
       </Grid>
     </Box>
   );

@@ -14,10 +14,10 @@ import { useCurrentGroupId } from './context';
 import PlayerLink from './util/PlayerLink';
 
 const categories = [
-  { property: 'hits', name: 'Hits' },
+  { property: 'doubles', name: 'Doubles' },
   { property: 'homeruns', name: 'Home Runs' },
   { property: 'walks', name: 'Walks' },
-  { property: 'battingAverage', name: 'Batting Average', decimal: true },
+  { property: 'rbi', name: 'Runs Batted In' },
   { property: 'onBasePct', name: 'On-Base Percentage', decimal: true },
   { property: 'ops', name: 'OPS (On-Base Plus Slugging)', decimal: true },
 ];
@@ -44,7 +44,7 @@ const LeadersPreview: FC<GetPreviewLeadersQuery> = props => {
               background="neutral-6"
               round="small"
             >
-              <PlayerLink color="accent-1" player={player} legacyPlayer={null} />
+              <PlayerLink color="accent-1" player={player} />
               <Text color="accent-1">{decimal ? value?.toFixed(3) : value}</Text>
             </Box>
           </Box>

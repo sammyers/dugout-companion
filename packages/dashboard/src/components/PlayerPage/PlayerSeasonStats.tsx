@@ -5,7 +5,13 @@ import _ from 'lodash';
 import PageBlock from '../util/PageBlock';
 import PlayerSeasonGames from './PlayerSeasonGames';
 
-import { useResponsiveColumns } from '../../utils';
+import {
+  getBattingAverage,
+  getOnBasePercentage,
+  getOps,
+  getSluggingPercentage,
+  useResponsiveColumns,
+} from '../../utils';
 import { useCurrentGroupId } from '../context';
 
 import { PlayerProfile, SeasonRow } from './types';
@@ -56,34 +62,37 @@ const columnDefs: ColumnConfig<SeasonRow>[] = [
     header: 'SAC',
   },
   {
-    property: 'battingAverage',
+    property: 'stolenBases',
+    header: 'SB',
+  },
+  {
+    property: 'avg',
     header: 'AVG',
-    render: row => row.battingAverage!.toFixed(3),
+    render: row => getBattingAverage(row).toFixed(3),
   },
   {
-    property: 'onBasePct',
+    property: 'obp',
     header: 'OBP',
-    render: row => row.onBasePct!.toFixed(3),
+    render: row => getOnBasePercentage(row).toFixed(3),
   },
   {
-    property: 'sluggingPct',
+    property: 'slg',
     header: 'SLG',
-    render: row => row.sluggingPct!.toFixed(3),
+    render: row => getSluggingPercentage(row).toFixed(3),
   },
   {
     property: 'ops',
     header: 'OPS',
-    render: row => row.ops!.toFixed(3),
+    render: row => getOps(row).toFixed(3),
   },
 ];
 
 interface Props extends PlayerProfile {}
 
 const PlayerSeasonStats: FC<Props> = ({
-  careerStats,
-  seasonStats,
-  gameBattingLines,
-  legacyGameBattingLines,
+  careerBattingStats,
+  seasonBattingStats,
+  gameBattingStats,
 }) => {
   const groupId = useCurrentGroupId();
 
@@ -98,11 +107,12 @@ const PlayerSeasonStats: FC<Props> = ({
       'rbi',
       'battingAverage',
       'sluggingPct',
+      'stolenBases',
     ],
-    small: ['runs', 'sacFlies', 'battingAverage', 'sluggingPct'],
+    small: ['runs', 'sacFlies', 'battingAverage', 'sluggingPct', 'stolenBases'],
   });
   const columns = useMemo(() => {
-    const careerRow = { ...careerStats[0], season: null };
+    const careerRow = { ...careerBattingStats[0], season: null };
     return responsiveColumns.map(column => {
       let footerContent: ReactNode;
       if (column.property === 'season') {
@@ -123,19 +133,15 @@ const PlayerSeasonStats: FC<Props> = ({
         ),
       };
     });
-  }, [careerStats, responsiveColumns]);
+  }, [careerBattingStats, responsiveColumns]);
 
   const battingLinesBySeason = useMemo(
     () =>
       _.groupBy(
-        gameBattingLines.filter(({ game }) => game?.groupId === groupId),
-        'season'
+        gameBattingStats.filter(({ game }) => game?.groupId === groupId),
+        'game.season'
       ),
-    [gameBattingLines, groupId]
-  );
-  const legacyBattingLinesBySeason = useMemo(
-    () => _.groupBy(legacyGameBattingLines, 'season'),
-    [gameBattingLines]
+    [gameBattingStats, groupId]
   );
 
   // This is incredibly jank but seems to be the only way to make the footer columns line up
@@ -161,17 +167,11 @@ const PlayerSeasonStats: FC<Props> = ({
           fill
           sortable
           columns={columns}
-          data={seasonStats}
+          data={seasonBattingStats}
           pad="xsmall"
           background={{ body: ['neutral-5', 'neutral-6'] }}
           rowDetails={({ season }: SeasonRow) => (
-            <PlayerSeasonGames
-              games={
-                season! in legacyBattingLinesBySeason
-                  ? legacyBattingLinesBySeason[season!]
-                  : battingLinesBySeason[season!]
-              }
-            />
+            <PlayerSeasonGames games={battingLinesBySeason[season!]} />
           )}
         />
       </ThemeContext.Extend>

@@ -9,18 +9,11 @@ export interface PlayerRecord {
     id: string;
     fullName: Maybe<string>;
   }>;
-  legacyPlayer: Maybe<{
-    playerName: Maybe<string>;
-  }>;
 }
-export const extractPlayerName = ({ player, legacyPlayer }: PlayerRecord) => {
+export const extractPlayerName = ({ player }: PlayerRecord) => {
   if (player) {
     return player.fullName!;
   }
-  if (legacyPlayer!.playerName!.startsWith('Z-')) {
-    return legacyPlayer!.playerName!.substring(2);
-  }
-  return legacyPlayer!.playerName!;
 };
 
 export const useResponsiveColumns = <T>(
@@ -40,3 +33,22 @@ export const useResponsiveColumns = <T>(
 
 export const parseLegacyDate = (date: string, time: string = '00:00:00') =>
   parse(`${date} ${time}`, 'yyyy-MM-dd HH:mm:ss', new Date());
+
+interface BasicStatRow {
+  plateAppearances: number;
+  atBats: number;
+  hits: number;
+  runs: number;
+  doubles: number;
+  triples: number;
+  homeruns: number;
+  walks: number;
+  sacFlies: number;
+}
+
+export const getBattingAverage = (row: BasicStatRow) => row.hits / row.atBats;
+export const getOnBasePercentage = (row: BasicStatRow) =>
+  (row.hits + row.walks) / (row.atBats + row.walks + row.sacFlies);
+export const getSluggingPercentage = (row: BasicStatRow) =>
+  (row.hits + row.doubles + 2 * row.triples + 3 * row.homeruns) / row.atBats;
+export const getOps = (row: BasicStatRow) => getOnBasePercentage(row) + getSluggingPercentage(row);

@@ -13,16 +13,16 @@ import PlayerLink from '../util/PlayerLink';
 import { useResponsiveColumns } from '../../utils';
 import { useCurrentGroupId } from '../context';
 
-type PlayerStatResult = NonNullable<SimplifyType<GetStatsForSeasonQuery['seasonStats']>>[number];
+type PlayerStatResult = NonNullable<
+  SimplifyType<NonNullable<GetStatsForSeasonQuery['group']>['seasonBattingStats']>
+>[number];
 
 const columnDefs: ColumnConfig<PlayerStatResult>[] = [
   {
     property: 'player',
     sortable: false,
     header: 'Player',
-    render: ({ player, legacyPlayer }) => (
-      <PlayerLink player={player} legacyPlayer={legacyPlayer} />
-    ),
+    render: ({ player }) => <PlayerLink player={player} />,
   },
   {
     property: 'games',
@@ -65,19 +65,23 @@ const columnDefs: ColumnConfig<PlayerStatResult>[] = [
     header: 'SAC',
   },
   {
+    property: 'stolenBases',
+    header: 'SB',
+  },
+  {
     property: 'battingAverage',
     header: 'AVG',
-    render: row => row.battingAverage!.toFixed(3),
+    render: row => row.avg.toFixed(3),
   },
   {
     property: 'onBasePct',
     header: 'OBP',
-    render: row => row.onBasePct!.toFixed(3),
+    render: row => row.obp.toFixed(3),
   },
   {
     property: 'ops',
     header: 'OPS',
-    render: row => row.ops!.toFixed(3),
+    render: row => row.ops.toFixed(3),
   },
 ];
 
@@ -86,16 +90,28 @@ const SeasonStats: FC<{ season: number; qualified: boolean }> = ({ season, quali
   const { data } = useGetStatsForSeasonQuery(groupIdOptions(groupId, { season }));
 
   const columns = useResponsiveColumns(columnDefs, {
-    xsmall: ['atBats', 'runs', 'walks', 'sacFlies', 'doubles', 'triples', 'rbi', 'battingAverage'],
-    small: ['runs', 'rbi'],
+    xsmall: [
+      'atBats',
+      'runs',
+      'walks',
+      'sacFlies',
+      'doubles',
+      'triples',
+      'rbi',
+      'battingAverage',
+      'stolenBases',
+    ],
+    small: ['runs', 'rbi', 'stolenBases'],
   });
 
   const rows = useMemo(() => {
-    if (data) {
+    if (data?.group) {
       if (qualified) {
-        return data.seasonStats?.filter(row => row.atBats! >= data.season!.totalGames * 2);
+        return data.group.seasonBattingStats?.filter(
+          row => row.atBats! >= data.group!.gamesInSeason! * 2
+        );
       }
-      return data.seasonStats;
+      return data.group.seasonBattingStats;
     }
   }, [data, qualified]);
 

@@ -1,13 +1,8 @@
 query GetCareerStats($groupId: UUID!) {
-  careerStats(condition: { groupId: $groupId }, orderBy: GAMES_DESC) {
+  careerBattingStats(condition: { groupId: $groupId }, orderBy: GAMES_DESC) {
     player {
       id
       fullName
-    }
-    legacyPlayer {
-      playerId
-      playerName
-      playerImage
     }
     seasons
     games
@@ -17,16 +12,16 @@ query GetCareerStats($groupId: UUID!) {
     doubles
     triples
     homeruns
-    xbh
     walks
     strikeouts
     sacFlies
+    stolenBases
     gidp
     runs
     rbi
-    battingAverage
-    onBasePct
-    sluggingPct
+    avg
+    obp
+    slg
     ops
   }
 }
