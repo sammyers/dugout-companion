@@ -46,7 +46,7 @@
     "@types/react-router-dom": "^5.3.2",
     "@types/styled-components": "^5.1.7",
     "date-fns": "^2.26.0",
-    "grommet": "^2.16.3",
+    "grommet": "^2.29.1",
     "grommet-icons": "^4.5.0",
     "lodash": "^4.17.20",
     "polished": "^4.1.1",

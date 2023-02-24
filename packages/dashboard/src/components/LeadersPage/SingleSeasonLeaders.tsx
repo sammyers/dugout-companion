@@ -5,12 +5,16 @@ import { groupIdOptions, useGetSingleSeasonStatLeadersQuery } from '@sammyers/dc
 
 import SeasonLeaderboard from './SeasonLeaderboard';
 
-import { useCurrentGroupId } from '../context';
+import { useCurrentGroupId, useCurrentGroupName } from '../context';
 
 const SingleSeasonLeaders: FC = () => {
   const groupId = useCurrentGroupId();
+  const groupName = useCurrentGroupName();
 
-  const { data } = useGetSingleSeasonStatLeadersQuery(groupIdOptions(groupId, {}));
+  // TODO(sam): make better logic for determining qualifying PAs
+  const { data } = useGetSingleSeasonStatLeadersQuery(
+    groupIdOptions(groupId, { qualifyingPAs: groupName === 'SF Meetup' ? 200 : 50 })
+  );
 
   if (!data) {
     return null;
@@ -22,12 +26,12 @@ const SingleSeasonLeaders: FC = () => {
         Single-Season Leaders
       </Heading>
       <Grid columns="min(100%, max(300px, 30%))" gap="small">
-        <SeasonLeaderboard name="Batting Average" decimal leaders={data.battingAverageLeaders!} />
         <SeasonLeaderboard name="On-Base Percentage" decimal leaders={data.onBasePctLeaders!} />
         <SeasonLeaderboard name="OPS" decimal leaders={data.opsLeaders!} />
-        <SeasonLeaderboard name="Hits" leaders={data.hitsLeaders!} />
-        <SeasonLeaderboard name="Walks" leaders={data.walksLeaders!} />
         <SeasonLeaderboard name="Home Runs" leaders={data.homerunsLeaders!} />
+        <SeasonLeaderboard name="Doubles" leaders={data.doublesLeaders!} />
+        <SeasonLeaderboard name="Walks" leaders={data.walksLeaders!} />
+        <SeasonLeaderboard name="RBI" leaders={data.rbiLeaders!} />
       </Grid>
     </Box>
   );

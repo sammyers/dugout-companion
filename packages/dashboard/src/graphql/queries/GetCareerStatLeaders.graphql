@@ -1,79 +1,65 @@
-query GetCareerStatLeaders($groupId: UUID!) {
-  hitsLeaders: careerStats(condition: { groupId: $groupId }, orderBy: HITS_DESC, first: 5) {
+query GetCareerStatLeaders($groupId: UUID!, $qualifyingPAs: Int!) {
+  doublesLeaders: careerBattingStats(
+    condition: { groupId: $groupId }
+    orderBy: DOUBLES_DESC
+    first: 5
+  ) {
     player {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
-    value: hits
+    value: doubles
   }
-  homerunsLeaders: careerStats(condition: { groupId: $groupId }, orderBy: HOMERUNS_DESC, first: 5) {
+  homerunsLeaders: careerBattingStats(
+    condition: { groupId: $groupId }
+    orderBy: HOMERUNS_DESC
+    first: 5
+  ) {
     player {
       id
       fullName
-    }
-    legacyPlayer {
-      playerId
-      playerName
     }
     value: homeruns
   }
-  walksLeaders: careerStats(condition: { groupId: $groupId }, orderBy: WALKS_DESC, first: 5) {
+  walksLeaders: careerBattingStats(
+    condition: { groupId: $groupId }
+    orderBy: WALKS_DESC
+    first: 5
+  ) {
     player {
       id
       fullName
-    }
-    legacyPlayer {
-      playerId
-      playerName
     }
     value: walks
   }
-  battingAverageLeaders: careerStatsQualifiedBatters(
+  rbiLeaders: careerBattingStats(condition: { groupId: $groupId }, orderBy: RBI_DESC, first: 5) {
+    player {
+      id
+      fullName
+    }
+    value: rbi
+  }
+  onBasePctLeaders: careerBattingStats(
     condition: { groupId: $groupId }
-    orderBy: BATTING_AVERAGE_DESC
+    filter: { plateAppearances: { greaterThanOrEqualTo: $qualifyingPAs } }
+    orderBy: OBP_DESC
     first: 5
   ) {
     player {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
-    value: battingAverage
+    value: obp
   }
-  onBasePctLeaders: careerStatsQualifiedBatters(
+  opsLeaders: careerBattingStats(
     condition: { groupId: $groupId }
-    orderBy: ON_BASE_PCT_DESC
-    first: 5
-  ) {
-    player {
-      id
-      fullName
-    }
-    legacyPlayer {
-      playerId
-      playerName
-    }
-    value: onBasePct
-  }
-  opsLeaders: careerStatsQualifiedBatters(
-    condition: { groupId: $groupId }
+    filter: { plateAppearances: { greaterThanOrEqualTo: $qualifyingPAs } }
     orderBy: OPS_DESC
     first: 5
   ) {
     player {
       id
       fullName
-    }
-    legacyPlayer {
-      playerId
-      playerName
     }
     value: ops
   }

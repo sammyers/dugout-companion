@@ -15,12 +15,12 @@ import PlayerLink from './util/PlayerLink';
 import { useCurrentGroupId } from './context';
 import { useResponsiveColumns } from '../utils';
 
-type PlayerStatRow = NonNullable<SimplifyType<GetPreviewStatsQuery['seasonStats']>>[number];
+type PlayerStatRow = NonNullable<SimplifyType<GetPreviewStatsQuery['seasonBattingStats']>>[number];
 const columnDefs: ColumnConfig<PlayerStatRow>[] = [
   {
     property: 'player',
     header: 'Player',
-    render: ({ player }) => <PlayerLink player={player} legacyPlayer={null} />,
+    render: ({ player }) => <PlayerLink player={player} />,
     sortable: false,
   },
   {
@@ -38,10 +38,6 @@ const columnDefs: ColumnConfig<PlayerStatRow>[] = [
   {
     property: 'hits',
     header: 'H',
-  },
-  {
-    property: 'xbh',
-    header: 'XBH',
   },
   {
     property: 'doubles',
@@ -68,19 +64,23 @@ const columnDefs: ColumnConfig<PlayerStatRow>[] = [
     header: 'SAC',
   },
   {
+    property: 'stolenBases',
+    header: 'SB',
+  },
+  {
     property: 'battingAverage',
     header: 'AVG',
-    render: row => row.battingAverage!.toFixed(3),
+    render: row => row.avg.toFixed(3),
   },
   {
     property: 'onBasePct',
     header: 'OBP',
-    render: row => row.onBasePct!.toFixed(3),
+    render: row => row.obp.toFixed(3),
   },
   {
     property: 'ops',
     header: 'OPS',
-    render: row => row.ops!.toFixed(3),
+    render: row => row.ops.toFixed(3),
   },
 ];
 
@@ -92,10 +92,17 @@ const StatsWidget = () => {
   const { data } = useGetPreviewStatsQuery(groupIdOptions(groupId, { currentSeason }));
 
   const columns = useResponsiveColumns(columnDefs, {
-    xsmall: ['runs', 'rbi', 'sacFlies', 'doubles', 'triples', 'homeruns', 'battingAverage'],
-    small: ['xbh', 'battingAverage'],
-    medium: ['xbh'],
-    large: ['xbh'],
+    xsmall: [
+      'runs',
+      'rbi',
+      'sacFlies',
+      'doubles',
+      'triples',
+      'homeruns',
+      'battingAverage',
+      'stolenBases',
+    ],
+    small: ['battingAverage', 'stolenBases'],
   });
 
   if (!data) {
@@ -124,7 +131,7 @@ const StatsWidget = () => {
       <DataTable
         sortable
         columns={columns}
-        data={data.seasonStats!}
+        data={data.seasonBattingStats!}
         pad="xsmall"
         background={{ body: ['neutral-5', 'neutral-6'] }}
       />

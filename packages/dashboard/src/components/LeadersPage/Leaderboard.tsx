@@ -5,7 +5,7 @@ import { GetCareerStatLeadersQuery, SimplifyType } from '@sammyers/dc-shared';
 
 import PlayerLink from '../util/PlayerLink';
 
-type LeaderRow = NonNullable<SimplifyType<GetCareerStatLeadersQuery['hitsLeaders']>>[number];
+type LeaderRow = NonNullable<SimplifyType<GetCareerStatLeadersQuery['doublesLeaders']>>[number];
 
 interface Props {
   name: string;
@@ -27,7 +27,7 @@ const Leaderboard: FC<Props> = ({ name, leaders, decimal }) => {
         return (
           <Text weight="bold" color={color}>
             {`${row.place}. `}
-            <PlayerLink color={color} player={row.player} legacyPlayer={row.legacyPlayer} />
+            <PlayerLink color={color} player={row.player} />
           </Text>
         );
       },

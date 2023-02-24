@@ -13,15 +13,15 @@ import PlayerLink from '../util/PlayerLink';
 import { useResponsiveColumns } from '../../utils';
 import { useCurrentGroupId } from '../context';
 
-type PlayerStatResult = NonNullable<SimplifyType<GetCareerStatsQuery['careerStats']>>[number];
+type PlayerStatResult = NonNullable<
+  SimplifyType<GetCareerStatsQuery['careerBattingStats']>
+>[number];
 
 const columnDefs: ColumnConfig<PlayerStatResult>[] = [
   {
     property: 'player',
     header: 'Player',
-    render: ({ player, legacyPlayer }) => (
-      <PlayerLink player={player} legacyPlayer={legacyPlayer} />
-    ),
+    render: ({ player }) => <PlayerLink player={player} />,
     sortable: false,
   },
   {
@@ -69,19 +69,23 @@ const columnDefs: ColumnConfig<PlayerStatResult>[] = [
     header: 'SAC',
   },
   {
+    property: 'stolenBases',
+    header: 'SB',
+  },
+  {
     property: 'battingAverage',
     header: 'AVG',
-    render: row => row.battingAverage!.toFixed(3),
+    render: row => row.avg.toFixed(3),
   },
   {
     property: 'onBasePct',
     header: 'OBP',
-    render: row => row.onBasePct!.toFixed(3),
+    render: row => row.obp.toFixed(3),
   },
   {
     property: 'ops',
     header: 'OPS',
-    render: row => row.ops!.toFixed(3),
+    render: row => row.ops.toFixed(3),
   },
 ];
 
@@ -100,16 +104,17 @@ const CareerStats: FC<{ qualified: boolean }> = ({ qualified }) => {
       'triples',
       'rbi',
       'battingAverage',
+      'stolenBases',
     ],
-    small: ['runs', 'rbi', 'sacFlies', 'battingAverage'],
+    small: ['runs', 'rbi', 'sacFlies', 'battingAverage', 'stolenBases'],
   });
 
   const rows = useMemo(() => {
     if (data) {
       if (qualified) {
-        return data.careerStats?.filter(row => row.atBats! >= 400);
+        return data.careerBattingStats?.filter(row => row.atBats! >= 400);
       }
-      return data.careerStats;
+      return data.careerBattingStats;
     }
   }, [data, qualified]);
 

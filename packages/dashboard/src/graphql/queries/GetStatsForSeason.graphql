@@ -1,34 +1,29 @@
 query GetStatsForSeason($groupId: UUID!, $season: Int!) {
-  season(groupId: $groupId, year: $season) {
-    totalGames
-  }
-  seasonStats(condition: { groupId: $groupId, season: $season }, orderBy: GAMES_DESC) {
-    player {
-      id
-      fullName
+  group(id: $groupId) {
+    gamesInSeason(season: $season)
+    seasonBattingStats(condition: { season: $season }, orderBy: GAMES_DESC) {
+      player {
+        id
+        fullName
+      }
+      games
+      plateAppearances
+      atBats
+      hits
+      doubles
+      triples
+      homeruns
+      walks
+      strikeouts
+      sacFlies
+      gidp
+      runs
+      rbi
+      avg
+      obp
+      slg
+      ops
+      stolenBases
     }
-    legacyPlayer {
-      playerId
-      playerName
-      playerImage
-    }
-    games
-    plateAppearances
-    atBats
-    hits
-    doubles
-    triples
-    homeruns
-    xbh
-    walks
-    strikeouts
-    sacFlies
-    gidp
-    runs
-    rbi
-    battingAverage
-    onBasePct
-    sluggingPct
-    ops
   }
 }

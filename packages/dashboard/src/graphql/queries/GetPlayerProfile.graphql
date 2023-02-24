@@ -2,12 +2,12 @@ query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
   player(id: $playerId) {
     id
     fullName
-    debut
+    debut(groupId: $groupId)
     claimed
     groups: playerGroupMemberships {
       groupId
     }
-    careerStats(condition: { groupId: $groupId }) {
+    careerBattingStats(condition: { groupId: $groupId }) {
       games
       plateAppearances
       atBats
@@ -21,12 +21,9 @@ query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
       sacFlies
       gidp
       rbi
-      battingAverage
-      onBasePct
-      sluggingPct
-      ops
+      stolenBases
     }
-    seasonStats(orderBy: SEASON_DESC, condition: { groupId: $groupId }) {
+    seasonBattingStats(orderBy: SEASON_DESC, condition: { groupId: $groupId }) {
       season
       games
       plateAppearances
@@ -41,20 +38,17 @@ query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
       sacFlies
       gidp
       rbi
-      battingAverage
-      onBasePct
-      sluggingPct
-      ops
+      stolenBases
     }
-    gameBattingLines {
+    gameBattingStats {
       game {
+        season
         groupId
         id
         name
         timeStarted
         timeEnded
       }
-      season
       plateAppearances
       atBats
       hits
@@ -67,30 +61,7 @@ query GetPlayerProfile($playerId: UUID!, $groupId: UUID!) {
       sacFlies
       gidp
       rbi
-      onBasePct
-    }
-    legacyGameBattingLines {
-      legacyGame {
-        gameId
-        gameTitle
-        gameDate
-        gameStartTime
-        gameEndTime
-      }
-      season
-      plateAppearances
-      atBats
-      hits
-      runs
-      doubles
-      triples
-      homeruns
-      walks
-      strikeouts
-      sacFlies
-      gidp
-      rbi
-      onBasePct
+      stolenBases
     }
   }
 }

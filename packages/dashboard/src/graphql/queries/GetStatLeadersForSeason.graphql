@@ -1,20 +1,16 @@
 query GetStatLeadersForSeason($groupId: UUID!, $season: Int!) {
-  hitsLeaders: seasonStats(
+  doublesLeaders: seasonBattingStats(
     condition: { groupId: $groupId, season: $season }
-    orderBy: HITS_DESC
+    orderBy: DOUBLES_DESC
     first: 5
   ) {
     player {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
-    value: hits
+    value: doubles
   }
-  homerunsLeaders: seasonStats(
+  homerunsLeaders: seasonBattingStats(
     condition: { groupId: $groupId, season: $season }
     orderBy: HOMERUNS_DESC
     first: 5
@@ -23,13 +19,9 @@ query GetStatLeadersForSeason($groupId: UUID!, $season: Int!) {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
     value: homeruns
   }
-  walksLeaders: seasonStats(
+  walksLeaders: seasonBattingStats(
     condition: { groupId: $groupId, season: $season }
     orderBy: WALKS_DESC
     first: 5
@@ -38,54 +30,40 @@ query GetStatLeadersForSeason($groupId: UUID!, $season: Int!) {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
     value: walks
   }
-  battingAverageLeaders: seasonStatsQualifiedBatters(
+  rbiLeaders: seasonBattingStats(
     condition: { groupId: $groupId, season: $season }
-    orderBy: BATTING_AVERAGE_DESC
+    orderBy: RBI_DESC
     first: 5
   ) {
     player {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
-    value: battingAverage
+    value: rbi
   }
-  onBasePctLeaders: seasonStatsQualifiedBatters(
+  onBasePctLeaders: seasonBattingStats(
     condition: { groupId: $groupId, season: $season }
-    orderBy: ON_BASE_PCT_DESC
+    filter: { qualified: { equalTo: true } }
+    orderBy: OBP_DESC
     first: 5
   ) {
     player {
       id
       fullName
     }
-    legacyPlayer {
-      playerId
-      playerName
-    }
-    value: onBasePct
+    value: obp
   }
-  opsLeaders: seasonStatsQualifiedBatters(
+  opsLeaders: seasonBattingStats(
     condition: { groupId: $groupId, season: $season }
+    filter: { qualified: { equalTo: true } }
     orderBy: OPS_DESC
     first: 5
   ) {
     player {
       id
       fullName
-    }
-    legacyPlayer {
-      playerId
-      playerName
     }
     value: ops
   }

@@ -1,7 +1,0 @@
-query GetLegacyGameTitle($id: Int!) {
-  legacyGame(gameId: $id) {
-    gameId
-    gameTitle
-    gameDate
-  }
-}

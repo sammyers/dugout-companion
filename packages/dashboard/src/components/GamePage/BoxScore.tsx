@@ -14,15 +14,18 @@ import {
   FieldingPosition,
   GetGameDetailsQuery,
   getPositionAbbreviation,
+  TeamRole,
 } from '@sammyers/dc-shared';
 
 import PlayerLink from '../util/PlayerLink';
+import { getOnBasePercentage, getOps } from '../../utils';
 
 type BoxScoreLine = NonNullable<NonNullable<GetGameDetailsQuery['game']>['boxScore']>[number];
 
 interface Props {
   teams: NonNullable<GetGameDetailsQuery['game']>['teams'];
   boxScoreLines: BoxScoreLine[];
+  score?: number[];
 }
 
 interface PlayerBoxScoreRow extends NonNullable<BoxScoreLine> {
@@ -33,7 +36,7 @@ interface PlayerBoxScoreRow extends NonNullable<BoxScoreLine> {
 
 const hidePropertiesOnSmallScreen = ['doubles', 'triples', 'homeruns'];
 
-const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
+const BoxScore: FC<Props> = ({ teams, boxScoreLines, score }) => {
   const size = useContext(ResponsiveContext);
 
   const columns: ColumnConfig<PlayerBoxScoreRow>[] = useMemo(
@@ -43,7 +46,7 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
         header: 'Player',
         render: row => (
           <Box direction="row" align="center" gap="xsmall">
-            <PlayerLink player={{ id: row.playerId, fullName: row.name }} legacyPlayer={null} />
+            <PlayerLink player={{ id: row.playerId, fullName: row.name }} />
             {size !== 'xsmall' && (
               <Text size="small" color="dark-4">
                 {getPositionAbbreviation(row.position)}
@@ -51,48 +54,66 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
             )}
           </Box>
         ),
+        footer: 'Team',
       },
       {
         property: 'atBats',
         header: 'AB',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'runs',
         header: 'R',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'hits',
         header: 'H',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'doubles',
         header: '2B',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'triples',
         header: '3B',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'homeruns',
         header: 'HR',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'rbi',
         header: 'RBI',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
         property: 'walks',
         header: 'BB',
+        aggregate: 'sum',
+        footer: { aggregate: true },
       },
       {
-        property: 'onBasePct',
+        property: 'obp',
         header: 'OBP',
-        render: row => row.onBasePct?.toFixed(3) ?? '',
+        render: row => getOnBasePercentage(row).toFixed(3) ?? '',
+        // TODO(sam): show team OBP
       },
       {
         property: 'ops',
         header: 'OPS',
-        render: row => row.ops?.toFixed(3) ?? '',
+        render: row => getOps(row).toFixed(3) ?? '',
       },
     ],
     [size]
@@ -124,33 +145,37 @@ const BoxScore: FC<Props> = ({ teams, boxScoreLines }) => {
 
   return (
     <Box direction="row" justify="stretch" wrap>
-      {teamBoxScores.map(team => (
-        <Box
-          align="center"
-          key={team.role}
-          margin="small"
-          pad="small"
-          flex="grow"
-          background="neutral-5"
-          round="small"
-          height="min-content"
-        >
-          <Heading
-            level={4}
+      {teamBoxScores.map(team => {
+        const displayScore = score && score[team.role === TeamRole.AWAY ? 0 : 1];
+        return (
+          <Box
+            align="center"
+            key={team.role}
             margin="small"
-            color={tieGame ? 'accent-4' : team.winner ? 'status-ok' : 'status-critical'}
+            pad="small"
+            flex="grow"
+            background="neutral-5"
+            round="small"
+            height="min-content"
           >
-            {team.name}
-          </Heading>
-          <DataTable
-            fill
-            columns={responsiveColumns}
-            data={team.boxScore}
-            background={{ body: ['neutral-5', 'neutral-6'] }}
-            pad="xsmall"
-          />
-        </Box>
-      ))}
+            <Heading
+              level={4}
+              margin="small"
+              color={tieGame ? 'accent-4' : team.winner ? 'status-ok' : 'status-critical'}
+            >
+              {team.name}
+              {displayScore ? ` (${displayScore})` : ''}
+            </Heading>
+            <DataTable
+              fill
+              columns={responsiveColumns}
+              data={team.boxScore}
+              background={{ body: ['neutral-5', 'neutral-6'] }}
+              pad="xsmall"
+            />
+          </Box>
+        );
+      })}
     </Box>
   );
 };

@@ -7,42 +7,28 @@ import { AnchorLink } from '@sammyers/dc-shared';
 
 import PageBlock from '../util/PageBlock';
 
-import { parseLegacyDate, useResponsiveColumns } from '../../utils';
+import { getOnBasePercentage, useResponsiveColumns } from '../../utils';
 
-import { GameRow, LegacyGameRow } from './types';
+import { GameRow } from './types';
 
-const getGameTime = (row: GameRow | LegacyGameRow) => {
-  if ('game' in row) {
-    return new Date(row.game!.timeStarted);
-  }
-  return parseLegacyDate(row.legacyGame!.gameDate!, row.legacyGame!.gameStartTime);
-};
+const getGameTime = (row: GameRow) => new Date(row.game!.timeStarted);
+const getLinkToGame = (row: GameRow) => `../game/${row.game!.id}`;
 
-const getGameName = (row: GameRow | LegacyGameRow) => {
-  if ('game' in row) {
-    return row.game?.name;
-  }
-  return row.legacyGame?.gameTitle;
-};
-
-const getLinkToGame = (row: GameRow | LegacyGameRow) =>
-  'game' in row ? `../game/${row.game!.id}` : `../game/legacy/${row.legacyGame!.gameId}`;
-
-const columnDefs: ColumnConfig<GameRow | LegacyGameRow>[] = [
+const columnDefs: ColumnConfig<GameRow>[] = [
   {
     property: 'game',
     header: 'Game',
     render: row => (
       <Text>
         <AnchorLink to={getLinkToGame(row)} defaultColor="neutral-1" weight="bold">
-          {getGameName(row)}
+          {row.game?.name}
         </AnchorLink>
       </Text>
     ),
     sortable: false,
   },
   {
-    property: 'legacyGame',
+    property: 'game.gameStartTime',
     header: 'Date',
     render: row => format(getGameTime(row), 'M/d/yy'),
     sortable: false,
@@ -84,12 +70,16 @@ const columnDefs: ColumnConfig<GameRow | LegacyGameRow>[] = [
     header: 'SAC',
   },
   {
+    property: 'stolenBases',
+    header: 'SB',
+  },
+  {
     property: 'onBasePct',
     header: 'OBP',
-    render: row => row.onBasePct!.toFixed(3),
+    render: row => getOnBasePercentage(row).toFixed(3),
   },
 ];
-const gameDatePrimaryColumn: ColumnConfig<GameRow | LegacyGameRow> = {
+const gameDatePrimaryColumn: ColumnConfig<GameRow> = {
   ...columnDefs[1],
   header: 'Game Date',
   render: row => (
@@ -102,14 +92,14 @@ const gameDatePrimaryColumn: ColumnConfig<GameRow | LegacyGameRow> = {
 };
 
 interface Props {
-  games: (GameRow | LegacyGameRow)[];
+  games: GameRow[];
 }
 
 const PlayerSeasonGames: FC<Props> = ({ games }) => {
   const size = useContext(ResponsiveContext);
 
   const responsiveColumns = useResponsiveColumns(columnDefs, {
-    xsmall: ['game', 'doubles', 'triples', 'walks', 'sacFlies'],
+    xsmall: ['game', 'doubles', 'triples', 'walks', 'sacFlies', 'stolenBases'],
     small: ['game'],
   });
   const columns = useMemo(
