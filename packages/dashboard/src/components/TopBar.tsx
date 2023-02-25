@@ -5,6 +5,7 @@ import { Outlet, useMatch, useNavigate, useParams } from 'react-router-dom';
 
 import { useAllGroups } from './context';
 import { ManageCurrentUser } from '@sammyers/dc-shared';
+import { StatsEntryPageLink } from './StatsEntryPage';
 
 const GroupSelector = () => {
   const { groupSlug } = useParams();
@@ -48,6 +49,7 @@ const TopBar = () => {
             <ManageCurrentUser />
             <Text textAlign="center">Current Group</Text>
             <GroupSelector />
+            <StatsEntryPageLink />
           </Box>
         }
       >

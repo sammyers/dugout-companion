@@ -17,6 +17,7 @@ import NewAccountPage from './NewAccountPage';
 
 import theme from '../theme';
 import { Group, groupContext } from './context';
+import StatsEntryPage, { StatsEntryPageTitle } from './StatsEntryPage';
 
 const DefaultTitle = () => <>{'Dugout Companion Dashboard'}</>;
 
@@ -59,6 +60,7 @@ const App = () => {
               <Route path="stats" element={<StatsPageTitle />} />
               <Route path="leaders" element={<LeadersPageTitle />} />
               <Route path="player/:id" element={<PlayerPageTitle />} />
+              <Route path="new-game" element={<StatsEntryPageTitle />} />
             </Route>
           </Routes>
           <Box flex>
@@ -70,6 +72,7 @@ const App = () => {
                 <Route path="stats" element={<StatsPage />} />
                 <Route path="leaders" element={<LeadersPage />} />
                 <Route path="player/:id" element={<PlayerPage />} />
+                <Route path="new-game" element={<StatsEntryPage />} />
               </Route>
               <Route path="/">
                 <Route path="" element={<LandingPage />} />

@@ -129,20 +129,24 @@ export const useAllPermissions = () => {
       );
       return { permissions: currentUserPermissions as PermissionType[], groupPermissions };
     }
-    return { permissions: [], groupPermissions: {} };
+    return null;
   }, [data]);
 
   return allPermissions;
 };
 
 export const usePermission: {
-  (permission: PermissionType): boolean;
-  (permission: GroupPermissionType, groupId: string): boolean;
+  (permission: PermissionType): boolean | null;
+  (permission: GroupPermissionType, groupId: string): boolean | null;
 } = (permission: PermissionType | GroupPermissionType, groupId?: string) => {
-  const { permissions, groupPermissions } = useAllPermissions();
+  const allPermissions = useAllPermissions();
 
-  if (groupId) {
-    return (groupPermissions[groupId] ?? []).includes(permission as GroupPermissionType);
+  if (allPermissions) {
+    const { permissions, groupPermissions } = allPermissions;
+    if (groupId) {
+      return (groupPermissions[groupId] ?? []).includes(permission as GroupPermissionType);
+    }
+    return permissions.includes(permission as PermissionType);
   }
-  return permissions.includes(permission as PermissionType);
+  return null;
 };
