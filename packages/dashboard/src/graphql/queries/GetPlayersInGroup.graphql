@@ -1,0 +1,8 @@
+query GetPlayersInGroup($groupId: UUID!) {
+  group(id: $groupId) {
+    players(filter: { active: { equalTo: true } }) {
+      id
+      fullName
+    }
+  }
+}

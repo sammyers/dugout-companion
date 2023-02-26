@@ -23368,6 +23368,22 @@ export type GetPlayerProfileQuery = (
   )> }
 );
 
+export type GetPlayersInGroupQueryVariables = Exact<{
+  groupId: Scalars['UUID'];
+}>;
+
+
+export type GetPlayersInGroupQuery = (
+  { __typename?: 'Query' }
+  & { group: Maybe<(
+    { __typename?: 'Group' }
+    & { players: Maybe<Array<Maybe<(
+      { __typename?: 'Player' }
+      & Pick<Player, 'id' | 'fullName'>
+    )>>> }
+  )> }
+);
+
 export type GetPreviewLeadersQueryVariables = Exact<{
   groupId: Scalars['UUID'];
   currentSeason: Scalars['Int'];
@@ -24733,6 +24749,42 @@ export function useGetPlayerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type GetPlayerProfileQueryHookResult = ReturnType<typeof useGetPlayerProfileQuery>;
 export type GetPlayerProfileLazyQueryHookResult = ReturnType<typeof useGetPlayerProfileLazyQuery>;
 export type GetPlayerProfileQueryResult = Apollo.QueryResult<GetPlayerProfileQuery, GetPlayerProfileQueryVariables>;
+export const GetPlayersInGroupDocument = gql`
+    query GetPlayersInGroup($groupId: UUID!) {
+  group(id: $groupId) {
+    players(filter: {active: {equalTo: true}}) {
+      id
+      fullName
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPlayersInGroupQuery__
+ *
+ * To run a query within a React component, call `useGetPlayersInGroupQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPlayersInGroupQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPlayersInGroupQuery({
+ *   variables: {
+ *      groupId: // value for 'groupId'
+ *   },
+ * });
+ */
+export function useGetPlayersInGroupQuery(baseOptions: Apollo.QueryHookOptions<GetPlayersInGroupQuery, GetPlayersInGroupQueryVariables>) {
+        return Apollo.useQuery<GetPlayersInGroupQuery, GetPlayersInGroupQueryVariables>(GetPlayersInGroupDocument, baseOptions);
+      }
+export function useGetPlayersInGroupLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPlayersInGroupQuery, GetPlayersInGroupQueryVariables>) {
+          return Apollo.useLazyQuery<GetPlayersInGroupQuery, GetPlayersInGroupQueryVariables>(GetPlayersInGroupDocument, baseOptions);
+        }
+export type GetPlayersInGroupQueryHookResult = ReturnType<typeof useGetPlayersInGroupQuery>;
+export type GetPlayersInGroupLazyQueryHookResult = ReturnType<typeof useGetPlayersInGroupLazyQuery>;
+export type GetPlayersInGroupQueryResult = Apollo.QueryResult<GetPlayersInGroupQuery, GetPlayersInGroupQueryVariables>;
 export const GetPreviewLeadersDocument = gql`
     query GetPreviewLeaders($groupId: UUID!, $currentSeason: Int!) {
   doubles: seasonBattingStats(
